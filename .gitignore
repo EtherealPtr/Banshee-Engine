@@ -30,3 +30,23 @@
 *.exe
 *.out
 *.app
+
+# Visual Studio temporary files
+.vs/
+obj/
+Debug/
+Release/
+ipch/
+*.aps
+*.ilk
+*.ncb
+*.pdb
+*.opensdf
+*.sdf
+*.suo
+*.VC.db
+*.VC.VC.opendb
+
+# Custom generated files
+temp/
+banshee_generated/

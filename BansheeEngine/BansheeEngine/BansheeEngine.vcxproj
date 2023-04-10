@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>16.0</VCProjectVersion>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{b809594c-796d-40f9-bb8f-c9fbb23c7673}</ProjectGuid>
+    <RootNamespace>BansheeEngine</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>$(SolutionDir)binaries\BansheeEngine-$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)binaries\temp\BansheeEngine-$(Configuration)\</IntDir>
+    <IncludePath>$(IncludePath)</IncludePath>
+    <LibraryPath>$(LibraryPath)</LibraryPath>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>$(SolutionDir)binaries\BansheeEngine-$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)binaries\temp\BansheeEngine-$(Configuration)\</IntDir>
+    <IncludePath>$(IncludePath)</IncludePath>
+    <LibraryPath>$(LibraryPath)</LibraryPath>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutDir>$(SolutionDir)binaries\BansheeEngine-$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)binaries\temp\BansheeEngine-$(Configuration)\</IntDir>
+    <IncludePath>$(IncludePath)</IncludePath>
+    <LibraryPath>$(LibraryPath)</LibraryPath>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>$(SolutionDir)binaries\BansheeEngine-$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)binaries\temp\BansheeEngine-$(Configuration)\</IntDir>
+    <IncludePath>$(IncludePath)</IncludePath>
+    <LibraryPath>$(LibraryPath)</LibraryPath>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>BANSHEE_EXPORTS;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(ProjectDir)source;$(ProjectDir)dependencies\glfw-3.3.8\include\GLFW;$(ProjectDir)dependencies\vulkan_sdk_1.3.239.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>glfw3.lib;vulkan-1.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)dependencies\glfw-3.3.8\lib;$(ProjectDir)dependencies\vulkan_sdk_1.3.239.0\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+    <PostBuildEvent>
+      <Command>
+      </Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>BANSHEE_EXPORTS;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(ProjectDir)source;$(ProjectDir)dependencies\glfw-3.3.8\include\GLFW;$(ProjectDir)dependencies\vulkan_sdk_1.3.239.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>glfw3.lib;vulkan-1.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)dependencies\glfw-3.3.8\lib;$(ProjectDir)dependencies\vulkan_sdk_1.3.239.0\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+    <PostBuildEvent>
+      <Command>
+      </Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>BANSHEE_EXPORTS;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(ProjectDir)source;$(ProjectDir)dependencies\glfw-3.3.8\include\GLFW;$(ProjectDir)dependencies\vulkan_sdk_1.3.239.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>glfw3.lib;vulkan-1.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)dependencies\glfw-3.3.8\lib;$(ProjectDir)dependencies\vulkan_sdk_1.3.239.0\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+    <PostBuildEvent>
+      <Command>
+      </Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>BANSHEE_EXPORTS;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(ProjectDir)source;$(ProjectDir)dependencies\glfw-3.3.8\include\GLFW;$(ProjectDir)dependencies\vulkan_sdk_1.3.239.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>glfw3.lib;vulkan-1.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)dependencies\glfw-3.3.8\lib;$(ProjectDir)dependencies\vulkan_sdk_1.3.239.0\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+    <PostBuildEvent>
+      <Command>
+      </Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="source\foundation\Entity.cpp" />
+    <ClCompile Include="source\foundation\INIParser.cpp" />
+    <ClCompile Include="source\graphics\MeshComponent.cpp" />
+    <ClCompile Include="source\application\Application.cpp" />
+    <ClCompile Include="source\application\main.cpp" />
+    <ClCompile Include="source\foundation\FileManager.cpp" />
+    <ClCompile Include="source\foundation\Logger.cpp" />
+    <ClCompile Include="source\foundation\Subsystem.cpp" />
+    <ClCompile Include="source\graphics\Window.cpp" />
+    <ClCompile Include="source\graphics\Vulkan\VulkanInstance.cpp" />
+    <ClCompile Include="source\graphics\Vulkan\VulkanRenderer.cpp" />
+    <ClCompile Include="source\graphics\Vulkan\VulkanUtils.cpp" />
+    <ClCompile Include="source\graphics\Vulkan\VulkanDevice.cpp" />
+    <ClCompile Include="source\graphics\Vulkan\VulkanSurface.cpp" />
+    <ClCompile Include="source\graphics\Vulkan\VulkanSwapchain.cpp" />
+    <ClCompile Include="source\graphics\Vulkan\VulkanRenderPass.cpp" />
+    <ClCompile Include="source\graphics\Vulkan\VulkanFramebuffer.cpp" />
+    <ClCompile Include="source\graphics\Vulkan\VulkanGraphicsPipeline.cpp" />
+    <ClCompile Include="source\graphics\Vulkan\VulkanCommandBuffer.cpp" />
+    <ClCompile Include="source\graphics\Vulkan\VulkanCommandPool.cpp" />
+    <ClCompile Include="source\graphics\Vulkan\VulkanSemaphore.cpp" />
+    <ClCompile Include="source\graphics\Vulkan\VulkanFence.cpp" />
+    <ClCompile Include="source\graphics\Vulkan\VulkanVertexBuffer.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="source\foundation\Entity.h" />
+    <ClInclude Include="source\foundation\EngineConfig.h" />
+    <ClInclude Include="source\foundation\INIParser.h" />
+    <ClInclude Include="source\graphics\MeshComponent.h" />
+    <ClInclude Include="source\application\Application.h" />
+    <ClInclude Include="source\application\EntryPoint.h" />
+    <ClInclude Include="source\Banshee.h" />
+    <ClInclude Include="source\foundation\DLLConfig.h" />
+    <ClInclude Include="source\foundation\FileManager.h" />
+    <ClInclude Include="source\foundation\Logger.h" />
+    <ClInclude Include="source\foundation\Platform.h" />
+    <ClInclude Include="source\foundation\Subsystem.h" />
+    <ClInclude Include="source\graphics\PrimitiveShape.h" />
+    <ClInclude Include="source\graphics\Vertex.h" />
+    <ClInclude Include="source\graphics\Vulkan\VulkanValidation.h" />
+    <ClInclude Include="source\graphics\Window.h" />
+    <ClInclude Include="source\graphics\Vulkan\VulkanInstance.h" />
+    <ClInclude Include="source\graphics\Vulkan\VulkanRenderer.h" />
+    <ClInclude Include="source\graphics\Vulkan\VulkanUtils.h" />
+    <ClInclude Include="source\graphics\Vulkan\VulkanDevice.h" />
+    <ClInclude Include="source\graphics\Vulkan\VulkanSurface.h" />
+    <ClInclude Include="source\graphics\Vulkan\VulkanSwapchain.h" />
+    <ClInclude Include="source\graphics\Vulkan\VulkanRenderPass.h" />
+    <ClInclude Include="source\graphics\Vulkan\VulkanFramebuffer.h" />
+    <ClInclude Include="source\graphics\Vulkan\VulkanGraphicsPipeline.h" />
+    <ClInclude Include="source\graphics\Vulkan\VulkanCommandBuffer.h" />
+    <ClInclude Include="source\graphics\Vulkan\VulkanCommandPool.h" />
+    <ClInclude Include="source\graphics\Vulkan\VulkanSemaphore.h" />
+    <ClInclude Include="source\graphics\Vulkan\VulkanFence.h" />
+    <ClInclude Include="source\graphics\Vulkan\VulkanVertexBuffer.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
