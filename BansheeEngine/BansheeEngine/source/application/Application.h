@@ -1,13 +1,13 @@
 #pragma once
 
-#include "foundation/DLLConfig.h"
+#include "Foundation/DLLConfig.h"
 #include <memory>
 
 namespace Banshee
 {
+	class INIParser;
 	class Window;
 	class VulkanRenderer;
-	class INIParser;
 
 	class Application
 	{

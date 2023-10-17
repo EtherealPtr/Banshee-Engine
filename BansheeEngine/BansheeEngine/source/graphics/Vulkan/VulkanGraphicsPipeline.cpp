@@ -1,7 +1,7 @@
 #include "VulkanGraphicsPipeline.h"
-#include "foundation/Logger.h"
-#include "foundation/FileManager.h"
 #include "VulkanUtils.h"
+#include "Foundation/File/FileManager.h"
+#include "../Vertex.h"
 #include <vulkan/vulkan.h>
 #include <string>
 #include <stdexcept>
@@ -9,16 +9,14 @@
 
 namespace Banshee
 {
-	VulkanGraphicsPipeline::VulkanGraphicsPipeline(const VkDevice& _logicalDevice, const VkRenderPass& _renderPass, const uint32 _w, const uint32 _h) : 
+	VulkanGraphicsPipeline::VulkanGraphicsPipeline(const VkDevice& _logicalDevice, const VkRenderPass& _renderPass, const VkDescriptorSetLayout& _descriptorSetLayout, const uint32_t _w, const uint32_t _h) :
 		m_LogicalDevice(_logicalDevice),
 		m_PipelineLayout(VK_NULL_HANDLE),
 		m_GraphicsPipeline(VK_NULL_HANDLE)
 	{
-		BE_LOG(LogCategory::trace, "Vulkan graphics pipeline creation stage: Start");
-
 		// Vertex creation stage
-		const std::string basicVertPath = "shaders/basic_vert.spv";
-		const std::string basicFragPath = "shaders/basic_frag.spv";
+		const std::string basicVertPath = "Shaders/basic_vert.spv";
+		const std::string basicFragPath = "Shaders/basic_frag.spv";
 
 		auto vertShaderBinary = FileManager::Instance().ReadBinaryFile(basicVertPath.c_str());
 		auto fragShaderBinary = FileManager::Instance().ReadBinaryFile(basicFragPath.c_str());
@@ -43,7 +41,7 @@ namespace Banshee
 		// Vertex input stage
 		VkVertexInputBindingDescription inputBindingDescription{};
 		inputBindingDescription.binding = 0;
-		inputBindingDescription.stride = sizeof(float) * 6;
+		inputBindingDescription.stride = sizeof(Vertex);
 		inputBindingDescription.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
 
 		std::array<VkVertexInputAttributeDescription, 2> inputAttributeDescriptions{};
@@ -55,13 +53,13 @@ namespace Banshee
 		inputAttributeDescriptions[1].binding = 0;
 		inputAttributeDescriptions[1].location = 1;
 		inputAttributeDescriptions[1].format = VK_FORMAT_R32G32B32_SFLOAT;
-		inputAttributeDescriptions[1].offset = sizeof(float) * 3;
+		inputAttributeDescriptions[1].offset = offsetof(Vertex, color);
 
 		VkPipelineVertexInputStateCreateInfo vertexInputCreateInfo{};
 		vertexInputCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
 		vertexInputCreateInfo.vertexBindingDescriptionCount = 1;
 		vertexInputCreateInfo.pVertexBindingDescriptions = &inputBindingDescription;
-		vertexInputCreateInfo.vertexAttributeDescriptionCount = static_cast<uint32>(inputAttributeDescriptions.size());
+		vertexInputCreateInfo.vertexAttributeDescriptionCount = static_cast<uint32_t>(inputAttributeDescriptions.size());
 		vertexInputCreateInfo.pVertexAttributeDescriptions = inputAttributeDescriptions.data();
 
 		// Dynamic states stage
@@ -73,7 +71,7 @@ namespace Banshee
 
 		VkPipelineDynamicStateCreateInfo dynamicStateCreateInfo{};
 		dynamicStateCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO;
-		dynamicStateCreateInfo.dynamicStateCount = static_cast<uint32>(dynamicState.size());
+		dynamicStateCreateInfo.dynamicStateCount = static_cast<uint32_t>(dynamicState.size());
 		dynamicStateCreateInfo.pDynamicStates = dynamicState.data();
 
 		// Input assembly stage
@@ -94,7 +92,7 @@ namespace Banshee
 		VkRect2D scissor{};
 		scissor.offset = { 0, 0 };
 		scissor.extent = VkExtent2D({ _w, _h });
-		
+
 		VkPipelineViewportStateCreateInfo viewportStateCreateInfo{};
 		viewportStateCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;
 		viewportStateCreateInfo.viewportCount = 1;
@@ -143,17 +141,35 @@ namespace Banshee
 		colorBlendStateCreateInfo.attachmentCount = 1;
 		colorBlendStateCreateInfo.pAttachments = &colorBlendAttachmentState;
 
+		// Depth stencil stage
+		VkPipelineDepthStencilStateCreateInfo depthStencilCreateInfo{};
+		depthStencilCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
+		depthStencilCreateInfo.depthTestEnable = VK_TRUE;
+		depthStencilCreateInfo.depthWriteEnable = VK_TRUE;
+		depthStencilCreateInfo.depthCompareOp = VK_COMPARE_OP_LESS;
+		depthStencilCreateInfo.depthBoundsTestEnable = VK_FALSE;
+		depthStencilCreateInfo.minDepthBounds = 0.0f;
+		depthStencilCreateInfo.maxDepthBounds = 1.0f;
+		depthStencilCreateInfo.stencilTestEnable = VK_FALSE;
+		depthStencilCreateInfo.front = {};
+		depthStencilCreateInfo.back = {};
+
 		// Pipeline layout stage
+		VkPushConstantRange pushConstantRange{};
+		pushConstantRange.offset = 0;
+		pushConstantRange.size = sizeof(glm::mat4);
+		pushConstantRange.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
+
 		VkPipelineLayoutCreateInfo pipelineLayoutCreateInfo{};
 		pipelineLayoutCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
-		pipelineLayoutCreateInfo.pushConstantRangeCount = 0;
-		pipelineLayoutCreateInfo.pPushConstantRanges = nullptr;
-		pipelineLayoutCreateInfo.setLayoutCount = 0;
-		pipelineLayoutCreateInfo.pSetLayouts = nullptr;
+		pipelineLayoutCreateInfo.pushConstantRangeCount = 1;
+		pipelineLayoutCreateInfo.pPushConstantRanges = &pushConstantRange;
+		pipelineLayoutCreateInfo.setLayoutCount = 1;
+		pipelineLayoutCreateInfo.pSetLayouts = &_descriptorSetLayout;
 
 		if (vkCreatePipelineLayout(_logicalDevice, &pipelineLayoutCreateInfo, nullptr, &m_PipelineLayout) != VK_SUCCESS)
 		{
-			BE_LOG(LogCategory::error, "Failed to create a pipeline layout");
+			throw std::runtime_error("ERROR: Failed to create a pipeline layout");
 		}
 
 		VkGraphicsPipelineCreateInfo graphicsPipelineCreateInfo{};
@@ -165,7 +181,7 @@ namespace Banshee
 		graphicsPipelineCreateInfo.pViewportState = &viewportStateCreateInfo;
 		graphicsPipelineCreateInfo.pRasterizationState = &rasterizerStateCreateInfo;
 		graphicsPipelineCreateInfo.pMultisampleState = &multisamplingStateCreateInfo;
-		graphicsPipelineCreateInfo.pDepthStencilState = nullptr;
+		graphicsPipelineCreateInfo.pDepthStencilState = &depthStencilCreateInfo;
 		graphicsPipelineCreateInfo.pColorBlendState = &colorBlendStateCreateInfo;
 		graphicsPipelineCreateInfo.pDynamicState = &dynamicStateCreateInfo;
 		graphicsPipelineCreateInfo.layout = m_PipelineLayout;
@@ -176,17 +192,13 @@ namespace Banshee
 
 		if (vkCreateGraphicsPipelines(_logicalDevice, VK_NULL_HANDLE, 1, &graphicsPipelineCreateInfo, nullptr, &m_GraphicsPipeline) != VK_SUCCESS)
 		{
-			BE_LOG(LogCategory::error, "Failed to create a graphics pipeline");
 			throw std::runtime_error("ERROR: Failed to create a graphics pipeline");
 		}
 
 		vkDestroyShaderModule(_logicalDevice, vertexShaderModule, nullptr);
 		vkDestroyShaderModule(_logicalDevice, fragmentShaderModule, nullptr);
-
-		BE_LOG(LogCategory::info, "Vulkan graphics pipeline created successfully");
-		BE_LOG(LogCategory::trace, "Vulkan graphics pipeline creation stage: End");
 	}
-	
+
 	VulkanGraphicsPipeline::~VulkanGraphicsPipeline()
 	{
 		vkDestroyPipeline(m_LogicalDevice, m_GraphicsPipeline, nullptr);
@@ -194,7 +206,5 @@ namespace Banshee
 
 		vkDestroyPipelineLayout(m_LogicalDevice, m_PipelineLayout, nullptr);
 		m_PipelineLayout = VK_NULL_HANDLE;
-
-		BE_LOG(LogCategory::trace, "Vulkan graphics pipeline destroyed");
 	}
-} // End of Banshee namespace
+}

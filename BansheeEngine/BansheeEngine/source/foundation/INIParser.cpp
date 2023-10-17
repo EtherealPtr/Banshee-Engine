@@ -1,6 +1,6 @@
 #include "INIParser.h"
-#include "FileManager.h"
-#include "Logger.h"
+#include "Foundation/File/FileManager.h"
+#include "Foundation/Logging/Logger.h"
 #include <sstream>
 
 namespace Banshee

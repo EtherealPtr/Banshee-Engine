@@ -1,5 +1,4 @@
 #include "VulkanDevice.h"
-#include "foundation/Logger.h"
 #include "VulkanUtils.h"
 #include <vulkan/vulkan.h>
 #include <vector>
@@ -21,36 +20,30 @@ namespace Banshee
 		PickPhysicalDevice(_vkInstance);
 		SetupQueueFamilyIndices();
 
-		BE_LOG(LogCategory::trace, "Vulkan logical device creation stage: Start");
 		CreateLogicalDevice();
-		BE_LOG(LogCategory::trace, "Vulkan logical device creation stage: End");
 	}
 
 	VulkanDevice::~VulkanDevice()
 	{
 		vkDestroyDevice(m_LogicalDevice, nullptr);
 		m_LogicalDevice = VK_NULL_HANDLE;
-		BE_LOG(LogCategory::trace, "Vulkan device destroyed");
 	}
-	
+
 	void VulkanDevice::PickPhysicalDevice(const VkInstance& _vkInstance)
 	{
-		uint32 deviceCount = 0;
+		unsigned int deviceCount = 0;
 		vkEnumeratePhysicalDevices(_vkInstance, &deviceCount, nullptr);
 
 		if (deviceCount == 0)
 		{
-			BE_LOG(LogCategory::error, "Failed to find GPUs with vulkan support");
 			throw std::runtime_error("ERROR: Failed to find GPUs\n");
 		}
-
-		BE_LOG(LogCategory::trace, "GPUs detected: %d", deviceCount);
 
 		std::vector<VkPhysicalDevice> physicalDevices(deviceCount);
 		vkEnumeratePhysicalDevices(_vkInstance, &deviceCount, physicalDevices.data());
 
 		std::string preferredDeviceName = "";
-		uint32 maxScore = 0;
+		uint32_t maxScore = 0;
 
 		for (const auto& gpu : physicalDevices)
 		{
@@ -59,7 +52,7 @@ namespace Banshee
 			vkGetPhysicalDeviceProperties(gpu, &deviceProperties);
 			vkGetPhysicalDeviceFeatures(gpu, &deviceFeatures);
 
-			uint32 deviceScore = RateDeviceSuitability(gpu, deviceProperties);
+			uint32_t deviceScore = RateDeviceSuitability(gpu, deviceProperties);
 
 			if (deviceScore > maxScore)
 			{
@@ -71,18 +64,13 @@ namespace Banshee
 
 		if (m_PhysicalDevice == VK_NULL_HANDLE)
 		{
-			BE_LOG(LogCategory::error, "Failed to pick adequate GPU device");
 			throw std::runtime_error("ERROR: Failed to pick a suitable GPU\n");
 		}
-		else
-		{
-			BE_LOG(LogCategory::info, "GPU picked: %s", preferredDeviceName.c_str());
-		}
 	}
-	
-	uint32 VulkanDevice::RateDeviceSuitability(const VkPhysicalDevice& _gpu, const VkPhysicalDeviceProperties& _deviceProperties)
+
+	unsigned int VulkanDevice::RateDeviceSuitability(const VkPhysicalDevice& _gpu, const VkPhysicalDeviceProperties& _deviceProperties)
 	{
-		uint32 queueFamilyCount = 0;
+		unsigned int queueFamilyCount = 0;
 		vkGetPhysicalDeviceQueueFamilyProperties(_gpu, &queueFamilyCount, nullptr);
 		std::vector<VkQueueFamilyProperties> queueFamilies(queueFamilyCount);
 		vkGetPhysicalDeviceQueueFamilyProperties(_gpu, &queueFamilyCount, queueFamilies.data());
@@ -90,7 +78,7 @@ namespace Banshee
 		VkBool32 graphicsSupport = VK_FALSE;
 		VkBool32 presentSupport = VK_FALSE;
 
-		for (uint32 i = 0; i < queueFamilies.size(); ++i)
+		for (uint32_t i = 0; i < queueFamilies.size(); ++i)
 		{
 			if (queueFamilies[i].queueCount > 0 && queueFamilies[i].queueFlags & VK_QUEUE_GRAPHICS_BIT)
 			{
@@ -107,7 +95,7 @@ namespace Banshee
 
 		if (!graphicsSupport || !presentSupport) return 0;
 
-		uint32 deviceScore = 0;
+		uint32_t deviceScore = 0;
 
 		if (_deviceProperties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU)
 		{
@@ -118,17 +106,17 @@ namespace Banshee
 
 		return deviceScore;
 	}
-	
+
 	void VulkanDevice::SetupQueueFamilyIndices()
 	{
 		assert(m_PhysicalDevice != VK_NULL_HANDLE);
 
-		uint32 queueFamilyCount = 0;
+		uint32_t queueFamilyCount = 0;
 		vkGetPhysicalDeviceQueueFamilyProperties(m_PhysicalDevice, &queueFamilyCount, nullptr);
 		std::vector<VkQueueFamilyProperties> queueFamilies(queueFamilyCount);
 		vkGetPhysicalDeviceQueueFamilyProperties(m_PhysicalDevice, &queueFamilyCount, queueFamilies.data());
 
-		for (uint32 i = 0; i < queueFamilyCount; ++i)
+		for (uint32_t i = 0; i < queueFamilyCount; ++i)
 		{
 			if (m_QueueIndices.m_GraphicsQueueFamilyIndex == UINT32_MAX)
 			{
@@ -157,26 +145,21 @@ namespace Banshee
 
 		if (!m_QueueIndices.Validate())
 		{
-			BE_LOG(LogCategory::error, "Queue indices are invalid, check GPU specifications");
 			throw std::runtime_error("ERROR: Queue indices are invalid, check GPU specifications");
 		}
-
-		BE_LOG(LogCategory::info, "Graphics queue index: %d", m_QueueIndices.m_GraphicsQueueFamilyIndex);
-		BE_LOG(LogCategory::info, "Presentation queue index: %d", m_QueueIndices.m_PresentationQueueFamilyIndex);
-		BE_LOG(LogCategory::info, "Transfer queue index: %d", m_QueueIndices.m_TransferQueueFamilyIndex);
 	}
-	
+
 	void VulkanDevice::CreateLogicalDevice()
 	{
-		std::set<uint32> queueIndices = { m_QueueIndices.m_GraphicsQueueFamilyIndex, 
-										  m_QueueIndices.m_TransferQueueFamilyIndex, 
+		std::set<uint32_t> queueIndices = { m_QueueIndices.m_GraphicsQueueFamilyIndex,
+										  m_QueueIndices.m_TransferQueueFamilyIndex,
 										  m_QueueIndices.m_PresentationQueueFamilyIndex };
 
 		std::vector<VkDeviceQueueCreateInfo> queueCreateInfos(queueIndices.size());
 
 		float queuePriority{ 1.0f };
 
-		uint16 index = 0;
+		uint32_t index = 0;
 		for (const auto& queueIndex : queueIndices)
 		{
 			// Specify device queue create info
@@ -190,6 +173,7 @@ namespace Banshee
 
 		// Specify device features
 		VkPhysicalDeviceFeatures deviceFeatures{};
+		//deviceFeatures.fillModeNonSolid = VK_TRUE;
 
 		std::vector<const char*> deviceExtentions = { VK_KHR_SWAPCHAIN_EXTENSION_NAME };
 		VulkanUtils::CheckDeviceExtSupport(m_PhysicalDevice, deviceExtentions);
@@ -198,27 +182,25 @@ namespace Banshee
 		VkDeviceCreateInfo deviceCreateInfo{};
 		deviceCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
 		deviceCreateInfo.pQueueCreateInfos = queueCreateInfos.data();
-		deviceCreateInfo.queueCreateInfoCount = static_cast<uint32>(queueCreateInfos.size());
+		deviceCreateInfo.queueCreateInfoCount = static_cast<uint32_t>(queueCreateInfos.size());
 		deviceCreateInfo.pEnabledFeatures = &deviceFeatures;
-		deviceCreateInfo.enabledExtensionCount = static_cast<uint32>(deviceExtentions.size());
+		deviceCreateInfo.enabledExtensionCount = static_cast<uint32_t>(deviceExtentions.size());
 		deviceCreateInfo.ppEnabledExtensionNames = deviceExtentions.data();
 
 		if (vkCreateDevice(m_PhysicalDevice, &deviceCreateInfo, nullptr, &m_LogicalDevice) != VK_SUCCESS)
 		{
-			BE_LOG(LogCategory::error, "Failed to create logical device");
 			throw std::runtime_error("ERROR: Failed to create logical device\n");
 		}
-
-		BE_LOG(LogCategory::info, "Vulkan device created successfully");
-		BE_LOG(LogCategory::trace, "Retrieving queue handles from the logical device...");
 
 		vkGetDeviceQueue(m_LogicalDevice, m_QueueIndices.m_GraphicsQueueFamilyIndex, 0, &m_GraphicsQueue);
 		vkGetDeviceQueue(m_LogicalDevice, m_QueueIndices.m_TransferQueueFamilyIndex, 0, &m_TransferQueue);
 		vkGetDeviceQueue(m_LogicalDevice, m_QueueIndices.m_PresentationQueueFamilyIndex, 0, &m_PresentQueue);
-
-		if (m_GraphicsQueue != VK_NULL_HANDLE && m_TransferQueue != VK_NULL_HANDLE && m_PresentQueue != VK_NULL_HANDLE)
-		{
-			BE_LOG(LogCategory::info, "Vulkan device queue handles were retrieved successfully");
-		}
 	}
-} // End of Banshee namespace
+
+	VkPhysicalDeviceLimits VulkanDevice::GetLimits()
+	{
+		VkPhysicalDeviceProperties gpuProperties{};
+		vkGetPhysicalDeviceProperties(m_PhysicalDevice, &gpuProperties);
+		return gpuProperties.limits;
+	}
+}

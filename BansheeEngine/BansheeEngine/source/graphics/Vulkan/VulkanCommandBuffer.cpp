@@ -1,66 +1,60 @@
 #include "VulkanCommandBuffer.h"
-#include "foundation/Logger.h"
 #include <vulkan/vulkan.h>
 #include <stdexcept>
 
 namespace Banshee
 {
-	VulkanCommandBuffer::VulkanCommandBuffer(const VkDevice& _logicalDevice, const VkCommandPool& _pool) : 
+	VulkanCommandBuffer::VulkanCommandBuffer(const VkDevice& _logicalDevice, const VkCommandPool& _pool, const uint16_t _count) :
 		m_LogicalDevice(_logicalDevice),
 		m_CommandPool(_pool),
-		m_CommandBuffer(VK_NULL_HANDLE)
+		m_CommandBuffers(_count, VK_NULL_HANDLE)
 	{
 		VkCommandBufferAllocateInfo commandBufferAllocInfo{};
 		commandBufferAllocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
 		commandBufferAllocInfo.commandPool = _pool;
 		commandBufferAllocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-		commandBufferAllocInfo.commandBufferCount = 1;
+		commandBufferAllocInfo.commandBufferCount = _count;
 
-		if (vkAllocateCommandBuffers(_logicalDevice, &commandBufferAllocInfo, &m_CommandBuffer) != VK_SUCCESS)
+		if (vkAllocateCommandBuffers(_logicalDevice, &commandBufferAllocInfo, m_CommandBuffers.data()) != VK_SUCCESS)
 		{
-			BE_LOG(LogCategory::error, "Failed to allocate a command buffer");
-			throw std::runtime_error("ERROR: Failed to allocate a command buffer");
+			throw std::runtime_error("ERROR: Failed to allocate command buffers");
 		}
-
-		BE_LOG(LogCategory::info, "Vulkan command buffer allocated successfully");
 	}
-	
+
 	VulkanCommandBuffer::~VulkanCommandBuffer()
 	{
-		vkFreeCommandBuffers(m_LogicalDevice, m_CommandPool, 1, &m_CommandBuffer);
-		m_CommandBuffer = VK_NULL_HANDLE;
-		BE_LOG(LogCategory::trace, "Vulkan command buffer freed")
+		vkFreeCommandBuffers(m_LogicalDevice, m_CommandPool, static_cast<uint32_t>(m_CommandBuffers.size()), m_CommandBuffers.data());
 	}
-	
-	void VulkanCommandBuffer::Begin() const
+
+	void VulkanCommandBuffer::Begin(const uint16_t _bufferIndex) const
 	{
 		VkCommandBufferBeginInfo beginInfo{};
 		beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
 		beginInfo.flags = VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT;
 
-		vkBeginCommandBuffer(m_CommandBuffer, &beginInfo);
+		vkBeginCommandBuffer(m_CommandBuffers[_bufferIndex], &beginInfo);
 	}
-	
-	void VulkanCommandBuffer::End() const
+
+	void VulkanCommandBuffer::End(const uint16_t _bufferIndex) const
 	{
-		vkEndCommandBuffer(m_CommandBuffer);
+		vkEndCommandBuffer(m_CommandBuffers[_bufferIndex]);
 	}
-	
-	void VulkanCommandBuffer::Submit(const VkQueue& _queue, const VkSemaphore& _waitSem, const VkSemaphore& _signalSem, const VkFence& _fence, const uint32 _waitStage)
+
+	void VulkanCommandBuffer::Submit(const uint16_t _bufferIndex, const VkQueue& _queue, const VkSemaphore& _waitSem, const VkSemaphore& _signalSem, const VkFence& _fence, const uint32_t _waitStage)
 	{
 		VkSubmitInfo submitInfo{};
 		submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
 		submitInfo.waitSemaphoreCount = _waitSem ? 1 : 0;
 		submitInfo.pWaitSemaphores = &_waitSem;
 		submitInfo.commandBufferCount = 1;
-		submitInfo.pCommandBuffers = &m_CommandBuffer;
+		submitInfo.pCommandBuffers = &m_CommandBuffers[_bufferIndex];
 		submitInfo.signalSemaphoreCount = _signalSem ? 1 : 0;
 		submitInfo.pSignalSemaphores = &_signalSem;
 		submitInfo.pWaitDstStageMask = &_waitStage;
 
 		if (vkQueueSubmit(_queue, 1, &submitInfo, _fence) != VK_SUCCESS)
 		{
-			BE_LOG(LogCategory::warning, "Failed to submit command buffer to queue");
+			throw std::runtime_error("ERROR: Failed to submit command buffer to queue");
 		}
 	}
-} // End of Banshee namespace
+}

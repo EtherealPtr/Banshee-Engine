@@ -1,12 +1,13 @@
 #pragma once
 
 // -----Application Layer-----
-#include "application/Application.h"
+#include "Application/Application.h"
 // ---------------------------
 
-// -----Graphics Layer-----
-// ------------------------
+// -----Foundation Layer-----
+#include "Foundation/Entity/EntityManager.h"
+// --------------------------
 
 // -----Entry-----
-#include "application/EntryPoint.h"
+#include "Application/EntryPoint.h"
 // ---------------

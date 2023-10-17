@@ -1,6 +1,5 @@
 #pragma once
 
-#include "foundation/Platform.h"
 #include <vector>
 
 typedef struct VkDevice_T* VkDevice;
@@ -11,7 +10,7 @@ namespace Banshee
 	class VulkanSemaphore
 	{
 	public:
-		VulkanSemaphore(const VkDevice& _logicalDevice, const uint8 _count = 1);
+		VulkanSemaphore(const VkDevice& _logicalDevice, const uint16_t _count = 1);
 		~VulkanSemaphore();
 
 		std::vector<std::pair<VkSemaphore, VkSemaphore>>& Get() { return m_Semaphores; }
@@ -20,4 +19,4 @@ namespace Banshee
 		VkDevice m_LogicalDevice;
 		std::vector<std::pair<VkSemaphore, VkSemaphore>> m_Semaphores;
 	};
-} // End of Banshee namespace
+}

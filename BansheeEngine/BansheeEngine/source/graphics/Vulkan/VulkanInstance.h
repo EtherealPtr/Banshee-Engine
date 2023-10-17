@@ -10,7 +10,7 @@ namespace Banshee
 	public:
 		VulkanInstance();
 		~VulkanInstance();
-		
+
 		VkInstance Get() const { return m_Instance; }
 
 	private:
@@ -20,4 +20,4 @@ namespace Banshee
 		VkInstance m_Instance;
 		VkDebugUtilsMessengerEXT m_DebugMessenger;
 	};
-}; // End of Banshee namespace
+}

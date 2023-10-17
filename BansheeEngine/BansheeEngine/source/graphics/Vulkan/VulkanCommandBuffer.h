@@ -1,6 +1,6 @@
 #pragma once
 
-#include "foundation/Platform.h"
+#include <vector>
 
 typedef struct VkDevice_T* VkDevice;
 typedef struct VkCommandPool_T* VkCommandPool;
@@ -14,17 +14,17 @@ namespace Banshee
 	class VulkanCommandBuffer
 	{
 	public:
-		VulkanCommandBuffer(const VkDevice& _logicalDevice, const VkCommandPool& _pool);
+		VulkanCommandBuffer(const VkDevice& _logicalDevice, const VkCommandPool& _pool, const uint16_t _count = 1);
 		~VulkanCommandBuffer();
 
-		void Begin() const;
-		void End() const;
-		void Submit(const VkQueue& _queue, const VkSemaphore& _waitSem = nullptr, const VkSemaphore& _signalSem = nullptr, const VkFence& _fence = nullptr, const uint32 _waitStage = 0);
-		VkCommandBuffer Get() const { return m_CommandBuffer; }
+		void Begin(const uint16_t _bufferIndex = 0) const;
+		void End(const uint16_t _bufferIndex = 0) const;
+		void Submit(const uint16_t _bufferIndex, const VkQueue& _queue, const VkSemaphore& _waitSem = nullptr, const VkSemaphore& _signalSem = nullptr, const VkFence& _fence = nullptr, const uint32_t _waitStage = 0);
+		std::vector<VkCommandBuffer> Get() const { return m_CommandBuffers; }
 
 	private:
 		VkDevice m_LogicalDevice;
 		VkCommandPool m_CommandPool;
-		VkCommandBuffer m_CommandBuffer;
+		std::vector<VkCommandBuffer> m_CommandBuffers;
 	};
-} // End of Banshee namespace
+}

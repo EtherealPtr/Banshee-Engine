@@ -18,5 +18,4 @@ namespace Banshee
 		VkSurfaceKHR m_Surface;
 		VkInstance m_VkInstance;
 	};
-
-} // End of Banshee namespace
+}
