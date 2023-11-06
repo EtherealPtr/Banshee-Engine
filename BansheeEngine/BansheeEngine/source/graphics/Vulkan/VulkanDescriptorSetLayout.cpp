@@ -10,7 +10,7 @@ namespace Banshee
 		m_DescriptorSetLayout(VK_NULL_HANDLE)
 	{
 		// View-projection binding
-		std::array<VkDescriptorSetLayoutBinding, 2> layoutBindings{};
+		std::array<VkDescriptorSetLayoutBinding, 3> layoutBindings{};
 		layoutBindings[0].binding = 0;
 		layoutBindings[0].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
 		layoutBindings[0].descriptorCount = 1;
@@ -23,6 +23,13 @@ namespace Banshee
 		layoutBindings[1].descriptorCount = 1;
 		layoutBindings[1].stageFlags = _shaderStage;
 		layoutBindings[1].pImmutableSamplers = nullptr;
+
+		// Sampler
+		layoutBindings[2].binding = 2;
+		layoutBindings[2].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+		layoutBindings[2].descriptorCount = 1;
+		layoutBindings[2].stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
+		layoutBindings[2].pImmutableSamplers = nullptr;
 
 		VkDescriptorSetLayoutCreateInfo layoutCreateInfo{};
 		layoutCreateInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;

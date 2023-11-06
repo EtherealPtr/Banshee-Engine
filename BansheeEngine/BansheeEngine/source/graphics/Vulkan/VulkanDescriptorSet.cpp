@@ -31,10 +31,15 @@ namespace Banshee
 	{
 		for (const auto& writeProperties : _descriptorSetWriteProperties)
 		{
-			VkDescriptorBufferInfo bufferInfo;
+			VkDescriptorBufferInfo bufferInfo{};
 			bufferInfo.offset = 0;
 			bufferInfo.buffer = writeProperties.buffer;
 			bufferInfo.range = writeProperties.bufferRange;
+
+			VkDescriptorImageInfo imageInfo{};
+			imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+			imageInfo.imageView = writeProperties.imageView;
+			imageInfo.sampler = writeProperties.sampler;
 
 			VkWriteDescriptorSet descriptorSetWriter{};
 			descriptorSetWriter.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
@@ -43,7 +48,7 @@ namespace Banshee
 			descriptorSetWriter.descriptorCount = 1;
 			descriptorSetWriter.descriptorType = writeProperties.descriptorType;
 			descriptorSetWriter.pBufferInfo = &bufferInfo;
-			descriptorSetWriter.pImageInfo = nullptr;
+			descriptorSetWriter.pImageInfo = imageInfo.imageView != VK_NULL_HANDLE ? &imageInfo : nullptr;
 
 			vkUpdateDescriptorSets(m_LogicalDevice, 1, &descriptorSetWriter, 0, nullptr);
 		}

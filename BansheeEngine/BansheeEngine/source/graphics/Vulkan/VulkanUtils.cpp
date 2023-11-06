@@ -92,7 +92,7 @@ namespace Banshee
 		return shaderModule;
 	}
 
-	VkImageView VulkanUtils::CreateImageView(const VkDevice& _logicalDevice, const VkImage& _image, const uint32_t _format, const uint32_t _aspect)
+	VkImageView VulkanUtils::CreateImageView(const VkDevice& _logicalDevice, const VkImage& _image, const uint32 _format, const uint32 _aspect)
 	{
 		VkImageViewCreateInfo imageViewCreateInfo{};
 		imageViewCreateInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
@@ -118,7 +118,7 @@ namespace Banshee
 		return imageView;
 	}
 
-	void VulkanUtils::CreateBuffer(const VkDevice& _logicalDevice, const VkPhysicalDevice& _gpu, const uint64_t _size, const uint32_t _usage, const uint32_t _memoryPropertyFlags, VkBuffer& _buffer, VkDeviceMemory& _bufferMemory)
+	void VulkanUtils::CreateBuffer(const VkDevice& _logicalDevice, const VkPhysicalDevice& _gpu, const uint64 _size, const uint32 _usage, const uint32 _memoryPropertyFlags, VkBuffer& _buffer, VkDeviceMemory& _bufferMemory)
 	{
 		// Create buffer object
 		VkBufferCreateInfo bufferCreateInfo{};
@@ -149,7 +149,7 @@ namespace Banshee
 		vkBindBufferMemory(_logicalDevice, _buffer, _bufferMemory, 0);
 	}
 
-	void VulkanUtils::CreateImage(const VkDevice& _logicalDevice, const VkPhysicalDevice& _gpu, const uint32_t _w, const uint32_t _h, const VkFormat _format, const VkImageTiling _tiling, const VkImageUsageFlagBits _usage, const uint32_t _memoryPropertyFlags, VkImage& _image, VkDeviceMemory& _imageMemory)
+	void VulkanUtils::CreateImage(const VkDevice& _logicalDevice, const VkPhysicalDevice& _gpu, const uint32 _w, const uint32 _h, const VkFormat _format, const VkImageTiling _tiling, const VkImageUsageFlagBits _usage, const uint32 _memoryPropertyFlags, VkImage& _image, VkDeviceMemory& _imageMemory)
 	{
 		// Create image object
 		VkImageCreateInfo imageCreateInfo{};
@@ -190,7 +190,7 @@ namespace Banshee
 		vkBindImageMemory(_logicalDevice, _image, _imageMemory, 0);
 	}
 
-	uint32_t VulkanUtils::FindMemoryTypeIndex(const VkPhysicalDevice& _gpu, const uint32_t _memoryTypeBits, const uint32_t _memoryPropertyFlags)
+	uint32 VulkanUtils::FindMemoryTypeIndex(const VkPhysicalDevice& _gpu, const uint32 _memoryTypeBits, const uint32 _memoryPropertyFlags)
 	{
 		VkPhysicalDeviceMemoryProperties memoryProperties{};
 		vkGetPhysicalDeviceMemoryProperties(_gpu, &memoryProperties);
@@ -207,24 +207,9 @@ namespace Banshee
 		return UINT32_MAX;
 	}
 
-	void VulkanUtils::CopyBuffer(const VkDevice& _logicalDevice, const VkCommandPool& _cmdPool, const VkQueue& _queue, const uint64_t _size, const VkBuffer& _srcBuffer, const VkBuffer& _dstBuffer)
+	void VulkanUtils::CopyBuffer(const VkDevice& _logicalDevice, const VkCommandPool& _commandPool, const VkQueue& _queue, const uint64 _size, const VkBuffer& _srcBuffer, const VkBuffer& _dstBuffer)
 	{
-		// Allocate command buffer
-		VkCommandBufferAllocateInfo cmdBufferAllocInfo{};
-		cmdBufferAllocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
-		cmdBufferAllocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-		cmdBufferAllocInfo.commandPool = _cmdPool;
-		cmdBufferAllocInfo.commandBufferCount = 1;
-
-		VkCommandBuffer cmdBuffer{};
-		vkAllocateCommandBuffers(_logicalDevice, &cmdBufferAllocInfo, &cmdBuffer);
-
-		// Record into command buffer
-		VkCommandBufferBeginInfo beginInfo{};
-		beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
-		beginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
-
-		vkBeginCommandBuffer(cmdBuffer, &beginInfo);
+		VkCommandBuffer cmdBuffer = BeginSingleTimeCommands(_logicalDevice, _commandPool, _queue);
 
 		VkBufferCopy bufferCopy{};
 		bufferCopy.srcOffset = 0;
@@ -232,21 +217,10 @@ namespace Banshee
 		bufferCopy.size = _size;
 		vkCmdCopyBuffer(cmdBuffer, _srcBuffer, _dstBuffer, 1, &bufferCopy);
 
-		vkEndCommandBuffer(cmdBuffer);
-
-		// Submit command buffer onto queue
-		VkSubmitInfo submitInfo{};
-		submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
-		submitInfo.commandBufferCount = 1;
-		submitInfo.pCommandBuffers = &cmdBuffer;
-
-		vkQueueSubmit(_queue, 1, &submitInfo, VK_NULL_HANDLE);
-		vkQueueWaitIdle(_queue);
-
-		vkFreeCommandBuffers(_logicalDevice, _cmdPool, 1, &cmdBuffer);
+		EndSingleTimeCommands(_logicalDevice, _commandPool, _queue, cmdBuffer);
 	}
 
-	VkFormat VulkanUtils::FindSupportedFormat(const VkPhysicalDevice& _gpu, const std::vector<VkFormat>& _formats, const VkImageTiling _tiling, const uint32_t _formatFeatures)
+	VkFormat VulkanUtils::FindSupportedFormat(const VkPhysicalDevice& _gpu, const std::vector<VkFormat>& _formats, const VkImageTiling _tiling, const uint32 _formatFeatures)
 	{
 		for (VkFormat format : _formats)
 		{
@@ -269,5 +243,126 @@ namespace Banshee
 	bool VulkanUtils::HasStencilComponent(const VkFormat _format)
 	{
 		return _format == VK_FORMAT_D32_SFLOAT_S8_UINT || _format == VK_FORMAT_D24_UNORM_S8_UINT;
+	}
+	
+	void VulkanUtils::TransitionImageLayout(const VkDevice& _logicalDevice, const VkCommandPool& _commandPool, const VkQueue& _queue, VkImage& _image, const VkFormat _imageFormat, const VkImageLayout _oldLayout, const VkImageLayout _newLayout)
+	{
+		VkCommandBuffer cmdBuffer = BeginSingleTimeCommands(_logicalDevice, _commandPool, _queue);
+
+		VkImageMemoryBarrier barrier{};
+		barrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
+		barrier.oldLayout = _oldLayout;
+		barrier.newLayout = _newLayout;
+		barrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+		barrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+		barrier.image = _image;
+		barrier.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+		barrier.subresourceRange.baseMipLevel = 0;
+		barrier.subresourceRange.levelCount = 1;
+		barrier.subresourceRange.baseArrayLayer = 0;
+		barrier.subresourceRange.layerCount = 1;
+		barrier.srcAccessMask = 0;
+		barrier.dstAccessMask = 0;
+
+		VkPipelineStageFlags srcStage{};
+		VkPipelineStageFlags dstStage{};
+
+		if (_oldLayout == VK_IMAGE_LAYOUT_UNDEFINED && _newLayout == VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL)
+		{
+			barrier.srcAccessMask = 0;
+			barrier.dstAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
+			
+			srcStage = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
+			dstStage = VK_PIPELINE_STAGE_TRANSFER_BIT;
+		}
+		else if (_oldLayout == VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL && _newLayout == VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL)
+		{
+			barrier.srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
+			barrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
+
+			srcStage = VK_PIPELINE_STAGE_TRANSFER_BIT;
+			dstStage = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
+		}
+		else
+		{
+			throw std::runtime_error("ERROR: Unsupported image layout transition");
+		}
+
+		vkCmdPipelineBarrier
+		(
+			cmdBuffer,
+			srcStage, dstStage,
+			0,
+			0, nullptr,
+			0, nullptr,
+			1, &barrier
+		);
+
+		EndSingleTimeCommands(_logicalDevice, _commandPool, _queue, cmdBuffer);
+	}
+
+	void VulkanUtils::CopyBufferToImage(const VkDevice& _logicalDevice, const VkCommandPool& _commandPool, const VkQueue& _queue, const VkBuffer& _srcBuffer, const VkImage& _image, const uint32 _w, const uint32 _h)
+	{
+		VkCommandBuffer cmdBuffer = BeginSingleTimeCommands(_logicalDevice, _commandPool, _queue);
+
+		VkBufferImageCopy region{};
+		region.bufferOffset = 0;
+		region.bufferRowLength = 0;
+		region.bufferImageHeight = 0;
+
+		region.imageSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+		region.imageSubresource.mipLevel = 0;
+		region.imageSubresource.baseArrayLayer = 0;
+		region.imageSubresource.layerCount = 1;
+
+		region.imageOffset = { 0, 0, 0 };
+		region.imageExtent = { _w, _h, 1 };
+
+		vkCmdCopyBufferToImage
+		(
+			cmdBuffer,
+			_srcBuffer,
+			_image,
+			VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+			1,
+			&region
+		);
+
+		EndSingleTimeCommands(_logicalDevice, _commandPool, _queue, cmdBuffer);
+	}
+
+	VkCommandBuffer VulkanUtils::BeginSingleTimeCommands(const VkDevice& _logicalDevice, const VkCommandPool& _commandPool, const VkQueue& _queue)
+	{
+		VkCommandBufferAllocateInfo allocInfo{};
+		allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+		allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
+		allocInfo.commandPool = _commandPool;
+		allocInfo.commandBufferCount = 1;
+
+		VkCommandBuffer commandBuffer{};
+		vkAllocateCommandBuffers(_logicalDevice, &allocInfo, &commandBuffer);
+
+		VkCommandBufferBeginInfo commandBufferBeginInfo{};
+		commandBufferBeginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+		commandBufferBeginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
+
+		vkBeginCommandBuffer(commandBuffer, &commandBufferBeginInfo);
+
+		return commandBuffer;
+	}
+
+	void VulkanUtils::EndSingleTimeCommands(const VkDevice& _logicalDevice, const VkCommandPool& _commandPool, const VkQueue& _queue, const VkCommandBuffer& _commandBuffer)
+	{
+		vkEndCommandBuffer(_commandBuffer);
+
+		VkSubmitInfo submitInfo{};
+		submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+		submitInfo.commandBufferCount = 1;
+		submitInfo.pCommandBuffers = &_commandBuffer;
+
+		vkQueueSubmit(_queue, 1, &submitInfo, VK_NULL_HANDLE);
+		vkQueueWaitIdle(_queue);
+
+		vkFreeCommandBuffers(_logicalDevice, _commandPool, 1, &_commandBuffer);
 	}
 }

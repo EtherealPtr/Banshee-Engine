@@ -1,7 +1,7 @@
 #pragma once
 
+#include "Foundation/Platform.h"
 #include <vector>
-#include <cstdint>
 
 typedef struct VkDevice_T* VkDevice;
 typedef struct VkPhysicalDevice_T* VkPhysicalDevice;
@@ -11,10 +11,12 @@ typedef struct VkShaderModule_T* VkShaderModule;
 typedef struct VkBuffer_T* VkBuffer;
 typedef struct VkDeviceMemory_T* VkDeviceMemory;
 typedef struct VkCommandPool_T* VkCommandPool;
+typedef struct VkCommandBuffer_T* VkCommandBuffer;
 typedef struct VkQueue_T* VkQueue;
 typedef enum VkFormat VkFormat;
 typedef enum VkImageTiling VkImageTiling;
 typedef enum VkImageUsageFlagBits VkImageUsageFlagBits;
+typedef enum VkImageLayout VkImageLayout;
 
 namespace Banshee
 {
@@ -25,12 +27,17 @@ namespace Banshee
 		static void CheckInstanceLayerSupport(const std::vector<const char*>& _requiredLayers);
 		static void CheckDeviceExtSupport(const VkPhysicalDevice& _gpu, const std::vector<const char*>& _requiredExtensions);
 		static VkShaderModule CreateShaderModule(const VkDevice& _logicalDevice, const std::vector<char>& _shaderBinaryCode);
-		static void CreateBuffer(const VkDevice& _logicalDevice, const VkPhysicalDevice& _gpu, const uint64_t _size, const uint32_t _usage, const uint32_t _memoryPropertyFlags, VkBuffer& _buffer, VkDeviceMemory& _bufferMemory);
-		static void CreateImage(const VkDevice& _logicalDevice, const VkPhysicalDevice& _gpu, const uint32_t _w, const uint32_t _h, const VkFormat _format, const VkImageTiling _tiling, const VkImageUsageFlagBits _usage, const uint32_t _memoryPropertyFlags, VkImage& _image, VkDeviceMemory& _imageMemory);
-		static VkImageView CreateImageView(const VkDevice& _logicalDevice, const VkImage& _image, const uint32_t _format, const uint32_t _aspect);
-		static uint32_t FindMemoryTypeIndex(const VkPhysicalDevice& _gpu, const uint32_t _memoryTypeBits, const uint32_t _memoryPropertyFlags);
-		static void CopyBuffer(const VkDevice& _logicalDevice, const VkCommandPool& _cmdPool, const VkQueue& _queue, const uint64_t _size, const VkBuffer& _srcBuffer, const VkBuffer& _dstBuffer);
-		static VkFormat FindSupportedFormat(const VkPhysicalDevice& _gpu, const std::vector<VkFormat>& _formats, const VkImageTiling _tiling, const uint32_t _formatFeatures);
+		static void CreateBuffer(const VkDevice& _logicalDevice, const VkPhysicalDevice& _gpu, const uint64 _size, const uint32 _usage, const uint32 _memoryPropertyFlags, VkBuffer& _buffer, VkDeviceMemory& _bufferMemory);
+		static void CreateImage(const VkDevice& _logicalDevice, const VkPhysicalDevice& _gpu, const uint32 _w, const uint32 _h, const VkFormat _format, const VkImageTiling _tiling, const VkImageUsageFlagBits _usage, const uint32 _memoryPropertyFlags, VkImage& _image, VkDeviceMemory& _imageMemory);
+		static VkImageView CreateImageView(const VkDevice& _logicalDevice, const VkImage& _image, const uint32 _format, const uint32 _aspect);
+		static uint32 FindMemoryTypeIndex(const VkPhysicalDevice& _gpu, const uint32 _memoryTypeBits, const uint32 _memoryPropertyFlags);
+		static void CopyBuffer(const VkDevice& _logicalDevice, const VkCommandPool& _commandPool, const VkQueue& _queue, const uint64 _size, const VkBuffer& _srcBuffer, const VkBuffer& _dstBuffer);
+		static VkFormat FindSupportedFormat(const VkPhysicalDevice& _gpu, const std::vector<VkFormat>& _formats, const VkImageTiling _tiling, const uint32 _formatFeatures);
 		static bool HasStencilComponent(const VkFormat _format);
+		static void TransitionImageLayout(const VkDevice& _logicalDevice, const VkCommandPool& _commandPool, const VkQueue& _queue, VkImage& _image, const VkFormat _imageFormat, const VkImageLayout _oldLayout, const VkImageLayout _newLayout);
+		static void CopyBufferToImage(const VkDevice& _logicalDevice, const VkCommandPool& _commandPool, const VkQueue& _queue, const VkBuffer& _srcBuffer, const VkImage& _image, const uint32 _w, const uint32 _h);
+	private:
+		static VkCommandBuffer BeginSingleTimeCommands(const VkDevice& _logicalDevice, const VkCommandPool& _commandPool, const VkQueue& _queue);
+		static void EndSingleTimeCommands(const VkDevice& _logicalDevice, const VkCommandPool& _commandPool, const VkQueue& _queue, const VkCommandBuffer& _commandBuffer);
 	};
 }

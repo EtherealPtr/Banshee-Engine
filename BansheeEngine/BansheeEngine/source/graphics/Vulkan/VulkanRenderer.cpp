@@ -16,10 +16,12 @@
 #include "VulkanFence.h"
 #include "VulkanUniformBuffer.h"
 #include "VulkanDescriptorSetProperties.h"
+#include "VulkanTexture.h"
+#include "VulkanTextureSampler.h"
 #include "../Window.h"
 #include "Foundation/Entity/EntityManager.h"
 #include "Foundation/Components/MeshRendererComponent.h"
-#include "Foundation/Systems/RenderSystem.h"
+#include "Foundation/RenderSystem/RenderSystem.h"
 #include <vulkan/vulkan.h>
 #include <stdexcept>
 #include <glm/glm.hpp>
@@ -45,7 +47,9 @@ namespace Banshee
 		m_VkFramebuffers(std::make_unique<VulkanFramebuffer>(m_VkDevice->GetLogicalDevice(), m_VkRenderPass->Get(), m_VkSwapchain->GetImageViews(), m_DepthBuffer->GetImageView(), m_VkSwapchain->GetWidth(), m_VkSwapchain->GetHeight())),
 		m_VkSemaphores(std::make_unique<VulkanSemaphore>(m_VkDevice->GetLogicalDevice(), static_cast<uint16_t>(m_VkSwapchain->GetImageViews().size()))),
 		m_VkInFlightFences(std::make_unique<VulkanFence>(m_VkDevice->GetLogicalDevice(), static_cast<uint16_t>(m_VkSwapchain->GetImageViews().size()))),
-		m_VertexBufferManager(std::make_unique<VulkanVertexBufferManager>(m_VkDevice->GetLogicalDevice(), m_VkDevice->GetPhysicalDevice(), m_VkCommandPool->Get(), m_VkDevice->GetGraphicsQueue()))
+		m_VertexBufferManager(std::make_unique<VulkanVertexBufferManager>(m_VkDevice->GetLogicalDevice(), m_VkDevice->GetPhysicalDevice(), m_VkCommandPool->Get(), m_VkDevice->GetGraphicsQueue())),
+		m_VkTexture(std::make_unique<VulkanTexture>(m_VkDevice->GetLogicalDevice(), m_VkDevice->GetPhysicalDevice(), m_VkDevice->GetGraphicsQueue(), m_VkCommandPool->Get(), "Textures/tiles.jpg")),
+		m_VkTextureSampler(std::make_unique<VulkanTextureSampler>(m_VkDevice->GetLogicalDevice(), m_VkDevice->GetPhysicalDevice())) 
 	{
 		AllocateDynamicBufferSpace();
 
@@ -91,10 +95,13 @@ namespace Banshee
 	{
 		DescriptorSetWriteProperties uniformBufferDescWriteProperties(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, m_VPUniformBuffers[_descriptorSetIndex]->GetBuffer(), m_VPUniformBuffers[_descriptorSetIndex]->GetBufferSize());
 		DescriptorSetWriteProperties dynamicUniformBufferDescWriteProperties(1, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC, m_DynamicUniformBuffers[_descriptorSetIndex]->GetBuffer(), m_DynamicBufferMemoryAlignment);
+		DescriptorSetWriteProperties samplerDescWriteProperties(2, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_NULL_HANDLE, 0, m_VkTexture->GetTextureImageView(), m_VkTextureSampler->Get());
+		
 		std::vector<DescriptorSetWriteProperties> descriptorSetWriteProperties =
 		{
 			uniformBufferDescWriteProperties,
-			dynamicUniformBufferDescWriteProperties
+			dynamicUniformBufferDescWriteProperties,
+			samplerDescWriteProperties
 		};
 
 		//if (m_Entities.size() == 0)

@@ -1,21 +1,27 @@
 #pragma once
 
-#include <cstdint>
+#include "Foundation/Platform.h"
 
 typedef struct VkBuffer_T* VkBuffer;
+typedef struct VkImageView_T* VkImageView;
+typedef struct VkSampler_T* VkSampler;
 typedef enum VkDescriptorType VkDescriptorType;
 
 struct DescriptorSetWriteProperties
 {
-	DescriptorSetWriteProperties(const uint32_t _binding, const VkDescriptorType _descType, const VkBuffer& _buffer, const uint64_t _bufferRance) :
+	DescriptorSetWriteProperties(const uint32 _binding, const VkDescriptorType _descType, const VkBuffer& _buffer, const uint64 _bufferRance, const VkImageView& _imageView = nullptr, const VkSampler& _sampler = nullptr) :
 		binding(_binding),
 		descriptorType(_descType),
 		buffer(_buffer),
-		bufferRange(_bufferRance)
+		bufferRange(_bufferRance),
+		imageView(_imageView),
+		sampler(_sampler)
 	{}
 
-	uint32_t binding;
+	uint32 binding;
 	VkDescriptorType descriptorType;
 	VkBuffer buffer;
-	uint64_t bufferRange;
+	uint64 bufferRange;
+	VkImageView imageView;
+	VkSampler sampler;
 };

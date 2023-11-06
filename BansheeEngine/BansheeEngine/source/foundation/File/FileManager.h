@@ -13,6 +13,7 @@ namespace Banshee
 		void WriteToLogFile(const char* _logData);
 		std::vector<char> ReadBinaryFile(const char* _fileName);
 		std::ifstream ReadFile(const char* _filePath);
+		const std::string& GetEngineResDirPath() const { return m_EngineResDirPath; }
 
 	private:
 		FileManager();

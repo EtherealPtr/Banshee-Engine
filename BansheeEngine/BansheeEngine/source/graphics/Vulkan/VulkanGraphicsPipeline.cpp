@@ -44,7 +44,7 @@ namespace Banshee
 		inputBindingDescription.stride = sizeof(Vertex);
 		inputBindingDescription.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
 
-		std::array<VkVertexInputAttributeDescription, 2> inputAttributeDescriptions{};
+		std::array<VkVertexInputAttributeDescription, 3> inputAttributeDescriptions{};
 		inputAttributeDescriptions[0].binding = 0;
 		inputAttributeDescriptions[0].location = 0;
 		inputAttributeDescriptions[0].format = VK_FORMAT_R32G32B32_SFLOAT;
@@ -54,6 +54,11 @@ namespace Banshee
 		inputAttributeDescriptions[1].location = 1;
 		inputAttributeDescriptions[1].format = VK_FORMAT_R32G32B32_SFLOAT;
 		inputAttributeDescriptions[1].offset = offsetof(Vertex, color);
+
+		inputAttributeDescriptions[2].binding = 0;
+		inputAttributeDescriptions[2].location = 2;
+		inputAttributeDescriptions[2].format = VK_FORMAT_R32G32_SFLOAT;
+		inputAttributeDescriptions[2].offset = offsetof(Vertex, texCoord);
 
 		VkPipelineVertexInputStateCreateInfo vertexInputCreateInfo{};
 		vertexInputCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;

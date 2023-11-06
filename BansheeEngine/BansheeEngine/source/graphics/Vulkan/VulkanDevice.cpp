@@ -51,7 +51,7 @@ namespace Banshee
 			VkPhysicalDeviceFeatures deviceFeatures;
 			vkGetPhysicalDeviceProperties(gpu, &deviceProperties);
 			vkGetPhysicalDeviceFeatures(gpu, &deviceFeatures);
-
+			
 			uint32_t deviceScore = RateDeviceSuitability(gpu, deviceProperties);
 
 			if (deviceScore > maxScore)
@@ -171,9 +171,15 @@ namespace Banshee
 			queueCreateInfos[index] = queueCreateInfo;
 		}
 
-		// Specify device features
-		VkPhysicalDeviceFeatures deviceFeatures{};
-		//deviceFeatures.fillModeNonSolid = VK_TRUE;
+		// Device features
+		VkPhysicalDeviceFeatures availableDeviceFeatures{};
+		VkPhysicalDeviceFeatures enabledFeatures{};
+		vkGetPhysicalDeviceFeatures(m_PhysicalDevice, &availableDeviceFeatures);
+
+		if (availableDeviceFeatures.samplerAnisotropy)
+		{
+			enabledFeatures.samplerAnisotropy = VK_TRUE;
+		}
 
 		std::vector<const char*> deviceExtentions = { VK_KHR_SWAPCHAIN_EXTENSION_NAME };
 		VulkanUtils::CheckDeviceExtSupport(m_PhysicalDevice, deviceExtentions);
@@ -183,7 +189,7 @@ namespace Banshee
 		deviceCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
 		deviceCreateInfo.pQueueCreateInfos = queueCreateInfos.data();
 		deviceCreateInfo.queueCreateInfoCount = static_cast<uint32_t>(queueCreateInfos.size());
-		deviceCreateInfo.pEnabledFeatures = &deviceFeatures;
+		deviceCreateInfo.pEnabledFeatures = &enabledFeatures;
 		deviceCreateInfo.enabledExtensionCount = static_cast<uint32_t>(deviceExtentions.size());
 		deviceCreateInfo.ppEnabledExtensionNames = deviceExtentions.data();
 

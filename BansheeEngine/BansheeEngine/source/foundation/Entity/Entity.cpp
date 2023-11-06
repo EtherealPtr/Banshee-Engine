@@ -1,6 +1,6 @@
 #include "Entity.h"
 #include "Foundation/Components/MeshRendererComponent.h"
-#include "Foundation/Systems/RenderSystem.h"
+#include "Foundation/RenderSystem/RenderSystem.h"
 
 namespace Banshee
 {

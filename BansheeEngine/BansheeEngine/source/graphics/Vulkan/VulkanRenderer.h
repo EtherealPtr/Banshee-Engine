@@ -24,6 +24,8 @@ namespace Banshee
 	class VulkanFence;
 	class VulkanVertexBufferManager;
 	class VulkanUniformBuffer;
+	class VulkanTexture;
+	class VulkanTextureSampler;
 
 	class VulkanRenderer
 	{
@@ -54,6 +56,8 @@ namespace Banshee
 		std::unique_ptr<VulkanSemaphore> m_VkSemaphores;
 		std::unique_ptr<VulkanFence> m_VkInFlightFences;
 		std::unique_ptr<VulkanVertexBufferManager> m_VertexBufferManager;
+		std::unique_ptr<VulkanTexture> m_VkTexture;
+		std::unique_ptr<VulkanTextureSampler> m_VkTextureSampler;
 		std::vector<std::unique_ptr<VulkanUniformBuffer>> m_VPUniformBuffers;
 		std::vector<std::unique_ptr<VulkanUniformBuffer>> m_DynamicUniformBuffers;
 		std::vector<std::unique_ptr<VulkanDescriptorSet>> m_DescriptorSets;
