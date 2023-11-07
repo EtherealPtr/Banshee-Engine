@@ -44,4 +44,4 @@ namespace Banshee
 	{
 		m_InputBindings = _bindings;
 	}
-}
+} // End of Banshee namespace

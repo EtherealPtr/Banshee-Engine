@@ -1,4 +1,5 @@
 #include "VulkanTextureSampler.h"
+#include "Foundation/Logging/Logger.h"
 #include <vulkan/vulkan.h>
 #include <stdexcept>
 
@@ -9,6 +10,8 @@ namespace Banshee
 		m_PhysicalDevice(_gpu),
 		m_TextureSampler(VK_NULL_HANDLE)
 	{
+		BE_LOG(LogCategory::Trace, "[SAMPLER]: Creating texture sampler");
+
 		VkSamplerCreateInfo samplerCreateInfo{};
 		samplerCreateInfo.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
 		samplerCreateInfo.magFilter = VK_FILTER_LINEAR;
@@ -44,6 +47,8 @@ namespace Banshee
 		{
 			throw std::runtime_error("ERROR: Failed to create texture sampler\n");
 		}
+
+		BE_LOG(LogCategory::Info, "[SAMPLER]: Created texture sampler");
 	}
 
 	VulkanTextureSampler::~VulkanTextureSampler()

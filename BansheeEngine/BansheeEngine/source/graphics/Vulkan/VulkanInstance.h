@@ -20,4 +20,4 @@ namespace Banshee
 		VkInstance m_Instance;
 		VkDebugUtilsMessengerEXT m_DebugMessenger;
 	};
-}
+} // End of Banshee namespace

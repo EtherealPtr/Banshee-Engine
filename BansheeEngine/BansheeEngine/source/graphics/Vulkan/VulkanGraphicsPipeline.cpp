@@ -1,6 +1,7 @@
 #include "VulkanGraphicsPipeline.h"
 #include "VulkanUtils.h"
 #include "Foundation/File/FileManager.h"
+#include "Foundation/Logging/Logger.h"
 #include "../Vertex.h"
 #include <vulkan/vulkan.h>
 #include <string>
@@ -14,9 +15,13 @@ namespace Banshee
 		m_PipelineLayout(VK_NULL_HANDLE),
 		m_GraphicsPipeline(VK_NULL_HANDLE)
 	{
+		BE_LOG(LogCategory::Trace, "[GRAPHICS PIPELINE]: Creating graphics pipeline");
+
 		// Vertex creation stage
 		const std::string basicVertPath = "Shaders/basic_vert.spv";
 		const std::string basicFragPath = "Shaders/basic_frag.spv";
+		BE_LOG(LogCategory::Trace, "[GRAPHICS PIPELINE]: Using vertex shader %s", basicVertPath.c_str());
+		BE_LOG(LogCategory::Trace, "[GRAPHICS PIPELINE]: Using frag shader %s", basicFragPath.c_str());
 
 		auto vertShaderBinary = FileManager::Instance().ReadBinaryFile(basicVertPath.c_str());
 		auto fragShaderBinary = FileManager::Instance().ReadBinaryFile(basicFragPath.c_str());
@@ -202,6 +207,8 @@ namespace Banshee
 
 		vkDestroyShaderModule(_logicalDevice, vertexShaderModule, nullptr);
 		vkDestroyShaderModule(_logicalDevice, fragmentShaderModule, nullptr);
+
+		BE_LOG(LogCategory::Info, "[GRAPHICS PIPELINE]: Created graphics pipeline");
 	}
 
 	VulkanGraphicsPipeline::~VulkanGraphicsPipeline()

@@ -30,4 +30,4 @@ namespace Banshee
 		GLFWwindow* m_Window;
 		std::vector<InputBinding> m_InputBindings;
 	};
-}
+} // End of Banshee namespace

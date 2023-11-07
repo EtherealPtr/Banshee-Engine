@@ -38,4 +38,4 @@ namespace Banshee
 		VkFormat m_TextureImageFormat;
 		VkDeviceMemory m_TextureImageMemory;
 	};
-}
+} // End of Banshee namespace

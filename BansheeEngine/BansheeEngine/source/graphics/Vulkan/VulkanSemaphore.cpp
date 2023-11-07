@@ -1,13 +1,16 @@
 #include "VulkanSemaphore.h"
+#include "Foundation/Logging/Logger.h"
 #include <vulkan/vulkan.h>
 #include <stdexcept>
 
 namespace Banshee
 {
-	VulkanSemaphore::VulkanSemaphore(const VkDevice& _logicalDevice, const uint16_t _count) :
+	VulkanSemaphore::VulkanSemaphore(const VkDevice& _logicalDevice, const uint16 _count) :
 		m_LogicalDevice(_logicalDevice),
 		m_Semaphores(_count, { VK_NULL_HANDLE, VK_NULL_HANDLE })
 	{
+		BE_LOG(LogCategory::Trace, "[SEMAPHORE]: Creating %d semaphores", _count);
+
 		m_Semaphores.resize(_count);
 
 		for (size_t i = 0; i < m_Semaphores.size(); ++i)
@@ -21,6 +24,8 @@ namespace Banshee
 				throw std::runtime_error("ERROR: Failed to create semaphores\n");
 			}
 		}
+
+		BE_LOG(LogCategory::Info, "[SEMAPHORE]: Created semaphores");
 	}
 
 	VulkanSemaphore::~VulkanSemaphore()

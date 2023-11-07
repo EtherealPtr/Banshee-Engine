@@ -1,5 +1,6 @@
 #include "VulkanDevice.h"
 #include "VulkanUtils.h"
+#include "Foundation/Logging/Logger.h"
 #include <vulkan/vulkan.h>
 #include <vector>
 #include <set>
@@ -17,6 +18,8 @@ namespace Banshee
 		m_TransferQueue(VK_NULL_HANDLE),
 		m_PresentQueue(VK_NULL_HANDLE)
 	{
+		BE_LOG(LogCategory::Trace, "[DEVICE]: Creating logical device");
+
 		PickPhysicalDevice(_vkInstance);
 		SetupQueueFamilyIndices();
 
@@ -43,7 +46,7 @@ namespace Banshee
 		vkEnumeratePhysicalDevices(_vkInstance, &deviceCount, physicalDevices.data());
 
 		std::string preferredDeviceName = "";
-		uint32_t maxScore = 0;
+		uint32 maxScore = 0;
 
 		for (const auto& gpu : physicalDevices)
 		{
@@ -52,7 +55,8 @@ namespace Banshee
 			vkGetPhysicalDeviceProperties(gpu, &deviceProperties);
 			vkGetPhysicalDeviceFeatures(gpu, &deviceFeatures);
 			
-			uint32_t deviceScore = RateDeviceSuitability(gpu, deviceProperties);
+			uint32 deviceScore = RateDeviceSuitability(gpu, deviceProperties);
+			BE_LOG(LogCategory::Trace, "[DEVICE]: Assigned score of %d for device with name %s", deviceScore, deviceProperties.deviceName);
 
 			if (deviceScore > maxScore)
 			{
@@ -66,11 +70,13 @@ namespace Banshee
 		{
 			throw std::runtime_error("ERROR: Failed to pick a suitable GPU\n");
 		}
+
+		BE_LOG(LogCategory::Info, "[DEVICE]: Selected GPU: %s", preferredDeviceName.c_str());
 	}
 
-	unsigned int VulkanDevice::RateDeviceSuitability(const VkPhysicalDevice& _gpu, const VkPhysicalDeviceProperties& _deviceProperties)
+	uint32 VulkanDevice::RateDeviceSuitability(const VkPhysicalDevice& _gpu, const VkPhysicalDeviceProperties& _deviceProperties)
 	{
-		unsigned int queueFamilyCount = 0;
+		uint32 queueFamilyCount = 0;
 		vkGetPhysicalDeviceQueueFamilyProperties(_gpu, &queueFamilyCount, nullptr);
 		std::vector<VkQueueFamilyProperties> queueFamilies(queueFamilyCount);
 		vkGetPhysicalDeviceQueueFamilyProperties(_gpu, &queueFamilyCount, queueFamilies.data());
@@ -78,7 +84,7 @@ namespace Banshee
 		VkBool32 graphicsSupport = VK_FALSE;
 		VkBool32 presentSupport = VK_FALSE;
 
-		for (uint32_t i = 0; i < queueFamilies.size(); ++i)
+		for (uint32 i = 0; i < queueFamilies.size(); ++i)
 		{
 			if (queueFamilies[i].queueCount > 0 && queueFamilies[i].queueFlags & VK_QUEUE_GRAPHICS_BIT)
 			{
@@ -95,7 +101,7 @@ namespace Banshee
 
 		if (!graphicsSupport || !presentSupport) return 0;
 
-		uint32_t deviceScore = 0;
+		uint32 deviceScore = 0;
 
 		if (_deviceProperties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU)
 		{
@@ -111,12 +117,12 @@ namespace Banshee
 	{
 		assert(m_PhysicalDevice != VK_NULL_HANDLE);
 
-		uint32_t queueFamilyCount = 0;
+		uint32 queueFamilyCount = 0;
 		vkGetPhysicalDeviceQueueFamilyProperties(m_PhysicalDevice, &queueFamilyCount, nullptr);
 		std::vector<VkQueueFamilyProperties> queueFamilies(queueFamilyCount);
 		vkGetPhysicalDeviceQueueFamilyProperties(m_PhysicalDevice, &queueFamilyCount, queueFamilies.data());
 
-		for (uint32_t i = 0; i < queueFamilyCount; ++i)
+		for (uint32 i = 0; i < queueFamilyCount; ++i)
 		{
 			if (m_QueueIndices.m_GraphicsQueueFamilyIndex == UINT32_MAX)
 			{
@@ -151,7 +157,7 @@ namespace Banshee
 
 	void VulkanDevice::CreateLogicalDevice()
 	{
-		std::set<uint32_t> queueIndices = { m_QueueIndices.m_GraphicsQueueFamilyIndex,
+		std::set<uint32> queueIndices = { m_QueueIndices.m_GraphicsQueueFamilyIndex,
 										  m_QueueIndices.m_TransferQueueFamilyIndex,
 										  m_QueueIndices.m_PresentationQueueFamilyIndex };
 
@@ -159,7 +165,7 @@ namespace Banshee
 
 		float queuePriority{ 1.0f };
 
-		uint32_t index = 0;
+		uint32 index = 0;
 		for (const auto& queueIndex : queueIndices)
 		{
 			// Specify device queue create info
@@ -201,6 +207,8 @@ namespace Banshee
 		vkGetDeviceQueue(m_LogicalDevice, m_QueueIndices.m_GraphicsQueueFamilyIndex, 0, &m_GraphicsQueue);
 		vkGetDeviceQueue(m_LogicalDevice, m_QueueIndices.m_TransferQueueFamilyIndex, 0, &m_TransferQueue);
 		vkGetDeviceQueue(m_LogicalDevice, m_QueueIndices.m_PresentationQueueFamilyIndex, 0, &m_PresentQueue);
+
+		BE_LOG(LogCategory::Info, "[DEVICE]: Created logical device");
 	}
 
 	VkPhysicalDeviceLimits VulkanDevice::GetLimits()

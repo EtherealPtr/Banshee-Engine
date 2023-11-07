@@ -1,14 +1,17 @@
 #include "VulkanRenderPass.h"
+#include "Foundation/Logging/Logger.h"
 #include <vulkan/vulkan.h>
 #include <stdexcept>
 #include <array>
 
 namespace Banshee
 {
-	VulkanRenderPass::VulkanRenderPass(const VkDevice& _device, const uint32_t _colorFormat, const uint32_t _depthFormat) :
+	VulkanRenderPass::VulkanRenderPass(const VkDevice& _device, const uint32 _colorFormat, const uint32 _depthFormat) :
 		m_Device(_device),
 		m_RenderPass(VK_NULL_HANDLE)
 	{
+		BE_LOG(LogCategory::Trace, "[RENDER PASS]: Creating render pass");
+
 		std::array<VkAttachmentDescription, 2> attachments{};
 		std::array<VkAttachmentReference, 2> attachmentReferences{};
 
@@ -70,6 +73,8 @@ namespace Banshee
 		{
 			throw std::runtime_error("ERROR: Failed to create a render pass");
 		}
+
+		BE_LOG(LogCategory::Info, "[RENDER PASS]: Created render pass");
 	}
 
 	VulkanRenderPass::~VulkanRenderPass()

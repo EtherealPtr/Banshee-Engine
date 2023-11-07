@@ -1,4 +1,5 @@
 #include "VulkanSurface.h"
+#include "Foundation/Logging/Logger.h"
 #include <vulkan/vulkan.h>
 #include <GLFW/glfw3.h>
 #include <stdexcept>
@@ -9,13 +10,19 @@ namespace Banshee
 		m_Surface(VK_NULL_HANDLE),
 		m_VkInstance(_instance)
 	{
-		if (_window)
+		BE_LOG(LogCategory::Trace, "[SURFACE]: Creating Vulkan surface");
+
+		if (!_window)
 		{
-			if (glfwCreateWindowSurface(_instance, _window, nullptr, &m_Surface) != VK_SUCCESS)
-			{
-				throw std::runtime_error("ERROR: Failed to create a Vulkan surface");
-			}
+			throw std::runtime_error("ERROR: Failed to create a Vulkan surface");
 		}
+
+		if (glfwCreateWindowSurface(_instance, _window, nullptr, &m_Surface) != VK_SUCCESS)
+		{
+			throw std::runtime_error("ERROR: Failed to create a Vulkan surface");
+		}
+
+		BE_LOG(LogCategory::Info, "[SURFACE]: Created Vulkan surface");
 	}
 
 	VulkanSurface::~VulkanSurface()

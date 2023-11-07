@@ -1,6 +1,6 @@
 #pragma once
 
-#include <cstdint>
+#include "Foundation/Platform.h"
 
 typedef struct VkDevice_T* VkDevice;
 typedef struct VkDescriptorSetLayout_T* VkDescriptorSetLayout;
@@ -10,7 +10,7 @@ namespace Banshee
 	class VulkanDescriptorSetLayout
 	{
 	public:
-		VulkanDescriptorSetLayout(const VkDevice& _logicalDevice, const uint32_t _shaderStage);
+		VulkanDescriptorSetLayout(const VkDevice& _logicalDevice, const uint32 _shaderStage);
 		~VulkanDescriptorSetLayout();
 
 		VkDescriptorSetLayout Get() const { return m_DescriptorSetLayout; }
@@ -19,4 +19,4 @@ namespace Banshee
 		VkDevice m_LogicalDevice;
 		VkDescriptorSetLayout m_DescriptorSetLayout;
 	};
-}
+} // End of Banshee namespace

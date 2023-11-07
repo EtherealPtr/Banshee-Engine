@@ -1,4 +1,5 @@
 #include "VulkanDescriptorPool.h"
+#include "Foundation/Logging/Logger.h"
 #include <vulkan/vulkan.h>
 #include <stdexcept>
 #include <array>
@@ -10,15 +11,20 @@ namespace Banshee
 		m_DescriptorSetLayout(_layout),
 		m_DescriptorPool(VK_NULL_HANDLE)
 	{
+		BE_LOG(LogCategory::Trace, "[DESCRIPTOR POOL]: Creating descriptor pool");
+
 		std::array<VkDescriptorPoolSize, 3> poolSizes{};
 		poolSizes[0].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
 		poolSizes[0].descriptorCount = 1;
+		BE_LOG(LogCategory::Trace, "[DESCRIPTOR POOL]: Added descriptor pool size of type VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER");
 
 		poolSizes[1].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC;
 		poolSizes[1].descriptorCount = 1;
+		BE_LOG(LogCategory::Trace, "[DESCRIPTOR POOL]: Added descriptor pool size of type VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC");
 
 		poolSizes[2].type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
 		poolSizes[2].descriptorCount = 1;
+		BE_LOG(LogCategory::Trace, "[DESCRIPTOR POOL]: Added descriptor pool size of type VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER");
 
 		VkDescriptorPoolCreateInfo descriptorPoolCreateInfo{};
 		descriptorPoolCreateInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
@@ -31,6 +37,8 @@ namespace Banshee
 		{
 			throw std::runtime_error("ERROR: Failed to create a descriptor pool");
 		}
+
+		BE_LOG(LogCategory::Info, "[DESCRIPTOR POOL]: Created descriptor pool");
 	}
 
 	VulkanDescriptorPool::~VulkanDescriptorPool()

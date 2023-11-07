@@ -4,7 +4,7 @@
 
 namespace Banshee
 {
-	VulkanDepthBuffer::VulkanDepthBuffer(const VkDevice& _logicalDevice, const VkPhysicalDevice& _gpu, const uint32_t _w, const uint32_t _h) :
+	VulkanDepthBuffer::VulkanDepthBuffer(const VkDevice& _logicalDevice, const VkPhysicalDevice& _gpu, const uint32 _w, const uint32 _h) :
 		m_LogicalDevice(_logicalDevice),
 		m_DepthImage(VK_NULL_HANDLE),
 		m_DepthImageView(VK_NULL_HANDLE),

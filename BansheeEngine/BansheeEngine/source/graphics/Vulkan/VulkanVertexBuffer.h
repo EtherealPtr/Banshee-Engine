@@ -1,6 +1,6 @@
 #pragma once
 
-#include <cstdint>
+#include "Foundation/Platform.h"
 
 typedef struct VkDevice_T* VkDevice;
 typedef struct VkPhysicalDevice_T* VkPhysicalDevice;
@@ -15,14 +15,14 @@ namespace Banshee
 	class VulkanVertexBuffer
 	{
 	public:
-		VulkanVertexBuffer(const VkDevice& _logicalDevice, const VkPhysicalDevice& _physicalDevice, const VkCommandPool& _commandPool, const VkQueue& _graphicsQueue, void* _vertexData, const uint64_t _sizeOfVertexData, void* _indexData, const uint64_t _sizeOfIndexData);
+		VulkanVertexBuffer(const VkDevice& _logicalDevice, const VkPhysicalDevice& _physicalDevice, const VkCommandPool& _commandPool, const VkQueue& _graphicsQueue, void* _vertexData, const uint64 _sizeOfVertexData, void* _indexData, const uint64 _sizeOfIndexData);
 		~VulkanVertexBuffer();
 
 		void Bind(const VkCommandBuffer& _commandBuffer);
 
 	private:
-		void CreateVertexBuffer(void* _data, const uint64_t _size);
-		void CreateIndexBuffer(void* _data, const uint64_t _size);
+		void CreateVertexBuffer(void* _data, const uint64 _size);
+		void CreateIndexBuffer(void* _data, const uint64 _size);
 		void CleanUpVertexBuffer();
 		void CleanUpIndexBuffer();
 
@@ -36,4 +36,4 @@ namespace Banshee
 		VkDeviceMemory m_VertexBufferMemory;
 		VkDeviceMemory m_IndexBufferMemory;
 	};
-}
+} // End of Banshee namespace

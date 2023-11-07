@@ -1,6 +1,6 @@
 #pragma once
 
-#include <cstdint>
+#include "Foundation/Platform.h"
 
 typedef struct VkDevice_T* VkDevice;
 typedef struct VkRenderPass_T* VkRenderPass;
@@ -13,7 +13,7 @@ namespace Banshee
 	class VulkanGraphicsPipeline
 	{
 	public:
-		VulkanGraphicsPipeline(const VkDevice& _logicalDevice, const VkRenderPass& _renderPass, const VkDescriptorSetLayout& _descriptorSetLayout, const uint32_t _w, const uint32_t _h);
+		VulkanGraphicsPipeline(const VkDevice& _logicalDevice, const VkRenderPass& _renderPass, const VkDescriptorSetLayout& _descriptorSetLayout, const uint32 _w, const uint32 _h);
 		~VulkanGraphicsPipeline();
 
 		VkPipeline Get() const { return m_GraphicsPipeline; }
@@ -24,4 +24,4 @@ namespace Banshee
 		VkPipelineLayout m_PipelineLayout;
 		VkPipeline m_GraphicsPipeline;
 	};
-}
+} // End of Banshee namespace

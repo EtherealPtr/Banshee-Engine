@@ -224,4 +224,4 @@ namespace Banshee
 		vkCmdEndRenderPass(cmdBuffer);
 		m_VkCommandBuffers->End(_imgIndex);
 	}
-}
+} // End of Banshee namespace

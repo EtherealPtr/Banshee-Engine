@@ -1,4 +1,5 @@
 #include "VulkanFence.h"
+#include "Foundation/Logging/Logger.h"
 #include <vulkan/vulkan.h>
 #include <stdexcept>
 
@@ -8,6 +9,8 @@ namespace Banshee
 		m_LogicalDevice(_logicalDevice),
 		m_Fences{ VK_NULL_HANDLE }
 	{
+		BE_LOG(LogCategory::Trace, "[FENCE]: Creating %d fences", _count);
+
 		VkFenceCreateInfo fenceCreateInfo{};
 		fenceCreateInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
 		fenceCreateInfo.flags = VK_FENCE_CREATE_SIGNALED_BIT;
@@ -21,6 +24,8 @@ namespace Banshee
 				throw std::runtime_error("ERROR: Failed to create fence\n");
 			}
 		}
+
+		BE_LOG(LogCategory::Info, "[FENCE]: Created fences");
 	}
 
 	VulkanFence::~VulkanFence()

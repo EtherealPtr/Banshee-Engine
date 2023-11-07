@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Foundation/Platform.h"
 #include <vector>
 
 typedef struct VkSwapchainKHR_T* VkSwapchainKHR;
@@ -14,22 +15,22 @@ namespace Banshee
 	class VulkanSwapchain
 	{
 	public:
-		VulkanSwapchain(const VkDevice& _logicalDevice, const VkPhysicalDevice& _gpu, const VkSurfaceKHR& _surface, const uint32_t _w, const uint32_t _h);
+		VulkanSwapchain(const VkDevice& _logicalDevice, const VkPhysicalDevice& _gpu, const VkSurfaceKHR& _surface, const uint32 _w, const uint32 _h);
 		~VulkanSwapchain();
 
 		VkSwapchainKHR Get() const { return m_Swapchain; }
 		std::vector<VkImageView> GetImageViews() const { return m_SwapchainImageViews; }
-		uint32_t GetFormat() const { return m_Format; }
-		uint32_t GetWidth() const { return m_Width; }
-		uint32_t GetHeight() const { return m_Height; }
+		uint32 GetFormat() const { return m_Format; }
+		uint32 GetWidth() const { return m_Width; }
+		uint32 GetHeight() const { return m_Height; }
 
 	private:
 		VkSwapchainKHR m_Swapchain;
 		VkDevice m_Device;
 		std::vector<VkImage> m_SwapchainImages;
 		std::vector<VkImageView> m_SwapchainImageViews;
-		uint32_t m_Format;
-		uint32_t m_Width;
-		uint32_t m_Height;
+		uint32 m_Format;
+		uint32 m_Width;
+		uint32 m_Height;
 	};
-}
+} // End of Banshee namespace

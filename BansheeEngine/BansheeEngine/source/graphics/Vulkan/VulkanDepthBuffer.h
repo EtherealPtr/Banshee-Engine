@@ -1,6 +1,6 @@
 #pragma once
 
-#include <cstdint>
+#include "Foundation/Platform.h"
 
 typedef struct VkDevice_T* VkDevice;
 typedef struct VkPhysicalDevice_T* VkPhysicalDevice;
@@ -14,7 +14,7 @@ namespace Banshee
 	class VulkanDepthBuffer
 	{
 	public:
-		VulkanDepthBuffer(const VkDevice& _logicalDevice, const VkPhysicalDevice& _gpu, const uint32_t _w, const uint32_t _h);
+		VulkanDepthBuffer(const VkDevice& _logicalDevice, const VkPhysicalDevice& _gpu, const uint32 _w, const uint32 _h);
 		~VulkanDepthBuffer();
 
 		VkFormat GetFormat() const { return m_DepthFormat; }
@@ -27,4 +27,4 @@ namespace Banshee
 		VkDeviceMemory m_DepthImageMemory;
 		VkFormat m_DepthFormat;
 	};
-}
+} // End of Banshee namespace

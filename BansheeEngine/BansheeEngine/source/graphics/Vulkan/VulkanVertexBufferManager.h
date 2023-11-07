@@ -23,4 +23,4 @@ namespace Banshee
 		uint32 m_CurrentIndicesCount;
 		std::unordered_map<uint32 /*bufferId*/, VulkanVertexBuffer /*bufferData*/> m_VertexBuffers;
 	};
-}
+} // End of Banshee namespace

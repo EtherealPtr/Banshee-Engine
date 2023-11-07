@@ -1,6 +1,6 @@
 #pragma once
 
-#include <cstdint>
+#include "Foundation/Platform.h"
 
 typedef struct VkInstance_T* VkInstance;
 typedef struct VkPhysicalDevice_T* VkPhysicalDevice;
@@ -21,9 +21,9 @@ namespace Banshee
 				(m_PresentationQueueFamilyIndex != UINT32_MAX);
 		}
 
-		uint32_t m_GraphicsQueueFamilyIndex{ UINT32_MAX };
-		uint32_t m_TransferQueueFamilyIndex{ UINT32_MAX };
-		uint32_t m_PresentationQueueFamilyIndex{ UINT32_MAX };
+		uint32 m_GraphicsQueueFamilyIndex{ UINT32_MAX };
+		uint32 m_TransferQueueFamilyIndex{ UINT32_MAX };
+		uint32 m_PresentationQueueFamilyIndex{ UINT32_MAX };
 	};
 
 	class VulkanDevice
@@ -42,7 +42,7 @@ namespace Banshee
 
 	private:
 		void PickPhysicalDevice(const VkInstance& _vkInstance);
-		uint32_t RateDeviceSuitability(const VkPhysicalDevice& _gpu, const VkPhysicalDeviceProperties& _deviceProperties);
+		uint32 RateDeviceSuitability(const VkPhysicalDevice& _gpu, const VkPhysicalDeviceProperties& _deviceProperties);
 		void SetupQueueFamilyIndices();
 		void CreateLogicalDevice();
 
@@ -55,4 +55,4 @@ namespace Banshee
 		VkQueue m_TransferQueue;
 		VkQueue m_PresentQueue;
 	};
-}
+} // End of Banshee namespace

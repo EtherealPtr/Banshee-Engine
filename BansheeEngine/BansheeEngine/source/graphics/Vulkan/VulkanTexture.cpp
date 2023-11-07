@@ -1,6 +1,7 @@
 #include "VulkanTexture.h"
 #include "VulkanUtils.h"
 #include "Foundation/File/FileManager.h"
+#include "Foundation/Logging/Logger.h"
 #include <stb_image.h>
 #include <vulkan/vulkan.h>
 #include <stdexcept>
@@ -18,8 +19,9 @@ namespace Banshee
 		m_TextureImageView(VK_NULL_HANDLE),
 		m_TextureImageFormat(VK_FORMAT_R8G8B8A8_SRGB),
 		m_TextureImageMemory(VK_NULL_HANDLE)
-
 	{
+		BE_LOG(LogCategory::Trace, "[TEXTURE]: Loading texture %s", _texturePath);
+
 		int32 textureChannels = 0;
 		auto fullTexturePath = FileManager::Instance().GetEngineResDirPath() + _texturePath;
 		stbi_uc* pixels = stbi_load(fullTexturePath.c_str(), &m_TextureWidth, &m_TextureHeight, &textureChannels, STBI_rgb_alpha);
@@ -29,6 +31,8 @@ namespace Banshee
 		{
 			throw std::runtime_error("ERROR: Failed to load texture image");
 		}
+
+		BE_LOG(LogCategory::Info, "[TEXTURE]: Successfully loaded %s", _texturePath);
 
 		CreateStagingBuffer(imageSize, pixels);
 		stbi_image_free(pixels);
@@ -71,6 +75,8 @@ namespace Banshee
 
 	void VulkanTexture::CreateTextureImage(const VkBuffer& _buffer)
 	{
+		BE_LOG(LogCategory::Trace, "[TEXTURE]: Creating texture image object");
+
 		VulkanUtils::CreateImage
 		(
 			m_LogicalDevice,
@@ -122,6 +128,7 @@ namespace Banshee
 			VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL
 		);
 
+		BE_LOG(LogCategory::Info, "[TEXTURE]: Created texture image object");
 		m_TextureImageView = VulkanUtils::CreateImageView(m_LogicalDevice, m_TextureImage, m_TextureImageFormat, VK_IMAGE_ASPECT_COLOR_BIT);
 	}
 }

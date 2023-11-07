@@ -24,6 +24,10 @@ namespace Banshee
 		std::string GetLogCategoryName(const LogCategory _category);
 	};
 
-#define BE_LOG(category, format, ...) Logger::Instance().PrintLog(category, format, __VA_ARGS__);
+#ifdef NDEBUG
+#define BE_LOG(category, format, ...) ((void)0)
+#else
+#define BE_LOG(category, format, ...) Logger::Instance().PrintLog(category, format, __VA_ARGS__)
+#endif
 
 } // End of Banshee namespace

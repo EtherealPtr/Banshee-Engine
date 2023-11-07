@@ -1,6 +1,7 @@
 #include "VulkanInstance.h"
 #include "VulkanUtils.h"
 #include "VulkanValidation.h"
+#include "Foundation/Logging/Logger.h"
 #include <vulkan/vulkan.h>
 #include <GLFW/glfw3.h>
 #include <vector>
@@ -18,6 +19,8 @@ namespace Banshee
 		m_Instance(VK_NULL_HANDLE),
 		m_DebugMessenger(VK_NULL_HANDLE)
 	{
+		BE_LOG(LogCategory::Trace, "[INSTANCE]: Creating Vulkan instance");
+
 		VkApplicationInfo appInfo{};
 		appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
 		appInfo.pApplicationName = "Untitled";
@@ -72,6 +75,8 @@ namespace Banshee
 		}
 
 		SetupDebugCallback();
+
+		BE_LOG(LogCategory::Info, "[INSTANCE]: Created Vulkan instance");
 	}
 
 	VulkanInstance::~VulkanInstance()
@@ -99,7 +104,7 @@ namespace Banshee
 
 		if (CreateDebugUtilsMessengerEXT(m_Instance, &debugCreateInfo, nullptr, &m_DebugMessenger) != VK_SUCCESS)
 		{
-			printf("WARNING: Failed to create vulkan debug messenger\n");
+			BE_LOG(LogCategory::Warning, "[INSTANCE]: Failed to create vulkan debug messenger");
 		}
 	}
 }

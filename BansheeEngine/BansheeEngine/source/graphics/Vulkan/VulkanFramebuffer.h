@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Foundation/Platform.h"
 #include <vector>
 
 typedef struct VkDevice_T* VkDevice;
@@ -12,7 +13,7 @@ namespace Banshee
 	class VulkanFramebuffer
 	{
 	public:
-		VulkanFramebuffer(const VkDevice& _logicalDevice, const VkRenderPass& _renderPass, const std::vector<VkImageView>& _swapImageViews, const VkImageView& _depthImageView, const uint32_t _w, const uint32_t _h);
+		VulkanFramebuffer(const VkDevice& _logicalDevice, const VkRenderPass& _renderPass, const std::vector<VkImageView>& _swapImageViews, const VkImageView& _depthImageView, const uint32 _w, const uint32 _h);
 		~VulkanFramebuffer();
 
 		std::vector<VkFramebuffer> Get() const { return m_Framebuffers; }
@@ -21,4 +22,4 @@ namespace Banshee
 		VkDevice m_Device;
 		std::vector<VkFramebuffer> m_Framebuffers;
 	};
-}
+} // End of Banshee namespace

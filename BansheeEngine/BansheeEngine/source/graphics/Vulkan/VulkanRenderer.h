@@ -66,4 +66,4 @@ namespace Banshee
 		size_t m_DynamicBufferMemoryAlignment;
 		glm::vec3* m_DynamicBufferMemorySpace;
 	};
-}
+} // End of Banshee namespace

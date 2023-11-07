@@ -1,14 +1,17 @@
 #include "VulkanFramebuffer.h"
+#include "Foundation/Logging/Logger.h"
 #include <vulkan/vulkan.h>
 #include <stdexcept>
 #include <array>
 
 namespace Banshee
 {
-	VulkanFramebuffer::VulkanFramebuffer(const VkDevice& _logicalDevice, const VkRenderPass& _renderPass, const std::vector<VkImageView>& _imageViews, const VkImageView& _depthImageView, const uint32_t _w, const uint32_t _h) :
+	VulkanFramebuffer::VulkanFramebuffer(const VkDevice& _logicalDevice, const VkRenderPass& _renderPass, const std::vector<VkImageView>& _imageViews, const VkImageView& _depthImageView, const uint32 _w, const uint32 _h) :
 		m_Device(_logicalDevice),
 		m_Framebuffers(_imageViews.size(), VK_NULL_HANDLE)
 	{
+		BE_LOG(LogCategory::Trace, "[FRAMEBUFFER]: Creating %d framebuffers", _imageViews.size());
+
 		for (unsigned short i = 0; i < _imageViews.size(); ++i)
 		{
 			std::array<VkImageView, 2> imageViews{};
@@ -30,6 +33,8 @@ namespace Banshee
 				throw std::runtime_error("ERROR: Failed to create a Vulkan framebuffer");
 			}
 		}
+
+		BE_LOG(LogCategory::Info, "[FRAMEBUFFER]: Created framebuffers");
 	}
 
 	VulkanFramebuffer::~VulkanFramebuffer()

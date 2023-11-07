@@ -1,5 +1,6 @@
 #include "VulkanDescriptorSet.h"
 #include "VulkanDescriptorSetProperties.h"
+#include "Foundation/Logging/Logger.h"
 #include <vulkan/vulkan.h>
 #include <stdexcept>
 
@@ -18,7 +19,7 @@ namespace Banshee
 
 		if (vkAllocateDescriptorSets(_logicalDevice, &allocInfo, &m_DescriptorSet) != VK_SUCCESS)
 		{
-			printf("WARNING: Failed to allocate descriptor sets\n");
+			BE_LOG(LogCategory::Warning, "[DESCRIPTOR SET]: Failed to allocate descriptor sets");
 		}
 	}
 

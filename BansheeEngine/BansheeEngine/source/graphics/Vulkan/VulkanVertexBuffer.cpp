@@ -6,7 +6,7 @@
 namespace Banshee
 {
 	VulkanVertexBuffer::VulkanVertexBuffer(const VkDevice& _logicalDevice, const VkPhysicalDevice& _physicalDevice, const VkCommandPool& _commandPool, const VkQueue& _graphicsQueue,
-		void* _vertexData, const uint64_t _sizeOfVertexData, void* _indexData, const uint64_t _sizeOfIndexData) :
+		void* _vertexData, const uint64 _sizeOfVertexData, void* _indexData, const uint64 _sizeOfIndexData) :
 		m_LogicalDevice(_logicalDevice),
 		m_PhysicalDevice(_physicalDevice),
 		m_CommandPool(_commandPool),
@@ -69,7 +69,7 @@ namespace Banshee
 		stagingBuffer = VK_NULL_HANDLE;
 	}
 
-	void VulkanVertexBuffer::CreateIndexBuffer(void* _data, const uint64_t _size)
+	void VulkanVertexBuffer::CreateIndexBuffer(void* _data, const uint64 _size)
 	{
 		// Create staging buffer
 		VkBuffer stagingBuffer{};

@@ -1,14 +1,17 @@
 #include "VulkanCommandBuffer.h"
+#include "Foundation/Logging/Logger.h"
 #include <vulkan/vulkan.h>
 #include <stdexcept>
 
 namespace Banshee
 {
-	VulkanCommandBuffer::VulkanCommandBuffer(const VkDevice& _logicalDevice, const VkCommandPool& _pool, const uint16_t _count) :
+	VulkanCommandBuffer::VulkanCommandBuffer(const VkDevice& _logicalDevice, const VkCommandPool& _pool, const uint16 _count) :
 		m_LogicalDevice(_logicalDevice),
 		m_CommandPool(_pool),
 		m_CommandBuffers(_count, VK_NULL_HANDLE)
 	{
+		BE_LOG(LogCategory::Trace, "[COMMAND BUFFER]: Creating command buffer");
+
 		VkCommandBufferAllocateInfo commandBufferAllocInfo{};
 		commandBufferAllocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
 		commandBufferAllocInfo.commandPool = _pool;
@@ -19,6 +22,8 @@ namespace Banshee
 		{
 			throw std::runtime_error("ERROR: Failed to allocate command buffers");
 		}
+
+		BE_LOG(LogCategory::Info, "[COMMAND BUFFER]: Created command buffer");
 	}
 
 	VulkanCommandBuffer::~VulkanCommandBuffer()
@@ -26,7 +31,7 @@ namespace Banshee
 		vkFreeCommandBuffers(m_LogicalDevice, m_CommandPool, static_cast<uint32_t>(m_CommandBuffers.size()), m_CommandBuffers.data());
 	}
 
-	void VulkanCommandBuffer::Begin(const uint16_t _bufferIndex) const
+	void VulkanCommandBuffer::Begin(const uint16 _bufferIndex) const
 	{
 		VkCommandBufferBeginInfo beginInfo{};
 		beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
@@ -35,12 +40,12 @@ namespace Banshee
 		vkBeginCommandBuffer(m_CommandBuffers[_bufferIndex], &beginInfo);
 	}
 
-	void VulkanCommandBuffer::End(const uint16_t _bufferIndex) const
+	void VulkanCommandBuffer::End(const uint16 _bufferIndex) const
 	{
 		vkEndCommandBuffer(m_CommandBuffers[_bufferIndex]);
 	}
 
-	void VulkanCommandBuffer::Submit(const uint16_t _bufferIndex, const VkQueue& _queue, const VkSemaphore& _waitSem, const VkSemaphore& _signalSem, const VkFence& _fence, const uint32_t _waitStage)
+	void VulkanCommandBuffer::Submit(const uint16 _bufferIndex, const VkQueue& _queue, const VkSemaphore& _waitSem, const VkSemaphore& _signalSem, const VkFence& _fence, const uint32 _waitStage)
 	{
 		VkSubmitInfo submitInfo{};
 		submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
