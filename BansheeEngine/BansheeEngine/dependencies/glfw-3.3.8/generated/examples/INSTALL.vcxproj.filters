@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="C:\Projects\banshee\BansheeEngine\BansheeEngine\Dependencies\glfw-3.3.8\generated\CMakeFiles\2f1eb0edda3afc58c47ef3cc2196e693\INSTALL_force.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{B671CBA4-27E2-3917-AB5A-96ABC7397972}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

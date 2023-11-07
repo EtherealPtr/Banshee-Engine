@@ -63,14 +63,14 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>BANSHEE_EXPORTS;STB_IMAGE_IMPLEMENTATION;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)source;$(ProjectDir)dependencies\glfw-3.3.8\include;$(ProjectDir)dependencies\vulkan\include;$(ProjectDir)dependencies\stb_image;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Source;$(ProjectDir)Dependencies\glfw-3.3.8\include;$(ProjectDir)Dependencies\vulkan\include;$(ProjectDir)Dependencies\stb_image;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>glfw3.lib;vulkan-1.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(ProjectDir)dependencies\glfw-3.3.8\lib;$(ProjectDir)dependencies\vulkan\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(ProjectDir)Dependencies\glfw-3.3.8\lib;$(ProjectDir)Dependencies\vulkan\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
       <Command>xcopy /y "$(TargetDir)BansheeEngine.dll" "$(SolutionDir)Binaries\Sandbox-$(Configuration)"
@@ -85,7 +85,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>BANSHEE_EXPORTS;STB_IMAGE_IMPLEMENTATION;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)source;$(ProjectDir)dependencies\glfw-3.3.8\include;$(ProjectDir)dependencies\vulkan\include;$(ProjectDir)dependencies\stb_image;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Source;$(ProjectDir)Dependencies\glfw-3.3.8\include;$(ProjectDir)Dependencies\vulkan\include;$(ProjectDir)Dependencies\stb_image;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -94,7 +94,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>glfw3.lib;vulkan-1.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(ProjectDir)dependencies\glfw-3.3.8\lib;$(ProjectDir)dependencies\vulkan\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(ProjectDir)Dependencies\glfw-3.3.8\lib;$(ProjectDir)Dependencies\vulkan\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
       <Command>xcopy /y "$(TargetDir)BansheeEngine.dll" "$(SolutionDir)Binaries\Sandbox-$(Configuration)"
