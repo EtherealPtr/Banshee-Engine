@@ -102,7 +102,7 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Source\Graphics\Input\Input.cpp" />
+    <ClCompile Include="Source\Application\Input\Input.cpp" />
     <ClCompile Include="Source\Foundation\RenderSystem\RenderSystem.cpp" />
     <ClCompile Include="Source\Foundation\Components\MeshRendererComponent.cpp" />
     <ClCompile Include="Source\Foundation\Entity\EntityManager.cpp" />
@@ -139,7 +139,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Foundation\Input\InputBinding.h" />
-    <ClInclude Include="Source\Graphics\Input\Input.h" />
+    <ClInclude Include="Source\Application\Input\Input.h" />
     <ClInclude Include="Source\Foundation\Input\InputSystem.h" />
     <ClInclude Include="Source\Foundation\RenderSystem\RenderSystem.h" />
     <ClInclude Include="Source\Foundation\Components\MeshRendererComponent.h" />

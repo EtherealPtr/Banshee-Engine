@@ -1,9 +1,9 @@
 #include "Application.h"
+#include "Input/Input.h"
 #include "Foundation/Logging/Logger.h"
 #include "Foundation/INIParser.h"
 #include "Graphics/Window.h"
 #include "Graphics/Vulkan/VulkanRenderer.h"
-#include "Graphics/Input/Input.h"
 
 namespace Banshee
 {

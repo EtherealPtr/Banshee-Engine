@@ -114,7 +114,7 @@
     <ClCompile Include="Source\Graphics\Vulkan\VulkanTextureSampler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Graphics\Input\Input.cpp">
+    <ClCompile Include="Source\Application\Input\Input.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -257,7 +257,7 @@
     <ClInclude Include="Source\Foundation\Input\InputSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Graphics\Input\Input.h">
+    <ClInclude Include="Source\Application\Input\Input.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Foundation\Input\InputBinding.h">
