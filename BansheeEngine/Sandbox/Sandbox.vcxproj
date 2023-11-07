@@ -46,14 +46,14 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>$(SolutionDir)BansheeEngine\Source;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)binaries\BansheeEngine-Debug;$(LibraryPath)</LibraryPath>
-    <OutDir>$(SolutionDir)Binaries\$(ProjectName)-$(Configuration)</OutDir>
-    <IntDir>$(SolutionDir)Binaries\temp</IntDir>
+    <OutDir>$(SolutionDir)Binaries\$(ProjectName)-$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)Binaries\temp\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IncludePath>$(SolutionDir)BansheeEngine\Source;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)binaries\BansheeEngine-Debug;$(LibraryPath)</LibraryPath>
-    <OutDir>$(SolutionDir)Binaries\$(ProjectName)-$(Configuration)</OutDir>
-    <IntDir>$(SolutionDir)Binaries\temp</IntDir>
+    <OutDir>$(SolutionDir)Binaries\$(ProjectName)-$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)Binaries\temp\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>

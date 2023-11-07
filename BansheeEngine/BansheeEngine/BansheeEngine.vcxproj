@@ -138,6 +138,7 @@
     <ClCompile Include="Source\Graphics\Vulkan\VulkanTextureSampler.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Application\Input\InputKeys.h" />
     <ClInclude Include="Source\Foundation\Input\InputBinding.h" />
     <ClInclude Include="Source\Application\Input\Input.h" />
     <ClInclude Include="Source\Foundation\Input\InputSystem.h" />

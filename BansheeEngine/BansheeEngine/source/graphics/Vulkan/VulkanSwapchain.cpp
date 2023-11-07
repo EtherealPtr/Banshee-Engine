@@ -75,11 +75,11 @@ namespace Banshee
 
 		if (_surfaceCapabilities.maxImageCount > 0 && imageCount > _surfaceCapabilities.maxImageCount)
 		{
-			BE_LOG(LogCategory::Info, "[SWAPCHAIN CREATION]: Picked image count of %d", _surfaceCapabilities.maxImageCount);
+			BE_LOG(LogCategory::Info, "[SWAPCHAIN]: Picked image count of %d", _surfaceCapabilities.maxImageCount);
 			return _surfaceCapabilities.maxImageCount;
 		}
 
-		BE_LOG(LogCategory::Info, "[SWAPCHAIN CREATION]: Picked image count of %d", imageCount);
+		BE_LOG(LogCategory::Info, "[SWAPCHAIN]: Picked image count of %d", imageCount);
 		return imageCount;
 	}
 

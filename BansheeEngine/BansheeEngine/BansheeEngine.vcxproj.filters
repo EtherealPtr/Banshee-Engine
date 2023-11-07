@@ -263,5 +263,8 @@
     <ClInclude Include="Source\Foundation\Input\InputBinding.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Application\Input\InputKeys.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
