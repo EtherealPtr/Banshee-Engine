@@ -1,5 +1,5 @@
 #include <Banshee.h>
-#include "TestEntity.h"
+#include "Player.h"
 
 using namespace Banshee;
 
@@ -8,7 +8,7 @@ class ClientApp : public Application
 public:
 	ClientApp()
 	{
-		
+
 	}
 
 private:

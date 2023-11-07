@@ -18,4 +18,4 @@ namespace Banshee
 		glm::vec3 color;
 		glm::vec2 texCoord;
 	};
-}
+} // End of Banshee namespace

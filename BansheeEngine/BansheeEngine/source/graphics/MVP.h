@@ -14,4 +14,4 @@ namespace Banshee
 	{
 		glm::mat4 model = glm::mat4(1.0f);
 	};
-}
+} // End of Banshee namespace

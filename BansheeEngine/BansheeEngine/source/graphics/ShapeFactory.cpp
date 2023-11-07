@@ -41,4 +41,4 @@ namespace Banshee
 
 		return 0;
 	}
-}
+} // End of Banshee namespace

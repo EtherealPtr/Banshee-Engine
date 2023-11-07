@@ -21,4 +21,4 @@ namespace Banshee
 	private:
 		GLFWwindow* m_Window;
 	};
-}
+} // End of Banshee namespace

@@ -7,14 +7,14 @@ namespace Banshee
 {
 	struct EngineConfig
 	{
-		EngineConfig() : 
-			m_WindowWidth(400),
-			m_WindowHeight(300),
-			m_WindowTitle("Untitled")
+		EngineConfig() :
+			windowWidth(400),
+			windowHeight(300),
+			windowTitle("Untitled")
 		{}
 
-		uint16 m_WindowWidth;
-		uint16 m_WindowHeight;
-		std::string m_WindowTitle;
+		uint16 windowWidth;
+		uint16 windowHeight;
+		std::string windowTitle;
 	};
-}; // End of Banshee namespace
+} // End of Banshee namespace

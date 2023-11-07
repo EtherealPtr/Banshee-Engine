@@ -25,15 +25,15 @@ namespace Banshee
 			{
 				if (key == "WindowTitle")
 				{
-					config.m_WindowTitle = value;
+					config.windowTitle = value;
 				}
 				else if (key == "WindowWidth")
 				{
-					config.m_WindowWidth = static_cast<uint16>(std::stoi(value));
+					config.windowWidth = static_cast<uint16>(std::stoi(value));
 				}
 				else if (key == "WindowHeight")
 				{
-					config.m_WindowHeight = static_cast<uint16>(std::stoi(value));
+					config.windowHeight = static_cast<uint16>(std::stoi(value));
 				}
 			}
 		}

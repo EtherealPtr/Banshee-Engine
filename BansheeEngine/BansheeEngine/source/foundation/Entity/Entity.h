@@ -19,7 +19,7 @@ namespace Banshee
 		BANSHEE_ENGINE uint32 GetUniqueId() const { return m_Id; }
 
 		template<typename T>
-		BANSHEE_ENGINE void AddComponent()
+		void AddComponent()
 		{
 			static_assert(std::is_base_of<Component, T>::value, "T must be derived from Component");
 			
@@ -47,7 +47,7 @@ namespace Banshee
 		}
 
 	private:
-		void ApplyRenderableComponent(std::shared_ptr<MeshRendererComponent>& _component);
+		BANSHEE_ENGINE void ApplyRenderableComponent(std::shared_ptr<MeshRendererComponent>& _component);
 
 	private:
 		uint32 m_Id;

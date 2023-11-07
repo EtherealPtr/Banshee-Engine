@@ -28,26 +28,23 @@ namespace Banshee
 
 	void FileManager::InitializeDirPaths()
 	{
-		const std::filesystem::path currentWorkDir = std::filesystem::current_path();
+		std::filesystem::path currentFilePath(__FILE__);
+		std::filesystem::path currentFileDirectory = currentFilePath.parent_path();
 
-		// Traverse the directory tree downwards until we find the target folder
-		for (const auto& entry : std::filesystem::recursive_directory_iterator(currentWorkDir))
+		// Traverse the directory tree upwards until we find the "Res" folder
+		for (std::filesystem::path directory = currentFileDirectory; !directory.empty(); directory = directory.parent_path()) 
 		{
-			if (!entry.is_directory())
+			for (const auto& entry : std::filesystem::directory_iterator(directory)) 
 			{
-				continue;
+				if (entry.is_directory() && entry.path().filename() == "Res") 
+				{
+					m_GeneratedDirPath = entry.path().parent_path().generic_string() + '/';
+					m_EngineResDirPath = entry.path().generic_string() + '/';
+					return;
+				}
 			}
-
-			if (entry.path().filename() != "Res")
-			{
-				continue;
-			}
-
-			m_GeneratedDirPath = entry.path().parent_path().generic_string() + '/';
-			m_EngineResDirPath = entry.path().generic_string() + '/';
-			return;
 		}
-
+		
 		BE_LOG(LogCategory::Warning, "Failed to initialize paths");
 	}
 

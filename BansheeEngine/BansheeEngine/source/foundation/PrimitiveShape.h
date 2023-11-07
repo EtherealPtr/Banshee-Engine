@@ -10,4 +10,4 @@ namespace Banshee
 		Triangle,
 		Square
 	};
-}
+} // End of Banshee namespace
