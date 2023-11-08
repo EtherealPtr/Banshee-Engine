@@ -1,10 +1,10 @@
 #pragma once
 
-#include "Platform.h"
+#include "Foundation/Platform.h"
 
 namespace Banshee
 {
-	enum class PrimitiveShape : uint8
+	enum PrimitiveShape : uint8
 	{
 		Empty,
 		Triangle,

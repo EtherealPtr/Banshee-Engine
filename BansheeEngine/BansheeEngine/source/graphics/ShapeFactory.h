@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Foundation/PrimitiveShape.h"
 #include "Foundation/Platform.h"
+#include "Graphics/PrimitiveShape.h"
 #include "Vertex.h"
 #include <vector>
 

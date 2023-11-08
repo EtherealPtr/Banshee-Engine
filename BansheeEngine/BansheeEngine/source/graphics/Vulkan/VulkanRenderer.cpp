@@ -21,7 +21,7 @@
 #include "../Window.h"
 #include "Foundation/Entity/EntityManager.h"
 #include "Foundation/Components/MeshComponent.h"
-#include "Foundation/RenderSystem/RenderSystem.h"
+#include "Foundation/Systems/RenderSystem.h"
 #include <vulkan/vulkan.h>
 #include <stdexcept>
 #include <glm/glm.hpp>
@@ -104,18 +104,14 @@ namespace Banshee
 			samplerDescWriteProperties
 		};
 
-		//if (m_Entities.size() == 0)
-		//{
-		//	m_DescriptorSets[_descriptorSetIndex]->UpdateDescriptorSet(descriptorSetWriteProperties);
-		//	return;
-		//}
-
-		//for (size_t i = 0; i < m_Entities.size(); ++i)
-		//{
-		//	glm::vec3* colorData = (glm::vec3*)((uint64_t)m_DynamicBufferMemorySpace + (i * m_DynamicBufferMemoryAlignment));
-		//	glm::vec3 color = m_Entities[i]->GetColor();
-		//	*colorData = color;
-		//}
+		auto meshComponents = RenderSystem::Instance().GetMeshComponents();
+		for (size_t i = 0; i < meshComponents.size(); ++i)
+		{
+			glm::vec3* colorData = (glm::vec3*)((uint64)m_DynamicBufferMemorySpace + (i * m_DynamicBufferMemoryAlignment));
+			const std::vector<float> meshColor = meshComponents[i]->GetColor();
+			glm::vec3 color = glm::vec3(meshColor[0], meshColor[1], meshColor[2]);
+			*colorData = color;
+		}
 
 		m_DynamicUniformBuffers[_descriptorSetIndex]->CopyData(m_DynamicBufferMemorySpace);
 		m_DescriptorSets[_descriptorSetIndex]->UpdateDescriptorSet(descriptorSetWriteProperties);
@@ -181,7 +177,7 @@ namespace Banshee
 		std::array<VkClearValue, 2> clearAttachments{};
 		clearAttachments[0].color = clearColor;
 		clearAttachments[1].depthStencil = clearDepthStencil;
-		renderPassInfo.clearValueCount = static_cast<uint32_t>(clearAttachments.size());
+		renderPassInfo.clearValueCount = static_cast<uint32>(clearAttachments.size());
 		renderPassInfo.pClearValues = clearAttachments.data();
 
 		vkCmdBeginRenderPass(cmdBuffer, &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);

@@ -2,6 +2,7 @@
 
 #include "Foundation/Entity/EntityManager.h"
 #include "Foundation/Components/MeshComponent.h"
+#include "Graphics/PrimitiveShape.h"
 #include "Application/Input/Input.h"
 
 using namespace Banshee;
@@ -12,7 +13,8 @@ public:
 	Player()
 	{
 		m_PlayerEntity = EntityManager::Instance().CreateEntity();
-		m_PlayerEntity->AddComponent<MeshComponent>(PrimitiveShape::Square);
+		auto meshComponent = m_PlayerEntity->AddComponent<MeshComponent>(PrimitiveShape::Square);
+		meshComponent->SetColor(1.0f, 1.0f, 1.0f);
 
 		std::vector<InputBinding> inputBindings = 
 		{
