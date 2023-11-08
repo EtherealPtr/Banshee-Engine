@@ -1,5 +1,5 @@
 #include "RenderSystem.h"
-#include "../Components/MeshRendererComponent.h"
+#include "../Components/MeshComponent.h"
 
 namespace Banshee
 {
@@ -9,7 +9,7 @@ namespace Banshee
 		return s_RenderSystem;
 	}
 
-	void RenderSystem::AddMeshRendererComponent(const std::shared_ptr<MeshRendererComponent>& _component)
+	void RenderSystem::AddMeshComponent(const std::shared_ptr<MeshComponent>& _component)
 	{
 		m_MeshRenderers.emplace_back(_component);
 	}

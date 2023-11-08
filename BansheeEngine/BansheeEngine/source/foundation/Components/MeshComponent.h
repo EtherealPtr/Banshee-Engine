@@ -6,13 +6,14 @@
 
 namespace Banshee
 {
-	class MeshRendererComponent : public Component
+	class MeshComponent : public Component
 	{
 	public:
-		BANSHEE_ENGINE MeshRendererComponent(PrimitiveShape _shape = PrimitiveShape::Triangle) : 
+		BANSHEE_ENGINE MeshComponent(PrimitiveShape _shape = PrimitiveShape::Triangle) : 
 			m_Shape(_shape)
 		{}
 
+		BANSHEE_ENGINE void SetPrimitiveShape(const PrimitiveShape _shape);
 		PrimitiveShape GetShape() const { return m_Shape; }
 
 	private:

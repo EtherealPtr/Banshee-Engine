@@ -37,8 +37,8 @@ namespace Banshee
 
 	private:
 		void AllocateDynamicBufferSpace();
-		void UpdateDescriptorSet(const uint8_t _descriptorSetIndex);
-		void RecordRenderCommands(const uint8_t _imgIndex);
+		void UpdateDescriptorSet(const uint8 _descriptorSetIndex);
+		void RecordRenderCommands(const uint8 _imgIndex);
 
 	private:
 		std::unique_ptr<VulkanInstance> m_VkInstance;
@@ -62,7 +62,7 @@ namespace Banshee
 		std::vector<std::unique_ptr<VulkanUniformBuffer>> m_DynamicUniformBuffers;
 		std::vector<std::unique_ptr<VulkanDescriptorSet>> m_DescriptorSets;
 		ViewProjMatrix m_ViewProjMatrix;
-		uint8_t m_CurrentFrameIndex;
+		uint8 m_CurrentFrameIndex;
 		size_t m_DynamicBufferMemoryAlignment;
 		glm::vec3* m_DynamicBufferMemorySpace;
 	};

@@ -8,7 +8,7 @@
 namespace Banshee
 {
 	class Component;
-	class MeshRendererComponent;
+	class MeshComponent;
 
 	class Entity
 	{
@@ -18,18 +18,20 @@ namespace Banshee
 
 		BANSHEE_ENGINE uint32 GetUniqueId() const { return m_Id; }
 
-		template<typename T>
-		void AddComponent()
+		template<typename T, typename... Args>
+		std::shared_ptr<T> AddComponent(Args&&... _args)
 		{
 			static_assert(std::is_base_of<Component, T>::value, "T must be derived from Component");
 			
-			std::shared_ptr<T> component = std::make_shared<T>();
+			std::shared_ptr<T> component = std::make_shared<T>(std::forward<Args>(_args)...);
 			m_Components.emplace_back(component);
 
-			if constexpr (std::is_same<T, MeshRendererComponent>())
+			if constexpr (std::is_same<T, MeshComponent>())
 			{
 				ApplyRenderableComponent(component);
 			}
+
+			return component;
 		}
 
 		template<typename T>
@@ -47,7 +49,7 @@ namespace Banshee
 		}
 
 	private:
-		BANSHEE_ENGINE void ApplyRenderableComponent(std::shared_ptr<MeshRendererComponent>& _component);
+		BANSHEE_ENGINE void ApplyRenderableComponent(std::shared_ptr<MeshComponent>& _component);
 
 	private:
 		uint32 m_Id;

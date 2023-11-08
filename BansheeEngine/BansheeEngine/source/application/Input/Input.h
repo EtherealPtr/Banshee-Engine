@@ -2,6 +2,7 @@
 
 #include "Foundation/Input/InputSystem.h"
 #include "Foundation/DLLConfig.h"
+#include "InputMapping.h"
 
 namespace Banshee
 {
@@ -12,8 +13,8 @@ namespace Banshee
 
 		virtual void Initialize(GLFWwindow* _window) override;
 		virtual void Update() override;
-		virtual bool IsKeyPressed(int32 _key) const override;
-		virtual bool IsMouseButtonPressed(int32 _button) const override;
+		virtual bool IsKeyPressed(const int32 _key) const override;
+		virtual bool IsMouseButtonPressed(const int32 _button) const override;
 		virtual void GetCursorPosition(double& _x, double& _y) const override;
 		virtual void SetInputBindings(const std::vector<InputBinding>& _bindings) override;
 

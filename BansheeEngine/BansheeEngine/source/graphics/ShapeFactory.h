@@ -1,16 +1,16 @@
 #pragma once
 
 #include "Foundation/PrimitiveShape.h"
+#include "Foundation/Platform.h"
 #include "Vertex.h"
 #include <vector>
-#include <cstdint>
 
 namespace Banshee
 {
 	class ShapeFactory
 	{
 	public:
-		static void GetVertices(const PrimitiveShape _shape, std::vector<Vertex>& _vertices, std::vector<uint16_t>& _indices);
-		static uint16_t GetIndicesCount(const PrimitiveShape _shape);
+		static void GetVertices(const PrimitiveShape _shape, std::vector<Vertex>& _vertices, std::vector<uint16>& _indices);
+		static uint16 GetIndicesCount(const PrimitiveShape _shape);
 	};
 } // End of Banshee namespace

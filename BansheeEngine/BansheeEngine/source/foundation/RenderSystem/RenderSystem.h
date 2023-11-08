@@ -5,14 +5,14 @@
 
 namespace Banshee
 {
-	class MeshRendererComponent;
+	class MeshComponent;
 
 	class RenderSystem
 	{
 	public:
 		static RenderSystem& Instance();
-		void AddMeshRendererComponent(const std::shared_ptr<MeshRendererComponent>& _component);
-		std::vector<std::shared_ptr<MeshRendererComponent>> GetMeshComponents()
+		void AddMeshComponent(const std::shared_ptr<MeshComponent>& _component);
+		std::vector<std::shared_ptr<MeshComponent>> GetMeshComponents()
 		{
 			return m_MeshRenderers;
 		}
@@ -27,6 +27,6 @@ namespace Banshee
 		void operator=(RenderSystem&&) = delete;
 
 	private:
-		std::vector<std::shared_ptr<MeshRendererComponent>> m_MeshRenderers;
+		std::vector<std::shared_ptr<MeshComponent>> m_MeshRenderers;
 	};
 } // End of Banshee namespace

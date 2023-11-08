@@ -1,5 +1,5 @@
 #include "Entity.h"
-#include "Foundation/Components/MeshRendererComponent.h"
+#include "Foundation/Components/MeshComponent.h"
 #include "Foundation/RenderSystem/RenderSystem.h"
 
 namespace Banshee
@@ -12,8 +12,8 @@ namespace Banshee
 	Entity::~Entity()
 	{}
 	
-	void Entity::ApplyRenderableComponent(std::shared_ptr<MeshRendererComponent>& _component)
+	void Entity::ApplyRenderableComponent(std::shared_ptr<MeshComponent>& _component)
 	{
-		RenderSystem::Instance().AddMeshRendererComponent(_component);
+		RenderSystem::Instance().AddMeshComponent(_component);
 	}
 } // End of Banshee namespace

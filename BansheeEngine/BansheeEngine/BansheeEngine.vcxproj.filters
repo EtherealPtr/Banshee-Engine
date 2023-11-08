@@ -102,7 +102,7 @@
     <ClCompile Include="Source\Foundation\Entity\EntityManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Foundation\Components\MeshRendererComponent.cpp">
+    <ClCompile Include="Source\Foundation\Components\MeshComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\Foundation\RenderSystem\RenderSystem.cpp">
@@ -239,7 +239,7 @@
     <ClInclude Include="Source\Foundation\Entity\EntityManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Foundation\Components\MeshRendererComponent.h">
+    <ClInclude Include="Source\Foundation\Components\MeshComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Foundation\RenderSystem\RenderSystem.h">
@@ -263,7 +263,7 @@
     <ClInclude Include="Source\Foundation\Input\InputBinding.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Application\Input\InputKeys.h">
+    <ClInclude Include="Source\Application\Input\InputMapping.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
