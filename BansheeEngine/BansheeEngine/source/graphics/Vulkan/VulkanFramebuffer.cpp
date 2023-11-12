@@ -22,7 +22,7 @@ namespace Banshee
 			VkFramebufferCreateInfo framebufferCreateInfo{};
 			framebufferCreateInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
 			framebufferCreateInfo.renderPass = _renderPass;
-			framebufferCreateInfo.attachmentCount = static_cast<uint32_t>(imageViews.size());
+			framebufferCreateInfo.attachmentCount = static_cast<uint32>(imageViews.size());
 			framebufferCreateInfo.pAttachments = imageViews.data();
 			framebufferCreateInfo.width = _w;
 			framebufferCreateInfo.height = _h;
@@ -45,4 +45,4 @@ namespace Banshee
 			m_Framebuffers[i] = VK_NULL_HANDLE;
 		}
 	}
-}
+} // End of Banshee namespace

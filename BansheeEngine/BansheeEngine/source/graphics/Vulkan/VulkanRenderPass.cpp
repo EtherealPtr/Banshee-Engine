@@ -82,4 +82,4 @@ namespace Banshee
 		vkDestroyRenderPass(m_Device, m_RenderPass, nullptr);
 		m_RenderPass = VK_NULL_HANDLE;
 	}
-}
+} // End of Banshee namespace

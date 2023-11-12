@@ -13,8 +13,7 @@ public:
 	Player()
 	{
 		m_PlayerEntity = EntityManager::Instance().CreateEntity();
-		auto meshComponent = m_PlayerEntity->AddComponent<MeshComponent>(PrimitiveShape::Square);
-		meshComponent->SetColor(1.0f, 1.0f, 1.0f);
+		auto meshComponent = m_PlayerEntity->AddComponent<MeshComponent>(PrimitiveShape::Triangle);
 
 		std::vector<InputBinding> inputBindings = 
 		{

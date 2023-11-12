@@ -55,11 +55,6 @@ namespace Banshee
 		inputAttributeDescriptions[0].format = VK_FORMAT_R32G32B32_SFLOAT;
 		inputAttributeDescriptions[0].offset = 0;
 
-		//inputAttributeDescriptions[1].binding = 0;
-		//inputAttributeDescriptions[1].location = 1;
-		//inputAttributeDescriptions[1].format = VK_FORMAT_R32G32B32_SFLOAT;
-		//inputAttributeDescriptions[1].offset = offsetof(Vertex, color);
-
 		inputAttributeDescriptions[1].binding = 0;
 		inputAttributeDescriptions[1].location = 1;
 		inputAttributeDescriptions[1].format = VK_FORMAT_R32G32_SFLOAT;
@@ -219,4 +214,4 @@ namespace Banshee
 		vkDestroyPipelineLayout(m_LogicalDevice, m_PipelineLayout, nullptr);
 		m_PipelineLayout = VK_NULL_HANDLE;
 	}
-}
+} // End of Banshee namespace

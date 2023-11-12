@@ -57,13 +57,13 @@ namespace Banshee
 		m_VPUniformBuffers.reserve(numOfSwapImages);
 		m_DynamicUniformBuffers.reserve(numOfSwapImages);
 
+		m_ViewProjMatrix.view = glm::lookAt(glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		m_ViewProjMatrix.proj = glm::orthoRH(-1.0f, 1.0f, -1.0f, 1.0f, 0.0f, 100.0f);
+
 		for (size_t i = 0; i < numOfSwapImages; ++i)
 		{
 			// View-proj UBO
 			m_VPUniformBuffers.emplace_back(std::make_unique<VulkanUniformBuffer>(m_VkDevice->GetLogicalDevice(), m_VkDevice->GetPhysicalDevice(), sizeof(ViewProjMatrix)));
-			m_ViewProjMatrix.view = glm::lookAt(glm::vec3(0.0f, 0.0f, 5.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-			m_ViewProjMatrix.proj = glm::ortho(0.0f, (float)m_VkSwapchain->GetWidth(), 0.0f, (float)m_VkSwapchain->GetHeight(), 0.1f, 10.0f);
-			//m_ViewProjMatrix.proj = glm::perspective(glm::radians(60.0f), (float)m_VkSwapchain->GetWidth() / (float)m_VkSwapchain->GetHeight(), 0.1f, 10.0f);
 			m_VPUniformBuffers[i]->CopyData(&m_ViewProjMatrix);
 
 			// Dynamic UBO
@@ -104,7 +104,7 @@ namespace Banshee
 			samplerDescWriteProperties
 		};
 
-		auto meshComponents = RenderSystem::Instance().GetMeshComponents();
+		const auto meshComponents = RenderSystem::Instance().GetMeshComponents();
 		for (size_t i = 0; i < meshComponents.size(); ++i)
 		{
 			glm::vec3* colorData = (glm::vec3*)((uint64)m_DynamicBufferMemorySpace + (i * m_DynamicBufferMemoryAlignment));
@@ -199,7 +199,7 @@ namespace Banshee
 
 		UpdateDescriptorSet(_imgIndex);
 
-		auto meshComponents = RenderSystem::Instance().GetMeshComponents();
+		const auto meshComponents = RenderSystem::Instance().GetMeshComponents();
 
 		for (uint32 i = 0; i < meshComponents.size(); ++i)
 		{
@@ -212,7 +212,7 @@ namespace Banshee
 		
 			// Push constants
 			glm::mat4 modelMatrix = glm::mat4(1.0f);
-			vkCmdPushConstants(cmdBuffer, m_VkGraphicsPipeline->GetLayout(), VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(ModelMatrix), &modelMatrix);
+			vkCmdPushConstants(cmdBuffer, m_VkGraphicsPipeline->GetLayout(), VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(glm::mat4), &modelMatrix);
 		
 			vkCmdDrawIndexed(cmdBuffer, m_VertexBufferManager->GetCurrentIndicesCount(), 1, 0, 0, 0);
 		}

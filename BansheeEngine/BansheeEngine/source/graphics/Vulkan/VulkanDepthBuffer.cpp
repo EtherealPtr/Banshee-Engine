@@ -27,4 +27,4 @@ namespace Banshee
 		vkDestroyImage(m_LogicalDevice, m_DepthImage, nullptr);
 		vkFreeMemory(m_LogicalDevice, m_DepthImageMemory, nullptr);
 	}
-}
+} // End of Banshee namespace
