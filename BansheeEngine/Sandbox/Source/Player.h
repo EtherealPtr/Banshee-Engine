@@ -15,8 +15,8 @@ public:
 	{
 		m_PlayerEntity = EntityManager::Instance().CreateEntity();
 		auto meshComponent = m_PlayerEntity->AddComponent<MeshComponent>(PrimitiveShape::Triangle);
-		auto transform = m_PlayerEntity->GetComponent<TransformComponent>();
-		transform.get()->SetPosition(glm::vec3(0.0f, -0.5f, 0.0f));
+		m_Transform = m_PlayerEntity->GetComponent<TransformComponent>();
+		m_Transform->SetPosition(glm::vec3(0.0f, 0.0f, 0.0f));
 
 		std::vector<InputBinding> inputBindings = 
 		{
@@ -31,24 +31,25 @@ public:
 
 	void MoveForward()
 	{
-		printf("Move forward\n");
+		m_Transform->Translate(glm::vec3(0.0f, -0.0001f, 0.0f));
 	}
 
 	void MoveBackward()
 	{
-		printf("Move backward\n");
+		m_Transform->Translate(glm::vec3(0.0f, 0.0001f, 0.0f));
 	}
 
 	void MoveLeft()
 	{
-		printf("Move left\n");
+		m_Transform->Translate(glm::vec3(-0.0001f, 0.0f, 0.0f));
 	}
 
 	void MoveRight()
 	{
-		printf("Move right\n");
+		m_Transform->Translate(glm::vec3(0.0001f, 0.0f, 0.0f));
 	}
 
 private:
 	std::shared_ptr<Entity> m_PlayerEntity;
+	std::shared_ptr<TransformComponent> m_Transform;
 };
