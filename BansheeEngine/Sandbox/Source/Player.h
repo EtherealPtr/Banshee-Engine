@@ -2,6 +2,7 @@
 
 #include "Foundation/Entity/EntityManager.h"
 #include "Foundation/Components/MeshComponent.h"
+#include "Foundation/Components/TransformComponent.h"
 #include "Graphics/PrimitiveShape.h"
 #include "Application/Input/Input.h"
 
@@ -14,6 +15,8 @@ public:
 	{
 		m_PlayerEntity = EntityManager::Instance().CreateEntity();
 		auto meshComponent = m_PlayerEntity->AddComponent<MeshComponent>(PrimitiveShape::Triangle);
+		auto transform = m_PlayerEntity->GetComponent<TransformComponent>();
+		transform.get()->SetPosition(glm::vec3(0.0f, -0.5f, 0.0f));
 
 		std::vector<InputBinding> inputBindings = 
 		{

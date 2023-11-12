@@ -18,14 +18,13 @@
 #include "VulkanDescriptorSetProperties.h"
 #include "VulkanTexture.h"
 #include "VulkanTextureSampler.h"
-#include "../Window.h"
+#include "Graphics/Window.h"
 #include "Foundation/Entity/EntityManager.h"
 #include "Foundation/Components/MeshComponent.h"
+#include "Foundation/Components/TransformComponent.h"
 #include "Foundation/Systems/RenderSystem.h"
 #include <vulkan/vulkan.h>
 #include <stdexcept>
-#include <glm/glm.hpp>
-#include <glm/gtx/transform.hpp>
 #include <array>
 
 namespace Banshee
@@ -171,7 +170,7 @@ namespace Banshee
 		renderPassInfo.renderArea.extent = VkExtent2D({ m_VkSwapchain->GetWidth(), m_VkSwapchain->GetHeight() });
 
 		// Clear attachments
-		VkClearColorValue clearColor = { 0.0f, 0.0f, 0.3f, 1.0f };
+		VkClearColorValue clearColor = { 0.0f, 0.0f, 0.0f, 1.0f };
 		VkClearDepthStencilValue clearDepthStencil{ 1.0f, 0 };
 
 		std::array<VkClearValue, 2> clearAttachments{};
@@ -211,7 +210,7 @@ namespace Banshee
 			vkCmdBindDescriptorSets(cmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_VkGraphicsPipeline->GetLayout(), 0, 1, &currentDescriptorSet, 1, &dynamicOffsets);
 		
 			// Push constants
-			glm::mat4 modelMatrix = glm::mat4(1.0f);
+			const glm::mat4 modelMatrix = meshComponents[i]->GetOwner()->GetTransform()->GetModel();
 			vkCmdPushConstants(cmdBuffer, m_VkGraphicsPipeline->GetLayout(), VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(glm::mat4), &modelMatrix);
 		
 			vkCmdDrawIndexed(cmdBuffer, m_VertexBufferManager->GetCurrentIndicesCount(), 1, 0, 0, 0);

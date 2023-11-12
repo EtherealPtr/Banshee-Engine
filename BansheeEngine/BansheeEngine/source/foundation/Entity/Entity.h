@@ -9,6 +9,7 @@ namespace Banshee
 {
 	class Component;
 	class MeshComponent;
+	class TransformComponent;
 
 	class Entity
 	{
@@ -17,6 +18,7 @@ namespace Banshee
 		BANSHEE_ENGINE ~Entity();
 
 		BANSHEE_ENGINE uint32 GetUniqueId() const { return m_Id; }
+		BANSHEE_ENGINE std::shared_ptr<TransformComponent> GetTransform() const { return m_Transform; }
 
 		template<typename T, typename... Args>
 		std::shared_ptr<T> AddComponent(Args&&... _args)
@@ -25,11 +27,13 @@ namespace Banshee
 			
 			std::shared_ptr<T> component = std::make_shared<T>(std::forward<Args>(_args)...);
 			m_Components.emplace_back(component);
-
+			
 			if constexpr (std::is_same<T, MeshComponent>())
 			{
 				ApplyRenderableComponent(component);
 			}
+
+			RegisterComponent(component.get());
 
 			return component;
 		}
@@ -50,9 +54,11 @@ namespace Banshee
 
 	private:
 		BANSHEE_ENGINE void ApplyRenderableComponent(std::shared_ptr<MeshComponent>& _component);
+		BANSHEE_ENGINE void RegisterComponent(Component* _component);
 
 	private:
 		uint32 m_Id;
+		std::shared_ptr<TransformComponent> m_Transform;
 		std::vector<std::shared_ptr<Component>> m_Components;
 	};
 } // End of Banshee namespace
