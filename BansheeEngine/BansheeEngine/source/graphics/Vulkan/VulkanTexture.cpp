@@ -131,4 +131,4 @@ namespace Banshee
 		BE_LOG(LogCategory::Info, "[TEXTURE]: Created texture image object");
 		m_TextureImageView = VulkanUtils::CreateImageView(m_LogicalDevice, m_TextureImage, m_TextureImageFormat, VK_IMAGE_ASPECT_COLOR_BIT);
 	}
-}
+} // End of Banshee namespace

@@ -15,12 +15,12 @@ namespace Banshee
 	Entity::~Entity()
 	{}
 	
-	void Entity::ApplyRenderableComponent(std::shared_ptr<MeshComponent>& _component)
+	void Entity::ApplyRenderableComponent(const std::shared_ptr<MeshComponent>& _component)
 	{
 		RenderSystem::Instance().AddMeshComponent(_component);
 	}
 
-	void Entity::RegisterComponent(Component* _component)
+	void Entity::RegisterComponent(Component* const _component)
 	{
 		_component->SetOwner(this);
 	}

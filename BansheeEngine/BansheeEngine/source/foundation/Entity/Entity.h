@@ -18,7 +18,7 @@ namespace Banshee
 		BANSHEE_ENGINE ~Entity();
 
 		BANSHEE_ENGINE uint32 GetUniqueId() const { return m_Id; }
-		BANSHEE_ENGINE std::shared_ptr<TransformComponent> GetTransform() const { return m_Transform; }
+		BANSHEE_ENGINE const std::shared_ptr<TransformComponent>& GetTransform() const { return m_Transform; }
 
 		template<typename T, typename... Args>
 		std::shared_ptr<T> AddComponent(Args&&... _args)
@@ -53,8 +53,8 @@ namespace Banshee
 		}
 
 	private:
-		BANSHEE_ENGINE void ApplyRenderableComponent(std::shared_ptr<MeshComponent>& _component);
-		BANSHEE_ENGINE void RegisterComponent(Component* _component);
+		BANSHEE_ENGINE void ApplyRenderableComponent(const std::shared_ptr<MeshComponent>& _component);
+		BANSHEE_ENGINE void RegisterComponent(Component* const _component);
 
 	private:
 		uint32 m_Id;

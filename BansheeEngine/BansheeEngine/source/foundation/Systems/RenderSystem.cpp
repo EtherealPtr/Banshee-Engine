@@ -1,5 +1,5 @@
 #include "RenderSystem.h"
-#include "../Components/MeshComponent.h"
+#include "Foundation/Components/MeshComponent.h"
 
 namespace Banshee
 {
