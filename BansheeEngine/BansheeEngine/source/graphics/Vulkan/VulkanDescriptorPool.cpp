@@ -13,7 +13,7 @@ namespace Banshee
 	{
 		BE_LOG(LogCategory::Trace, "[DESCRIPTOR POOL]: Creating descriptor pool");
 
-		std::array<VkDescriptorPoolSize, 3> poolSizes{};
+		std::array<VkDescriptorPoolSize, 4> poolSizes{};
 		poolSizes[0].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
 		poolSizes[0].descriptorCount = 1;
 		BE_LOG(LogCategory::Trace, "[DESCRIPTOR POOL]: Added descriptor pool size of type VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER");
@@ -22,9 +22,13 @@ namespace Banshee
 		poolSizes[1].descriptorCount = 1;
 		BE_LOG(LogCategory::Trace, "[DESCRIPTOR POOL]: Added descriptor pool size of type VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC");
 
-		poolSizes[2].type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+		poolSizes[2].type = VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE;
 		poolSizes[2].descriptorCount = 1;
-		BE_LOG(LogCategory::Trace, "[DESCRIPTOR POOL]: Added descriptor pool size of type VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER");
+		BE_LOG(LogCategory::Trace, "[DESCRIPTOR POOL]: Added descriptor pool size of type VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE");
+
+		poolSizes[3].type = VK_DESCRIPTOR_TYPE_SAMPLER;
+		poolSizes[3].descriptorCount = 1;
+		BE_LOG(LogCategory::Trace, "[DESCRIPTOR POOL]: Added descriptor pool size of type VK_DESCRIPTOR_TYPE_SAMPLER");
 
 		VkDescriptorPoolCreateInfo descriptorPoolCreateInfo{};
 		descriptorPoolCreateInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;

@@ -6,7 +6,8 @@ typedef struct VkDevice_T* VkDevice;
 typedef struct VkDescriptorPool_T* VkDescriptorPool;
 typedef struct VkDescriptorSetLayout_T* VkDescriptorSetLayout;
 typedef struct VkDescriptorSet_T* VkDescriptorSet;
-struct DescriptorSetWriteProperties;
+struct DescriptorSetWriteBufferProperties;
+struct DescriptorSetWriteTextureProperties;
 
 namespace Banshee
 {
@@ -16,7 +17,8 @@ namespace Banshee
 		VulkanDescriptorSet(const VkDevice& _logicalDevice, const VkDescriptorPool& _descriptorPool, const VkDescriptorSetLayout& _descriptorLayout);
 		~VulkanDescriptorSet();
 
-		void UpdateDescriptorSet(const std::vector<DescriptorSetWriteProperties>& _descriptorSetWriteProperties);
+		void UpdateDescriptorSet(const std::vector<DescriptorSetWriteBufferProperties>& _descriptorSetWriteBufProperties);
+		void UpdateDescriptorSet(const std::vector<DescriptorSetWriteTextureProperties>& _descriptorSetWriteTexProperties);
 		VkDescriptorSet Get() const { return m_DescriptorSet; }
 
 	private:

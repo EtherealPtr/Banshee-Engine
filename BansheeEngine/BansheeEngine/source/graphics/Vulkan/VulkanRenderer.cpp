@@ -48,6 +48,7 @@ namespace Banshee
 		m_VkInFlightFences(std::make_unique<VulkanFence>(m_VkDevice->GetLogicalDevice(), static_cast<uint16>(m_VkSwapchain->GetImageViews().size()))),
 		m_VertexBufferManager(std::make_unique<VulkanVertexBufferManager>(m_VkDevice->GetLogicalDevice(), m_VkDevice->GetPhysicalDevice(), m_VkCommandPool->Get(), m_VkDevice->GetGraphicsQueue())),
 		m_VkTexture(std::make_unique<VulkanTexture>(m_VkDevice->GetLogicalDevice(), m_VkDevice->GetPhysicalDevice(), m_VkDevice->GetGraphicsQueue(), m_VkCommandPool->Get(), "Textures/tiles.jpg")),
+		m_VkTexture2(std::make_unique<VulkanTexture>(m_VkDevice->GetLogicalDevice(), m_VkDevice->GetPhysicalDevice(), m_VkDevice->GetGraphicsQueue(), m_VkCommandPool->Get(), "Textures/gengar.png")),
 		m_VkTextureSampler(std::make_unique<VulkanTextureSampler>(m_VkDevice->GetLogicalDevice(), m_VkDevice->GetPhysicalDevice())) 
 	{
 		AllocateDynamicBufferSpace();
@@ -92,14 +93,23 @@ namespace Banshee
 
 	void VulkanRenderer::UpdateDescriptorSet(const uint8 _descriptorSetIndex)
 	{
-		DescriptorSetWriteProperties uniformBufferDescWriteProperties(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, m_VPUniformBuffers[_descriptorSetIndex]->GetBuffer(), m_VPUniformBuffers[_descriptorSetIndex]->GetBufferSize());
-		DescriptorSetWriteProperties dynamicUniformBufferDescWriteProperties(1, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC, m_DynamicUniformBuffers[_descriptorSetIndex]->GetBuffer(), m_DynamicBufferMemoryAlignment);
-		DescriptorSetWriteProperties samplerDescWriteProperties(2, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_NULL_HANDLE, 0, m_VkTexture->GetTextureImageView(), m_VkTextureSampler->Get());
+		DescriptorSetWriteBufferProperties uniformBufferDescWriteProperties(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, m_VPUniformBuffers[_descriptorSetIndex]->GetBuffer(), m_VPUniformBuffers[_descriptorSetIndex]->GetBufferSize());
+		DescriptorSetWriteBufferProperties dynamicUniformBufferDescWriteProperties(1, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC, m_DynamicUniformBuffers[_descriptorSetIndex]->GetBuffer(), m_DynamicBufferMemoryAlignment);
 		
-		std::vector<DescriptorSetWriteProperties> descriptorSetWriteProperties =
+		std::vector<VkImageView> textureImageViews = { m_VkTexture->GetTextureImageView(), m_VkTexture2->GetTextureImageView() };
+		
+		DescriptorSetWriteTextureProperties texturesDescWriteProperties(2, VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE, textureImageViews, VK_NULL_HANDLE);
+		DescriptorSetWriteTextureProperties samplerDescWriteProperties(3, VK_DESCRIPTOR_TYPE_SAMPLER, {}, m_VkTextureSampler->Get());
+		
+		const std::vector<DescriptorSetWriteBufferProperties> descriptorSetWriteBufferProperties =
 		{
 			uniformBufferDescWriteProperties,
-			dynamicUniformBufferDescWriteProperties,
+			dynamicUniformBufferDescWriteProperties
+		};
+
+		const std::vector<DescriptorSetWriteTextureProperties> descriptorSetWriteTextureProperties =
+		{
+			texturesDescWriteProperties,
 			samplerDescWriteProperties
 		};
 
@@ -113,7 +123,8 @@ namespace Banshee
 		}
 
 		m_DynamicUniformBuffers[_descriptorSetIndex]->CopyData(m_DynamicBufferMemorySpace);
-		m_DescriptorSets[_descriptorSetIndex]->UpdateDescriptorSet(descriptorSetWriteProperties);
+		m_DescriptorSets[_descriptorSetIndex]->UpdateDescriptorSet(descriptorSetWriteBufferProperties);
+		m_DescriptorSets[_descriptorSetIndex]->UpdateDescriptorSet(descriptorSetWriteTextureProperties);
 	}
 
 	void VulkanRenderer::DrawFrame()

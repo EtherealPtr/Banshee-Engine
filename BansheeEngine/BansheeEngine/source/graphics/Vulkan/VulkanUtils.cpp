@@ -365,4 +365,4 @@ namespace Banshee
 
 		vkFreeCommandBuffers(_logicalDevice, _commandPool, 1, &_commandBuffer);
 	}
-}
+} // End of Banshee namespace

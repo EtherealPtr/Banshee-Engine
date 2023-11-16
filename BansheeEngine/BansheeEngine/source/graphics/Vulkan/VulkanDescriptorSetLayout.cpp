@@ -6,14 +6,14 @@
 
 namespace Banshee
 {
-	VulkanDescriptorSetLayout::VulkanDescriptorSetLayout(const VkDevice& _logicalDevice, const uint32_t _shaderStage) :
+	VulkanDescriptorSetLayout::VulkanDescriptorSetLayout(const VkDevice& _logicalDevice, const uint32 _shaderStage) :
 		m_LogicalDevice(_logicalDevice),
 		m_DescriptorSetLayout(VK_NULL_HANDLE)
 	{
 		BE_LOG(LogCategory::Trace, "[DESCRIPTOR SET LAYOUT]: Creating descriptor set layout");
 
 		// View-projection binding
-		std::array<VkDescriptorSetLayoutBinding, 3> layoutBindings{};
+		std::array<VkDescriptorSetLayoutBinding, 4> layoutBindings{};
 		layoutBindings[0].binding = 0;
 		layoutBindings[0].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
 		layoutBindings[0].descriptorCount = 1;
@@ -29,17 +29,25 @@ namespace Banshee
 		layoutBindings[1].pImmutableSamplers = nullptr;
 		BE_LOG(LogCategory::Trace, "[DESCRIPTOR SET LAYOUT]: Added descriptor of type VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC at binding 1");
 
-		// Sampler
+		// Textures
 		layoutBindings[2].binding = 2;
-		layoutBindings[2].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-		layoutBindings[2].descriptorCount = 1;
+		layoutBindings[2].descriptorType = VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE;
+		layoutBindings[2].descriptorCount = 2; // TODO: Remove hardcoded value
 		layoutBindings[2].stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
 		layoutBindings[2].pImmutableSamplers = nullptr;
-		BE_LOG(LogCategory::Trace, "[DESCRIPTOR SET LAYOUT]: Added descriptor of type VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER at binding 2");
+		BE_LOG(LogCategory::Trace, "[DESCRIPTOR SET LAYOUT]: Added descriptor of type VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE at binding 2");
+
+		// Sampler
+		layoutBindings[3].binding = 3;
+		layoutBindings[3].descriptorType = VK_DESCRIPTOR_TYPE_SAMPLER;
+		layoutBindings[3].descriptorCount = 1;
+		layoutBindings[3].stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
+		layoutBindings[3].pImmutableSamplers = nullptr;
+		BE_LOG(LogCategory::Trace, "[DESCRIPTOR SET LAYOUT]: Added descriptor of type VK_DESCRIPTOR_TYPE_SAMPLER at binding 3");
 
 		VkDescriptorSetLayoutCreateInfo layoutCreateInfo{};
 		layoutCreateInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
-		layoutCreateInfo.bindingCount = static_cast<uint32_t>(layoutBindings.size());
+		layoutCreateInfo.bindingCount = static_cast<uint32>(layoutBindings.size());
 		layoutCreateInfo.pBindings = layoutBindings.data();
 
 		if (vkCreateDescriptorSetLayout(_logicalDevice, &layoutCreateInfo, nullptr, &m_DescriptorSetLayout) != VK_SUCCESS)

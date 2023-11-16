@@ -28,28 +28,65 @@ namespace Banshee
 		vkFreeDescriptorSets(m_LogicalDevice, m_DescriptorPool, 1, &m_DescriptorSet);
 	}
 
-	void VulkanDescriptorSet::UpdateDescriptorSet(const std::vector<DescriptorSetWriteProperties>& _descriptorSetWriteProperties)
+	void VulkanDescriptorSet::UpdateDescriptorSet(const std::vector<DescriptorSetWriteBufferProperties>& _descriptorSetWriteBufProperties)
 	{
-		for (const auto& writeProperties : _descriptorSetWriteProperties)
+		for (const auto& writeBufProperties : _descriptorSetWriteBufProperties)
 		{
 			VkDescriptorBufferInfo bufferInfo{};
 			bufferInfo.offset = 0;
-			bufferInfo.buffer = writeProperties.buffer;
-			bufferInfo.range = writeProperties.bufferRange;
-
-			VkDescriptorImageInfo imageInfo{};
-			imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-			imageInfo.imageView = writeProperties.imageView;
-			imageInfo.sampler = writeProperties.sampler;
+			bufferInfo.buffer = writeBufProperties.buffer;
+			bufferInfo.range = writeBufProperties.bufferRange;
 
 			VkWriteDescriptorSet descriptorSetWriter{};
 			descriptorSetWriter.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
 			descriptorSetWriter.dstSet = m_DescriptorSet;
-			descriptorSetWriter.dstBinding = writeProperties.binding;
+			descriptorSetWriter.dstBinding = writeBufProperties.binding;
 			descriptorSetWriter.descriptorCount = 1;
-			descriptorSetWriter.descriptorType = writeProperties.descriptorType;
+			descriptorSetWriter.descriptorType = writeBufProperties.descriptorType;
 			descriptorSetWriter.pBufferInfo = &bufferInfo;
-			descriptorSetWriter.pImageInfo = imageInfo.imageView != VK_NULL_HANDLE ? &imageInfo : nullptr;
+			descriptorSetWriter.pImageInfo = nullptr;
+
+			vkUpdateDescriptorSets(m_LogicalDevice, 1, &descriptorSetWriter, 0, nullptr);
+		}
+	}
+
+	void VulkanDescriptorSet::UpdateDescriptorSet(const std::vector<DescriptorSetWriteTextureProperties>& _descriptorSetWriteTexProperties)
+	{
+		for (const auto& writeTexProperties : _descriptorSetWriteTexProperties)
+		{
+			std::vector<VkDescriptorImageInfo> imageInfos{};
+			uint32 descriptorCount = 1;
+
+			if (writeTexProperties.imageViews.size() > 0)
+			{
+				descriptorCount = static_cast<uint32>(writeTexProperties.imageViews.size());
+
+				for (uint32 i = 0; i < writeTexProperties.imageViews.size(); ++i)
+				{
+					VkDescriptorImageInfo imageInfo{};
+					imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+					imageInfo.imageView = writeTexProperties.imageViews[i];
+					imageInfo.sampler = VK_NULL_HANDLE;
+					imageInfos.emplace_back(imageInfo);
+				}
+			}
+			else
+			{
+				VkDescriptorImageInfo imageInfo{};
+				imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+				imageInfo.imageView = VK_NULL_HANDLE;
+				imageInfo.sampler = writeTexProperties.sampler;
+				imageInfos.emplace_back(imageInfo);
+			}
+
+			VkWriteDescriptorSet descriptorSetWriter{};
+			descriptorSetWriter.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+			descriptorSetWriter.dstSet = m_DescriptorSet;
+			descriptorSetWriter.dstBinding = writeTexProperties.binding;
+			descriptorSetWriter.descriptorCount = descriptorCount;
+			descriptorSetWriter.descriptorType = writeTexProperties.descriptorType;
+			descriptorSetWriter.pBufferInfo = nullptr;
+			descriptorSetWriter.pImageInfo = imageInfos.data();
 
 			vkUpdateDescriptorSets(m_LogicalDevice, 1, &descriptorSetWriter, 0, nullptr);
 		}
