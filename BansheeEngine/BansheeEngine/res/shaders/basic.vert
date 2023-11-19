@@ -5,6 +5,7 @@ layout (location = 1) in vec2 in_vertex_texCoord;
 
 layout (location = 0) out vec3 out_vertex_color;
 layout (location = 1) out vec2 out_vertex_texCoord;
+layout (location = 2) out int out_texture_index;
 
 layout (set = 0, binding = 0) uniform ViewProjBuffer
 {
@@ -20,6 +21,7 @@ layout (set = 0, binding = 1) uniform ColorBuffer
 layout (push_constant) uniform PushConstants
 {
 	mat4 model;
+	int textureId;
 } u_PushConstants;
 
 void main()
@@ -27,4 +29,5 @@ void main()
 	gl_Position = u_ViewProj.proj * u_ViewProj.view * u_PushConstants.model * vec4(in_vertex_position, 1.0f);
 	out_vertex_color = u_Color.color;
 	out_vertex_texCoord = in_vertex_texCoord;
+	out_texture_index = u_PushConstants.textureId;
 }

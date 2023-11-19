@@ -17,8 +17,8 @@ namespace Banshee
 		VulkanDepthBuffer(const VkDevice& _logicalDevice, const VkPhysicalDevice& _gpu, const uint32 _w, const uint32 _h);
 		~VulkanDepthBuffer();
 
-		VkFormat GetFormat() const { return m_DepthFormat; }
-		VkImageView GetImageView() const { return m_DepthImageView; }
+		VkFormat GetFormat() const noexcept { return m_DepthFormat; }
+		VkImageView GetImageView() const noexcept { return m_DepthImageView; }
 
 	private:
 		VkDevice m_LogicalDevice;

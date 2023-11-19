@@ -1,5 +1,7 @@
 #include "VulkanDescriptorSetLayout.h"
 #include "Foundation/Logging/Logger.h"
+#include "Foundation/ResourceManager/ResourceManager.h"
+#include "Foundation/ResourceManager/Image/ImageManager.h"
 #include <vulkan/vulkan.h>
 #include <stdexcept>
 #include <array>
@@ -32,7 +34,7 @@ namespace Banshee
 		// Textures
 		layoutBindings[2].binding = 2;
 		layoutBindings[2].descriptorType = VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE;
-		layoutBindings[2].descriptorCount = 2; // TODO: Remove hardcoded value
+		layoutBindings[2].descriptorCount = static_cast<uint32>(ResourceManager::Instance().GetImageManager()->GetImages().size());
 		layoutBindings[2].stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
 		layoutBindings[2].pImmutableSamplers = nullptr;
 		BE_LOG(LogCategory::Trace, "[DESCRIPTOR SET LAYOUT]: Added descriptor of type VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE at binding 2");

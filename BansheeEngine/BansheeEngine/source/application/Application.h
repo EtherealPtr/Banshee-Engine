@@ -15,6 +15,7 @@ namespace Banshee
 		BANSHEE_ENGINE Application();
 		BANSHEE_ENGINE ~Application();
 		
+		BANSHEE_ENGINE void PostClientInitialize();
 		BANSHEE_ENGINE void Run() const;
 
 	private:

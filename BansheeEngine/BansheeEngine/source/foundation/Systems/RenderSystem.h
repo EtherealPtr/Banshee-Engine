@@ -10,16 +10,13 @@ namespace Banshee
 	class RenderSystem
 	{
 	public:
-		static RenderSystem& Instance();
+		static RenderSystem& Instance() noexcept;
 		void AddMeshComponent(const std::shared_ptr<MeshComponent>& _component);
-		std::vector<std::shared_ptr<MeshComponent>> GetMeshComponents()
-		{
-			return m_MeshRenderers;
-		}
+		const std::vector<std::shared_ptr<MeshComponent>>& GetMeshComponents() const noexcept { return m_MeshRenderers; }
 
 	private:
-		RenderSystem() {};
-		~RenderSystem() {};
+		RenderSystem() noexcept = default;
+		~RenderSystem() noexcept = default;
 
 		RenderSystem(const RenderSystem&) = delete;
 		RenderSystem(RenderSystem&&) = delete;

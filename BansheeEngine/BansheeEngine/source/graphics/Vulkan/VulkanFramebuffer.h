@@ -16,7 +16,7 @@ namespace Banshee
 		VulkanFramebuffer(const VkDevice& _logicalDevice, const VkRenderPass& _renderPass, const std::vector<VkImageView>& _swapImageViews, const VkImageView& _depthImageView, const uint32 _w, const uint32 _h);
 		~VulkanFramebuffer();
 
-		std::vector<VkFramebuffer> Get() const { return m_Framebuffers; }
+		const std::vector<VkFramebuffer>& Get() const noexcept { return m_Framebuffers; }
 
 	private:
 		VkDevice m_Device;

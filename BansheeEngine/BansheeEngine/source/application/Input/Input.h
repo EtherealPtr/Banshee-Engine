@@ -9,18 +9,18 @@ namespace Banshee
 	class Input : public InputSystem
 	{
 	public:
-		BANSHEE_ENGINE static Input& Instance();
+		BANSHEE_ENGINE static Input& Instance() noexcept;
 
-		virtual void Initialize(GLFWwindow* _window) override;
+		virtual void Initialize(GLFWwindow* _window) noexcept override;
 		virtual void Update() override;
-		virtual bool IsKeyPressed(const int32 _key) const override;
-		virtual bool IsMouseButtonPressed(const int32 _button) const override;
-		virtual void GetCursorPosition(double& _x, double& _y) const override;
+		virtual bool IsKeyPressed(const int32 _key) const noexcept override;
+		virtual bool IsMouseButtonPressed(const int32 _button) const noexcept override;
+		virtual void GetCursorPosition(double& _x, double& _y) const noexcept override;
 		virtual void SetInputBindings(const std::vector<InputBinding>& _bindings) override;
 
 	private:
-		Input() : m_Window(nullptr) {}
-		~Input() = default;
+		Input() noexcept : m_Window(nullptr) {}
+		virtual ~Input() = default;
 
 		Input(const Input&) = delete;
 		Input(Input&&) = delete;

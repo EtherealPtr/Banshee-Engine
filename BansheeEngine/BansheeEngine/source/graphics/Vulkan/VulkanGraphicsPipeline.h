@@ -16,8 +16,8 @@ namespace Banshee
 		VulkanGraphicsPipeline(const VkDevice& _logicalDevice, const VkRenderPass& _renderPass, const VkDescriptorSetLayout& _descriptorSetLayout, const uint32 _w, const uint32 _h);
 		~VulkanGraphicsPipeline();
 
-		VkPipeline Get() const { return m_GraphicsPipeline; }
-		VkPipelineLayout GetLayout() const { return m_PipelineLayout; }
+		VkPipeline Get() const noexcept { return m_GraphicsPipeline; }
+		VkPipelineLayout GetLayout() const noexcept { return m_PipelineLayout; }
 
 	private:
 		VkDevice m_LogicalDevice;

@@ -20,12 +20,6 @@ namespace Banshee
 		m_LogFile.close();
 	}
 
-	FileManager& FileManager::Instance()
-	{
-		static FileManager s_FileManager{};
-		return s_FileManager;
-	}
-
 	void FileManager::InitializeDirPaths()
 	{
 		std::filesystem::path currentFilePath(__FILE__);

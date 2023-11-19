@@ -49,6 +49,7 @@
     <IncludePath>$(IncludePath)</IncludePath>
     <LibraryPath>$(LibraryPath)</LibraryPath>
     <RunCodeAnalysis>false</RunCodeAnalysis>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(SolutionDir)Binaries\BansheeEngine-$(Configuration)\</OutDir>
@@ -102,14 +103,16 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Foundation\Components\MeshComponent.cpp" />
+    <ClCompile Include="Source\Foundation\ResourceManager\Image\ImageManager.cpp" />
+    <ClCompile Include="Source\Foundation\ResourceManager\ResourceManager.cpp" />
     <ClCompile Include="Source\Application\Input\Input.cpp" />
     <ClCompile Include="Source\Foundation\Systems\RenderSystem.cpp" />
     <ClCompile Include="Source\Foundation\Entity\EntityManager.cpp" />
-    <ClCompile Include="Source\Foundation\Components\Component.cpp" />
     <ClCompile Include="Source\Foundation\Entity\Entity.cpp" />
     <ClCompile Include="source\foundation\INIParser.cpp" />
     <ClCompile Include="source\application\Application.cpp" />
-    <ClCompile Include="source\foundation\File\FileManager.cpp" />
+    <ClCompile Include="Source\Foundation\ResourceManager\File\FileManager.cpp" />
     <ClCompile Include="source\foundation\Logging\Logger.cpp" />
     <ClCompile Include="Source\Graphics\ShapeFactory.cpp" />
     <ClCompile Include="Source\Graphics\Vulkan\VulkanDepthBuffer.cpp" />
@@ -133,11 +136,14 @@
     <ClCompile Include="source\Graphics\Vulkan\VulkanSemaphore.cpp" />
     <ClCompile Include="source\Graphics\Vulkan\VulkanFence.cpp" />
     <ClCompile Include="source\Graphics\Vulkan\VulkanVertexBuffer.cpp" />
-    <ClCompile Include="Source\Graphics\Vulkan\VulkanTexture.cpp" />
     <ClCompile Include="Source\Graphics\Vulkan\VulkanTextureSampler.cpp" />
     <ClCompile Include="Source\Foundation\Components\TransformComponent.cpp" />
+    <ClCompile Include="Source\Graphics\Vulkan\VulkanTextureManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Foundation\ResourceManager\Image\Image.h" />
+    <ClInclude Include="Source\Foundation\ResourceManager\Image\ImageManager.h" />
+    <ClInclude Include="Source\Foundation\ResourceManager\ResourceManager.h" />
     <ClInclude Include="Source\Application\Input\InputMapping.h" />
     <ClInclude Include="Source\Foundation\Input\InputBinding.h" />
     <ClInclude Include="Source\Application\Input\Input.h" />
@@ -156,7 +162,7 @@
     <ClInclude Include="source\application\EntryPoint.h" />
     <ClInclude Include="source\Banshee.h" />
     <ClInclude Include="source\foundation\DLLConfig.h" />
-    <ClInclude Include="source\foundation\File\FileManager.h" />
+    <ClInclude Include="Source\Foundation\ResourceManager\File\FileManager.h" />
     <ClInclude Include="source\foundation\Logging\Logger.h" />
     <ClInclude Include="source\foundation\Platform.h" />
     <ClInclude Include="Source\Graphics\PrimitiveShape.h" />
@@ -185,9 +191,9 @@
     <ClInclude Include="source\Graphics\Vulkan\VulkanSemaphore.h" />
     <ClInclude Include="source\Graphics\Vulkan\VulkanFence.h" />
     <ClInclude Include="source\Graphics\Vulkan\VulkanVertexBuffer.h" />
-    <ClInclude Include="Source\Graphics\Vulkan\VulkanTexture.h" />
     <ClInclude Include="Source\Graphics\Vulkan\VulkanTextureSampler.h" />
     <ClInclude Include="Source\Foundation\Components\TransformComponent.h" />
+    <ClInclude Include="Source\Graphics\Vulkan\VulkanTextureManager.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

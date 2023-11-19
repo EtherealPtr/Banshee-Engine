@@ -13,7 +13,7 @@ namespace Banshee
 		VulkanDescriptorSetLayout(const VkDevice& _logicalDevice, const uint32 _shaderStage);
 		~VulkanDescriptorSetLayout();
 
-		VkDescriptorSetLayout Get() const { return m_DescriptorSetLayout; }
+		VkDescriptorSetLayout Get() const noexcept { return m_DescriptorSetLayout; }
 
 	private:
 		VkDevice m_LogicalDevice;

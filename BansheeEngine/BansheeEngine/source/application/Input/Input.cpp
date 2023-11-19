@@ -3,13 +3,13 @@
 
 namespace Banshee
 {
-	Input& Input::Instance()
+	Input& Input::Instance() noexcept
 	{
 		static Input s_InputSystemGLFW;
 		return s_InputSystemGLFW;
 	}
 
-	void Input::Initialize(GLFWwindow* _window)
+	void Input::Initialize(GLFWwindow* _window) noexcept
 	{
 		m_Window = _window;
 	}
@@ -25,17 +25,17 @@ namespace Banshee
 		}
 	}
 
-	bool Input::IsKeyPressed(int32 _key) const
+	bool Input::IsKeyPressed(int32 _key) const noexcept
 	{
 		return glfwGetKey(m_Window, _key) == GLFW_PRESS;
 	}
 
-	bool Input::IsMouseButtonPressed(int32 _button) const
+	bool Input::IsMouseButtonPressed(int32 _button) const noexcept
 	{
 		return glfwGetMouseButton(m_Window, _button) == GLFW_PRESS;
 	}
 
-	void Input::GetCursorPosition(double& _x, double& _y) const
+	void Input::GetCursorPosition(double& _x, double& _y) const noexcept
 	{
 		glfwGetCursorPos(m_Window, &_x, &_y);
 	}

@@ -14,7 +14,8 @@ public:
 	Player()
 	{
 		m_PlayerEntity = EntityManager::Instance().CreateEntity();
-		auto meshComponent = m_PlayerEntity->AddComponent<MeshComponent>(PrimitiveShape::Triangle);
+		const std::shared_ptr<MeshComponent>& meshComponent = m_PlayerEntity->AddComponent<MeshComponent>(PrimitiveShape::Square);
+		meshComponent->SetTexture("Textures/tiles.jpg");
 		m_Transform = m_PlayerEntity->GetTransform();
 		m_Transform->SetPosition(glm::vec3(0.0f, 0.0f, 0.0f));
 

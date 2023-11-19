@@ -8,7 +8,8 @@ namespace Banshee
 	class FileManager
 	{
 	public:
-		static FileManager& Instance();
+		FileManager();
+		~FileManager();
 
 		void WriteToLogFile(const char* _logData);
 		std::vector<char> ReadBinaryFile(const char* _fileName);
@@ -16,14 +17,6 @@ namespace Banshee
 		const std::string& GetEngineResDirPath() const { return m_EngineResDirPath; }
 
 	private:
-		FileManager();
-		~FileManager();
-
-		FileManager(const FileManager&) = delete;
-		FileManager(FileManager&&) = delete;
-		void operator=(const FileManager&) = delete;
-		void operator=(FileManager&&) = delete;
-
 		void CreateGeneratedFolder();
 		void OpenLogFile();
 		void InitializeDirPaths();

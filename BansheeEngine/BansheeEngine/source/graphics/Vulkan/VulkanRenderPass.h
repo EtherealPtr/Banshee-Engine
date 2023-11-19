@@ -13,7 +13,7 @@ namespace Banshee
 		VulkanRenderPass(const VkDevice& _device, const uint32 _colorFormat, const uint32 _depthFormat);
 		~VulkanRenderPass();
 
-		VkRenderPass Get() const { return m_RenderPass; }
+		const VkRenderPass& Get() const noexcept { return m_RenderPass; }
 
 	private:
 		VkDevice m_Device;

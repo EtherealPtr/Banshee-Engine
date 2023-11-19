@@ -13,7 +13,7 @@ namespace Banshee
 
 		void GenerateBuffers(const uint32 _bufferId, void* _vertexData, const uint64 _sizeOfVertexData, void* _indexData, const uint64 _sizeOfIndexData);
 		void Bind(const uint32 bufferId, const VkCommandBuffer& _commandBuffer);
-		uint32 GetCurrentIndicesCount() const { return m_CurrentIndicesCount; }
+		uint32 GetCurrentIndicesCount() const noexcept { return m_CurrentIndicesCount; }
 
 	private:
 		VkDevice m_LogicalDevice;

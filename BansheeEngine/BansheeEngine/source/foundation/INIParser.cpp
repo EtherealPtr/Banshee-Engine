@@ -1,5 +1,6 @@
 #include "INIParser.h"
-#include "Foundation/File/FileManager.h"
+#include "Foundation/ResourceManager/ResourceManager.h"
+#include "Foundation/ResourceManager/File/FileManager.h"
 #include "Foundation/Logging/Logger.h"
 #include <sstream>
 
@@ -9,7 +10,7 @@ namespace Banshee
 	{
 		EngineConfig config{};
 
-		std::ifstream file = FileManager::Instance().ReadFile(_filePath);
+		std::ifstream file = ResourceManager::Instance().GetFileManager()->ReadFile(_filePath);
 
 		std::string line = "";
 		while (std::getline(file, line))
@@ -38,6 +39,7 @@ namespace Banshee
 			}
 		}
 
+		BE_LOG(LogCategory::Info, "[CONFIG]: Loaded config.ini");
 		return config;
 	}
 } // End of Banshee namespace

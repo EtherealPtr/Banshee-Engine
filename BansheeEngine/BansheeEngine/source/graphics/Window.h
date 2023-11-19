@@ -9,14 +9,14 @@ namespace Banshee
 	class Window
 	{
 	public:
-		Window(const uint16_t _width, const uint16_t _height, const char* _title);
+		Window(const uint16 _width, const uint16 _height, const char* _title);
 		~Window();
 
-		bool ShouldWindowClose() const;
-		void Update();
-		GLFWwindow* GetWindow() const { return m_Window; }
-		uint16_t GetWidth() const;
-		uint16_t GetHeight() const;
+		bool ShouldWindowClose() const noexcept;
+		void Update() noexcept;
+		GLFWwindow* GetWindow() const noexcept { return m_Window; }
+		uint16 GetWidth() const noexcept;
+		uint16 GetHeight() const noexcept;
 
 	private:
 		GLFWwindow* m_Window;

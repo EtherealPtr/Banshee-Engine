@@ -11,6 +11,6 @@ namespace Banshee
 	{
 	public:
 		static void GetVertices(const PrimitiveShape _shape, std::vector<Vertex>& _vertices, std::vector<uint16>& _indices);
-		static uint16 GetIndicesCount(const PrimitiveShape _shape);
+		static uint16 GetIndicesCount(const PrimitiveShape _shape) noexcept;
 	};
 } // End of Banshee namespace

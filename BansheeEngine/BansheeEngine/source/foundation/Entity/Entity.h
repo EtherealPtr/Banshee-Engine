@@ -15,10 +15,10 @@ namespace Banshee
 	{
 	public:
 		BANSHEE_ENGINE Entity(const uint32 _id);
-		BANSHEE_ENGINE ~Entity();
+		BANSHEE_ENGINE ~Entity() noexcept = default;
 
-		BANSHEE_ENGINE uint32 GetUniqueId() const { return m_Id; }
-		BANSHEE_ENGINE const std::shared_ptr<TransformComponent>& GetTransform() const { return m_Transform; }
+		BANSHEE_ENGINE uint32 GetUniqueId() const noexcept { return m_Id; }
+		BANSHEE_ENGINE const std::shared_ptr<TransformComponent>& GetTransform() const noexcept { return m_Transform; }
 
 		template<typename T, typename... Args>
 		std::shared_ptr<T> AddComponent(Args&&... _args)

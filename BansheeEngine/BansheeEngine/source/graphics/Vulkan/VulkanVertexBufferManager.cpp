@@ -1,5 +1,5 @@
 #include "VulkanVertexBufferManager.h"
-#include "../ShapeFactory.h"
+#include "Graphics/ShapeFactory.h"
 
 namespace Banshee
 {
@@ -37,4 +37,4 @@ namespace Banshee
 			Bind(_bufferId, _commandBuffer);
 		}
 	}
-}
+} // End of Banshee namespace

@@ -2,7 +2,7 @@
 
 #include "VulkanVertexBufferManager.h"
 #include <memory>
-#include "../MVP.h"
+#include "Graphics/MVP.h"
 
 namespace Banshee
 {
@@ -24,14 +24,14 @@ namespace Banshee
 	class VulkanFence;
 	class VulkanVertexBufferManager;
 	class VulkanUniformBuffer;
-	class VulkanTexture;
+	class VulkanTextureManager;
 	class VulkanTextureSampler;
 
 	class VulkanRenderer
 	{
 	public:
 		VulkanRenderer(const Window* _window);
-		~VulkanRenderer();
+		~VulkanRenderer() noexcept;
 
 		void DrawFrame();
 
@@ -47,18 +47,17 @@ namespace Banshee
 		std::unique_ptr<VulkanSwapchain> m_VkSwapchain;
 		std::unique_ptr<VulkanDepthBuffer> m_DepthBuffer;
 		std::unique_ptr<VulkanRenderPass> m_VkRenderPass;
-		std::unique_ptr<VulkanDescriptorSetLayout> m_VkDescriptorSetLayout;
-		std::unique_ptr<VulkanDescriptorPool> m_VkDescriptorPool;
-		std::unique_ptr<VulkanGraphicsPipeline> m_VkGraphicsPipeline;
 		std::unique_ptr<VulkanCommandPool> m_VkCommandPool;
 		std::unique_ptr<VulkanCommandBuffer> m_VkCommandBuffers;
 		std::unique_ptr<VulkanFramebuffer> m_VkFramebuffers;
 		std::unique_ptr<VulkanSemaphore> m_VkSemaphores;
 		std::unique_ptr<VulkanFence> m_VkInFlightFences;
 		std::unique_ptr<VulkanVertexBufferManager> m_VertexBufferManager;
-		std::unique_ptr<VulkanTexture> m_VkTexture;
-		std::unique_ptr<VulkanTexture> m_VkTexture2;
 		std::unique_ptr<VulkanTextureSampler> m_VkTextureSampler;
+		std::unique_ptr<VulkanTextureManager> m_VkTextureManager;
+		std::unique_ptr<VulkanDescriptorSetLayout> m_VkDescriptorSetLayout;
+		std::unique_ptr<VulkanDescriptorPool> m_VkDescriptorPool;
+		std::unique_ptr<VulkanGraphicsPipeline> m_VkGraphicsPipeline;
 		std::vector<std::unique_ptr<VulkanUniformBuffer>> m_VPUniformBuffers;
 		std::vector<std::unique_ptr<VulkanUniformBuffer>> m_DynamicUniformBuffers;
 		std::vector<std::unique_ptr<VulkanDescriptorSet>> m_DescriptorSets;

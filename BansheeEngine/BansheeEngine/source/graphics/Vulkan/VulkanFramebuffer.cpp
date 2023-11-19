@@ -12,7 +12,7 @@ namespace Banshee
 	{
 		BE_LOG(LogCategory::Trace, "[FRAMEBUFFER]: Creating %d framebuffers", _imageViews.size());
 
-		for (unsigned short i = 0; i < _imageViews.size(); ++i)
+		for (size_t i = 0; i < _imageViews.size(); ++i)
 		{
 			std::array<VkImageView, 2> imageViews{};
 			imageViews[0] = _imageViews[i];

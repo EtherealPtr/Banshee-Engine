@@ -3,7 +3,7 @@
 
 namespace Banshee
 {
-	RenderSystem& Banshee::RenderSystem::Instance()
+	RenderSystem& Banshee::RenderSystem::Instance() noexcept
 	{
 		static RenderSystem s_RenderSystem;
 		return s_RenderSystem;
@@ -13,5 +13,4 @@ namespace Banshee
 	{
 		m_MeshRenderers.emplace_back(_component);
 	}
-
 } // End of Banshee namespace

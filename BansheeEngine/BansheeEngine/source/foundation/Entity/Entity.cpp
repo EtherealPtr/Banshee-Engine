@@ -2,6 +2,7 @@
 #include "Foundation/Components/MeshComponent.h"
 #include "Foundation/Components/TransformComponent.h"
 #include "Foundation/Systems/RenderSystem.h"
+#include "Foundation/Logging/Logger.h"
 
 namespace Banshee
 {
@@ -11,9 +12,6 @@ namespace Banshee
 	{
 		m_Transform = AddComponent<TransformComponent>();
 	}
-
-	Entity::~Entity()
-	{}
 	
 	void Entity::ApplyRenderableComponent(const std::shared_ptr<MeshComponent>& _component)
 	{
@@ -22,6 +20,12 @@ namespace Banshee
 
 	void Entity::RegisterComponent(Component* const _component)
 	{
+		if (!_component)
+		{
+			BE_LOG(LogCategory::Warning, "Attempted to add an invalid component");
+			return;
+		}
+
 		_component->SetOwner(this);
 	}
 } // End of Banshee namespace

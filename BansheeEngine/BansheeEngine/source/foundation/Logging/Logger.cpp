@@ -1,5 +1,6 @@
 #include "Logger.h"
-#include "Foundation/File/FileManager.h"
+#include "Foundation/ResourceManager/ResourceManager.h"
+#include "Foundation/ResourceManager/File/FileManager.h"
 #include <stdarg.h>
 
 namespace Banshee
@@ -40,7 +41,7 @@ namespace Banshee
 		default:					printf("%s\n", outputLog.c_str());
 		}
 
-		FileManager::Instance().WriteToLogFile(outputLog.c_str());
+		ResourceManager::Instance().GetFileManager()->WriteToLogFile(outputLog.c_str());
 	}
 
 	std::string Logger::GetLogCategoryName(const LogCategory _category)

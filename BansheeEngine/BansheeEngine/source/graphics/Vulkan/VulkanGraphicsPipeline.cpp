@@ -1,8 +1,10 @@
 #include "VulkanGraphicsPipeline.h"
 #include "VulkanUtils.h"
-#include "Foundation/File/FileManager.h"
+#include "Foundation/ResourceManager/ResourceManager.h"
+#include "Foundation/ResourceManager/File/FileManager.h"
 #include "Foundation/Logging/Logger.h"
-#include "../Vertex.h"
+#include "Graphics/Vertex.h"
+#include "Graphics/MVP.h"
 #include <vulkan/vulkan.h>
 #include <string>
 #include <stdexcept>
@@ -10,7 +12,7 @@
 
 namespace Banshee
 {
-	VulkanGraphicsPipeline::VulkanGraphicsPipeline(const VkDevice& _logicalDevice, const VkRenderPass& _renderPass, const VkDescriptorSetLayout& _descriptorSetLayout, const uint32_t _w, const uint32_t _h) :
+	VulkanGraphicsPipeline::VulkanGraphicsPipeline(const VkDevice& _logicalDevice, const VkRenderPass& _renderPass, const VkDescriptorSetLayout& _descriptorSetLayout, const uint32 _w, const uint32 _h) :
 		m_LogicalDevice(_logicalDevice),
 		m_PipelineLayout(VK_NULL_HANDLE),
 		m_GraphicsPipeline(VK_NULL_HANDLE)
@@ -23,12 +25,13 @@ namespace Banshee
 		BE_LOG(LogCategory::Trace, "[GRAPHICS PIPELINE]: Using vertex shader %s", basicVertPath.c_str());
 		BE_LOG(LogCategory::Trace, "[GRAPHICS PIPELINE]: Using frag shader %s", basicFragPath.c_str());
 
-		auto vertShaderBinary = FileManager::Instance().ReadBinaryFile(basicVertPath.c_str());
-		auto fragShaderBinary = FileManager::Instance().ReadBinaryFile(basicFragPath.c_str());
+		auto vertShaderBinary = ResourceManager::Instance().GetFileManager()->ReadBinaryFile(basicVertPath.c_str());
+		auto fragShaderBinary = ResourceManager::Instance().GetFileManager()->ReadBinaryFile(basicFragPath.c_str());
 
 		VkShaderModule vertexShaderModule = VulkanUtils::CreateShaderModule(_logicalDevice, vertShaderBinary);
 		VkShaderModule fragmentShaderModule = VulkanUtils::CreateShaderModule(_logicalDevice, fragShaderBinary);
 
+		// Shader creation stage
 		VkPipelineShaderStageCreateInfo vertexShaderCreateInfo{};
 		vertexShaderCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
 		vertexShaderCreateInfo.stage = VK_SHADER_STAGE_VERTEX_BIT;
@@ -41,7 +44,7 @@ namespace Banshee
 		fragmentShaderCreateInfo.module = fragmentShaderModule;
 		fragmentShaderCreateInfo.pName = "main";
 
-		VkPipelineShaderStageCreateInfo shaderStageCreateInfos[] = { vertexShaderCreateInfo, fragmentShaderCreateInfo };
+		const VkPipelineShaderStageCreateInfo shaderStageCreateInfos[] = { vertexShaderCreateInfo, fragmentShaderCreateInfo };
 
 		// Vertex input stage
 		VkVertexInputBindingDescription inputBindingDescription{};
@@ -64,7 +67,7 @@ namespace Banshee
 		vertexInputCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
 		vertexInputCreateInfo.vertexBindingDescriptionCount = 1;
 		vertexInputCreateInfo.pVertexBindingDescriptions = &inputBindingDescription;
-		vertexInputCreateInfo.vertexAttributeDescriptionCount = static_cast<uint32_t>(inputAttributeDescriptions.size());
+		vertexInputCreateInfo.vertexAttributeDescriptionCount = static_cast<uint32>(inputAttributeDescriptions.size());
 		vertexInputCreateInfo.pVertexAttributeDescriptions = inputAttributeDescriptions.data();
 
 		// Dynamic states stage
@@ -76,7 +79,7 @@ namespace Banshee
 
 		VkPipelineDynamicStateCreateInfo dynamicStateCreateInfo{};
 		dynamicStateCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO;
-		dynamicStateCreateInfo.dynamicStateCount = static_cast<uint32_t>(dynamicState.size());
+		dynamicStateCreateInfo.dynamicStateCount = static_cast<uint32>(dynamicState.size());
 		dynamicStateCreateInfo.pDynamicStates = dynamicState.data();
 
 		// Input assembly stage
@@ -89,8 +92,8 @@ namespace Banshee
 		VkViewport viewport{};
 		viewport.x = 0.0f;
 		viewport.y = 0.0f;
-		viewport.width = (float)_w;
-		viewport.height = (float)_h;
+		viewport.width = static_cast<float>(_w);
+		viewport.height = static_cast<float>(_h);
 		viewport.minDepth = 0.0f;
 		viewport.maxDepth = 1.0f;
 
@@ -162,7 +165,7 @@ namespace Banshee
 		// Pipeline layout stage
 		VkPushConstantRange pushConstantRange{};
 		pushConstantRange.offset = 0;
-		pushConstantRange.size = sizeof(glm::mat4);
+		pushConstantRange.size = sizeof(PushConstant);
 		pushConstantRange.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
 
 		VkPipelineLayoutCreateInfo pipelineLayoutCreateInfo{};
