@@ -16,6 +16,7 @@ public:
 		m_PlayerEntity = EntityManager::Instance().CreateEntity();
 		const std::shared_ptr<MeshComponent>& meshComponent = m_PlayerEntity->AddComponent<MeshComponent>(PrimitiveShape::Square);
 		meshComponent->SetTexture("Textures/tiles.jpg");
+		meshComponent->SetSortLayer(2, 0);
 		m_Transform = m_PlayerEntity->GetTransform();
 		m_Transform->SetPosition(glm::vec3(0.0f, 0.0f, 0.0f));
 

@@ -22,7 +22,7 @@
 #include "Foundation/Entity/EntityManager.h"
 #include "Foundation/Components/MeshComponent.h"
 #include "Foundation/Components/TransformComponent.h"
-#include "Foundation/Systems/RenderSystem.h"
+#include "Foundation/Systems/MeshSystem.h"
 #include "Foundation/Logging/Logger.h"
 #include <vulkan/vulkan.h>
 #include <stdexcept>
@@ -39,7 +39,7 @@ namespace Banshee
 		m_VkSwapchain(std::make_unique<VulkanSwapchain>(m_VkDevice->GetLogicalDevice(), m_VkDevice->GetPhysicalDevice(), m_VkSurface->Get(), _window->GetWidth(), _window->GetHeight())),
 		m_DepthBuffer(std::make_unique<VulkanDepthBuffer>(m_VkDevice->GetLogicalDevice(), m_VkDevice->GetPhysicalDevice(), m_VkSwapchain->GetWidth(), m_VkSwapchain->GetHeight())),
 		m_VkRenderPass(std::make_unique<VulkanRenderPass>(m_VkDevice->GetLogicalDevice(), m_VkSwapchain->GetFormat(), m_DepthBuffer->GetFormat())),
-		m_VkCommandPool(std::make_unique<VulkanCommandPool>(m_VkDevice->GetLogicalDevice(), m_VkDevice->GetQueueIndices().m_GraphicsQueueFamilyIndex)),
+		m_VkCommandPool(std::make_unique<VulkanCommandPool>(m_VkDevice->GetLogicalDevice(), m_VkDevice->GetQueueIndices().graphicsQueueFamilyIndex)),
 		m_VkCommandBuffers(std::make_unique<VulkanCommandBuffer>(m_VkDevice->GetLogicalDevice(), m_VkCommandPool->Get(), static_cast<uint16>(m_VkSwapchain->GetImageViews().size()))),
 		m_VkFramebuffers(std::make_unique<VulkanFramebuffer>(m_VkDevice->GetLogicalDevice(), m_VkRenderPass->Get(), m_VkSwapchain->GetImageViews(), m_DepthBuffer->GetImageView(), m_VkSwapchain->GetWidth(), m_VkSwapchain->GetHeight())),
 		m_VkSemaphores(std::make_unique<VulkanSemaphore>(m_VkDevice->GetLogicalDevice(), static_cast<uint16>(m_VkSwapchain->GetImageViews().size()))),
@@ -77,6 +77,12 @@ namespace Banshee
 		}
 
 		m_CurrentFrameIndex = 0;
+		const std::vector<std::shared_ptr<MeshComponent>>& meshComponents = MeshSystem::Instance().GetMeshComponents();
+		for (const auto& meshComponent : meshComponents)
+		{
+			meshComponent->SetDirty(true);
+		}
+
 		BE_LOG(LogCategory::Trace, "[RENDERER]: Vulkan initialized");
 	}
 
@@ -114,7 +120,7 @@ namespace Banshee
 			samplerDescWriteProperties
 		};
 
-		const auto meshComponents = RenderSystem::Instance().GetMeshComponents();
+		const auto meshComponents = MeshSystem::Instance().GetMeshComponents();
 		for (size_t i = 0; i < meshComponents.size(); ++i)
 		{
 			glm::vec3* colorData = (glm::vec3*)((uint64)m_DynamicBufferMemorySpace + (i * m_DynamicBufferMemoryAlignment));
@@ -182,7 +188,7 @@ namespace Banshee
 		renderPassInfo.renderArea.extent = VkExtent2D({ m_VkSwapchain->GetWidth(), m_VkSwapchain->GetHeight() });
 
 		// Clear attachments
-		const VkClearColorValue clearColor = { 0.0f, 0.0f, 0.0f, 1.0f };
+		const VkClearColorValue clearColor = { 0.1f, 0.1f, 0.1f, 1.0f };
 		const VkClearDepthStencilValue clearDepthStencil{ 1.0f, 0 };
 
 		std::array<VkClearValue, 2> clearAttachments{};
@@ -210,7 +216,7 @@ namespace Banshee
 
 		UpdateDescriptorSet(_imgIndex);
 
-		const auto meshComponents = RenderSystem::Instance().GetMeshComponents();
+		const std::vector<std::shared_ptr<MeshComponent>>& meshComponents = MeshSystem::Instance().GetMeshComponents();
 
 		for (uint32 i = 0; i < meshComponents.size(); ++i)
 		{

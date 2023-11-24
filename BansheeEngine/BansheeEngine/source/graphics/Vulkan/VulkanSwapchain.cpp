@@ -144,7 +144,7 @@ namespace Banshee
 
 		for (uint32 i = 0; i < imageCount; ++i)
 		{
-			m_SwapchainImageViews[i] = VulkanUtils::CreateImageView(_logicalDevice, m_SwapchainImages[i], surfaceFormat.format, VK_IMAGE_ASPECT_COLOR_BIT);
+			VulkanUtils::CreateImageView(_logicalDevice, m_SwapchainImages[i], surfaceFormat.format, VK_IMAGE_ASPECT_COLOR_BIT, m_SwapchainImageViews[i]);
 		}
 
 		assert(m_SwapchainImageViews.size() > 0);

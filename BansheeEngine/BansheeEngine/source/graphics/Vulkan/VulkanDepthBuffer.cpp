@@ -11,14 +11,16 @@ namespace Banshee
 		m_DepthImageMemory(VK_NULL_HANDLE),
 		m_DepthFormat(VK_FORMAT_UNDEFINED)
 	{
-		m_DepthFormat = VulkanUtils::FindSupportedFormat(_gpu,
+		m_DepthFormat = VulkanUtils::FindSupportedFormat
+		(
+			_gpu,
 			{ VK_FORMAT_D32_SFLOAT, VK_FORMAT_D32_SFLOAT_S8_UINT, VK_FORMAT_D24_UNORM_S8_UINT },
 			VK_IMAGE_TILING_OPTIMAL,
-			VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT);
+			VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT
+		);
 
 		VulkanUtils::CreateImage(_logicalDevice, _gpu, _w, _h, m_DepthFormat, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, m_DepthImage, m_DepthImageMemory);
-
-		m_DepthImageView = VulkanUtils::CreateImageView(_logicalDevice, m_DepthImage, m_DepthFormat, VK_IMAGE_ASPECT_DEPTH_BIT);
+		VulkanUtils::CreateImageView(_logicalDevice, m_DepthImage, m_DepthFormat, VK_IMAGE_ASPECT_DEPTH_BIT, m_DepthImageView);
 	}
 
 	VulkanDepthBuffer::~VulkanDepthBuffer()

@@ -1,7 +1,7 @@
 #include "Entity.h"
 #include "Foundation/Components/MeshComponent.h"
 #include "Foundation/Components/TransformComponent.h"
-#include "Foundation/Systems/RenderSystem.h"
+#include "Foundation/Systems/MeshSystem.h"
 #include "Foundation/Logging/Logger.h"
 
 namespace Banshee
@@ -15,7 +15,7 @@ namespace Banshee
 	
 	void Entity::ApplyRenderableComponent(const std::shared_ptr<MeshComponent>& _component)
 	{
-		RenderSystem::Instance().AddMeshComponent(_component);
+		MeshSystem::Instance().AddMeshComponent(_component);
 	}
 
 	void Entity::RegisterComponent(Component* const _component)

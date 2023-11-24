@@ -62,7 +62,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>BANSHEE_EXPORTS;STB_IMAGE_IMPLEMENTATION;GLM_FORCE_DEPTH_ZERO_TO_ONE;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>BANSHEE_EXPORTS;STB_IMAGE_IMPLEMENTATION;GLM_FORCE_RADIANS;GLM_FORCE_DEPTH_ZERO_TO_ONE;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(ProjectDir)Source;$(ProjectDir)Dependencies\glfw-3.3.8\include;$(ProjectDir)Dependencies\vulkan\include;$(ProjectDir)Dependencies\stb_image;$(ProjectDir)Dependencies\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
@@ -86,7 +86,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>BANSHEE_EXPORTS;STB_IMAGE_IMPLEMENTATION;GLM_FORCE_DEPTH_ZERO_TO_ONE;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)Source;$(ProjectDir)Dependencies\glfw-3.3.8\include;$(ProjectDir)Dependencies\vulkan\include;$(ProjectDir)Dependencies\stb_image;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Source;$(ProjectDir)Dependencies\glfw-3.3.8\include;$(ProjectDir)Dependencies\vulkan\include;$(ProjectDir)Dependencies\stb_image;$(ProjectDir)Dependencies\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -103,11 +103,12 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Foundation\Components\Component.cpp" />
     <ClCompile Include="Source\Foundation\Components\MeshComponent.cpp" />
     <ClCompile Include="Source\Foundation\ResourceManager\Image\ImageManager.cpp" />
     <ClCompile Include="Source\Foundation\ResourceManager\ResourceManager.cpp" />
     <ClCompile Include="Source\Application\Input\Input.cpp" />
-    <ClCompile Include="Source\Foundation\Systems\RenderSystem.cpp" />
+    <ClCompile Include="Source\Foundation\Systems\MeshSystem.cpp" />
     <ClCompile Include="Source\Foundation\Entity\EntityManager.cpp" />
     <ClCompile Include="Source\Foundation\Entity\Entity.cpp" />
     <ClCompile Include="source\foundation\INIParser.cpp" />
@@ -148,11 +149,13 @@
     <ClInclude Include="Source\Foundation\Input\InputBinding.h" />
     <ClInclude Include="Source\Application\Input\Input.h" />
     <ClInclude Include="Source\Foundation\Input\InputSystem.h" />
-    <ClInclude Include="Source\Foundation\Systems\RenderSystem.h" />
+    <ClInclude Include="Source\Foundation\Systems\MeshSystem.h" />
     <ClInclude Include="Source\Foundation\Components\MeshComponent.h" />
     <ClInclude Include="Source\Foundation\Entity\EntityManager.h" />
     <ClInclude Include="source\foundation\Logging\LogCategories.h" />
     <ClInclude Include="Dependencies\stb_image\stb_image.h" />
+    <ClInclude Include="Source\Foundation\Systems\SortingLayerSystem.h" />
+    <ClInclude Include="Source\Foundation\Systems\System.h" />
     <ClInclude Include="Source\Graphics\MVP.h" />
     <ClInclude Include="Source\Foundation\Components\Component.h" />
     <ClInclude Include="Source\Foundation\Entity\Entity.h" />

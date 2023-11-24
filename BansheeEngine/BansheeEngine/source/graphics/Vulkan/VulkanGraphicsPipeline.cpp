@@ -152,8 +152,8 @@ namespace Banshee
 		// Depth stencil stage
 		VkPipelineDepthStencilStateCreateInfo depthStencilCreateInfo{};
 		depthStencilCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
-		depthStencilCreateInfo.depthTestEnable = VK_TRUE;
-		depthStencilCreateInfo.depthWriteEnable = VK_TRUE;
+		depthStencilCreateInfo.depthTestEnable = VK_FALSE;
+		depthStencilCreateInfo.depthWriteEnable = VK_FALSE;
 		depthStencilCreateInfo.depthCompareOp = VK_COMPARE_OP_LESS;
 		depthStencilCreateInfo.depthBoundsTestEnable = VK_FALSE;
 		depthStencilCreateInfo.minDepthBounds = 0.0f;

@@ -14,16 +14,16 @@ namespace Banshee
 {
 	struct DeviceQueueIndices
 	{
-		bool Validate() const
+		bool Validate() const noexcept
 		{
-			return (m_GraphicsQueueFamilyIndex != UINT32_MAX) &&
-				(m_TransferQueueFamilyIndex != UINT32_MAX) &&
-				(m_PresentationQueueFamilyIndex != UINT32_MAX);
+			return (graphicsQueueFamilyIndex != UINT32_MAX) &&
+				   (transferQueueFamilyIndex != UINT32_MAX) &&
+				   (presentationQueueFamilyIndex != UINT32_MAX);
 		}
 
-		uint32 m_GraphicsQueueFamilyIndex{ UINT32_MAX };
-		uint32 m_TransferQueueFamilyIndex{ UINT32_MAX };
-		uint32 m_PresentationQueueFamilyIndex{ UINT32_MAX };
+		uint32 graphicsQueueFamilyIndex{ UINT32_MAX };
+		uint32 transferQueueFamilyIndex{ UINT32_MAX };
+		uint32 presentationQueueFamilyIndex{ UINT32_MAX };
 	};
 
 	class VulkanDevice
@@ -42,6 +42,7 @@ namespace Banshee
 
 	private:
 		void PickPhysicalDevice(const VkInstance& _vkInstance);
+		bool CheckDeviceFeatures(const VkPhysicalDevice& _gpu);
 		uint32 RateDeviceSuitability(const VkPhysicalDevice& _gpu, const VkPhysicalDeviceProperties& _deviceProperties);
 		void SetupQueueFamilyIndices();
 		void CreateLogicalDevice();

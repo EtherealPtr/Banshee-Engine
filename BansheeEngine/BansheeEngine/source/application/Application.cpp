@@ -21,11 +21,14 @@ namespace Banshee
 
 	void Application::PostClientInitialize()
 	{
+		BE_LOG(LogCategory::Trace, "[APPLICATION]: Starting post client initialization");
 		m_Renderer = std::make_unique<VulkanRenderer>(m_Window.get());
 	}
 
 	void Application::Run() const
 	{
+		BE_LOG(LogCategory::Trace, "[APPLICATION]: Banshee run");
+
 		while (!m_Window->ShouldWindowClose())
 		{
 			m_Renderer->DrawFrame();

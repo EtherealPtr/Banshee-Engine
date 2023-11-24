@@ -1,5 +1,6 @@
 #pragma once
 
+#include "System.h"
 #include <vector>
 #include <memory>
 
@@ -7,21 +8,24 @@ namespace Banshee
 {
 	class MeshComponent;
 
-	class RenderSystem
+	class MeshSystem : public System
 	{
 	public:
-		static RenderSystem& Instance() noexcept;
+		static MeshSystem& Instance() noexcept;
 		void AddMeshComponent(const std::shared_ptr<MeshComponent>& _component);
 		const std::vector<std::shared_ptr<MeshComponent>>& GetMeshComponents() const noexcept { return m_MeshRenderers; }
+		virtual void Update() override;
 
-	private:
-		RenderSystem() noexcept = default;
-		~RenderSystem() noexcept = default;
+	protected:
+		MeshSystem() noexcept = default;
+		~MeshSystem() noexcept = default;
 
-		RenderSystem(const RenderSystem&) = delete;
-		RenderSystem(RenderSystem&&) = delete;
-		void operator=(const RenderSystem&) = delete;
-		void operator=(RenderSystem&&) = delete;
+		MeshSystem(const MeshSystem&) = delete;
+		MeshSystem(MeshSystem&&) = delete;
+		void operator=(const MeshSystem&) = delete;
+		void operator=(MeshSystem&&) = delete;
+
+		void SortByLayer();
 
 	private:
 		std::vector<std::shared_ptr<MeshComponent>> m_MeshRenderers;

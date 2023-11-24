@@ -99,7 +99,7 @@
     <ClCompile Include="Source\Foundation\Entity\EntityManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Foundation\Systems\RenderSystem.cpp">
+    <ClCompile Include="Source\Foundation\Systems\MeshSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\Graphics\Vulkan\VulkanTextureSampler.cpp">
@@ -121,6 +121,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\Graphics\Vulkan\VulkanTextureManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Foundation\Components\Component.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -248,7 +251,7 @@
     <ClInclude Include="Source\Foundation\Components\MeshComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Foundation\Systems\RenderSystem.h">
+    <ClInclude Include="Source\Foundation\Systems\MeshSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Dependencies\stb_image\stb_image.h">
@@ -282,6 +285,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Graphics\Vulkan\VulkanTextureManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Foundation\Systems\SortingLayerSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Foundation\Systems\System.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

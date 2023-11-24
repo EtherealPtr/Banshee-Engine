@@ -30,7 +30,7 @@ namespace Banshee
 		vsnprintf_s(userLog, size, _format, argList);
 		va_end(argList);
 
-		std::string outputLog = categoryText + " " + userLog;
+		const std::string outputLog = categoryText + userLog;
 
 		switch (_category)
 		{

@@ -92,7 +92,7 @@ namespace Banshee
 		return shaderModule;
 	}
 
-	VkImageView VulkanUtils::CreateImageView(const VkDevice& _logicalDevice, const VkImage& _image, const uint32 _format, const uint32 _aspect)
+	void VulkanUtils::CreateImageView(const VkDevice& _logicalDevice, const VkImage& _image, const uint32 _format, const uint32 _aspect, VkImageView& _imageView)
 	{
 		VkImageViewCreateInfo imageViewCreateInfo{};
 		imageViewCreateInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
@@ -109,13 +109,10 @@ namespace Banshee
 		imageViewCreateInfo.subresourceRange.baseArrayLayer = 0;
 		imageViewCreateInfo.subresourceRange.layerCount = 1;
 
-		VkImageView imageView = VK_NULL_HANDLE;
-		if (vkCreateImageView(_logicalDevice, &imageViewCreateInfo, nullptr, &imageView) != VK_SUCCESS)
+		if (vkCreateImageView(_logicalDevice, &imageViewCreateInfo, nullptr, &_imageView) != VK_SUCCESS)
 		{
 			throw std::runtime_error("ERROR: Failed to create a Vulkan image view object");
 		}
-
-		return imageView;
 	}
 
 	void VulkanUtils::CreateBuffer(const VkDevice& _logicalDevice, const VkPhysicalDevice& _gpu, const uint64 _size, const uint32 _usage, const uint32 _memoryPropertyFlags, VkBuffer& _buffer, VkDeviceMemory& _bufferMemory)
@@ -222,7 +219,7 @@ namespace Banshee
 
 	VkFormat VulkanUtils::FindSupportedFormat(const VkPhysicalDevice& _gpu, const std::vector<VkFormat>& _formats, const VkImageTiling _tiling, const uint32 _formatFeatures)
 	{
-		for (VkFormat format : _formats)
+		for (const VkFormat format : _formats)
 		{
 			VkFormatProperties props;
 			vkGetPhysicalDeviceFormatProperties(_gpu, format, &props);

@@ -50,12 +50,15 @@ namespace Banshee
 
 		for (const auto& gpu : physicalDevices)
 		{
-			VkPhysicalDeviceProperties deviceProperties;
-			VkPhysicalDeviceFeatures deviceFeatures;
+			VkPhysicalDeviceProperties deviceProperties{};
 			vkGetPhysicalDeviceProperties(gpu, &deviceProperties);
-			vkGetPhysicalDeviceFeatures(gpu, &deviceFeatures);
 			
-			uint32 deviceScore = RateDeviceSuitability(gpu, deviceProperties);
+			if (!CheckDeviceFeatures(gpu))
+			{
+				continue;
+			}
+
+			const uint32 deviceScore = RateDeviceSuitability(gpu, deviceProperties);
 			BE_LOG(LogCategory::Trace, "[DEVICE]: Assigned score of %d for device with name %s", deviceScore, deviceProperties.deviceName);
 
 			if (deviceScore > maxScore)
@@ -113,6 +116,20 @@ namespace Banshee
 		return deviceScore;
 	}
 
+	bool VulkanDevice::CheckDeviceFeatures(const VkPhysicalDevice& _gpu)
+	{
+		VkPhysicalDeviceVulkan12Features features12{};
+		features12.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_FEATURES;
+
+		VkPhysicalDeviceFeatures2 deviceFeatures{};
+		deviceFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2;
+		deviceFeatures.pNext = &features12;
+
+		vkGetPhysicalDeviceFeatures2(_gpu, &deviceFeatures);
+
+		return features12.runtimeDescriptorArray == VK_TRUE;
+	}
+
 	void VulkanDevice::SetupQueueFamilyIndices()
 	{
 		assert(m_PhysicalDevice != VK_NULL_HANDLE);
@@ -124,28 +141,28 @@ namespace Banshee
 
 		for (uint32 i = 0; i < queueFamilyCount; ++i)
 		{
-			if (m_QueueIndices.m_GraphicsQueueFamilyIndex == UINT32_MAX)
+			if (m_QueueIndices.graphicsQueueFamilyIndex == UINT32_MAX)
 			{
 				if (queueFamilies[i].queueCount > 0 && queueFamilies[i].queueFlags & VK_QUEUE_GRAPHICS_BIT)
 				{
-					m_QueueIndices.m_GraphicsQueueFamilyIndex = i;
+					m_QueueIndices.graphicsQueueFamilyIndex = i;
 				}
 			}
 
-			if (m_QueueIndices.m_TransferQueueFamilyIndex == UINT32_MAX)
+			if (m_QueueIndices.transferQueueFamilyIndex == UINT32_MAX)
 			{
 				if (queueFamilies[i].queueCount > 0 && queueFamilies[i].queueFlags & VK_QUEUE_TRANSFER_BIT)
 				{
-					m_QueueIndices.m_TransferQueueFamilyIndex = i;
+					m_QueueIndices.transferQueueFamilyIndex = i;
 				}
 			}
 
 			VkBool32 presentSupport = VK_FALSE;
 			vkGetPhysicalDeviceSurfaceSupportKHR(m_PhysicalDevice, i, m_Surface, &presentSupport);
 
-			if (m_QueueIndices.m_PresentationQueueFamilyIndex == UINT32_MAX && presentSupport)
+			if (m_QueueIndices.presentationQueueFamilyIndex == UINT32_MAX && presentSupport)
 			{
-				m_QueueIndices.m_PresentationQueueFamilyIndex = i;
+				m_QueueIndices.presentationQueueFamilyIndex = i;
 			}
 		}
 
@@ -157,15 +174,14 @@ namespace Banshee
 
 	void VulkanDevice::CreateLogicalDevice()
 	{
-		std::set<uint32> queueIndices = { m_QueueIndices.m_GraphicsQueueFamilyIndex,
-										  m_QueueIndices.m_TransferQueueFamilyIndex,
-										  m_QueueIndices.m_PresentationQueueFamilyIndex };
+		std::set<uint32> queueIndices = { m_QueueIndices.graphicsQueueFamilyIndex,
+										  m_QueueIndices.transferQueueFamilyIndex,
+										  m_QueueIndices.presentationQueueFamilyIndex };
 
 		std::vector<VkDeviceQueueCreateInfo> queueCreateInfos(queueIndices.size());
+		const float queuePriority = 1.0f;
+		const uint32 index = 0;
 
-		float queuePriority{ 1.0f };
-
-		uint32 index = 0;
 		for (const auto& queueIndex : queueIndices)
 		{
 			// Specify device queue create info
@@ -187,16 +203,21 @@ namespace Banshee
 			enabledFeatures.samplerAnisotropy = VK_TRUE;
 		}
 
+		VkPhysicalDeviceVulkan12Features features12{};
+		features12.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_FEATURES;
+		features12.runtimeDescriptorArray = VK_TRUE;
+
 		std::vector<const char*> deviceExtentions = { VK_KHR_SWAPCHAIN_EXTENSION_NAME };
 		VulkanUtils::CheckDeviceExtSupport(m_PhysicalDevice, deviceExtentions);
 
 		// Specify device create info
 		VkDeviceCreateInfo deviceCreateInfo{};
 		deviceCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
+		deviceCreateInfo.pNext = &features12;
 		deviceCreateInfo.pQueueCreateInfos = queueCreateInfos.data();
-		deviceCreateInfo.queueCreateInfoCount = static_cast<uint32_t>(queueCreateInfos.size());
+		deviceCreateInfo.queueCreateInfoCount = static_cast<uint32>(queueCreateInfos.size());
 		deviceCreateInfo.pEnabledFeatures = &enabledFeatures;
-		deviceCreateInfo.enabledExtensionCount = static_cast<uint32_t>(deviceExtentions.size());
+		deviceCreateInfo.enabledExtensionCount = static_cast<uint32>(deviceExtentions.size());
 		deviceCreateInfo.ppEnabledExtensionNames = deviceExtentions.data();
 
 		if (vkCreateDevice(m_PhysicalDevice, &deviceCreateInfo, nullptr, &m_LogicalDevice) != VK_SUCCESS)
@@ -204,9 +225,9 @@ namespace Banshee
 			throw std::runtime_error("ERROR: Failed to create logical device\n");
 		}
 
-		vkGetDeviceQueue(m_LogicalDevice, m_QueueIndices.m_GraphicsQueueFamilyIndex, 0, &m_GraphicsQueue);
-		vkGetDeviceQueue(m_LogicalDevice, m_QueueIndices.m_TransferQueueFamilyIndex, 0, &m_TransferQueue);
-		vkGetDeviceQueue(m_LogicalDevice, m_QueueIndices.m_PresentationQueueFamilyIndex, 0, &m_PresentQueue);
+		vkGetDeviceQueue(m_LogicalDevice, m_QueueIndices.graphicsQueueFamilyIndex, 0, &m_GraphicsQueue);
+		vkGetDeviceQueue(m_LogicalDevice, m_QueueIndices.transferQueueFamilyIndex, 0, &m_TransferQueue);
+		vkGetDeviceQueue(m_LogicalDevice, m_QueueIndices.presentationQueueFamilyIndex, 0, &m_PresentQueue);
 
 		BE_LOG(LogCategory::Info, "[DEVICE]: Created logical device");
 	}
@@ -217,4 +238,4 @@ namespace Banshee
 		vkGetPhysicalDeviceProperties(m_PhysicalDevice, &gpuProperties);
 		return gpuProperties.limits;
 	}
-}
+} // End of Banshee namespace

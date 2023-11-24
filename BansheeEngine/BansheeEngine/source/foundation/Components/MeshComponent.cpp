@@ -14,4 +14,10 @@ namespace Banshee
 	{
 		m_TexId = ResourceManager::Instance().LoadImageResource(_pathToTexture);
 	}
+
+	void MeshComponent::SetSortLayer(const uint32 _layerId, const int32 _priority) noexcept
+	{
+		m_SortingLayer.layerId = _layerId;
+		m_SortingLayer.priority = _priority;
+	}
 } // End of Banshee namespace

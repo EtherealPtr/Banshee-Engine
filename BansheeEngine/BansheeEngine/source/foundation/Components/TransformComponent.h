@@ -25,8 +25,8 @@ namespace Banshee
 		BANSHEE_ENGINE void Scale(const glm::vec3& _scale);
 
 		BANSHEE_ENGINE glm::mat4 GetModel() const;
-		BANSHEE_ENGINE const glm::vec3& GetPosition() const { return m_Position; }
-		BANSHEE_ENGINE const glm::vec3& GetScale() const { return m_Scale; }
+		BANSHEE_ENGINE const glm::vec3& GetPosition() const noexcept { return m_Position; }
+		BANSHEE_ENGINE const glm::vec3& GetScale() const noexcept { return m_Scale; }
 
 	private:
 		glm::vec3 m_Position;
