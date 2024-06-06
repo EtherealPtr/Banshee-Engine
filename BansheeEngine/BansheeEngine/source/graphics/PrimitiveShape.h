@@ -8,6 +8,7 @@ namespace Banshee
 	{
 		Empty,
 		Triangle,
-		Square
+		Square,
+		Pyramid
 	};
 } // End of Banshee namespace

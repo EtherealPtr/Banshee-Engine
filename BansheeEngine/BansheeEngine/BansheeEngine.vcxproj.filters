@@ -105,7 +105,7 @@
     <ClCompile Include="Source\Graphics\Vulkan\VulkanTextureSampler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Application\Input\Input.cpp">
+    <ClCompile Include="Source\Foundation\Input\Input.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\Foundation\Components\TransformComponent.cpp">
@@ -124,6 +124,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\Foundation\Components\Component.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Graphics\Camera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -263,13 +266,13 @@
     <ClInclude Include="Source\Foundation\Input\InputSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Application\Input\Input.h">
+    <ClInclude Include="Source\Foundation\Input\Input.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Foundation\Input\InputBinding.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Application\Input\InputMapping.h">
+    <ClInclude Include="Source\Foundation\Input\InputMapping.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Foundation\Components\TransformComponent.h">
@@ -291,6 +294,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Foundation\Systems\System.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Graphics\Camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
