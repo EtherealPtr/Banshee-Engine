@@ -17,5 +17,7 @@ namespace Banshee
 		virtual void SetInputBindings(const std::vector<InputBinding>& _bindings) = 0;
 		virtual bool IsKeyPressed(const int32 _key) const = 0;
 		virtual bool IsMouseButtonPressed(const int32 _button) const = 0;
+		virtual double GetMouseXChange() const = 0;
+		virtual double GetMouseYChange() const = 0;
 	};
 } // End of Banshee namespace

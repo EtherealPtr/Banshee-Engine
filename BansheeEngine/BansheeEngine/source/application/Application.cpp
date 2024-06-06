@@ -1,5 +1,5 @@
 #include "Application.h"
-#include "Input/Input.h"
+#include "Foundation/Input/Input.h"
 #include "Foundation/Logging/Logger.h"
 #include "Foundation/INIParser.h"
 #include "Graphics/Window.h"

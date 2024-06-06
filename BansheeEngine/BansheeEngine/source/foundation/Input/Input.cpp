@@ -14,6 +14,11 @@ namespace Banshee
 		m_Window = _window;
 	}
 
+	void Input::LockCursor()
+	{
+		glfwSetInputMode(m_Window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	}
+
 	void Input::Update()
 	{
 		for (const auto& binding : m_InputBindings)
@@ -23,6 +28,15 @@ namespace Banshee
 				binding.callback();
 			}
 		}
+
+		double mouseX, mouseY;
+		GetCursorPosition(mouseX, mouseY);
+
+		m_MouseXChange = mouseX - m_LastMouseX;
+		m_MouseYChange = mouseY - m_LastMouseY;
+
+		m_LastMouseX = mouseX;
+		m_LastMouseY = mouseY;
 	}
 
 	bool Input::IsKeyPressed(int32 _key) const noexcept
@@ -43,5 +57,15 @@ namespace Banshee
 	void Input::SetInputBindings(const std::vector<InputBinding>& _bindings)
 	{
 		m_InputBindings = _bindings;
+	}
+
+	double Input::GetMouseXChange() const noexcept
+	{
+		return m_MouseXChange;
+	}
+
+	double Input::GetMouseYChange() const noexcept
+	{
+		return m_MouseYChange;
 	}
 } // End of Banshee namespace

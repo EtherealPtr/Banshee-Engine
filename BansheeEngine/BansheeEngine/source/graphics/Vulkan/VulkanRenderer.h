@@ -26,6 +26,7 @@ namespace Banshee
 	class VulkanUniformBuffer;
 	class VulkanTextureManager;
 	class VulkanTextureSampler;
+	class Camera;
 
 	class VulkanRenderer
 	{
@@ -58,6 +59,7 @@ namespace Banshee
 		std::unique_ptr<VulkanDescriptorSetLayout> m_VkDescriptorSetLayout;
 		std::unique_ptr<VulkanDescriptorPool> m_VkDescriptorPool;
 		std::unique_ptr<VulkanGraphicsPipeline> m_VkGraphicsPipeline;
+		std::unique_ptr<Camera> m_Camera;
 		std::vector<std::unique_ptr<VulkanUniformBuffer>> m_VPUniformBuffers;
 		std::vector<std::unique_ptr<VulkanUniformBuffer>> m_DynamicUniformBuffers;
 		std::vector<std::unique_ptr<VulkanDescriptorSet>> m_DescriptorSets;

@@ -24,6 +24,7 @@
 #include "Foundation/Components/TransformComponent.h"
 #include "Foundation/Systems/MeshSystem.h"
 #include "Foundation/Logging/Logger.h"
+#include "../Camera.h"
 #include <vulkan/vulkan.h>
 #include <stdexcept>
 #include <array>
@@ -49,7 +50,8 @@ namespace Banshee
 		m_VkTextureManager(std::make_unique<VulkanTextureManager>(m_VkDevice->GetLogicalDevice(), m_VkDevice->GetPhysicalDevice(), m_VkDevice->GetGraphicsQueue(), m_VkCommandPool->Get())),
 		m_VkDescriptorSetLayout(std::make_unique<VulkanDescriptorSetLayout>(m_VkDevice->GetLogicalDevice(), VK_SHADER_STAGE_VERTEX_BIT)),
 		m_VkDescriptorPool(std::make_unique<VulkanDescriptorPool>(m_VkDevice->GetLogicalDevice(), m_VkDescriptorSetLayout->Get(), static_cast<uint16>(m_VkSwapchain->GetImageViews().size()))),
-		m_VkGraphicsPipeline(std::make_unique<VulkanGraphicsPipeline>(m_VkDevice->GetLogicalDevice(), m_VkRenderPass->Get(), m_VkDescriptorSetLayout->Get(), m_VkSwapchain->GetWidth(), m_VkSwapchain->GetHeight()))
+		m_VkGraphicsPipeline(std::make_unique<VulkanGraphicsPipeline>(m_VkDevice->GetLogicalDevice(), m_VkRenderPass->Get(), m_VkDescriptorSetLayout->Get(), m_VkSwapchain->GetWidth(), m_VkSwapchain->GetHeight())),
+		m_Camera(std::make_unique<Camera>(45.0f, static_cast<float>(_window->GetWidth()) / _window->GetHeight(), 0.1f, 100.0f))
 	{
 		BE_LOG(LogCategory::Trace, "[RENDERER]: Initializing Vulkan");
 
@@ -103,8 +105,8 @@ namespace Banshee
 
 	void VulkanRenderer::UpdateDescriptorSet(const uint8 _descriptorSetIndex)
 	{
-		DescriptorSetWriteBufferProperties uniformBufferDescWriteProperties(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, m_VPUniformBuffers[_descriptorSetIndex]->GetBuffer(), m_VPUniformBuffers[_descriptorSetIndex]->GetBufferSize());
-		DescriptorSetWriteBufferProperties dynamicUniformBufferDescWriteProperties(1, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC, m_DynamicUniformBuffers[_descriptorSetIndex]->GetBuffer(), m_DynamicBufferMemoryAlignment);
+		const DescriptorSetWriteBufferProperties uniformBufferDescWriteProperties(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, m_VPUniformBuffers[_descriptorSetIndex]->GetBuffer(), m_VPUniformBuffers[_descriptorSetIndex]->GetBufferSize());
+		const DescriptorSetWriteBufferProperties dynamicUniformBufferDescWriteProperties(1, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC, m_DynamicUniformBuffers[_descriptorSetIndex]->GetBuffer(), m_DynamicBufferMemoryAlignment);
 		DescriptorSetWriteTextureProperties texturesDescWriteProperties(2, VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE, m_VkTextureManager->GetTextureImageViews(), VK_NULL_HANDLE);
 		DescriptorSetWriteTextureProperties samplerDescWriteProperties(3, VK_DESCRIPTOR_TYPE_SAMPLER, {}, m_VkTextureSampler->Get());
 		
@@ -129,6 +131,9 @@ namespace Banshee
 			*colorData = color;
 		}
 
+		// Update the uniform buffer with the ViewProjMatrix
+		m_VPUniformBuffers[m_CurrentFrameIndex]->CopyData(&m_ViewProjMatrix);
+
 		m_DynamicUniformBuffers[_descriptorSetIndex]->CopyData(m_DynamicBufferMemorySpace);
 		m_DescriptorSets[_descriptorSetIndex]->UpdateDescriptorSet(descriptorSetWriteBufferProperties);
 		m_DescriptorSets[_descriptorSetIndex]->UpdateDescriptorSet(descriptorSetWriteTextureProperties);
@@ -143,6 +148,12 @@ namespace Banshee
 
 		vkAcquireNextImageKHR(m_VkDevice->GetLogicalDevice(), m_VkSwapchain->Get(), UINT64_MAX,
 			m_VkSemaphores->Get()[m_CurrentFrameIndex].first, VK_NULL_HANDLE, &imgIndex);
+
+		// Update the ViewProjMatrix with the camera's view and projection matrices
+		m_Camera->ProcessInput();
+		m_ViewProjMatrix.view = m_Camera->GetViewMatrix();
+		m_ViewProjMatrix.proj = m_Camera->GetProjectionMatrix();
+		m_ViewProjMatrix.proj[1][1] *= -1.0f;
 
 		// Get the semaphores to use for this frame
 		VkSemaphore waitSemaphore = m_VkSemaphores->Get()[m_CurrentFrameIndex].first;
@@ -188,7 +199,7 @@ namespace Banshee
 		renderPassInfo.renderArea.extent = VkExtent2D({ m_VkSwapchain->GetWidth(), m_VkSwapchain->GetHeight() });
 
 		// Clear attachments
-		const VkClearColorValue clearColor = { 0.1f, 0.1f, 0.1f, 1.0f };
+        const VkClearColorValue clearColor = { 0.0f, 0.0f, 0.5f, 1.0f };
 		const VkClearDepthStencilValue clearDepthStencil{ 1.0f, 0 };
 
 		std::array<VkClearValue, 2> clearAttachments{};
