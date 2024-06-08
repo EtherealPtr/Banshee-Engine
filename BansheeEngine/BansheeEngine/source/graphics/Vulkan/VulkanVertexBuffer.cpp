@@ -1,7 +1,6 @@
 #include "VulkanVertexBuffer.h"
 #include "VulkanUtils.h"
 #include <vulkan/vulkan.h>
-#include <stdexcept>
 
 namespace Banshee
 {
@@ -26,14 +25,14 @@ namespace Banshee
 		CleanUpIndexBuffer();
 	}
 
-	void VulkanVertexBuffer::Bind(const VkCommandBuffer& _commandBuffer)
+	void VulkanVertexBuffer::Bind(const VkCommandBuffer& _commandBuffer) const
 	{
 		VkDeviceSize offsets[] = { 0 };
 		vkCmdBindVertexBuffers(_commandBuffer, 0, 1, &m_VertexBuffer, offsets);
 		vkCmdBindIndexBuffer(_commandBuffer, m_IndexBuffer, 0, VK_INDEX_TYPE_UINT16);
 	}
 
-	void VulkanVertexBuffer::CreateVertexBuffer(void* _data, const uint64_t _size)
+	void VulkanVertexBuffer::CreateVertexBuffer(void* _data, const uint64 _size)
 	{
 		// Create staging buffer
 		VkBuffer stagingBuffer{};
@@ -105,7 +104,7 @@ namespace Banshee
 		stagingBuffer = VK_NULL_HANDLE;
 	}
 
-	void VulkanVertexBuffer::CleanUpVertexBuffer()
+	void VulkanVertexBuffer::CleanUpVertexBuffer() noexcept
 	{
 		vkFreeMemory(m_LogicalDevice, m_VertexBufferMemory, nullptr);
 		vkDestroyBuffer(m_LogicalDevice, m_VertexBuffer, nullptr);
@@ -113,7 +112,7 @@ namespace Banshee
 		m_VertexBuffer = VK_NULL_HANDLE;
 	}
 
-	void VulkanVertexBuffer::CleanUpIndexBuffer()
+	void VulkanVertexBuffer::CleanUpIndexBuffer() noexcept
 	{
 		vkFreeMemory(m_LogicalDevice, m_IndexBufferMemory, nullptr);
 		vkDestroyBuffer(m_LogicalDevice, m_IndexBuffer, nullptr);

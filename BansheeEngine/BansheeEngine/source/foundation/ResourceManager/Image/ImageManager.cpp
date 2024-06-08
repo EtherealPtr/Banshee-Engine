@@ -22,6 +22,7 @@ namespace Banshee
 
 		if (!image->pixels)
 		{
+			BE_LOG(LogCategory::Error, "[RESOURCE]: Failed to load texture image %s", _pathToImage);
 			throw std::runtime_error("ERROR: Failed to load texture image");
 		}
 

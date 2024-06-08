@@ -10,8 +10,8 @@ namespace Banshee
 			_vertices =
 			{
 				Vertex(-0.5f, -0.5f, 0.0f, 0.0f, 1.0f),
-				Vertex(0.0f, 0.5f, 0.0f, 0.5f, 0.0f),
-				Vertex(0.5f, -0.5f, 0.0f, 1.0f, 1.0f)
+				Vertex(0.5f, -0.5f, 0.0f, 1.0f, 1.0f),
+				Vertex(0.0f, 0.5f, 0.0f, 0.5f, 0.0f)
 			};
 
 			_indices = { 0, 1, 2 };
@@ -21,9 +21,9 @@ namespace Banshee
 			_vertices =
 			{
 				Vertex(-0.5f, -0.5f, 0.0f, 0.0f, 1.0f),
-				Vertex(-0.5f, 0.5f, 0.0f, 0.0f, 0.0f),
+				Vertex(0.5f, -0.5f, 0.0f, 1.0f, 1.0f),
 				Vertex(0.5f, 0.5f, 0.0f, 1.0f, 0.0f),
-				Vertex(0.5f, -0.5f, 0.0f, 1.0f, 1.0f)
+				Vertex(-0.5f, 0.5f, 0.0f, 0.0f, 0.0f)
 			};
 
 			_indices = { 0, 1, 2, 2, 3, 0 };
@@ -33,20 +33,20 @@ namespace Banshee
 			_vertices =
 			{
 				Vertex(-0.5f, -0.5f, 0.0f, 0.0f, 1.0f),
-				Vertex(-0.5f, -0.5f, -1.0f, 0.0f, 0.0f),
-				Vertex(0.5f, -0.5f, -1.0f, 1.0f, 0.0f),
 				Vertex(0.5f, -0.5f, 0.0f, 1.0f, 1.0f),
+				Vertex(0.5f, -0.5f, -1.0f, 1.0f, 0.0f),
+				Vertex(-0.5f, -0.5f, -1.0f, 0.0f, 0.0f),
 				Vertex(0.0f, 0.5f, -0.5f, 0.5f, 0.5f)
 			};
 
-			_indices = 
+			_indices =
 			{
-				0, 4, 3,
-				3, 4, 2,
-				2, 4, 1,
-				1, 4, 0,
-				1, 0, 3,
-				1, 3, 2 
+				0, 3, 4,
+				3, 2, 4,
+				2, 1, 4,
+				1, 0, 4,
+				1, 2, 3,
+				1, 3, 0
 			};
 			break;
 		}

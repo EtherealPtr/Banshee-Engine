@@ -1,5 +1,6 @@
 #include <Banshee.h>
 #include "Player.h"
+#include "Ground.h"
 
 using namespace Banshee;
 
@@ -13,6 +14,8 @@ public:
 
 private:
 	Player m_Player;
+	Ground m_Ground;
+	Ground2 m_Ground2;
 };
 
 Application* CreateApplication()

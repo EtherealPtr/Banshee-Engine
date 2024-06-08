@@ -19,7 +19,6 @@ namespace Banshee
 
 	void MeshSystem::Update()
 	{
-		BE_LOG(LogCategory::Trace, "Updating mesh component");
 		SortByLayer();
 	}
 

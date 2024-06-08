@@ -116,7 +116,7 @@ namespace Banshee
 		rasterizerStateCreateInfo.polygonMode = VK_POLYGON_MODE_FILL;
 		rasterizerStateCreateInfo.lineWidth = 1.0f;
 		rasterizerStateCreateInfo.cullMode = VK_CULL_MODE_BACK_BIT;
-		rasterizerStateCreateInfo.frontFace = VK_FRONT_FACE_CLOCKWISE;
+		rasterizerStateCreateInfo.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE;
 		rasterizerStateCreateInfo.depthBiasEnable = VK_FALSE;
 		rasterizerStateCreateInfo.depthBiasConstantFactor = 0.0f;
 		rasterizerStateCreateInfo.depthBiasClamp = 0.0f;
@@ -152,8 +152,8 @@ namespace Banshee
 		// Depth stencil stage
 		VkPipelineDepthStencilStateCreateInfo depthStencilCreateInfo{};
 		depthStencilCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
-		depthStencilCreateInfo.depthTestEnable = VK_FALSE;
-		depthStencilCreateInfo.depthWriteEnable = VK_FALSE;
+		depthStencilCreateInfo.depthTestEnable = VK_TRUE;
+		depthStencilCreateInfo.depthWriteEnable = VK_TRUE;
 		depthStencilCreateInfo.depthCompareOp = VK_COMPARE_OP_LESS;
 		depthStencilCreateInfo.depthBoundsTestEnable = VK_FALSE;
 		depthStencilCreateInfo.minDepthBounds = 0.0f;

@@ -231,7 +231,14 @@ namespace Banshee
 
 		for (uint32 i = 0; i < meshComponents.size(); ++i)
 		{
-			m_VertexBufferManager->Bind(static_cast<uint32>(meshComponents[i]->GetShape()), cmdBuffer);
+			if (meshComponents[i]->HasModel())
+			{
+				m_VertexBufferManager->BindModel(cmdBuffer, meshComponents[i]->GetModelPath());
+			}
+			else
+			{
+				m_VertexBufferManager->BindBasicShape(static_cast<uint32>(meshComponents[i]->GetShape()), cmdBuffer);
+			}
 		
 			// Bind descriptor set
 			const uint32 dynamicOffsets = static_cast<uint32>(m_DynamicBufferMemoryAlignment) * i;

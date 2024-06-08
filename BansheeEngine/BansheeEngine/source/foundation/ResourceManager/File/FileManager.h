@@ -14,7 +14,8 @@ namespace Banshee
 		void WriteToLogFile(const char* _logData);
 		std::vector<char> ReadBinaryFile(const char* _fileName);
 		std::ifstream ReadFile(const char* _filePath);
-		const std::string& GetEngineResDirPath() const { return m_EngineResDirPath; }
+		const std::string& GetEngineResDirPath() const noexcept { return m_EngineResDirPath; }
+		std::string GetAssetName(const std::string& _assetPath) const;
 
 	private:
 		void CreateGeneratedFolder();

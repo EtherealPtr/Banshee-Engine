@@ -95,4 +95,10 @@ namespace Banshee
 
 		return file;
 	}
+
+	std::string FileManager::GetAssetName(const std::string& _assetPath) const
+	{
+		std::filesystem::path path(_assetPath);
+		return path.filename().string();
+	}
 } // End of Banshee namespace

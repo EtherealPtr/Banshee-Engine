@@ -20,4 +20,9 @@ namespace Banshee
 		m_SortingLayer.layerId = _layerId;
 		m_SortingLayer.priority = _priority;
 	}
+
+	std::string MeshComponent::GetModelPath() const
+	{
+		return ResourceManager::Instance().GetEngineResDirPath() + m_ModelPath;
+	}
 } // End of Banshee namespace

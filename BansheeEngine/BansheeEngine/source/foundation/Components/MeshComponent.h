@@ -5,6 +5,7 @@
 #include "Foundation/DLLConfig.h"
 #include "Foundation/Systems/SortingLayerSystem.h"
 #include <vector>
+#include <string>
 
 namespace Banshee
 {
@@ -15,7 +16,18 @@ namespace Banshee
 			m_Shape(_shape),
 			m_TexId(0),
 			m_Color(3, 1.0f),
-			m_SortingLayer{0, 0}
+			m_SortingLayer{0, 0},
+			m_ModelPath(""),
+			m_HasModel(false)
+		{}
+
+		BANSHEE_ENGINE MeshComponent(const char* _path) :
+			m_Shape(0),
+			m_TexId(0),
+			m_Color(3, 1.0f),
+			m_SortingLayer{ 0, 0 },
+			m_ModelPath(_path),
+			m_HasModel(true)
 		{}
 
 		BANSHEE_ENGINE void SetColor(const float _r, const float _g, const float _b) noexcept;
@@ -23,13 +35,17 @@ namespace Banshee
 		BANSHEE_ENGINE void SetSortLayer(const uint32 _layerId, const int32 _priority) noexcept;
 		const SortingLayer& GetSortLayer() const noexcept { return m_SortingLayer; }
 		const std::vector<float>& GetColor() const noexcept { return m_Color; }
-		const uint8 GetShape() const noexcept { return m_Shape; }
-		const uint32 GetTexId() const noexcept { return m_TexId; }
+		uint8 GetShape() const noexcept { return m_Shape; }
+		uint32 GetTexId() const noexcept { return m_TexId; }
+		std::string GetModelPath() const;
+		bool HasModel() const noexcept { return m_HasModel; }
 
 	private:
 		uint8 m_Shape;
 		uint32 m_TexId;
 		std::vector<float> m_Color;
 		SortingLayer m_SortingLayer;
+		std::string m_ModelPath;
+		bool m_HasModel;
 	};
 } // End of Banshee namespace

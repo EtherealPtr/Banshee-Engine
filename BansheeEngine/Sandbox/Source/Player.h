@@ -13,7 +13,7 @@ public:
 	Player()
 	{
 		m_PlayerEntity = EntityManager::Instance().CreateEntity();
-		const std::shared_ptr<MeshComponent>& meshComponent = m_PlayerEntity->AddComponent<MeshComponent>(PrimitiveShape::Pyramid);
+		const std::shared_ptr<MeshComponent>& meshComponent = m_PlayerEntity->AddComponent<MeshComponent>("MonkeyHead.obj");
 		//meshComponent->SetColor(0.5f, 0.5f, 0.5f);
 		meshComponent->SetTexture("Textures/tiles.jpg");
 		m_Transform = m_PlayerEntity->GetTransform();
