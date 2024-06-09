@@ -18,7 +18,8 @@ namespace Banshee
 			m_Color(3, 1.0f),
 			m_SortingLayer{0, 0},
 			m_ModelPath(""),
-			m_HasModel(false)
+			m_HasModel(false),
+			m_HasCustomTexture(false)
 		{}
 
 		BANSHEE_ENGINE MeshComponent(const char* _path) :
@@ -27,7 +28,8 @@ namespace Banshee
 			m_Color(3, 1.0f),
 			m_SortingLayer{ 0, 0 },
 			m_ModelPath(_path),
-			m_HasModel(true)
+			m_HasModel(true),
+			m_HasCustomTexture(false)
 		{}
 
 		BANSHEE_ENGINE void SetColor(const float _r, const float _g, const float _b) noexcept;
@@ -36,16 +38,18 @@ namespace Banshee
 		const SortingLayer& GetSortLayer() const noexcept { return m_SortingLayer; }
 		const std::vector<float>& GetColor() const noexcept { return m_Color; }
 		uint8 GetShape() const noexcept { return m_Shape; }
-		uint32 GetTexId() const noexcept { return m_TexId; }
+		uint16 GetTexId() const noexcept { return m_TexId; }
 		std::string GetModelPath() const;
 		bool HasModel() const noexcept { return m_HasModel; }
+		bool HasCustomTexture() const noexcept { return m_HasCustomTexture; }
 
 	private:
 		uint8 m_Shape;
-		uint32 m_TexId;
+		uint16 m_TexId;
 		std::vector<float> m_Color;
 		SortingLayer m_SortingLayer;
 		std::string m_ModelPath;
 		bool m_HasModel;
+		bool m_HasCustomTexture;
 	};
 } // End of Banshee namespace

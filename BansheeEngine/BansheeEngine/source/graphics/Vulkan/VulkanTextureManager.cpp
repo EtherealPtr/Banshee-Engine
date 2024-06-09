@@ -17,7 +17,7 @@ namespace Banshee
 		m_TextureImageFormat(VK_FORMAT_R8G8B8A8_SRGB)
 	{
 		const std::vector<std::shared_ptr<Image>>& images = ResourceManager::Instance().GetImageManager()->GetImages();
-
+		
 		for (const auto& image : images)
 		{
 			CreateStagingBuffer(image->imageSize, image->pixels, image->imageWidth, image->imageHeight);

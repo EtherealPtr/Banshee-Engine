@@ -7,12 +7,37 @@
 
 namespace Banshee
 {
+	ImageManager::ImageManager()
+	{
+		m_Images.reserve(1);
+		CreateDefaultImage();
+	}
+
 	ImageManager::~ImageManager()
 	{
 		UnloadImages();
 	}
 
-	uint32 ImageManager::LoadImage(const char* _pathToImage)
+	void ImageManager::CreateDefaultImage()
+	{
+		const std::shared_ptr<Image> image = std::make_shared<Image>();
+		
+		// Create a simple white texture
+		unsigned char* whiteTexturePixels = (unsigned char*)stbi__malloc(4);
+		whiteTexturePixels[0] = 255;
+		whiteTexturePixels[1] = 255;
+		whiteTexturePixels[2] = 255;
+		whiteTexturePixels[3] = 255;
+		image->pixels = whiteTexturePixels;
+		image->imageWidth = 1;
+		image->imageHeight = 1;
+		image->imageSize = 4;
+
+		image->imageIndex = static_cast<uint16>(m_Images.size());
+		m_Images.emplace_back(image);
+	}
+
+	uint16 ImageManager::LoadImage(const char* _pathToImage)
 	{
 		const std::shared_ptr<Image> image = std::make_shared<Image>();
 
@@ -26,7 +51,7 @@ namespace Banshee
 			throw std::runtime_error("ERROR: Failed to load texture image");
 		}
 
-		image->imageIndex = static_cast<uint32>(m_Images.size());
+		image->imageIndex = static_cast<uint16>(m_Images.size());
 		m_Images.emplace_back(image);
 		BE_LOG(LogCategory::Trace, "[RESOURCE]: Loaded image %s", _pathToImage);
 

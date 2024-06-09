@@ -33,7 +33,7 @@ public:
 	{
 		m_Entity = EntityManager::Instance().CreateEntity();
 		const std::shared_ptr<MeshComponent>& meshComponent = m_Entity->AddComponent<MeshComponent>(PrimitiveShape::Triangle);
-		meshComponent->SetTexture("Textures/tiles.jpg");
+		meshComponent->SetColor(0.8f, 0.4f, 0.0f);
 		m_Transform = m_Entity->GetTransform();
 		m_Transform.get()->SetRotation(glm::angleAxis(glm::radians(-45.0f), glm::vec3(1.0f, 0.0f, 0.0f)));
 		m_Transform.get()->SetScale(glm::vec3(5.0f, 5.0f, 1.0f));

@@ -13,6 +13,7 @@ namespace Banshee
 	void MeshComponent::SetTexture(const char* _pathToTexture)
 	{
 		m_TexId = ResourceManager::Instance().LoadImageResource(_pathToTexture);
+		m_HasCustomTexture = true;
 	}
 
 	void MeshComponent::SetSortLayer(const uint32 _layerId, const int32 _priority) noexcept

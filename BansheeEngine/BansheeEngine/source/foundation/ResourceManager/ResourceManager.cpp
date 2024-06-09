@@ -15,7 +15,7 @@ namespace Banshee
         return instance;
     }
 
-    uint32 ResourceManager::LoadImageResource(const char* _pathToImage)
+    uint16 ResourceManager::LoadImageResource(const char* _pathToImage)
     {
         const std::string fullPath = m_FileManager->GetEngineResDirPath() + _pathToImage;
         return m_ImageManager->LoadImage(fullPath.c_str());

@@ -247,7 +247,7 @@ namespace Banshee
 		
 			// Push constants
 			const glm::mat4 modelMatrix = meshComponents[i]->GetOwner()->GetTransform()->GetModel();
-			const PushConstant pc(modelMatrix, meshComponents[i]->GetTexId());
+			const PushConstant pc(modelMatrix, meshComponents[i]->GetTexId(), meshComponents[i]->HasCustomTexture() ? 1 : 0);
 			vkCmdPushConstants(cmdBuffer, m_VkGraphicsPipeline->GetLayout(), VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(PushConstant), &pc);
 		
 			vkCmdDrawIndexed(cmdBuffer, m_VertexBufferManager->GetCurrentIndicesCount(), 1, 0, 0, 0);

@@ -14,7 +14,7 @@ namespace Banshee
 	public:
 		static ResourceManager& Instance();
 
-		uint32 LoadImageResource(const char* _pathToImage);
+		uint16 LoadImageResource(const char* _pathToImage);
 		const std::shared_ptr<FileManager>& GetFileManager() const noexcept { return m_FileManager; }
 		const std::shared_ptr<ImageManager>& GetImageManager() const noexcept { return m_ImageManager; }
 		const char* GetEngineResDirPath() noexcept;
