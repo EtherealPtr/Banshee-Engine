@@ -6,9 +6,8 @@
 
 namespace Banshee
 {
-	VulkanDescriptorPool::VulkanDescriptorPool(const VkDevice& _logicalDevice, const VkDescriptorSetLayout& _layout, const uint32 _maxSets) :
+	VulkanDescriptorPool::VulkanDescriptorPool(const VkDevice& _logicalDevice, const uint32 _maxSets) :
 		m_LogicalDevice(_logicalDevice),
-		m_DescriptorSetLayout(_layout),
 		m_DescriptorPool(VK_NULL_HANDLE)
 	{
 		BE_LOG(LogCategory::Trace, "[DESCRIPTOR POOL]: Creating descriptor pool");

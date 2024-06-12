@@ -35,6 +35,7 @@ namespace Banshee
 		~VulkanTextureManager();
 
 		std::vector<VkImageView> GetTextureImageViews() const;
+		void UploadTextures();
 
 	private:
 		void CreateStagingBuffer(const uint64 _sizeOfBuffer, const unsigned char* _pixels, const uint32 _imgW, const uint32 _imgH);

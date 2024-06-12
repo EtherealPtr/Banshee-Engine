@@ -13,9 +13,9 @@ public:
 	Player()
 	{
 		m_PlayerEntity = EntityManager::Instance().CreateEntity();
-		const std::shared_ptr<MeshComponent>& meshComponent = m_PlayerEntity->AddComponent<MeshComponent>("MonkeyHead.obj");
-		meshComponent->SetColor(1.0f, 0.0f, 0.0f);
-		//meshComponent->SetTexture("Textures/tiles.jpg");
+		const std::shared_ptr<MeshComponent>& meshComponent = m_PlayerEntity->AddComponent<MeshComponent>();
+		meshComponent->SetModel("Models/level1.obj");
+		//meshComponent->SetColor(1.0f, 0.0f, 0.0f);
 		m_Transform = m_PlayerEntity->GetTransform();
 
 		//std::vector<InputBinding> inputBindings = 

@@ -17,9 +17,9 @@ namespace Banshee
 
 		void CopyData(void* _pData);
 
-		VkBuffer GetBuffer() const { return m_Buffer; }
-		uint64 GetBufferSize() const { return m_BufferSize; }
-		VkDeviceMemory GetBufferMemory() const { return m_BufferMemory; }
+		VkBuffer GetBuffer() const noexcept { return m_Buffer; }
+		uint64 GetBufferSize() const noexcept { return m_BufferSize; }
+		VkDeviceMemory GetBufferMemory() const noexcept { return m_BufferMemory; }
 
 	private:
 		VkDevice m_LogicalDevice;

@@ -1,55 +1,50 @@
 #pragma once
 
 #include "Component.h"
-#include "Foundation/Platform.h"
+#include "Material.h"
 #include "Foundation/DLLConfig.h"
-#include "Foundation/Systems/SortingLayerSystem.h"
 #include <vector>
-#include <string>
 
 namespace Banshee
 {
+	class Material;
+
 	class MeshComponent : public Component
 	{
 	public:
-		BANSHEE_ENGINE MeshComponent(const uint8 _shape = 0) :
-			m_Shape(_shape),
-			m_TexId(0),
-			m_Color(3, 1.0f),
-			m_SortingLayer{0, 0},
-			m_ModelPath(""),
+		BANSHEE_ENGINE MeshComponent(const uint32 _meshId = 0) :
+			m_MeshId(_meshId),
+			m_IndicesCount(0),
+			m_HasTexture(false),
 			m_HasModel(false),
-			m_HasCustomTexture(false)
-		{}
+			m_ModelName(""),
+			m_TexId(0)
+		{
+			m_Materials.resize(1);
+		}
 
-		BANSHEE_ENGINE MeshComponent(const char* _path) :
-			m_Shape(0),
-			m_TexId(0),
-			m_Color(3, 1.0f),
-			m_SortingLayer{ 0, 0 },
-			m_ModelPath(_path),
-			m_HasModel(true),
-			m_HasCustomTexture(false)
-		{}
-
-		BANSHEE_ENGINE void SetColor(const float _r, const float _g, const float _b) noexcept;
+		BANSHEE_ENGINE void SetModel(const char* _modelName);
 		BANSHEE_ENGINE void SetTexture(const char* _pathToTexture);
-		BANSHEE_ENGINE void SetSortLayer(const uint32 _layerId, const int32 _priority) noexcept;
-		const SortingLayer& GetSortLayer() const noexcept { return m_SortingLayer; }
-		const std::vector<float>& GetColor() const noexcept { return m_Color; }
-		uint8 GetShape() const noexcept { return m_Shape; }
+		void SetMeshId(const uint32 _meshId) noexcept { m_MeshId = _meshId; }
+		void SetIndicesCount(const uint32 _count) noexcept { m_IndicesCount = _count; }
+		void SetMaterials(const std::vector<Material>& _materials) { m_Materials = _materials; }
+
+		uint32 GetMeshId() const noexcept { return m_MeshId; }
+		uint32 GetIndicesCount() const noexcept { return m_IndicesCount; }
 		uint16 GetTexId() const noexcept { return m_TexId; }
-		std::string GetModelPath() const;
+		std::vector<Material>& GetMaterials() noexcept { return m_Materials; }
+		const std::string& GetModelName() const noexcept { return m_ModelName; }
+		const std::string GetModelPath() const;
+		bool HasTexture() const noexcept { return m_HasTexture; }
 		bool HasModel() const noexcept { return m_HasModel; }
-		bool HasCustomTexture() const noexcept { return m_HasCustomTexture; }
 
 	private:
-		uint8 m_Shape;
-		uint16 m_TexId;
-		std::vector<float> m_Color;
-		SortingLayer m_SortingLayer;
-		std::string m_ModelPath;
+		uint32 m_MeshId;
+		uint32 m_IndicesCount;
+		std::vector<Material> m_Materials;
+		bool m_HasTexture;
 		bool m_HasModel;
-		bool m_HasCustomTexture;
+		std::string m_ModelName;
+		uint16 m_TexId;
 	};
 } // End of Banshee namespace

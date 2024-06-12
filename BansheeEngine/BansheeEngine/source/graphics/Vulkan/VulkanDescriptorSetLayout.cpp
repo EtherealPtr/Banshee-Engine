@@ -32,9 +32,10 @@ namespace Banshee
 		BE_LOG(LogCategory::Trace, "[DESCRIPTOR SET LAYOUT]: Added descriptor of type VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC at binding 1");
 
 		// Textures
+		const uint32 MAX_TEXTURES = 16;
 		layoutBindings[2].binding = 2;
 		layoutBindings[2].descriptorType = VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE;
-		layoutBindings[2].descriptorCount = static_cast<uint32>(ResourceManager::Instance().GetImageManager()->GetImages().size());
+		layoutBindings[2].descriptorCount = MAX_TEXTURES;
 		layoutBindings[2].stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
 		layoutBindings[2].pImmutableSamplers = nullptr;
 		BE_LOG(LogCategory::Trace, "[DESCRIPTOR SET LAYOUT]: Added descriptor of type VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE at binding 2");

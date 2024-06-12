@@ -2,6 +2,7 @@
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include "MVP.h"
 
 namespace Banshee
 {
@@ -10,8 +11,9 @@ namespace Banshee
 	public:
 		Camera(float _fov, float _aspect, float _near, float _far);
 
-		glm::mat4 GetViewMatrix() const;
-		glm::mat4 GetProjectionMatrix() const;
+		const ViewProjMatrix& GetViewProjMatrix() const noexcept { return m_ViewProjMatrix; }
+		const glm::mat4& GetViewMatrix() const noexcept { return m_ViewProjMatrix.view; }
+		const glm::mat4& GetProjectionMatrix() const noexcept { return m_ViewProjMatrix.proj; }
 		void ProcessInput();
 		void MoveForward(float _delta);
 		void MoveBackward(float _delta);
@@ -25,6 +27,8 @@ namespace Banshee
 		void ProcessMouseInput();
 
 	private:
+		ViewProjMatrix m_ViewProjMatrix;
+
 		glm::vec3 m_Position;
 		glm::vec3 m_Up;
 		glm::vec3 m_Right;
@@ -36,8 +40,5 @@ namespace Banshee
 		float m_Far;
 		float m_Yaw;
 		float m_Pitch;
-
-		glm::mat4 m_ViewMatrix;
-		glm::mat4 m_ProjectionMatrix;
 	};
 } // End of Banshee namespace

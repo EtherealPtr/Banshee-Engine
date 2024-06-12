@@ -104,6 +104,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Source\Foundation\Components\Component.cpp" />
+    <ClCompile Include="Source\Foundation\Components\Material.cpp" />
     <ClCompile Include="Source\Foundation\Components\MeshComponent.cpp" />
     <ClCompile Include="Source\Foundation\ResourceManager\Image\ImageManager.cpp" />
     <ClCompile Include="Source\Foundation\ResourceManager\ResourceManager.cpp" />
@@ -143,6 +144,7 @@
     <ClCompile Include="Source\Graphics\Vulkan\VulkanTextureManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Foundation\Components\Material.h" />
     <ClInclude Include="Source\Foundation\ResourceManager\Image\Image.h" />
     <ClInclude Include="Source\Foundation\ResourceManager\Image\ImageManager.h" />
     <ClInclude Include="Source\Foundation\ResourceManager\ResourceManager.h" />

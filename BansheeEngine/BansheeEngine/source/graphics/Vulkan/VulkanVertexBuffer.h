@@ -18,9 +18,6 @@ namespace Banshee
 		VulkanVertexBuffer(const VkDevice& _logicalDevice, const VkPhysicalDevice& _physicalDevice, const VkCommandPool& _commandPool, const VkQueue& _graphicsQueue, void* _vertexData, const uint64 _sizeOfVertexData, void* _indexData, const uint64 _sizeOfIndexData);
 		~VulkanVertexBuffer();
 
-		void SetIndicesCount(const uint32 _numOfIndices) noexcept { m_NumOfIndices = _numOfIndices; }
-		uint32 GetIndicesCount() const noexcept { return m_NumOfIndices; }
-
 		void Bind(const VkCommandBuffer& _commandBuffer) const;
 
 	private:
@@ -38,6 +35,5 @@ namespace Banshee
 		VkBuffer m_IndexBuffer;
 		VkDeviceMemory m_VertexBufferMemory;
 		VkDeviceMemory m_IndexBufferMemory;
-		uint32 m_NumOfIndices;
 	};
 } // End of Banshee namespace

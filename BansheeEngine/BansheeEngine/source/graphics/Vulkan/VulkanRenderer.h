@@ -1,12 +1,13 @@
 #pragma once
 
-#include "VulkanVertexBufferManager.h"
+#include <vector>
 #include <memory>
-#include "Graphics/MVP.h"
+#include "Foundation/Platform.h"
 
 namespace Banshee
 {
 	class Window;
+	class Camera;
 	class VulkanInstance;
 	class VulkanSurface;
 	class VulkanDevice;
@@ -26,7 +27,7 @@ namespace Banshee
 	class VulkanUniformBuffer;
 	class VulkanTextureManager;
 	class VulkanTextureSampler;
-	class Camera;
+	class Material;
 
 	class VulkanRenderer
 	{
@@ -59,13 +60,12 @@ namespace Banshee
 		std::unique_ptr<VulkanDescriptorSetLayout> m_VkDescriptorSetLayout;
 		std::unique_ptr<VulkanDescriptorPool> m_VkDescriptorPool;
 		std::unique_ptr<VulkanGraphicsPipeline> m_VkGraphicsPipeline;
-		std::unique_ptr<Camera> m_Camera;
 		std::vector<std::unique_ptr<VulkanUniformBuffer>> m_VPUniformBuffers;
 		std::vector<std::unique_ptr<VulkanUniformBuffer>> m_DynamicUniformBuffers;
 		std::vector<std::unique_ptr<VulkanDescriptorSet>> m_DescriptorSets;
-		ViewProjMatrix m_ViewProjMatrix;
+		std::unique_ptr<Camera> m_Camera;
 		uint8 m_CurrentFrameIndex;
 		size_t m_DynamicBufferMemoryAlignment;
-		glm::vec3* m_DynamicBufferMemorySpace;
+		Material* m_DynamicBufferMemorySpace;
 	};
 } // End of Banshee namespace

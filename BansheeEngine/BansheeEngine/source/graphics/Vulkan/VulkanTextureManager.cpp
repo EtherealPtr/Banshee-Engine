@@ -15,14 +15,7 @@ namespace Banshee
 		m_GraphicsQueue(_graphicsQueue),
 		m_CommandPool(_commandPool),
 		m_TextureImageFormat(VK_FORMAT_R8G8B8A8_SRGB)
-	{
-		const std::vector<std::shared_ptr<Image>>& images = ResourceManager::Instance().GetImageManager()->GetImages();
-		
-		for (const auto& image : images)
-		{
-			CreateStagingBuffer(image->imageSize, image->pixels, image->imageWidth, image->imageHeight);
-		}
-	}
+	{}
 
 	VulkanTextureManager::~VulkanTextureManager()
 	{
@@ -31,6 +24,16 @@ namespace Banshee
 			vkDestroyImageView(m_LogicalDevice, image.imageView, nullptr);
 			vkDestroyImage(m_LogicalDevice, image.image, nullptr);
 			vkFreeMemory(m_LogicalDevice, image.imageMemory, nullptr);
+		}
+	}
+
+	void VulkanTextureManager::UploadTextures()
+	{
+		const std::vector<std::shared_ptr<Image>>& images = ResourceManager::Instance().GetImageManager()->GetImages();
+
+		for (const auto& image : images)
+		{
+			CreateStagingBuffer(image->imageSize, image->pixels, image->imageWidth, image->imageHeight);
 		}
 	}
 

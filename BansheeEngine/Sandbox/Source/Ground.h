@@ -33,11 +33,10 @@ public:
 	{
 		m_Entity = EntityManager::Instance().CreateEntity();
 		const std::shared_ptr<MeshComponent>& meshComponent = m_Entity->AddComponent<MeshComponent>(PrimitiveShape::Triangle);
-		meshComponent->SetColor(0.8f, 0.4f, 0.0f);
+		meshComponent->GetMaterials()[0].SetDiffuseColor({0.0f, 1.0f, 0.0f});
 		m_Transform = m_Entity->GetTransform();
-		m_Transform.get()->SetRotation(glm::angleAxis(glm::radians(-45.0f), glm::vec3(1.0f, 0.0f, 0.0f)));
-		m_Transform.get()->SetScale(glm::vec3(5.0f, 5.0f, 1.0f));
-		m_Transform.get()->SetPosition(glm::vec3(0.0f, 2.0f, 0.0f));
+		m_Transform.get()->SetScale(glm::vec3(3.0f, 3.0f, 1.0f));
+		m_Transform.get()->SetPosition(glm::vec3(-5.0f, 0.0f, 0.0f));
 	}
 
 private:

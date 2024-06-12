@@ -14,10 +14,12 @@ layout (set = 0, binding = 0) uniform ViewProjBuffer
 	mat4 proj;
 } u_ViewProj;
 
-layout (set = 0, binding = 1) uniform ColorBuffer
+layout (set = 0, binding = 1) uniform Material
 {
-	vec3 color;
-} u_Color;
+	vec3 diffuseColor;
+	vec3 specularColor;
+	float shininess;
+} u_Material;
 
 layout (push_constant) uniform PushConstants
 {
@@ -30,7 +32,7 @@ void main()
 {
 	gl_Position = u_ViewProj.proj * u_ViewProj.view * u_PushConstants.model * vec4(in_vertex_position, 1.0f);
 	out_vertex_texCoord = in_vertex_texCoord;
-	out_vertex_color = u_Color.color;
+	out_vertex_color = u_Material.diffuseColor;
 	out_texture_index = u_PushConstants.textureId;
 	out_texture_available = u_PushConstants.hasCustomTexture;
 }

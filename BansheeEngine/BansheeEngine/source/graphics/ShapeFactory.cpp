@@ -2,7 +2,7 @@
 
 namespace Banshee
 {
-	void ShapeFactory::GetVertices(const PrimitiveShape _shape, std::vector<Vertex>& _vertices, std::vector<uint16>& _indices)
+	void ShapeFactory::GetShapeData(const PrimitiveShape _shape, std::vector<Vertex>& _vertices, std::vector<uint32>& _indices)
 	{
 		switch (_shape)
 		{
@@ -52,7 +52,7 @@ namespace Banshee
 		}
 	}
 
-	uint16 ShapeFactory::GetIndicesCount(const PrimitiveShape _shape) noexcept
+	uint32 ShapeFactory::GetIndicesCount(const PrimitiveShape _shape) noexcept
 	{
 		switch (_shape)
 		{

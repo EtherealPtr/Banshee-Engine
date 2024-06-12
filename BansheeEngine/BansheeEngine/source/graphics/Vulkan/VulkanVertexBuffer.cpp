@@ -29,7 +29,7 @@ namespace Banshee
 	{
 		VkDeviceSize offsets[] = { 0 };
 		vkCmdBindVertexBuffers(_commandBuffer, 0, 1, &m_VertexBuffer, offsets);
-		vkCmdBindIndexBuffer(_commandBuffer, m_IndexBuffer, 0, VK_INDEX_TYPE_UINT16);
+		vkCmdBindIndexBuffer(_commandBuffer, m_IndexBuffer, 0, VK_INDEX_TYPE_UINT32);
 	}
 
 	void VulkanVertexBuffer::CreateVertexBuffer(void* _data, const uint64 _size)
