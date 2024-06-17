@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Foundation/DLLConfig.h"
 #include "Entity.h"
 
 namespace Banshee
@@ -8,13 +7,9 @@ namespace Banshee
 	class EntityManager
 	{
 	public:
-		BANSHEE_ENGINE static EntityManager& Instance();
-		BANSHEE_ENGINE std::shared_ptr<Entity> CreateEntity();
-		std::vector<std::shared_ptr<Entity>>& GetAllEntities() { return m_Entities; }
-
-	private:
-		EntityManager() {};
-		~EntityManager() {};
+		BANSHEE_ENGINE static EntityManager& Instance() noexcept;
+		BANSHEE_ENGINE static std::shared_ptr<Entity> CreateEntity();
+		const static std::vector<std::shared_ptr<Entity>>& GetAllEntities() noexcept { return m_Entities; }
 
 		EntityManager(const EntityManager&) = delete;
 		EntityManager(EntityManager&&) = delete;
@@ -22,8 +17,12 @@ namespace Banshee
 		void operator=(EntityManager&&) = delete;
 
 	private:
+		EntityManager() noexcept {};
+		~EntityManager() {};
+
+	private:
 		static EntityManager s_EntityManager;
 		static uint32 m_TotalEntities;
-		std::vector<std::shared_ptr<Entity>> m_Entities;
+		static std::vector<std::shared_ptr<Entity>> m_Entities;
 	};
 } // End of Banshee namespace

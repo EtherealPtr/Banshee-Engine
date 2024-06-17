@@ -99,7 +99,7 @@
     <ClCompile Include="Source\Foundation\Entity\EntityManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Foundation\Systems\MeshSystem.cpp">
+    <ClCompile Include="Source\Graphics\Systems\MeshSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\Graphics\Vulkan\VulkanTextureSampler.cpp">
@@ -126,10 +126,10 @@
     <ClCompile Include="Source\Graphics\Camera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Foundation\Components\Material.cpp">
+    <ClCompile Include="Source\Graphics\Components\MeshComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Foundation\Components\MeshComponent.cpp">
+    <ClCompile Include="Source\Graphics\Systems\ModelLoadingSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -254,10 +254,10 @@
     <ClInclude Include="Source\Foundation\Entity\EntityManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Foundation\Components\MeshComponent.h">
+    <ClInclude Include="Source\Graphics\Components\MeshComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Foundation\Systems\MeshSystem.h">
+    <ClInclude Include="Source\Graphics\Systems\MeshSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Dependencies\stb_image\stb_image.h">
@@ -302,7 +302,22 @@
     <ClInclude Include="Source\Graphics\Camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Foundation\Components\Material.h">
+    <ClInclude Include="Source\Graphics\Components\Material.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Graphics\Components\Mesh.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Components.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Graphics\Systems\ModelLoadingSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependencies\tinyobjloader\tiny_obj_loader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependencies\tinygltf\tiny_gltf.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

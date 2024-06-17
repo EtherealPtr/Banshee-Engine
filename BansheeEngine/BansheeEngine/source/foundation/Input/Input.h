@@ -21,14 +21,14 @@ namespace Banshee
 
 		void LockCursor();
 
-	private:
-		Input() noexcept : m_Window(nullptr) {}
-		virtual ~Input() = default;
-
 		Input(const Input&) = delete;
 		Input(Input&&) = delete;
 		void operator=(const Input&) = delete;
 		void operator=(Input&&) = delete;
+
+	private:
+		Input() noexcept;
+		virtual ~Input() = default;
 
 	private:
 		GLFWwindow* m_Window;

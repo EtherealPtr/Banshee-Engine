@@ -12,14 +12,14 @@ namespace Banshee
 
 		void PrintLog(const LogCategory _category, const char* _format, ...);
 
-	private:
-		Logger() {};
-		~Logger() {};
-
 		Logger(const Logger&) = delete;
 		Logger(Logger&&) = delete;
 		void operator=(const Logger&) = delete;
 		void operator=(Logger&&) = delete;
+
+	private:
+		Logger() {};
+		~Logger() {};
 
 		std::string GetLogCategoryName(const LogCategory _category);
 	};

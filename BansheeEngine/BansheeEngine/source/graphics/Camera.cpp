@@ -80,8 +80,8 @@ namespace Banshee
 		xoffset *= sensitivity;
 		yoffset *= sensitivity;
 
-		m_Yaw += xoffset;
-		m_Pitch -= yoffset;
+		m_Yaw += static_cast<float>(xoffset);
+		m_Pitch -= static_cast<float>(yoffset);
 
 		if (m_Pitch > 89.0)
 			m_Pitch = 89.0;

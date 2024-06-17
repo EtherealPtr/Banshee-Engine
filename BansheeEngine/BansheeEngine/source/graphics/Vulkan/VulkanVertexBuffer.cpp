@@ -25,11 +25,11 @@ namespace Banshee
 		CleanUpIndexBuffer();
 	}
 
-	void VulkanVertexBuffer::Bind(const VkCommandBuffer& _commandBuffer) const
+	void VulkanVertexBuffer::Bind(const VkCommandBuffer& _commandBuffer, const uint64 _vertexOffset, const uint64 _indexOffset) const
 	{
-		VkDeviceSize offsets[] = { 0 };
+		const VkDeviceSize offsets[] = { _vertexOffset };
 		vkCmdBindVertexBuffers(_commandBuffer, 0, 1, &m_VertexBuffer, offsets);
-		vkCmdBindIndexBuffer(_commandBuffer, m_IndexBuffer, 0, VK_INDEX_TYPE_UINT32);
+		vkCmdBindIndexBuffer(_commandBuffer, m_IndexBuffer, _indexOffset, VK_INDEX_TYPE_UINT32);
 	}
 
 	void VulkanVertexBuffer::CreateVertexBuffer(void* _data, const uint64 _size)

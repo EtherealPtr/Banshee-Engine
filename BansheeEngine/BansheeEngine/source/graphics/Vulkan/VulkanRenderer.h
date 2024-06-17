@@ -6,8 +6,6 @@
 
 namespace Banshee
 {
-	class Window;
-	class Camera;
 	class VulkanInstance;
 	class VulkanSurface;
 	class VulkanDevice;
@@ -27,6 +25,8 @@ namespace Banshee
 	class VulkanUniformBuffer;
 	class VulkanTextureManager;
 	class VulkanTextureSampler;
+	class Window;
+	class Camera;
 	class Material;
 
 	class VulkanRenderer
@@ -41,6 +41,7 @@ namespace Banshee
 		void AllocateDynamicBufferSpace();
 		void UpdateDescriptorSet(const uint8 _descriptorSetIndex);
 		void RecordRenderCommands(const uint8 _imgIndex);
+		void FetchMeshComponents() const;
 
 	private:
 		std::unique_ptr<VulkanInstance> m_VkInstance;

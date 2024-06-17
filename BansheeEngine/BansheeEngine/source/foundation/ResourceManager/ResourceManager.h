@@ -20,6 +20,11 @@ namespace Banshee
 		const char* GetEngineResDirPath() noexcept;
 		std::string GetAssetName(const std::string& _assetName);
 
+		ResourceManager(const ResourceManager&) = delete;
+		ResourceManager& operator=(const ResourceManager&) = delete;
+		ResourceManager(ResourceManager&&) = delete;
+		ResourceManager& operator=(ResourceManager&&) = delete;
+
 	private:
 		ResourceManager();
 		~ResourceManager() = default;

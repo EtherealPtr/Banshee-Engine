@@ -3,8 +3,9 @@
 namespace Banshee
 {
     uint32 EntityManager::m_TotalEntities = 0;
+	std::vector<std::shared_ptr<Entity>> EntityManager::m_Entities;
 
-    EntityManager& EntityManager::Instance()
+    EntityManager& EntityManager::Instance() noexcept
     {
         static EntityManager s_EntityManager;
         return s_EntityManager;

@@ -64,14 +64,14 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>BANSHEE_EXPORTS;STB_IMAGE_IMPLEMENTATION;GLM_FORCE_RADIANS;GLM_FORCE_DEPTH_ZERO_TO_ONE;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)Source;$(ProjectDir)Dependencies\glfw-3.3.8\include;$(ProjectDir)Dependencies\vulkan\include;$(ProjectDir)Dependencies\stb_image;$(ProjectDir)Dependencies\glm;$(ProjectDir)Dependencies\assimp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Source;$(ProjectDir)Dependencies\glfw-3.3.8\include;$(ProjectDir)Dependencies\vulkan\include;$(ProjectDir)Dependencies\stb_image;$(ProjectDir)Dependencies\glm;$(ProjectDir)Dependencies\tinygltf;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>glfw3.lib;vulkan-1.lib;assimp-vc143-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(ProjectDir)Dependencies\glfw-3.3.8\lib;$(ProjectDir)Dependencies\vulkan\lib;$(ProjectDir)Dependencies\assimp\lib\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>glfw3.lib;vulkan-1.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)Dependencies\glfw-3.3.8\lib;$(ProjectDir)Dependencies\vulkan\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
       <Command>xcopy /y "$(TargetDir)BansheeEngine.dll" "$(SolutionDir)Binaries\Sandbox-$(Configuration)"
@@ -86,7 +86,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>BANSHEE_EXPORTS;STB_IMAGE_IMPLEMENTATION;GLM_FORCE_DEPTH_ZERO_TO_ONE;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)Source;$(ProjectDir)Dependencies\glfw-3.3.8\include;$(ProjectDir)Dependencies\vulkan\include;$(ProjectDir)Dependencies\stb_image;$(ProjectDir)Dependencies\glm;$(ProjectDir)Dependencies\assimp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Source;$(ProjectDir)Dependencies\glfw-3.3.8\include;$(ProjectDir)Dependencies\vulkan\include;$(ProjectDir)Dependencies\stb_image;$(ProjectDir)Dependencies\glm;$(ProjectDir)Dependencies\tinygltf;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -94,8 +94,8 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>glfw3.lib;vulkan-1.lib;assimp-vc143-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(ProjectDir)Dependencies\glfw-3.3.8\lib;$(ProjectDir)Dependencies\vulkan\lib;$(ProjectDir)Dependencies\assimp\lib\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>glfw3.lib;vulkan-1.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)Dependencies\glfw-3.3.8\lib;$(ProjectDir)Dependencies\vulkan\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
       <Command>xcopy /y "$(TargetDir)BansheeEngine.dll" "$(SolutionDir)Binaries\Sandbox-$(Configuration)"
@@ -103,13 +103,13 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Graphics\Systems\ModelLoadingSystem.cpp" />
     <ClCompile Include="Source\Foundation\Components\Component.cpp" />
-    <ClCompile Include="Source\Foundation\Components\Material.cpp" />
-    <ClCompile Include="Source\Foundation\Components\MeshComponent.cpp" />
+    <ClCompile Include="Source\Graphics\Components\MeshComponent.cpp" />
     <ClCompile Include="Source\Foundation\ResourceManager\Image\ImageManager.cpp" />
     <ClCompile Include="Source\Foundation\ResourceManager\ResourceManager.cpp" />
     <ClCompile Include="Source\Foundation\Input\Input.cpp" />
-    <ClCompile Include="Source\Foundation\Systems\MeshSystem.cpp" />
+    <ClCompile Include="Source\Graphics\Systems\MeshSystem.cpp" />
     <ClCompile Include="Source\Foundation\Entity\EntityManager.cpp" />
     <ClCompile Include="Source\Foundation\Entity\Entity.cpp" />
     <ClCompile Include="source\foundation\INIParser.cpp" />
@@ -144,7 +144,12 @@
     <ClCompile Include="Source\Graphics\Vulkan\VulkanTextureManager.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Source\Foundation\Components\Material.h" />
+    <ClInclude Include="Dependencies\tinygltf\tiny_gltf.h" />
+    <ClInclude Include="Dependencies\tinyobjloader\tiny_obj_loader.h" />
+    <ClInclude Include="Source\Graphics\Systems\ModelLoadingSystem.h" />
+    <ClInclude Include="Source\Components.h" />
+    <ClInclude Include="Source\Graphics\Components\Material.h" />
+    <ClInclude Include="Source\Graphics\Components\Mesh.h" />
     <ClInclude Include="Source\Foundation\ResourceManager\Image\Image.h" />
     <ClInclude Include="Source\Foundation\ResourceManager\Image\ImageManager.h" />
     <ClInclude Include="Source\Foundation\ResourceManager\ResourceManager.h" />
@@ -152,8 +157,8 @@
     <ClInclude Include="Source\Foundation\Input\InputBinding.h" />
     <ClInclude Include="Source\Foundation\Input\Input.h" />
     <ClInclude Include="Source\Foundation\Input\InputSystem.h" />
-    <ClInclude Include="Source\Foundation\Systems\MeshSystem.h" />
-    <ClInclude Include="Source\Foundation\Components\MeshComponent.h" />
+    <ClInclude Include="Source\Graphics\Systems\MeshSystem.h" />
+    <ClInclude Include="Source\Graphics\Components\MeshComponent.h" />
     <ClInclude Include="Source\Foundation\Entity\EntityManager.h" />
     <ClInclude Include="source\foundation\Logging\LogCategories.h" />
     <ClInclude Include="Dependencies\stb_image\stb_image.h" />

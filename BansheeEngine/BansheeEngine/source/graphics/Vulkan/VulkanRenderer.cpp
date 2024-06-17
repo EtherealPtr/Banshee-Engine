@@ -20,10 +20,11 @@
 #include "VulkanTextureSampler.h"
 #include "VulkanVertexBufferManager.h"
 #include "Foundation/Entity/EntityManager.h"
-#include "Foundation/Components/MeshComponent.h"
 #include "Foundation/Components/TransformComponent.h"
-#include "Foundation/Systems/MeshSystem.h"
+#include "Graphics/Systems/MeshSystem.h"
 #include "Foundation/Logging/Logger.h"
+#include "Graphics/Components/MeshComponent.h"
+#include "Graphics/Components/Material.h"
 #include "Graphics/Window.h"
 #include "Graphics/Camera.h"
 #include <vulkan/vulkan.h>
@@ -54,6 +55,7 @@ namespace Banshee
 		m_VkGraphicsPipeline(std::make_unique<VulkanGraphicsPipeline>(m_VkDevice->GetLogicalDevice(), m_VkRenderPass->Get(), m_VkDescriptorSetLayout->Get(), m_VkSwapchain->GetWidth(), m_VkSwapchain->GetHeight())),
 		m_Camera(std::make_unique<Camera>(45.0f, static_cast<float>(_window->GetWidth()) / _window->GetHeight(), 0.1f, 100.0f))
 	{
+		FetchMeshComponents();
 		AllocateDynamicBufferSpace();
 
 		const size_t numOfSwapImages = m_VkSwapchain->GetImageViews().size();
@@ -102,7 +104,6 @@ namespace Banshee
 	void VulkanRenderer::AllocateDynamicBufferSpace()
 	{
 		const VkDeviceSize minUniformBufferOffset = m_VkDevice->GetLimits().minUniformBufferOffsetAlignment;
-
 		m_DynamicBufferMemoryAlignment = (sizeof(Material) + minUniformBufferOffset - 1) & ~(m_VkDevice->GetLimits().minUniformBufferOffsetAlignment - 1);
 		m_DynamicBufferMemorySpace = static_cast<Material*>(_aligned_malloc(m_DynamicBufferMemoryAlignment * g_MaxEntities, m_DynamicBufferMemoryAlignment));
 	}
@@ -120,36 +121,40 @@ namespace Banshee
 			dynamicUniformBufferDescWriteProperties
 		};
 
+		m_DescriptorSets[_descriptorSetIndex]->UpdateDescriptorSet(descriptorSetWriteBufferProperties);
+
 		const std::vector<DescriptorSetWriteTextureProperties> descriptorSetWriteTextureProperties =
 		{
 			texturesDescWriteProperties,
 			samplerDescWriteProperties
 		};
 
-		size_t materialIndex = 0;
+		m_DescriptorSets[_descriptorSetIndex]->UpdateDescriptorSet(descriptorSetWriteTextureProperties);
+
+		// Update dynamic buffer with material data
 		const std::vector<std::shared_ptr<MeshComponent>>& meshComponents = MeshSystem::Instance().GetMeshComponents();
+		size_t dynamicOffsetIndex = 0;
+
 		for (const auto& meshComponent : meshComponents)
 		{
-			const auto& subMeshMaterials = meshComponent->GetMaterials();
-			for (const auto& material : subMeshMaterials)
+			for (const auto& subMesh : meshComponent->GetSubMeshes())
 			{
-				Material* materialData = (Material*)((uint64)m_DynamicBufferMemorySpace + (materialIndex * m_DynamicBufferMemoryAlignment));
+				auto material = subMesh.material;
+				Material* materialData = (Material*)((uint64)m_DynamicBufferMemorySpace + (dynamicOffsetIndex * m_DynamicBufferMemoryAlignment));
 				const glm::vec3 diffuseColor = material.GetDiffuseColor();
 				const glm::vec3 specularColor = material.GetSpecularColor();
 				const float shininess = material.GetShininess();
 				*materialData = { diffuseColor, specularColor, shininess };
-				++materialIndex;
+				++dynamicOffsetIndex;
 			}
 		}
 
-		// Update the uniform buffer with the ViewProjMatrix
+		m_DynamicUniformBuffers[_descriptorSetIndex]->CopyData(m_DynamicBufferMemorySpace);
+
+		// Update uniform buffer with the ViewProjMatrix
 		ViewProjMatrix viewProjMatrix = m_Camera->GetViewProjMatrix();
 		viewProjMatrix.proj[1][1] *= -1.0f;
 		m_VPUniformBuffers[m_CurrentFrameIndex]->CopyData(&viewProjMatrix);
-
-		m_DynamicUniformBuffers[_descriptorSetIndex]->CopyData(m_DynamicBufferMemorySpace);
-		m_DescriptorSets[_descriptorSetIndex]->UpdateDescriptorSet(descriptorSetWriteBufferProperties);
-		m_DescriptorSets[_descriptorSetIndex]->UpdateDescriptorSet(descriptorSetWriteTextureProperties);
 	}
 
 	void VulkanRenderer::DrawFrame()
@@ -238,27 +243,44 @@ namespace Banshee
 		UpdateDescriptorSet(_imgIndex);
 
 		const std::vector<std::shared_ptr<MeshComponent>>& meshComponents = MeshSystem::Instance().GetMeshComponents();
-
 		for (uint32 i = 0; i < meshComponents.size(); ++i)
 		{
-			// Bind vertex & index buffers
 			const VulkanVertexBuffer* const vertexBuffer = m_VertexBufferManager->GetVertexBuffer(meshComponents[i]->GetMeshId());
-			vertexBuffer->Bind(cmdBuffer);
 
-			// Bind descriptor set
-			const uint32 dynamicOffsets = static_cast<uint32>(m_DynamicBufferMemoryAlignment) * i;
-			auto currentDescriptorSet = m_DescriptorSets[_imgIndex]->Get();
-			vkCmdBindDescriptorSets(cmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_VkGraphicsPipeline->GetLayout(), 0, 1, &currentDescriptorSet, 1, &dynamicOffsets);
-		
-			// Push constants
-			const glm::mat4& modelMatrix = meshComponents[i]->GetOwner()->GetTransform()->GetModel();
-			const PushConstant pc(modelMatrix, meshComponents[i]->GetTexId(), meshComponents[i]->HasTexture());
-			vkCmdPushConstants(cmdBuffer, m_VkGraphicsPipeline->GetLayout(), VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(PushConstant), &pc);
-		
-			vkCmdDrawIndexed(cmdBuffer, meshComponents[i]->GetIndicesCount(), 1, 0, 0, 0);
+			for (const auto& subMesh : meshComponents[i]->GetSubMeshes())
+			{
+				// Bind vertex & index buffers
+				const VkDeviceSize indexOffset = subMesh.indexOffset * sizeof(uint32);
+				vertexBuffer->Bind(cmdBuffer, 0, indexOffset);
+
+				// Bind descriptor set
+				const uint32 dynamicOffset = static_cast<uint32>(m_DynamicBufferMemoryAlignment) * subMesh.materialIndex;
+				auto currentDescriptorSet = m_DescriptorSets[_imgIndex]->Get();
+				vkCmdBindDescriptorSets(cmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_VkGraphicsPipeline->GetLayout(), 0, 1, &currentDescriptorSet, 1, &dynamicOffset);
+
+				// Push constants
+				const glm::mat4& modelMatrix = subMesh.modelMatrix;
+				const PushConstant pc(modelMatrix, meshComponents[i]->GetTexId(), meshComponents[i]->HasTexture());
+				vkCmdPushConstants(cmdBuffer, m_VkGraphicsPipeline->GetLayout(), VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(PushConstant), &pc);
+
+				vkCmdDrawIndexed(cmdBuffer, static_cast<uint32>(subMesh.indices.size()), 1, 0, 0, 0);
+			}
 		}
 
 		vkCmdEndRenderPass(cmdBuffer);
 		m_VkCommandBuffers->End(_imgIndex);
+	}
+
+	void VulkanRenderer::FetchMeshComponents() const
+	{
+		const auto& entities = EntityManager::GetAllEntities();
+		for (const auto& entity : entities)
+		{
+			const auto& meshComponent = entity->GetComponent<MeshComponent>();
+			if (meshComponent)
+			{
+				MeshSystem::Instance().AddMeshComponent(meshComponent);
+			}
+		}
 	}
 } // End of Banshee namespace

@@ -201,6 +201,7 @@ namespace Banshee
 		if (availableDeviceFeatures.samplerAnisotropy)
 		{
 			enabledFeatures.samplerAnisotropy = VK_TRUE;
+			enabledFeatures.fillModeNonSolid = VK_TRUE; // Enable wireframe mode
 		}
 
 		VkPhysicalDeviceVulkan12Features features12{};

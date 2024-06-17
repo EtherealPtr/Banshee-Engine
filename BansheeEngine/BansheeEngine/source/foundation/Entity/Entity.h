@@ -8,7 +8,6 @@
 namespace Banshee
 {
 	class Component;
-	class MeshComponent;
 	class TransformComponent;
 
 	class Entity
@@ -25,14 +24,8 @@ namespace Banshee
 		{
 			static_assert(std::is_base_of<Component, T>::value, "T must be derived from Component");
 			
-			std::shared_ptr<T> component = std::make_shared<T>(std::forward<Args>(_args)...);
+			const std::shared_ptr<T> component = std::make_shared<T>(std::forward<Args>(_args)...);
 			m_Components.emplace_back(component);
-			
-			if constexpr (std::is_same<T, MeshComponent>())
-			{
-				ApplyRenderableComponent(component);
-			}
-
 			RegisterComponent(component.get());
 
 			return component;
@@ -53,8 +46,7 @@ namespace Banshee
 		}
 
 	private:
-		BANSHEE_ENGINE void ApplyRenderableComponent(const std::shared_ptr<MeshComponent>& _component);
-		BANSHEE_ENGINE void RegisterComponent(Component* const _component);
+		BANSHEE_ENGINE void RegisterComponent(Component* const _component) const;
 
 	private:
 		uint32 m_Id;

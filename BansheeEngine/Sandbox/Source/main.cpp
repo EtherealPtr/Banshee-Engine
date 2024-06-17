@@ -13,8 +13,8 @@ public:
 	}
 
 private:
-	Ground m_Ground;
-	Ground2 m_Ground2;
+	//Ground m_Ground;
+	//Ground2 m_Ground2;
 	Player m_Player;
 };
 

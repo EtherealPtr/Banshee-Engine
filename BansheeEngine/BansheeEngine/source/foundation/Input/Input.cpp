@@ -3,6 +3,14 @@
 
 namespace Banshee
 {
+	Input::Input() noexcept : 
+		m_Window(nullptr),
+		m_LastMouseX(0.0),
+		m_LastMouseY(0.0),
+		m_MouseXChange(0.0),
+		m_MouseYChange(0.0)
+	{}
+
 	Input& Input::Instance() noexcept
 	{
 		static Input s_InputSystemGLFW;

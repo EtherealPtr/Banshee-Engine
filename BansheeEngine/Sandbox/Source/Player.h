@@ -1,9 +1,7 @@
 #pragma once
 
 #include "Foundation/Entity/EntityManager.h"
-#include "Foundation/Components/MeshComponent.h"
-#include "Foundation/Components/TransformComponent.h"
-#include "Graphics/PrimitiveShape.h"
+#include "Components.h"
 
 using namespace Banshee;
 
@@ -14,7 +12,8 @@ public:
 	{
 		m_PlayerEntity = EntityManager::Instance().CreateEntity();
 		const std::shared_ptr<MeshComponent>& meshComponent = m_PlayerEntity->AddComponent<MeshComponent>();
-		meshComponent->SetModel("Models/level1.obj");
+		meshComponent->SetModel("Models/levelone.glb");
+		//meshComponent->SetTexture("Textures/viking_room.png");
 		//meshComponent->SetColor(1.0f, 0.0f, 0.0f);
 		m_Transform = m_PlayerEntity->GetTransform();
 
