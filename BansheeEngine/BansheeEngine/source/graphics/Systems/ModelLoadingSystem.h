@@ -25,6 +25,6 @@ namespace Banshee
 
 	private:
 		void LoadModel(const tinygltf::Model& _model, MeshComponent* _meshComponent);
-		void GetNodeTransform(const tinygltf::Node& _node, glm::mat4& _outTransform) const noexcept;)
+		void GetNodeTransform(const tinygltf::Node& _node, glm::mat4& _outTransform) const noexcept;
 	};
 } // End of Banshee namespace
