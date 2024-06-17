@@ -3,7 +3,7 @@
 
 namespace Banshee
 {
-	MeshComponent::MeshComponent() :
+	MeshComponent::MeshComponent(const std::string& _modelPath) :
 		m_MeshId(0),
 		m_TexId(0),
 		m_Vertices(),
@@ -11,9 +11,24 @@ namespace Banshee
 		m_Meshes(),
 		m_ModelName(""),
 		m_HasModel(false),
-		m_HasTexture(false)
+		m_HasTexture(false),
+		m_Color(glm::vec3(1.0f))
 	{
-		m_Material = std::make_shared<Material>();
+		SetModel(_modelPath.c_str());
+	}
+
+	MeshComponent::MeshComponent(const PrimitiveShape _basicShape, const glm::vec3& _color) :
+		m_MeshId(0),
+		m_TexId(0),
+		m_Vertices(),
+		m_Indices(),
+		m_Meshes(),
+		m_ModelName(""),
+		m_HasModel(false),
+		m_HasTexture(false),
+		m_Color(_color)
+	{
+		SetMeshId(static_cast<uint32>(_basicShape));
 	}
 
 	void MeshComponent::SetModel(const char* _modelName)

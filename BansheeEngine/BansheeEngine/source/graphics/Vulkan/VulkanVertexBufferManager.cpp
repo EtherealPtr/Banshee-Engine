@@ -43,6 +43,12 @@ namespace Banshee
 			std::vector<uint32> indices{};
 		
 			ShapeFactory::GetShapeData(static_cast<PrimitiveShape>(bufferId), vertices, indices);
+			Mesh mesh{};
+			mesh.vertices = vertices;
+			mesh.indices = indices;
+			mesh.material.SetDiffuseColor(_meshComponent->GetColor());
+
+			_meshComponent->SetSubMesh(mesh);
 			_meshComponent->SetCombinedMeshData(vertices, indices);
 
 			GenerateBuffers(bufferId, vertices.data(), sizeof(Vertex) * vertices.size(), indices.data(), sizeof(uint32) * indices.size());

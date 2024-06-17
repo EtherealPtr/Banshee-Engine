@@ -2,8 +2,8 @@
 
 #include "Foundation/Platform.h"
 #include "Graphics/Vertex.h"
-#include <vector>
 #include "Material.h"
+#include <vector>
 
 namespace Banshee
 {
@@ -12,19 +12,29 @@ namespace Banshee
 		Mesh() noexcept :
 			vertexOffset{ 0 },
 			indexOffset{ 0 },
-			materialIndex{ 0 },
+			m_MaterialIndex(SetNextMaterialIndex()),
 			vertices{},
 			indices{},
 			material{},
-			modelMatrix{}
+			localTransform(1.0f)
 		{}
 
+		uint32 GetMaterialIndex() const noexcept { return m_MaterialIndex; }
 		uint32 vertexOffset;  // Offset into the vertex buffer
 		uint32 indexOffset;   // Offset into the index buffer
-		uint32 materialIndex;
 		std::vector<Vertex> vertices{};
 		std::vector<uint32> indices{};
 		Material material;
-		glm::mat4 modelMatrix;
+		glm::mat4 localTransform;
+
+	private:
+		static uint32 SetNextMaterialIndex() noexcept
+		{
+			static uint32 nextIndex = 0;
+			return nextIndex++;
+		}
+
+	private:
+		uint32 m_MaterialIndex;
 	};
 } // End of Banshee namespace

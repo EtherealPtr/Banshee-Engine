@@ -97,21 +97,17 @@ namespace Banshee
 
 				subMesh.vertices = subMeshVertices;
 				subMesh.indices = subMeshIndices;
-				subMesh.modelMatrix = nodeTransform;
+				subMesh.localTransform = nodeTransform;
 
 				if (primitive.material > -1) 
 				{
 					const auto& tinyMaterial = _model.materials[primitive.material];
-					Material material{};
-					subMesh.materialIndex = static_cast<uint32>(_meshComponent->GetSubMeshes().size());
 
 					if (tinyMaterial.values.find("baseColorFactor") != tinyMaterial.values.end()) 
 					{
 						const auto& colorFactor = tinyMaterial.values.at("baseColorFactor").ColorFactor();
-						material.SetDiffuseColor(glm::vec3(colorFactor[0], colorFactor[1], colorFactor[2]));
+						subMesh.material.SetDiffuseColor(glm::vec3(colorFactor[0], colorFactor[1], colorFactor[2]));
 					}
-
-					subMesh.material = material;
 				}
 
 				_meshComponent->SetSubMesh(subMesh);

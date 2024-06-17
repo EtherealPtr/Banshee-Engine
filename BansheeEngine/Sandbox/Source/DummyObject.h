@@ -1,22 +1,20 @@
 #pragma once
 
 #include "Foundation/Entity/EntityManager.h"
-#include "Graphics/Components/MeshComponent.h"
-#include "Foundation/Components/TransformComponent.h"
+#include "Components.h"
 #include "Graphics/PrimitiveShape.h"
 
 using namespace Banshee;
 
-class Ground
+class DummyObjectOne
 {
 public:
-	Ground()
+	DummyObjectOne()
 	{
 		m_Entity = EntityManager::Instance().CreateEntity();
-		const std::shared_ptr<MeshComponent>& meshComponent = m_Entity->AddComponent<MeshComponent>();
-		meshComponent->SetModel("Models/leveltwo.obj");
+		const std::shared_ptr<MeshComponent>& meshComponent = m_Entity->AddComponent<MeshComponent>(PrimitiveShape::Triangle, glm::vec3(0.5f, 0.5f, 0.5f));
 		m_Transform = m_Entity->GetTransform();
-		m_Transform.get()->SetPosition(glm::vec3(0.0f, 5.0f, 0.0f));
+		m_Transform.get()->SetPosition(glm::vec3(5.0f, 5.0f, 0.0f));
 	}
 
 private:
@@ -24,16 +22,14 @@ private:
 	std::shared_ptr<TransformComponent> m_Transform;
 };
 
-class Ground2
+class DummyObjectTwo
 {
 public:
-	Ground2()
+	DummyObjectTwo()
 	{
 		m_Entity = EntityManager::Instance().CreateEntity();
-		const std::shared_ptr<MeshComponent>& meshComponent = m_Entity->AddComponent<MeshComponent>();
-		//meshComponent->GetMaterials()[0].SetDiffuseColor({0.0f, 1.0f, 0.0f});
+		const std::shared_ptr<MeshComponent>& meshComponent = m_Entity->AddComponent<MeshComponent>(PrimitiveShape::Pyramid, glm::vec3(1.0f, 0.0f, 1.0f));
 		m_Transform = m_Entity->GetTransform();
-		m_Transform.get()->SetScale(glm::vec3(3.0f, 3.0f, 1.0f));
 		m_Transform.get()->SetPosition(glm::vec3(-5.0f, 0.0f, 0.0f));
 	}
 

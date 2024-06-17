@@ -133,19 +133,17 @@ namespace Banshee
 
 		// Update dynamic buffer with material data
 		const std::vector<std::shared_ptr<MeshComponent>>& meshComponents = MeshSystem::Instance().GetMeshComponents();
-		size_t dynamicOffsetIndex = 0;
 
 		for (const auto& meshComponent : meshComponents)
 		{
 			for (const auto& subMesh : meshComponent->GetSubMeshes())
 			{
 				auto material = subMesh.material;
-				Material* materialData = (Material*)((uint64)m_DynamicBufferMemorySpace + (dynamicOffsetIndex * m_DynamicBufferMemoryAlignment));
+				Material* materialData = (Material*)((uint64)m_DynamicBufferMemorySpace + (subMesh.GetMaterialIndex() * m_DynamicBufferMemoryAlignment));
 				const glm::vec3 diffuseColor = material.GetDiffuseColor();
 				const glm::vec3 specularColor = material.GetSpecularColor();
 				const float shininess = material.GetShininess();
 				*materialData = { diffuseColor, specularColor, shininess };
-				++dynamicOffsetIndex;
 			}
 		}
 
@@ -245,21 +243,22 @@ namespace Banshee
 		const std::vector<std::shared_ptr<MeshComponent>>& meshComponents = MeshSystem::Instance().GetMeshComponents();
 		for (uint32 i = 0; i < meshComponents.size(); ++i)
 		{
+			const glm::mat4& entityModelMatrix = meshComponents[i]->GetOwner()->GetTransform()->GetModel();
 			const VulkanVertexBuffer* const vertexBuffer = m_VertexBufferManager->GetVertexBuffer(meshComponents[i]->GetMeshId());
 
 			for (const auto& subMesh : meshComponents[i]->GetSubMeshes())
 			{
 				// Bind vertex & index buffers
 				const VkDeviceSize indexOffset = subMesh.indexOffset * sizeof(uint32);
-				vertexBuffer->Bind(cmdBuffer, 0, indexOffset);
+				vertexBuffer->Bind(cmdBuffer, indexOffset);
 
 				// Bind descriptor set
-				const uint32 dynamicOffset = static_cast<uint32>(m_DynamicBufferMemoryAlignment) * subMesh.materialIndex;
+				const uint32 dynamicOffset = static_cast<uint32>(m_DynamicBufferMemoryAlignment) * subMesh.GetMaterialIndex();
 				auto currentDescriptorSet = m_DescriptorSets[_imgIndex]->Get();
 				vkCmdBindDescriptorSets(cmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_VkGraphicsPipeline->GetLayout(), 0, 1, &currentDescriptorSet, 1, &dynamicOffset);
 
 				// Push constants
-				const glm::mat4& modelMatrix = subMesh.modelMatrix;
+				const glm::mat4& modelMatrix = entityModelMatrix * subMesh.localTransform;
 				const PushConstant pc(modelMatrix, meshComponents[i]->GetTexId(), meshComponents[i]->HasTexture());
 				vkCmdPushConstants(cmdBuffer, m_VkGraphicsPipeline->GetLayout(), VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(PushConstant), &pc);
 
