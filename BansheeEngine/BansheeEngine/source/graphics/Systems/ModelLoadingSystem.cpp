@@ -1,5 +1,7 @@
 #include "ModelLoadingSystem.h"
 #include "Foundation/Logging/Logger.h"
+#include "Foundation/ResourceManager/ResourceManager.h"
+#include "Foundation/ResourceManager/Image/ImageManager.h"
 #include "Graphics/Vertex.h"
 #include "Graphics/Components/MeshComponent.h"
 #include "glm/gtc/matrix_transform.hpp"
@@ -12,6 +14,14 @@
 
 namespace Banshee
 {
+	static bool LoadImageDataCallback(tinygltf::Image* _image, const int _image_idx, std::string* _err, std::string* _warn, int _req_width, int _req_height, const unsigned char* _bytes, int _size, void* _user_data)
+	{
+		auto* textureIds = static_cast<std::vector<uint16>*>(_user_data);
+		const uint16 textureId = ResourceManager::Instance().GetImageManager()->LoadImageFromMemory(_bytes, _size);
+		textureIds->push_back(textureId);
+		return true;
+	}
+
 	ModelLoadingSystem::ModelLoadingSystem(const char* _modelPath, MeshComponent* _meshComponent)
 	{
 		assert(_meshComponent != NULL);
@@ -21,8 +31,8 @@ namespace Banshee
 		std::string err{};
 		std::string warn{};
 
-		const bool ret = loader.LoadBinaryFromFile(&model, &err, &warn, _modelPath);
-		if (!ret)
+		loader.SetImageLoader(LoadImageDataCallback, &m_TextureIds);
+		if (!loader.LoadBinaryFromFile(&model, &err, &warn, _modelPath))
 		{
 			BE_LOG(LogCategory::Error, "[MODEL LOADING SYSTEM]: Failed to load model: %s", err.c_str());
 			throw std::runtime_error("Failed to load model");
@@ -99,16 +109,7 @@ namespace Banshee
 				subMesh.indices = subMeshIndices;
 				subMesh.localTransform = nodeTransform;
 
-				if (primitive.material > -1) 
-				{
-					const auto& tinyMaterial = _model.materials[primitive.material];
-
-					if (tinyMaterial.values.find("baseColorFactor") != tinyMaterial.values.end()) 
-					{
-						const auto& colorFactor = tinyMaterial.values.at("baseColorFactor").ColorFactor();
-						subMesh.material.SetDiffuseColor(glm::vec3(colorFactor[0], colorFactor[1], colorFactor[2]));
-					}
-				}
+				LoadMaterial(_model, primitive, &subMesh);
 
 				_meshComponent->SetSubMesh(subMesh);
 			}
@@ -142,6 +143,28 @@ namespace Banshee
 			{
 				_outTransform = glm::scale(_outTransform, glm::vec3(_node.scale[0], _node.scale[1], _node.scale[2]));
 			}
+		}
+
+	}
+
+	void ModelLoadingSystem::LoadMaterial(const tinygltf::Model& _model, const tinygltf::Primitive& _primitive, Mesh* _subMesh)
+	{
+		if (_primitive.material < 0)
+		{
+			return;
+		}
+
+		const auto& tinyMaterial = _model.materials[_primitive.material];
+		if (tinyMaterial.values.find("baseColorFactor") != tinyMaterial.values.end())
+		{
+			const auto& colorFactor = tinyMaterial.values.at("baseColorFactor").ColorFactor();
+			_subMesh->material.SetDiffuseColor(glm::vec3(colorFactor[0], colorFactor[1], colorFactor[2]));
+		}
+
+		if (tinyMaterial.values.find("baseColorTexture") != tinyMaterial.values.end())
+		{
+			const uint16 textureId = m_TextureIds[tinyMaterial.values.at("baseColorTexture").TextureIndex()];
+			_subMesh->SetTexId(textureId);
 		}
 	}
 } // End of Banshee namespace

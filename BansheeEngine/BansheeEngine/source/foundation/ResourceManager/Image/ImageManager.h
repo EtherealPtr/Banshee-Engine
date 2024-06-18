@@ -16,6 +16,7 @@ namespace Banshee
 
 		const std::vector<std::shared_ptr<Image>>& GetImages() const noexcept { return m_Images; }
 		uint16 LoadImage(const char* _pathToImage);
+		uint16 LoadImageFromMemory(const unsigned char* _bytes, const int _size);
 		void UnloadImages() const;
 
 	private:
