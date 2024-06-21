@@ -293,9 +293,6 @@
     <ClInclude Include="Source\Graphics\Vulkan\VulkanTextureManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Foundation\Systems\SortingLayerSystem.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Foundation\Systems\System.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -320,5 +317,8 @@
     <ClInclude Include="Dependencies\tinygltf\tiny_gltf.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Res\config.ini" />
   </ItemGroup>
 </Project>

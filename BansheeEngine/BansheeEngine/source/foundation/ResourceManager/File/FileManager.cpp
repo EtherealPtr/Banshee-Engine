@@ -30,7 +30,7 @@ namespace Banshee
 		{
 			for (const auto& entry : std::filesystem::directory_iterator(directory)) 
 			{
-				if (entry.is_directory() && entry.path().filename() == "Res") 
+				if (entry.is_directory() && entry.path().filename() == "Res")
 				{
 					m_GeneratedDirPath = entry.path().parent_path().generic_string() + '/';
 					m_EngineResDirPath = entry.path().generic_string() + '/';

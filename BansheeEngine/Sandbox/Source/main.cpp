@@ -13,9 +13,9 @@ public:
 	}
 
 private:
-	//DummyObjectOne m_DummyOne;
+	DummyObjectOne m_DummyOne;
 	Player m_Player;
-	//DummyObjectTwo m_DummyTwo;
+	DummyObjectTwo m_DummyTwo;
 };
 
 Application* CreateApplication()

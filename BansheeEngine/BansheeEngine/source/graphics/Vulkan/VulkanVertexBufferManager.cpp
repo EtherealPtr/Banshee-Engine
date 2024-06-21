@@ -4,6 +4,7 @@
 #include "Graphics/Components/MeshComponent.h"
 #include "Graphics/ShapeFactory.h"
 #include "Graphics/Systems/ModelLoadingSystem.h"
+#include "Graphics/Systems/MeshSystem.h"
 #include <stdexcept>
 
 namespace Banshee
@@ -30,11 +31,14 @@ namespace Banshee
 	{
 		assert(_meshComponent != nullptr);
 
-		const uint32 bufferId = _meshComponent->GetMeshId();
-		auto vertexBuffer = m_VertexBuffers.find(bufferId);
+		const uint32 meshId = _meshComponent->GetMeshId();
+		auto vertexBuffer = m_VertexBuffers.find(meshId);
 		
 		if (vertexBuffer != m_VertexBuffers.end())
 		{
+			const auto duplicatedMesh = MeshSystem::Instance().GetMeshComponentById(meshId);
+			const auto& subMeshes = duplicatedMesh->GetSubMeshes();
+			_meshComponent->SetSubMeshes(subMeshes);
 			return;
 		}
 		else
@@ -42,7 +46,7 @@ namespace Banshee
 			std::vector<Vertex> vertices{};
 			std::vector<uint32> indices{};
 		
-			ShapeFactory::GetShapeData(static_cast<PrimitiveShape>(bufferId), vertices, indices);
+			ShapeFactory::GetShapeData(static_cast<PrimitiveShape>(meshId), vertices, indices);
 			Mesh mesh{};
 			mesh.vertices = vertices;
 			mesh.indices = indices;
@@ -51,7 +55,7 @@ namespace Banshee
 			_meshComponent->SetSubMesh(mesh);
 			_meshComponent->SetCombinedMeshData(vertices, indices);
 
-			GenerateBuffers(bufferId, vertices.data(), sizeof(Vertex) * vertices.size(), indices.data(), sizeof(uint32) * indices.size());
+			GenerateBuffers(meshId, vertices.data(), sizeof(Vertex) * vertices.size(), indices.data(), sizeof(uint32) * indices.size());
 		}
 	}
 
@@ -67,6 +71,10 @@ namespace Banshee
 		{
 			modelId = it->second;
 			_meshComponent->SetMeshId(modelId);
+
+			const auto duplicatedMesh = MeshSystem::Instance().GetMeshComponentById(modelId);
+			const auto& subMeshes = duplicatedMesh->GetSubMeshes();
+			_meshComponent->SetSubMeshes(subMeshes);
 		}
 		else
 		{

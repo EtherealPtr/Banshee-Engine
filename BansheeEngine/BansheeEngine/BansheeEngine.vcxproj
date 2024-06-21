@@ -162,7 +162,6 @@
     <ClInclude Include="Source\Foundation\Entity\EntityManager.h" />
     <ClInclude Include="source\foundation\Logging\LogCategories.h" />
     <ClInclude Include="Dependencies\stb_image\stb_image.h" />
-    <ClInclude Include="Source\Foundation\Systems\SortingLayerSystem.h" />
     <ClInclude Include="Source\Foundation\Systems\System.h" />
     <ClInclude Include="Source\Graphics\Camera.h" />
     <ClInclude Include="Source\Graphics\MVP.h" />
@@ -206,6 +205,9 @@
     <ClInclude Include="Source\Graphics\Vulkan\VulkanTextureSampler.h" />
     <ClInclude Include="Source\Foundation\Components\TransformComponent.h" />
     <ClInclude Include="Source\Graphics\Vulkan\VulkanTextureManager.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Res\config.ini" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

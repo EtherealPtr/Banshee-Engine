@@ -16,22 +16,29 @@ namespace Banshee
 {
 	static bool LoadImageDataCallback(tinygltf::Image* _image, const int _image_idx, std::string* _err, std::string* _warn, int _req_width, int _req_height, const unsigned char* _bytes, int _size, void* _user_data)
 	{
-		auto* textureIds = static_cast<std::vector<uint16>*>(_user_data);
+		auto* data = static_cast<std::pair<std::vector<uint16>*, std::unordered_map<int, uint16>*>*>(_user_data);
+		auto* textureIds = data->first;
+		auto* textureIdMap = data->second;
+
 		const uint16 textureId = ResourceManager::Instance().GetImageManager()->LoadImageFromMemory(_bytes, _size);
 		textureIds->push_back(textureId);
+		(*textureIdMap)[_image_idx] = textureId;
+
 		return true;
 	}
 
 	ModelLoadingSystem::ModelLoadingSystem(const char* _modelPath, MeshComponent* _meshComponent)
 	{
-		assert(_meshComponent != NULL);
+		assert(_meshComponent != nullptr);
 
 		tinygltf::Model model{};
 		tinygltf::TinyGLTF loader{};
 		std::string err{};
 		std::string warn{};
 
-		loader.SetImageLoader(LoadImageDataCallback, &m_TextureIds);
+		std::pair<std::vector<uint16>*, std::unordered_map<int, uint16>*> data = { &m_TextureIds, &m_TextureIdMap };
+
+		loader.SetImageLoader(LoadImageDataCallback, &data);
 		if (!loader.LoadBinaryFromFile(&model, &err, &warn, _modelPath))
 		{
 			BE_LOG(LogCategory::Error, "[MODEL LOADING SYSTEM]: Failed to load model: %s", err.c_str());
@@ -43,7 +50,7 @@ namespace Banshee
 
 	void ModelLoadingSystem::LoadModel(const tinygltf::Model& _model, MeshComponent* _meshComponent)
 	{
-		assert(_meshComponent != NULL);
+		assert(_meshComponent != nullptr);
 
 		std::vector<Vertex> combinedVertices{};
 		std::vector<uint32> combinedIndices{};
@@ -144,11 +151,12 @@ namespace Banshee
 				_outTransform = glm::scale(_outTransform, glm::vec3(_node.scale[0], _node.scale[1], _node.scale[2]));
 			}
 		}
-
 	}
 
 	void ModelLoadingSystem::LoadMaterial(const tinygltf::Model& _model, const tinygltf::Primitive& _primitive, Mesh* _subMesh)
 	{
+		assert(_subMesh != nullptr);
+
 		if (_primitive.material < 0)
 		{
 			return;
@@ -163,7 +171,8 @@ namespace Banshee
 
 		if (tinyMaterial.values.find("baseColorTexture") != tinyMaterial.values.end())
 		{
-			const uint16 textureId = m_TextureIds[tinyMaterial.values.at("baseColorTexture").TextureIndex()];
+			const int tinyTextureIndex = tinyMaterial.values.at("baseColorTexture").TextureIndex();
+			const uint16 textureId = m_TextureIdMap[tinyTextureIndex];
 			_subMesh->SetTexId(textureId);
 		}
 	}

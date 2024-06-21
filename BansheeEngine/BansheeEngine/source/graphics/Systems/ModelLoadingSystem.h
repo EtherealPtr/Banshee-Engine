@@ -3,6 +3,7 @@
 #include "Foundation/Platform.h"
 #include "glm/glm.hpp"
 #include <vector>
+#include <unordered_map>
 
 namespace tinygltf
 {
@@ -34,5 +35,6 @@ namespace Banshee
 
 	private:
 		std::vector<uint16> m_TextureIds;
+		std::unordered_map<int, uint16> m_TextureIdMap;
 	};
 } // End of Banshee namespace

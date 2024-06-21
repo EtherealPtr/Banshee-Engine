@@ -33,7 +33,7 @@ namespace Banshee
 
 	void MeshComponent::SetModel(const char* _modelName)
 	{
-		m_ModelName = _modelName;
+		m_ModelName = ResourceManager::Instance().GetAssetName(_modelName);
 		m_HasModel = true;
 	}
 
@@ -51,6 +51,7 @@ namespace Banshee
 
 	const std::string MeshComponent::GetModelPath() const
 	{
-		return ResourceManager::Instance().GetEngineResDirPath() + m_ModelName;
+		const std::string modelsFolder = "Models/";
+		return ResourceManager::Instance().GetEngineResDirPath() + modelsFolder + m_ModelName;
 	}
 } // End of Banshee namespace
