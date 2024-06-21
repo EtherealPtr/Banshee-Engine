@@ -10,9 +10,7 @@ namespace Banshee
 	struct Mesh
 	{
 		Mesh() noexcept :
-			vertexOffset{ 0 },
 			indexOffset{ 0 },
-			m_MaterialIndex(SetNextMaterialIndex()),
 			vertices{},
 			indices{},
 			material{},
@@ -27,7 +25,6 @@ namespace Banshee
 		bool HasTexture() const noexcept { return m_HasTexture; }
 		uint16 GetTexId() const noexcept { return m_TexId; }
 		uint32 GetMaterialIndex() const noexcept { return m_MaterialIndex; }
-		uint32 vertexOffset;  // Offset into the vertex buffer
 		uint32 indexOffset;   // Offset into the index buffer
 		std::vector<Vertex> vertices{};
 		std::vector<uint32> indices{};

@@ -67,7 +67,7 @@ namespace Banshee
 			for (const auto& primitive : mesh.primitives) 
 			{
 				Mesh subMesh{};
-				subMesh.vertexOffset = static_cast<uint32>(_vertices.size());
+				const uint32 vertexOffset = static_cast<uint32>(_vertices.size());
 				subMesh.indexOffset = static_cast<uint32>(_indices.size());
 
 				// Load vertex data
@@ -104,7 +104,7 @@ namespace Banshee
 				std::vector<uint32> subMeshIndices(indicesAccessor.count);
 				for (size_t j = 0; j < indicesAccessor.count; ++j) 
 				{
-					subMeshIndices[j] = indices[j] + subMesh.vertexOffset;
+					subMeshIndices[j] = indices[j] + vertexOffset;
 				}
 
 				_indices.insert(_indices.end(), subMeshIndices.begin(), subMeshIndices.end());
