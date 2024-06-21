@@ -15,6 +15,7 @@ namespace Banshee
 			indices{},
 			material{},
 			localTransform(1.0f),
+			m_MaterialIndex(0),
 			m_TexId(0),
 			m_HasTexture(false)
 		{}
