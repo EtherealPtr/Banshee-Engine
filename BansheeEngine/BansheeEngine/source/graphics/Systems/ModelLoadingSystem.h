@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Foundation/Platform.h"
-#include "glm/glm.hpp"
+#include "Graphics/Vertex.h"
 #include <vector>
 #include <unordered_map>
 
@@ -20,7 +20,7 @@ namespace Banshee
 	class ModelLoadingSystem
 	{
 	public:
-		ModelLoadingSystem(const char* _modelPath, MeshComponent* _meshComponent);
+		ModelLoadingSystem(const char* _modelPath, MeshComponent* _meshComponent, std::vector<Vertex>& _vertices, std::vector<uint32>& _indices);
 		~ModelLoadingSystem() = default;
 
 		ModelLoadingSystem(const ModelLoadingSystem&) = delete;
@@ -29,7 +29,7 @@ namespace Banshee
 		void operator=(ModelLoadingSystem&&) = delete;
 
 	private:
-		void LoadModel(const tinygltf::Model& _model, MeshComponent* _meshComponent);
+		void LoadModel(const tinygltf::Model& _model, MeshComponent* _meshComponent, std::vector<Vertex>& _vertices, std::vector<uint32>& _indices);
 		void GetNodeTransform(const tinygltf::Node& _node, glm::mat4& _outTransform) const noexcept;
 		void LoadMaterial(const tinygltf::Model& _model, const tinygltf::Primitive& _primitive, Mesh* _subMesh);
 

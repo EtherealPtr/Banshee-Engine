@@ -51,9 +51,7 @@ namespace Banshee
 			mesh.vertices = vertices;
 			mesh.indices = indices;
 			mesh.material.SetDiffuseColor(_meshComponent->GetColor());
-
 			_meshComponent->SetSubMesh(mesh);
-			_meshComponent->SetCombinedMeshData(vertices, indices);
 
 			GenerateBuffers(meshId, vertices.data(), sizeof(Vertex) * vertices.size(), indices.data(), sizeof(uint32) * indices.size());
 		}
@@ -91,9 +89,9 @@ namespace Banshee
 			return;
 		}
 
-		const ModelLoadingSystem modelLoadingSystem(_meshComponent->GetModelPath().c_str(), _meshComponent);
-		auto vertices = _meshComponent->GetVertices();
-		auto indices = _meshComponent->GetIndices();
+		std::vector<Vertex> vertices{};
+		std::vector<uint32> indices{};
+		const ModelLoadingSystem modelLoadingSystem(_meshComponent->GetModelPath().c_str(), _meshComponent, vertices, indices);
 
 		GenerateBuffers(modelId, vertices.data(), sizeof(Vertex) * vertices.size(), indices.data(), sizeof(uint32) * indices.size());
 	}

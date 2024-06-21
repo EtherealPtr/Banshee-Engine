@@ -27,7 +27,7 @@ namespace Banshee
 		return true;
 	}
 
-	ModelLoadingSystem::ModelLoadingSystem(const char* _modelPath, MeshComponent* _meshComponent)
+	ModelLoadingSystem::ModelLoadingSystem(const char* _modelPath, MeshComponent* _meshComponent, std::vector<Vertex>& _vertices, std::vector<uint32>& _indices)
 	{
 		assert(_meshComponent != nullptr);
 
@@ -45,15 +45,12 @@ namespace Banshee
 			throw std::runtime_error("Failed to load model");
 		}
 
-		LoadModel(model, _meshComponent);
+		LoadModel(model, _meshComponent, _vertices, _indices);
 	}
 
-	void ModelLoadingSystem::LoadModel(const tinygltf::Model& _model, MeshComponent* _meshComponent)
+	void ModelLoadingSystem::LoadModel(const tinygltf::Model& _model, MeshComponent* _meshComponent, std::vector<Vertex>& _vertices, std::vector<uint32>& _indices)
 	{
 		assert(_meshComponent != nullptr);
-
-		std::vector<Vertex> combinedVertices{};
-		std::vector<uint32> combinedIndices{};
 
 		for (size_t i = 0; i < _model.nodes.size(); ++i)
 		{
@@ -70,8 +67,8 @@ namespace Banshee
 			for (const auto& primitive : mesh.primitives) 
 			{
 				Mesh subMesh{};
-				subMesh.vertexOffset = static_cast<uint32>(combinedVertices.size());
-				subMesh.indexOffset = static_cast<uint32>(combinedIndices.size());
+				subMesh.vertexOffset = static_cast<uint32>(_vertices.size());
+				subMesh.indexOffset = static_cast<uint32>(_indices.size());
 
 				// Load vertex data
 				const auto& positionsAccessor = _model.accessors[primitive.attributes.find("POSITION")->second];
@@ -97,7 +94,7 @@ namespace Banshee
 					);
 				}
 
-				combinedVertices.insert(combinedVertices.end(), subMeshVertices.begin(), subMeshVertices.end());
+				_vertices.insert(_vertices.end(), subMeshVertices.begin(), subMeshVertices.end());
 
 				// Load index data
 				const auto& indicesAccessor = _model.accessors[primitive.indices];
@@ -110,7 +107,7 @@ namespace Banshee
 					subMeshIndices[j] = indices[j] + subMesh.vertexOffset;
 				}
 
-				combinedIndices.insert(combinedIndices.end(), subMeshIndices.begin(), subMeshIndices.end());
+				_indices.insert(_indices.end(), subMeshIndices.begin(), subMeshIndices.end());
 
 				subMesh.vertices = subMeshVertices;
 				subMesh.indices = subMeshIndices;
@@ -121,8 +118,6 @@ namespace Banshee
 				_meshComponent->SetSubMesh(subMesh);
 			}
 		}
-
-		_meshComponent->SetCombinedMeshData(combinedVertices, combinedIndices);
 	}
 
 	void ModelLoadingSystem::GetNodeTransform(const tinygltf::Node& _node, glm::mat4& _outTransform) const noexcept

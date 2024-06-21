@@ -6,8 +6,6 @@ namespace Banshee
 	MeshComponent::MeshComponent(const std::string& _modelPath) :
 		m_MeshId(0),
 		m_TexId(0),
-		m_Vertices(),
-		m_Indices(),
 		m_Meshes(),
 		m_ModelName(""),
 		m_HasModel(false),
@@ -20,8 +18,6 @@ namespace Banshee
 	MeshComponent::MeshComponent(const PrimitiveShape _basicShape, const glm::vec3& _color) :
 		m_MeshId(0),
 		m_TexId(0),
-		m_Vertices(),
-		m_Indices(),
 		m_Meshes(),
 		m_ModelName(""),
 		m_HasModel(false),
@@ -35,12 +31,6 @@ namespace Banshee
 	{
 		m_ModelName = ResourceManager::Instance().GetAssetName(_modelName);
 		m_HasModel = true;
-	}
-
-	void MeshComponent::SetCombinedMeshData(const std::vector<Vertex>& _vertices, const std::vector<uint32>& _indices)
-	{
-		m_Vertices = _vertices;
-		m_Indices = _indices;
 	}
 
 	void MeshComponent::SetTexture(const char* _pathToTexture) noexcept
