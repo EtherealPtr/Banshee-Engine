@@ -2,6 +2,7 @@
 #include "Foundation/Input/Input.h"
 #include "Foundation/Logging/Logger.h"
 #include "Foundation/INIParser.h"
+#include "Foundation/Timer/Timer.h"
 #include "Graphics/Window.h"
 #include "Graphics/Vulkan/VulkanRenderer.h"
 
@@ -10,7 +11,8 @@ namespace Banshee
 	Application::Application() :
 		m_INIParser(std::make_unique<INIParser>()),
 		m_Window(nullptr),
-		m_Renderer(nullptr)
+		m_Renderer(nullptr),
+		m_Timer(std::make_unique<Timer>())
 	{
 		BE_LOG(LogCategory::Trace, "[APPLICATION]: Banshee initializing");
 		EngineConfig configSettings = m_INIParser->ParseConfigSettings("config.ini");
@@ -35,7 +37,8 @@ namespace Banshee
 
 		while (!m_Window->ShouldWindowClose())
 		{
-			m_Renderer->DrawFrame();
+			m_Timer->Update();
+			m_Renderer->DrawFrame(m_Timer->GetDeltaTime());
 			Input::Instance().Update();
 			m_Window->Update();
 		}

@@ -172,9 +172,9 @@ namespace Banshee
 		m_VPUniformBuffers[m_CurrentFrameIndex]->CopyData(&viewProjMatrix);
 	}
 
-	void VulkanRenderer::DrawFrame()
+	void VulkanRenderer::DrawFrame(const double _deltaTime)
 	{
-		unsigned int imgIndex = 0;
+		uint32 imgIndex = 0;
 
 		m_VkInFlightFences->Wait(m_CurrentFrameIndex);
 		m_VkInFlightFences->Reset(m_CurrentFrameIndex);
@@ -183,7 +183,7 @@ namespace Banshee
 			m_VkSemaphores->Get()[m_CurrentFrameIndex].first, VK_NULL_HANDLE, &imgIndex);
 
 		// Update the camera's position and rotation
-		m_Camera->ProcessInput();
+		m_Camera->ProcessInput(_deltaTime);
 
 		// Get the semaphores to use for this frame
 		VkSemaphore waitSemaphore = m_VkSemaphores->Get()[m_CurrentFrameIndex].first;

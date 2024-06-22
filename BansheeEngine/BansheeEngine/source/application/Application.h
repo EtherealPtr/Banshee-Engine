@@ -8,6 +8,7 @@ namespace Banshee
 	class INIParser;
 	class Window;
 	class VulkanRenderer;
+	class Timer;
 
 	class Application
 	{
@@ -22,5 +23,6 @@ namespace Banshee
 		std::unique_ptr<INIParser> m_INIParser;
 		std::unique_ptr<Window> m_Window;
 		std::unique_ptr<VulkanRenderer> m_Renderer;
+		std::unique_ptr<Timer> m_Timer;
 	};
 } // End of Banshee namespace

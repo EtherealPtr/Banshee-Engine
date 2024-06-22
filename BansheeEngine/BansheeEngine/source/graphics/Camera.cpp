@@ -3,9 +3,13 @@
 
 namespace Banshee
 {
-	Camera::Camera(float _fov, float _aspect, float _near, float _far) :
-		m_Fov(_fov), m_Aspect(_aspect), m_Near(_near), m_Far(_far),
-		m_Yaw(-90.0f), m_Pitch(0.0f)
+	Camera::Camera(const float _fov, const float _aspect, const float _near, const float _far) :
+		m_Fov(_fov), 
+		m_Aspect(_aspect),
+		m_Near(_near),
+		m_Far(_far),
+		m_Yaw(-90.0f),
+		m_Pitch(0.0f)
 	{
 		m_Position = glm::vec3(0.0f, 0.0f, 2.0f);
 		m_Up = glm::vec3(0.0f, 1.0f, 0.0f);
@@ -17,15 +21,16 @@ namespace Banshee
 		Input::Instance().LockCursor();
 	}
 
-	void Camera::ProcessInput()
+	void Camera::ProcessInput(const double _deltaTime)
 	{
-		ProcessKeyboardInput();
-		ProcessMouseInput();
+		ProcessKeyboardInput(_deltaTime);
+		ProcessMouseInput(_deltaTime);
 	}
 
-	void Camera::ProcessKeyboardInput()
+	void Camera::ProcessKeyboardInput(const double _deltaTime)
 	{
-		constexpr float speed = 0.005f;
+		constexpr float baseSpeed = 15.0f;
+		const float speed = baseSpeed * static_cast<float>(_deltaTime);
 
 		if (Input::Instance().IsKeyPressed(BE_KEY_W))
 		{
@@ -47,36 +52,13 @@ namespace Banshee
 		UpdateViewMatrix();
 	}
 
-	void Camera::MoveForward(float _delta)
-	{
-		m_Position += m_Front * _delta;
-		UpdateViewMatrix();
-	}
-
-	void Camera::MoveBackward(float _delta)
-	{
-		m_Position -= m_Front * _delta;
-		UpdateViewMatrix();
-	}
-
-	void Camera::MoveRight(float _delta)
-	{
-		m_Position += m_Right * _delta;
-		UpdateViewMatrix();
-	}
-
-	void Camera::MoveLeft(float _delta)
-	{
-		m_Position -= m_Right * _delta;
-		UpdateViewMatrix();
-	}
-
-	void Camera::ProcessMouseInput()
+	void Camera::ProcessMouseInput(const double _deltaTime)
 	{
 		double xoffset = Input::Instance().GetMouseXChange();
 		double yoffset = Input::Instance().GetMouseYChange();
 
-		const double sensitivity = 0.1;
+		constexpr double baseSensitivity = 50.0;
+		const double sensitivity = baseSensitivity * _deltaTime;
 		xoffset *= sensitivity;
 		yoffset *= sensitivity;
 

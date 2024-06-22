@@ -103,6 +103,7 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Foundation\Timer\Timer.cpp" />
     <ClCompile Include="Source\Graphics\Systems\ModelLoadingSystem.cpp" />
     <ClCompile Include="Source\Foundation\Components\Component.cpp" />
     <ClCompile Include="Source\Graphics\Components\MeshComponent.cpp" />
@@ -146,6 +147,7 @@
   <ItemGroup>
     <ClInclude Include="Dependencies\tinygltf\tiny_gltf.h" />
     <ClInclude Include="Dependencies\tinyobjloader\tiny_obj_loader.h" />
+    <ClInclude Include="Source\Foundation\Timer\Timer.h" />
     <ClInclude Include="Source\Graphics\Systems\ModelLoadingSystem.h" />
     <ClInclude Include="Source\Components.h" />
     <ClInclude Include="Source\Graphics\Components\Material.h" />

@@ -132,6 +132,9 @@
     <ClCompile Include="Source\Graphics\Systems\ModelLoadingSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Foundation\Timer\Timer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\foundation\Logging\Logger.h">
@@ -315,6 +318,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Dependencies\tinygltf\tiny_gltf.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Foundation\Timer\Timer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

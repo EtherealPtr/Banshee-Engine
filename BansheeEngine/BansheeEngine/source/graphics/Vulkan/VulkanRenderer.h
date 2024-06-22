@@ -35,7 +35,7 @@ namespace Banshee
 		VulkanRenderer(const Window* _window);
 		~VulkanRenderer() noexcept;
 
-		void DrawFrame();
+		void DrawFrame(const double _deltaTime);
 
 	private:
 		void AllocateDynamicBufferSpace();
