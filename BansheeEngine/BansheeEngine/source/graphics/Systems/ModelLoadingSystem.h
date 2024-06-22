@@ -35,6 +35,6 @@ namespace Banshee
 
 	private:
 		std::vector<uint16> m_TextureIds;
-		std::unordered_map<int, uint16> m_TextureIdMap;
+		std::unordered_map<uint16, uint16> m_TextureIdMap;
 	};
 } // End of Banshee namespace

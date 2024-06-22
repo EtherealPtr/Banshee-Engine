@@ -23,7 +23,7 @@ namespace Banshee
 		BE_LOG(LogCategory::Trace, "[APPLICATION]: Banshee shutting down");
 	}
 
-	void Application::InitializeRenderer() const
+	void Application::InitializeRenderer()
 	{
 		BE_LOG(LogCategory::Trace, "[APPLICATION]: Starting post client initialization");
 		m_Renderer = std::make_unique<VulkanRenderer>(m_Window.get());

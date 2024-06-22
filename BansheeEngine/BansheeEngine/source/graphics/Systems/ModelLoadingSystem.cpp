@@ -2,7 +2,6 @@
 #include "Foundation/Logging/Logger.h"
 #include "Foundation/ResourceManager/ResourceManager.h"
 #include "Foundation/ResourceManager/Image/ImageManager.h"
-#include "Graphics/Vertex.h"
 #include "Graphics/Components/MeshComponent.h"
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtc/type_ptr.hpp"
@@ -16,7 +15,7 @@ namespace Banshee
 {
 	static bool LoadImageDataCallback(tinygltf::Image* _image, const int _image_idx, std::string* _err, std::string* _warn, int _req_width, int _req_height, const unsigned char* _bytes, int _size, void* _user_data)
 	{
-		auto* data = static_cast<std::pair<std::vector<uint16>*, std::unordered_map<int, uint16>*>*>(_user_data);
+		auto* data = static_cast<std::pair<std::vector<uint16>*, std::unordered_map<uint16, uint16>*>*>(_user_data);
 		auto* textureIds = data->first;
 		auto* textureIdMap = data->second;
 
@@ -35,8 +34,7 @@ namespace Banshee
 		tinygltf::TinyGLTF loader{};
 		std::string err{};
 		std::string warn{};
-
-		std::pair<std::vector<uint16>*, std::unordered_map<int, uint16>*> data = { &m_TextureIds, &m_TextureIdMap };
+		std::pair<std::vector<uint16>*, std::unordered_map<uint16, uint16>*> data = { &m_TextureIds, &m_TextureIdMap };
 
 		loader.SetImageLoader(LoadImageDataCallback, &data);
 		if (!loader.LoadBinaryFromFile(&model, &err, &warn, _modelPath))
@@ -122,30 +120,35 @@ namespace Banshee
 
 	void ModelLoadingSystem::GetNodeTransform(const tinygltf::Node& _node, glm::mat4& _outTransform) const noexcept
 	{
-		if (_node.matrix.size() == 16) 
-		{
-			// Node has a transformation matrix
-			_outTransform = glm::make_mat4(_node.matrix.data());
-		}
-		else 
-		{
-			// Node has TRS (Translation, Rotation, Scale)
-			if (_node.translation.size() == 3) 
-			{
-				_outTransform = glm::translate(_outTransform, glm::vec3(_node.translation[0], _node.translation[1], _node.translation[2]));
-			}
+        constexpr uint16 MATRIX_SIZE = 16;
+        constexpr uint16 TRANSLATION_SIZE = 3;
+        constexpr uint16 ROTATION_SIZE = 4;
+        constexpr uint16 SCALE_SIZE = 3;
 
-			if (_node.rotation.size() == 4) 
-			{
-				glm::quat rotation = glm::make_quat(_node.rotation.data());
-				_outTransform *= glm::mat4_cast(rotation);
-			}
+        if (_node.matrix.size() == MATRIX_SIZE) 
+        {
+            // Node has a transformation matrix
+            _outTransform = glm::make_mat4(_node.matrix.data());
+        }
+        else 
+        {
+            // Node has TRS (Translation, Rotation, Scale)
+            if (_node.translation.size() == TRANSLATION_SIZE) 
+            {
+                _outTransform = glm::translate(_outTransform, glm::vec3(_node.translation[0], _node.translation[1], _node.translation[2]));
+            }
 
-			if (_node.scale.size() == 3) 
-			{
-				_outTransform = glm::scale(_outTransform, glm::vec3(_node.scale[0], _node.scale[1], _node.scale[2]));
-			}
-		}
+            if (_node.rotation.size() == ROTATION_SIZE) 
+            {
+                glm::quat rotation = glm::make_quat(_node.rotation.data());
+                _outTransform *= glm::mat4_cast(rotation);
+            }
+
+            if (_node.scale.size() == SCALE_SIZE) 
+            {
+                _outTransform = glm::scale(_outTransform, glm::vec3(_node.scale[0], _node.scale[1], _node.scale[2]));
+            }
+        }
 	}
 
 	void ModelLoadingSystem::LoadMaterial(const tinygltf::Model& _model, const tinygltf::Primitive& _primitive, Mesh* _subMesh)

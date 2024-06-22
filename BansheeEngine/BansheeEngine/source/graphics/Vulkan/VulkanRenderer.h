@@ -39,7 +39,8 @@ namespace Banshee
 
 	private:
 		void AllocateDynamicBufferSpace();
-		void UpdateDescriptorSet(const uint8 _descriptorSetIndex);
+		void UpdateDescriptorSetStatic();
+		void UpdateDescriptorSetDynamic(const uint8 _descriptorSetIndex);
 		void RecordRenderCommands(const uint8 _imgIndex);
 		void FetchMeshComponents() const;
 
