@@ -11,7 +11,7 @@ namespace Banshee
 		m_Transform = AddComponent<TransformComponent>();
 	}
 
-	void Entity::RegisterComponent(Component* const _component) const
+	void Entity::RegisterComponent(const std::shared_ptr<Component>& _component) const
 	{
 		if (!_component)
 		{

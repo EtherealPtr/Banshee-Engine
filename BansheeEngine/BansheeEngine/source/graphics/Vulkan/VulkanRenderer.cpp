@@ -133,7 +133,6 @@ namespace Banshee
 
 		// Update dynamic buffer with material data
 		const std::vector<std::shared_ptr<MeshComponent>>& meshComponents = MeshSystem::Instance().GetMeshComponents();
-
 		for (const auto& meshComponent : meshComponents)
 		{
 			for (const auto& subMesh : meshComponent->GetSubMeshes())

@@ -50,6 +50,7 @@ namespace Banshee
 			Mesh mesh{};
 			mesh.vertices = vertices;
 			mesh.indices = indices;
+			mesh.SetTexId(_meshComponent->GetTexId());
 			mesh.material.SetDiffuseColor(_meshComponent->GetColor());
 			_meshComponent->SetSubMesh(mesh);
 

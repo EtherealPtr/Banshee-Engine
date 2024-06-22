@@ -2,23 +2,22 @@
 #include "Player.h"
 #include "DummyObject.h"
 
-using namespace Banshee;
-
-class ClientApp : public Application
+class ClientApp : public Banshee::Application
 {
 public:
-	ClientApp()
-	{
-		
-	}
+	ClientApp() : 
+		m_Player(),
+		m_DummyOne(),
+		m_DummyTwo()
+	{}
 
 private:
-	DummyObjectOne m_DummyOne;
 	Player m_Player;
+	DummyObjectOne m_DummyOne;
 	DummyObjectTwo m_DummyTwo;
 };
 
-Application* CreateApplication()
+std::unique_ptr<Banshee::Application> CreateApplication()
 {
-	return new ClientApp();
+	return std::make_unique<ClientApp>();
 }

@@ -26,7 +26,7 @@ namespace Banshee
 			
 			const std::shared_ptr<T> component = std::make_shared<T>(std::forward<Args>(_args)...);
 			m_Components.emplace_back(component);
-			RegisterComponent(component.get());
+			RegisterComponent(component);
 
 			return component;
 		}
@@ -46,7 +46,7 @@ namespace Banshee
 		}
 
 	private:
-		BANSHEE_ENGINE void RegisterComponent(Component* const _component) const;
+		BANSHEE_ENGINE void RegisterComponent(const std::shared_ptr<Component>& _component) const;
 
 	private:
 		uint32 m_Id;

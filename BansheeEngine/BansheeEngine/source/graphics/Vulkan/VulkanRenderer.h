@@ -1,8 +1,8 @@
 #pragma once
 
+#include "Foundation/Platform.h"
 #include <vector>
 #include <memory>
-#include "Foundation/Platform.h"
 
 namespace Banshee
 {

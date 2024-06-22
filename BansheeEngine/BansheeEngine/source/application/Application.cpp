@@ -7,19 +7,23 @@
 
 namespace Banshee
 {
-	Application::Application()
+	Application::Application() :
+		m_INIParser(std::make_unique<INIParser>()),
+		m_Window(nullptr),
+		m_Renderer(nullptr)
 	{
 		BE_LOG(LogCategory::Trace, "[APPLICATION]: Banshee initializing");
-		m_INIParser = std::make_unique<INIParser>();
 		EngineConfig configSettings = m_INIParser->ParseConfigSettings("config.ini");
 		m_Window = std::make_unique<Window>(configSettings.windowWidth, configSettings.windowHeight, configSettings.windowTitle.c_str());
 		Input::Instance().Initialize(m_Window->GetWindow());
 	}
 
 	Application::~Application()
-	{}
+	{
+		BE_LOG(LogCategory::Trace, "[APPLICATION]: Banshee shutting down");
+	}
 
-	void Application::PostClientInitialize()
+	void Application::InitializeRenderer() const
 	{
 		BE_LOG(LogCategory::Trace, "[APPLICATION]: Starting post client initialization");
 		m_Renderer = std::make_unique<VulkanRenderer>(m_Window.get());

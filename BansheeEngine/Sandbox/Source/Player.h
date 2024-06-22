@@ -14,36 +14,7 @@ public:
 		const std::shared_ptr<MeshComponent>& meshComponent = m_PlayerEntity->AddComponent<MeshComponent>("Models/texturetest.glb");
 		//meshComponent->SetTexture("Textures/viking_room.png");
 		m_Transform = m_PlayerEntity->GetTransform();
-		//std::vector<InputBinding> inputBindings = 
-		//{
-		//   {BE_KEY_W, [&]() { MoveForward(); }},
-		//   {BE_KEY_S, [&]() { MoveBackward(); }},
-		//   {BE_KEY_A, [&]() { MoveLeft(); }},
-		//   {BE_KEY_D, [&]() { MoveRight(); }}
-		//};
-		
-		//Input::Instance().SetInputBindings(inputBindings);
 	}
-
-	/*void MoveForward()
-	{
-		m_Transform->Translate(glm::vec3(0.0f, -0.001f, 0.0f));
-	}
-
-	void MoveBackward()
-	{
-		m_Transform->Translate(glm::vec3(0.0f, 0.001f, 0.0f));
-	}
-
-	void MoveLeft()
-	{
-		m_Transform->Translate(glm::vec3(-0.001f, 0.0f, 0.0f));
-	}
-
-	void MoveRight()
-	{
-		m_Transform->Translate(glm::vec3(0.001f, 0.0f, 0.0f));
-	}*/
 
 private:
 	std::shared_ptr<Entity> m_PlayerEntity;

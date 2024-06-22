@@ -1,13 +1,12 @@
 #pragma once
 
-extern Banshee::Application* CreateApplication();
+#include <memory>
+
+extern std::unique_ptr<Banshee::Application> CreateApplication();
 
 int main()
 {
-	auto app = CreateApplication();
-	app->PostClientInitialize();
+	const std::unique_ptr<Banshee::Application>& app = CreateApplication();
+	app->InitializeRenderer();
 	app->Run();
-
-	delete app;
-	app = nullptr;
 }

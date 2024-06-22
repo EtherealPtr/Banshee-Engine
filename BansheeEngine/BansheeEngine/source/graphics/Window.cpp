@@ -46,13 +46,13 @@ namespace Banshee
 	{
 		int w = 0;
 		glfwGetFramebufferSize(m_Window, &w, nullptr);
-		return static_cast<uint16>(w);
+		return w;
 	}
 
 	uint16 Window::GetHeight() const noexcept
 	{
 		int h = 0;
 		glfwGetFramebufferSize(m_Window, nullptr, &h);
-		return static_cast<uint16>(h);
+		return h;
 	}
 } // End of Banshee namespace

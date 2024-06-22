@@ -12,7 +12,7 @@ public:
 	DummyObjectOne()
 	{
 		m_Entity = EntityManager::Instance().CreateEntity();
-		const std::shared_ptr<MeshComponent>& meshComponent = m_Entity->AddComponent<MeshComponent>(PrimitiveShape::Triangle, glm::vec3(0.5f, 0.5f, 0.5f));
+		const std::shared_ptr<MeshComponent>& meshComponent = m_Entity->AddComponent<MeshComponent>(PrimitiveShape::Triangle);
 		meshComponent->SetTexture("Textures/wood.jpg");
 		m_Transform = m_Entity->GetTransform();
 		m_Transform.get()->SetPosition(glm::vec3(5.0f, 5.0f, 0.0f));
