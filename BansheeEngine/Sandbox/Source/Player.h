@@ -11,8 +11,7 @@ public:
 	Player()
 	{
 		m_PlayerEntity = EntityManager::Instance().CreateEntity();
-		const std::shared_ptr<MeshComponent>& meshComponent = m_PlayerEntity->AddComponent<MeshComponent>("Models/texturetest.glb");
-		//meshComponent->SetTexture("Textures/viking_room.png");
+		const std::shared_ptr<MeshComponent>& meshComponent = m_PlayerEntity->AddComponent<MeshComponent>("Models/scene0.glb");
 		m_Transform = m_PlayerEntity->GetTransform();
 	}
 

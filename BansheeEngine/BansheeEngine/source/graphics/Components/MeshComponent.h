@@ -2,7 +2,7 @@
 
 #include "Foundation/Components/Component.h"
 #include "Foundation/DLLConfig.h"
-#include "Mesh.h"
+#include "Graphics/Mesh.h"
 #include "Graphics/PrimitiveShape.h"
 #include <string>
 

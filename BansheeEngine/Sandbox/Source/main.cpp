@@ -6,15 +6,11 @@ class ClientApp : public Banshee::Application
 {
 public:
 	ClientApp() : 
-		m_Player(),
-		m_DummyOne(),
-		m_DummyTwo()
+		m_Player()
 	{}
 
 private:
 	Player m_Player;
-	DummyObjectOne m_DummyOne;
-	DummyObjectTwo m_DummyTwo;
 };
 
 std::unique_ptr<Banshee::Application> CreateApplication()

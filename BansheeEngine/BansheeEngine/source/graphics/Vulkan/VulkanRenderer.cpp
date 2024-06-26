@@ -23,8 +23,9 @@
 #include "Foundation/Components/TransformComponent.h"
 #include "Graphics/Systems/MeshSystem.h"
 #include "Foundation/Logging/Logger.h"
+#include "Graphics/Light/Light.h"
 #include "Graphics/Components/MeshComponent.h"
-#include "Graphics/Components/Material.h"
+#include "Graphics/Material.h"
 #include "Graphics/Window.h"
 #include "Graphics/Camera.h"
 #include <vulkan/vulkan.h>
@@ -50,7 +51,7 @@ namespace Banshee
 		m_VertexBufferManager(std::make_unique<VulkanVertexBufferManager>(m_VkDevice->GetLogicalDevice(), m_VkDevice->GetPhysicalDevice(), m_VkCommandPool->Get(), m_VkDevice->GetGraphicsQueue())),
 		m_VkTextureSampler(std::make_unique<VulkanTextureSampler>(m_VkDevice->GetLogicalDevice(), m_VkDevice->GetPhysicalDevice())),
 		m_VkTextureManager(std::make_unique<VulkanTextureManager>(m_VkDevice->GetLogicalDevice(), m_VkDevice->GetPhysicalDevice(), m_VkDevice->GetGraphicsQueue(), m_VkCommandPool->Get())),
-		m_VkDescriptorSetLayout(std::make_unique<VulkanDescriptorSetLayout>(m_VkDevice->GetLogicalDevice(), VK_SHADER_STAGE_VERTEX_BIT)),
+		m_VkDescriptorSetLayout(std::make_unique<VulkanDescriptorSetLayout>(m_VkDevice->GetLogicalDevice())),
 		m_VkDescriptorPool(std::make_unique<VulkanDescriptorPool>(m_VkDevice->GetLogicalDevice(), static_cast<uint16>(m_VkSwapchain->GetImageViews().size()))),
 		m_VkGraphicsPipeline(std::make_unique<VulkanGraphicsPipeline>(m_VkDevice->GetLogicalDevice(), m_VkRenderPass->Get(), m_VkDescriptorSetLayout->Get(), m_VkSwapchain->GetWidth(), m_VkSwapchain->GetHeight())),
 		m_Camera(std::make_unique<Camera>(45.0f, static_cast<float>(_window->GetWidth()) / _window->GetHeight(), 0.1f, 100.0f))
@@ -60,7 +61,8 @@ namespace Banshee
 
 		const size_t numOfSwapImages = m_VkSwapchain->GetImageViews().size();
 		m_VPUniformBuffers.reserve(numOfSwapImages);
-		m_DynamicUniformBuffers.reserve(numOfSwapImages);
+		m_MaterialUniformBuffers.reserve(numOfSwapImages);
+		m_LightUniformBuffers.reserve(numOfSwapImages);
 		m_DescriptorSets.reserve(numOfSwapImages);
 
 		for (size_t i = 0; i < numOfSwapImages; ++i)
@@ -68,16 +70,18 @@ namespace Banshee
 			// Create view-proj UBO
 			m_VPUniformBuffers.emplace_back(std::make_unique<VulkanUniformBuffer>(m_VkDevice->GetLogicalDevice(), m_VkDevice->GetPhysicalDevice(), sizeof(ViewProjMatrix)));
 
-			// Create Dynamic UBO
-			m_DynamicUniformBuffers.emplace_back(std::make_unique<VulkanUniformBuffer>(m_VkDevice->GetLogicalDevice(), m_VkDevice->GetPhysicalDevice(), m_DynamicBufferMemoryAlignment * g_MaxEntities));
+			// Create Dynamic Material UBO
+			m_MaterialUniformBuffers.emplace_back(std::make_unique<VulkanUniformBuffer>(m_VkDevice->GetLogicalDevice(), m_VkDevice->GetPhysicalDevice(), m_MaterialDynamicBufferMemAlignment * g_MaxEntities));
+
+			// Create Light UBO
+			m_LightUniformBuffers.emplace_back(std::make_unique<VulkanUniformBuffer>(m_VkDevice->GetLogicalDevice(), m_VkDevice->GetPhysicalDevice(), sizeof(Light)));
 
 			// Create descriptor sets
 			m_DescriptorSets.emplace_back(std::make_unique<VulkanDescriptorSet>(m_VkDevice->GetLogicalDevice(), m_VkDescriptorPool->Get(), m_VkDescriptorSetLayout->Get()));
 		}
 
 		m_CurrentFrameIndex = 0;
-		const std::vector<std::shared_ptr<MeshComponent>>& meshComponents = MeshSystem::Instance().GetMeshComponents();
-		for (const auto& meshComponent : meshComponents)
+		for (const auto& meshComponent : MeshSystem::Instance().GetMeshComponents())
 		{
 			meshComponent->SetDirty(true);
 
@@ -91,7 +95,9 @@ namespace Banshee
 			}
 		}
 
-		UpdateDescriptorSetStatic();
+		const Light light(glm::vec3(0.0f, 2.0f, 0.0f));
+		UpdateMaterialData();
+		UpdateLightData(light);
 		m_VkTextureManager->UploadTextures();
 		BE_LOG(LogCategory::Trace, "[RENDERER]: Vulkan initialized");
 	}
@@ -99,7 +105,7 @@ namespace Banshee
 	VulkanRenderer::~VulkanRenderer() noexcept
 	{
 		vkDeviceWaitIdle(m_VkDevice->GetLogicalDevice());
-		_aligned_free(m_DynamicBufferMemorySpace);
+		_aligned_free(m_MaterialDynamicBufferMemBlock);
 	}
 
 	void VulkanRenderer::FetchMeshComponents() const
@@ -116,20 +122,19 @@ namespace Banshee
 	void VulkanRenderer::AllocateDynamicBufferSpace()
 	{
 		const VkDeviceSize minUniformBufferOffset = m_VkDevice->GetLimits().minUniformBufferOffsetAlignment;
-		m_DynamicBufferMemoryAlignment = (sizeof(Material) + minUniformBufferOffset - 1) & ~(m_VkDevice->GetLimits().minUniformBufferOffsetAlignment - 1);
-		m_DynamicBufferMemorySpace = static_cast<Material*>(_aligned_malloc(m_DynamicBufferMemoryAlignment * g_MaxEntities, m_DynamicBufferMemoryAlignment));
+		m_MaterialDynamicBufferMemAlignment = (sizeof(Material) + minUniformBufferOffset - 1) & ~(m_VkDevice->GetLimits().minUniformBufferOffsetAlignment - 1);
+		m_MaterialDynamicBufferMemBlock = static_cast<Material*>(_aligned_malloc(m_MaterialDynamicBufferMemAlignment * g_MaxEntities, m_MaterialDynamicBufferMemAlignment));
 	}
 
-	void VulkanRenderer::UpdateDescriptorSetStatic()
+	void VulkanRenderer::UpdateMaterialData()
 	{
 		// Update dynamic buffer with material data
-		const std::vector<std::shared_ptr<MeshComponent>>& meshComponents = MeshSystem::Instance().GetMeshComponents();
-		for (const auto& meshComponent : meshComponents)
+		for (const auto& meshComponent : MeshSystem::Instance().GetMeshComponents())
 		{
 			for (const auto& subMesh : meshComponent->GetSubMeshes())
 			{
 				auto material = subMesh.material;
-				Material* materialData = (Material*)((uint64)m_DynamicBufferMemorySpace + (subMesh.GetMaterialIndex() * m_DynamicBufferMemoryAlignment));
+				Material* materialData = (Material*)((uint64)m_MaterialDynamicBufferMemBlock + (subMesh.GetMaterialIndex() * m_MaterialDynamicBufferMemAlignment));
 				const glm::vec3 diffuseColor = material.GetDiffuseColor();
 				const glm::vec3 specularColor = material.GetSpecularColor();
 				const float shininess = material.GetShininess();
@@ -139,21 +144,33 @@ namespace Banshee
 
 		for (uint8 i = 0; i < m_DescriptorSets.size(); ++i)
 		{
-			m_DynamicUniformBuffers[i]->CopyData(m_DynamicBufferMemorySpace);
+			m_MaterialUniformBuffers[i]->CopyData(m_MaterialDynamicBufferMemBlock);
 		}
 	}
 
-	void VulkanRenderer::UpdateDescriptorSetDynamic(const uint8 _descriptorSetIndex)
+	void VulkanRenderer::UpdateLightData(const Light& _light) noexcept
 	{
-		const DescriptorSetWriteBufferProperties uniformBufferDescWriteProperties(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, m_VPUniformBuffers[_descriptorSetIndex]->GetBuffer(), m_VPUniformBuffers[_descriptorSetIndex]->GetBufferSize());
-		const DescriptorSetWriteBufferProperties dynamicUniformBufferDescWriteProperties(1, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC, m_DynamicUniformBuffers[_descriptorSetIndex]->GetBuffer(), m_DynamicBufferMemoryAlignment);
-		DescriptorSetWriteTextureProperties texturesDescWriteProperties(2, VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE, m_VkTextureManager->GetTextureImageViews(), VK_NULL_HANDLE);
-		DescriptorSetWriteTextureProperties samplerDescWriteProperties(3, VK_DESCRIPTOR_TYPE_SAMPLER, {}, m_VkTextureSampler->Get());
+		LightData lightData(_light.GetLocation(), _light.GetColor());
+
+		for (uint8 i = 0; i < m_DescriptorSets.size(); ++i)
+		{
+			m_LightUniformBuffers[i]->CopyData(&lightData);
+		}
+	}
+
+	void VulkanRenderer::UpdateDescriptorSets(const uint8 _descriptorSetIndex)
+	{
+		const DescriptorSetWriteBufferProperties viewProjBufferDescWriteProperties(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, m_VPUniformBuffers[_descriptorSetIndex]->GetBuffer(), m_VPUniformBuffers[_descriptorSetIndex]->GetBufferSize());
+		const DescriptorSetWriteBufferProperties materialDynamicBufferDescWriteProperties(1, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC, m_MaterialUniformBuffers[_descriptorSetIndex]->GetBuffer(), m_MaterialDynamicBufferMemAlignment);
+		const DescriptorSetWriteTextureProperties texturesDescWriteProperties(2, VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE, m_VkTextureManager->GetTextureImageViews(), VK_NULL_HANDLE);
+		const DescriptorSetWriteTextureProperties samplerDescWriteProperties(3, VK_DESCRIPTOR_TYPE_SAMPLER, {}, m_VkTextureSampler->Get());
+		const DescriptorSetWriteBufferProperties lightBufferDescWriteProperties(4, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, m_LightUniformBuffers[_descriptorSetIndex]->GetBuffer(), m_LightUniformBuffers[_descriptorSetIndex]->GetBufferSize());
 		
 		const std::vector<DescriptorSetWriteBufferProperties> descriptorSetWriteBufferProperties =
 		{
-			uniformBufferDescWriteProperties,
-			dynamicUniformBufferDescWriteProperties
+			viewProjBufferDescWriteProperties,
+			materialDynamicBufferDescWriteProperties,
+			lightBufferDescWriteProperties
 		};
 
 		m_DescriptorSets[_descriptorSetIndex]->UpdateDescriptorSet(descriptorSetWriteBufferProperties);
@@ -255,7 +272,7 @@ namespace Banshee
 		scissor.extent = VkExtent2D({ m_VkSwapchain->GetWidth(), m_VkSwapchain->GetHeight() });
 		vkCmdSetScissor(cmdBuffer, 0, 1, &scissor);
 
-		UpdateDescriptorSetDynamic(_imgIndex);
+		UpdateDescriptorSets(_imgIndex);
 
 		const std::vector<std::shared_ptr<MeshComponent>>& meshComponents = MeshSystem::Instance().GetMeshComponents();
 		for (uint32 i = 0; i < meshComponents.size(); ++i)
@@ -270,7 +287,7 @@ namespace Banshee
 				vertexBuffer->Bind(cmdBuffer, indexOffset);
 
 				// Bind descriptor set
-				const uint32 dynamicOffset = static_cast<uint32>(m_DynamicBufferMemoryAlignment) * subMesh.GetMaterialIndex();
+				const uint32 dynamicOffset = static_cast<uint32>(m_MaterialDynamicBufferMemAlignment) * subMesh.GetMaterialIndex();
 				auto currentDescriptorSet = m_DescriptorSets[_imgIndex]->Get();
 				vkCmdBindDescriptorSets(cmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_VkGraphicsPipeline->GetLayout(), 0, 1, &currentDescriptorSet, 1, &dynamicOffset);
 

@@ -10,7 +10,7 @@ namespace Banshee
 	class VulkanDescriptorSetLayout
 	{
 	public:
-		VulkanDescriptorSetLayout(const VkDevice& _logicalDevice, const uint32 _shaderStage);
+		VulkanDescriptorSetLayout(const VkDevice& _logicalDevice);
 		~VulkanDescriptorSetLayout();
 
 		VkDescriptorSetLayout Get() const noexcept { return m_DescriptorSetLayout; }

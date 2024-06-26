@@ -28,6 +28,7 @@ namespace Banshee
 	class Window;
 	class Camera;
 	class Material;
+	class Light;
 
 	class VulkanRenderer
 	{
@@ -39,8 +40,9 @@ namespace Banshee
 
 	private:
 		void AllocateDynamicBufferSpace();
-		void UpdateDescriptorSetStatic();
-		void UpdateDescriptorSetDynamic(const uint8 _descriptorSetIndex);
+		void UpdateMaterialData();
+		void UpdateLightData(const Light& _light) noexcept;
+		void UpdateDescriptorSets(const uint8 _descriptorSetIndex);
 		void RecordRenderCommands(const uint8 _imgIndex);
 		void FetchMeshComponents() const;
 
@@ -63,11 +65,12 @@ namespace Banshee
 		std::unique_ptr<VulkanDescriptorPool> m_VkDescriptorPool;
 		std::unique_ptr<VulkanGraphicsPipeline> m_VkGraphicsPipeline;
 		std::vector<std::unique_ptr<VulkanUniformBuffer>> m_VPUniformBuffers;
-		std::vector<std::unique_ptr<VulkanUniformBuffer>> m_DynamicUniformBuffers;
+		std::vector<std::unique_ptr<VulkanUniformBuffer>> m_MaterialUniformBuffers;
+		std::vector<std::unique_ptr<VulkanUniformBuffer>> m_LightUniformBuffers;
 		std::vector<std::unique_ptr<VulkanDescriptorSet>> m_DescriptorSets;
 		std::unique_ptr<Camera> m_Camera;
 		uint8 m_CurrentFrameIndex;
-		size_t m_DynamicBufferMemoryAlignment;
-		Material* m_DynamicBufferMemorySpace;
+		size_t m_MaterialDynamicBufferMemAlignment;
+		Material* m_MaterialDynamicBufferMemBlock;
 	};
 } // End of Banshee namespace

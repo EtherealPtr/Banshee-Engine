@@ -148,10 +148,12 @@
     <ClInclude Include="Dependencies\tinygltf\tiny_gltf.h" />
     <ClInclude Include="Dependencies\tinyobjloader\tiny_obj_loader.h" />
     <ClInclude Include="Source\Foundation\Timer\Timer.h" />
+    <ClInclude Include="Source\Graphics\Light\Light.h" />
+    <ClInclude Include="Source\Graphics\Light\LightData.h" />
     <ClInclude Include="Source\Graphics\Systems\ModelLoadingSystem.h" />
     <ClInclude Include="Source\Components.h" />
-    <ClInclude Include="Source\Graphics\Components\Material.h" />
-    <ClInclude Include="Source\Graphics\Components\Mesh.h" />
+    <ClInclude Include="Source\Graphics\Material.h" />
+    <ClInclude Include="Source\Graphics\Mesh.h" />
     <ClInclude Include="Source\Foundation\ResourceManager\Image\Image.h" />
     <ClInclude Include="Source\Foundation\ResourceManager\Image\ImageManager.h" />
     <ClInclude Include="Source\Foundation\ResourceManager\ResourceManager.h" />
