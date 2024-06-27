@@ -7,6 +7,7 @@ layout (location = 2) in vec3 in_vertex_normal;
 layout (location = 3) flat in int in_texture_index;
 layout (location = 4) flat in int in_texture_available;
 layout (location = 5) in vec3 in_fragment_position;
+layout (location = 6) in vec3 in_fragment_normal;
 
 layout (location = 0) out vec4 out_frag_color;
 
@@ -15,31 +16,35 @@ layout (binding = 3) uniform sampler texture_sampler;
 
 layout (set = 0, binding = 4) uniform LightUBO
 {
-	vec3 lightLocation;
-	vec3 lightColor;
+	vec3 position;
+	float padding1;
+	vec3 color;
+	float padding2;
 } u_Light;
 
 void main()
 {
-	const float ambientStrength = 0.1f;
-	const vec3 lightColor = u_Light.lightColor;
-    const vec3 ambient = ambientStrength * lightColor;
+ 	vec4 baseColor = vec4(in_vertex_color, 1.0f);
 
 	if (in_texture_available == 1)
 	{
 		vec4 texColor = texture(sampler2D(textures[in_texture_index], texture_sampler), in_vertex_texCoord);
-		out_frag_color = texColor * vec4(in_vertex_color, 1.0);
-	}
-    else
-	{
-		out_frag_color = vec4(in_vertex_color, 1.0f);
+		baseColor = texColor * vec4(in_vertex_color, 1.0);
 	}
 
-	vec3 lightLocation = normalize(u_Light.lightLocation);
-	vec3 norm = normalize(in_vertex_normal);
-	vec3 lightDir = normalize(lightLocation - in_fragment_position);
+	// Ambient 
+	const float ambientStrength = 0.1f;
+	const vec3 lightColor = u_Light.color + ambientStrength;
+    const vec3 ambient = ambientStrength * lightColor;
 
-	float diffuseImpact = max(dot(norm, lightDir), 0.0);
-	vec3 diffuse = diffuseImpact * u_Light.lightColor;
-	out_frag_color *= vec4(ambient + diffuse, 1.0f);
+	// Diffuse
+	const vec3 norm = normalize(in_fragment_normal);
+	const vec3 lightDir = normalize(u_Light.position - in_fragment_position);
+	const float diffuseImpact = max(dot(norm, lightDir), 0.0);
+	const vec3 diffuse = diffuseImpact * lightColor;
+
+	// Combine lighting effect
+	vec3 lighting = ambient + diffuse;
+
+	out_frag_color = baseColor * vec4(lighting, 1.0f);
 }

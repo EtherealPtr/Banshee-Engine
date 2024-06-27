@@ -36,6 +36,8 @@ namespace Banshee
 {
 	constexpr uint64 g_MaxEntities = 512;
 
+	Light light(glm::vec3(0.0f, 5.0f, 0.0f));
+
 	VulkanRenderer::VulkanRenderer(const Window* _window) :
 		m_VkInstance(std::make_unique<VulkanInstance>()),
 		m_VkSurface(std::make_unique<VulkanSurface>(_window->GetWindow(), m_VkInstance->Get())),
@@ -74,7 +76,7 @@ namespace Banshee
 			m_MaterialUniformBuffers.emplace_back(std::make_unique<VulkanUniformBuffer>(m_VkDevice->GetLogicalDevice(), m_VkDevice->GetPhysicalDevice(), m_MaterialDynamicBufferMemAlignment * g_MaxEntities));
 
 			// Create Light UBO
-			m_LightUniformBuffers.emplace_back(std::make_unique<VulkanUniformBuffer>(m_VkDevice->GetLogicalDevice(), m_VkDevice->GetPhysicalDevice(), sizeof(Light)));
+			m_LightUniformBuffers.emplace_back(std::make_unique<VulkanUniformBuffer>(m_VkDevice->GetLogicalDevice(), m_VkDevice->GetPhysicalDevice(), sizeof(LightData)));
 
 			// Create descriptor sets
 			m_DescriptorSets.emplace_back(std::make_unique<VulkanDescriptorSet>(m_VkDevice->GetLogicalDevice(), m_VkDescriptorPool->Get(), m_VkDescriptorSetLayout->Get()));
@@ -95,9 +97,8 @@ namespace Banshee
 			}
 		}
 
-		const Light light(glm::vec3(0.0f, 2.0f, 0.0f));
 		UpdateMaterialData();
-		UpdateLightData(light);
+		UpdateLightData();
 		m_VkTextureManager->UploadTextures();
 		BE_LOG(LogCategory::Trace, "[RENDERER]: Vulkan initialized");
 	}
@@ -148,9 +149,9 @@ namespace Banshee
 		}
 	}
 
-	void VulkanRenderer::UpdateLightData(const Light& _light) noexcept
+	void VulkanRenderer::UpdateLightData() noexcept
 	{
-		LightData lightData(_light.GetLocation(), _light.GetColor());
+		LightData lightData(light.GetLocation(), light.GetColor());
 
 		for (uint8 i = 0; i < m_DescriptorSets.size(); ++i)
 		{

@@ -28,7 +28,6 @@ namespace Banshee
 	class Window;
 	class Camera;
 	class Material;
-	class Light;
 
 	class VulkanRenderer
 	{
@@ -41,7 +40,7 @@ namespace Banshee
 	private:
 		void AllocateDynamicBufferSpace();
 		void UpdateMaterialData();
-		void UpdateLightData(const Light& _light) noexcept;
+		void UpdateLightData() noexcept;
 		void UpdateDescriptorSets(const uint8 _descriptorSetIndex);
 		void RecordRenderCommands(const uint8 _imgIndex);
 		void FetchMeshComponents() const;

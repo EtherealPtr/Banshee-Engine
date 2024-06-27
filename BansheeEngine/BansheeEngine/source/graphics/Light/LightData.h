@@ -11,7 +11,7 @@ namespace Banshee
 			color(_color)
 		{}
 
-		glm::vec3 location;
-		glm::vec3 color;
+		alignas(16) glm::vec3 location;
+		alignas(16) glm::vec3 color;
 	};
 } // End of Banshee namespace

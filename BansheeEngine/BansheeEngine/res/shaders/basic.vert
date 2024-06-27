@@ -10,6 +10,7 @@ layout (location = 2) out vec3 out_vertex_normal;
 layout (location = 3) out int out_texture_index;
 layout (location = 4) out int out_texture_available;
 layout (location = 5) out vec3 out_fragment_position;
+layout (location = 6) out vec3 out_fragment_normal;
 
 layout (set = 0, binding = 0) uniform ViewProjBuffer
 {
@@ -34,10 +35,12 @@ layout (push_constant) uniform PushConstants
 void main()
 {
 	gl_Position = u_ViewProj.proj * u_ViewProj.view * u_PushConstants.model * vec4(in_vertex_position, 1.0f);
+	out_fragment_position = vec3(u_PushConstants.model * vec4(in_vertex_position, 1.0f));
+	out_fragment_normal = mat3(transpose(inverse(u_PushConstants.model))) * in_vertex_normal;
+	
 	out_vertex_texCoord = in_vertex_texCoord;
 	out_vertex_normal = in_vertex_normal;
 	out_vertex_color = u_Material.diffuseColor;
 	out_texture_index = u_PushConstants.textureId;
 	out_texture_available = u_PushConstants.hasCustomTexture;
-	out_fragment_position = vec3(u_PushConstants.model * vec4(in_vertex_position, 1.0f));
 }

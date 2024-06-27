@@ -11,7 +11,7 @@ namespace Banshee
 		m_Yaw(-90.0f),
 		m_Pitch(0.0f)
 	{
-		m_Position = glm::vec3(0.0f, 0.0f, 2.0f);
+		m_Position = glm::vec3(0.0f, 2.0f, 2.0f);
 		m_Up = glm::vec3(0.0f, 1.0f, 0.0f);
 		m_Right = glm::vec3(1.0f, 0.0f, 0.0f);
 		m_Front = glm::vec3(0.0f, 0.0f, -1.0f);
