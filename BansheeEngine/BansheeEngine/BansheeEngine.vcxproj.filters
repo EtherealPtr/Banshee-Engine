@@ -135,6 +135,9 @@
     <ClCompile Include="Source\Foundation\Timer\Timer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Graphics\Vulkan\VulkanGraphicsPipelineManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\foundation\Logging\Logger.h">
@@ -327,6 +330,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Graphics\Light\LightData.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Graphics\Vulkan\VulkanGraphicsPipelineManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Graphics\ShaderType.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

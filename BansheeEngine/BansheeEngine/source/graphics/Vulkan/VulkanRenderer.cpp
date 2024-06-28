@@ -9,6 +9,7 @@
 #include "VulkanDescriptorPool.h"
 #include "VulkanDescriptorSet.h"
 #include "VulkanGraphicsPipeline.h"
+#include "VulkanGraphicsPipelineManager.h"
 #include "VulkanCommandPool.h"
 #include "VulkanCommandBuffer.h"
 #include "VulkanFramebuffer.h"
@@ -55,7 +56,7 @@ namespace Banshee
 		m_VkTextureManager(std::make_unique<VulkanTextureManager>(m_VkDevice->GetLogicalDevice(), m_VkDevice->GetPhysicalDevice(), m_VkDevice->GetGraphicsQueue(), m_VkCommandPool->Get())),
 		m_VkDescriptorSetLayout(std::make_unique<VulkanDescriptorSetLayout>(m_VkDevice->GetLogicalDevice())),
 		m_VkDescriptorPool(std::make_unique<VulkanDescriptorPool>(m_VkDevice->GetLogicalDevice(), static_cast<uint16>(m_VkSwapchain->GetImageViews().size()))),
-		m_VkGraphicsPipeline(std::make_unique<VulkanGraphicsPipeline>(m_VkDevice->GetLogicalDevice(), m_VkRenderPass->Get(), m_VkDescriptorSetLayout->Get(), m_VkSwapchain->GetWidth(), m_VkSwapchain->GetHeight())),
+		m_VkGraphicsPipelineManager(std::make_unique<VulkanGraphicsPipelineManager>(m_VkDevice->GetLogicalDevice(), m_VkRenderPass->Get(), m_VkDescriptorSetLayout->Get(), m_VkSwapchain->GetWidth(), m_VkSwapchain->GetHeight())),
 		m_Camera(std::make_unique<Camera>(45.0f, static_cast<float>(_window->GetWidth()) / _window->GetHeight(), 0.1f, 100.0f))
 	{
 		FetchMeshComponents();
@@ -257,7 +258,6 @@ namespace Banshee
 		renderPassInfo.pClearValues = clearAttachments.data();
 
 		vkCmdBeginRenderPass(cmdBuffer, &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
-		vkCmdBindPipeline(cmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_VkGraphicsPipeline->Get());
 
 		VkViewport viewport{};
 		viewport.x = 0.0f;
@@ -281,6 +281,9 @@ namespace Banshee
 			const glm::mat4& entityModelMatrix = meshComponents[i]->GetOwner()->GetTransform()->GetModel();
 			const VulkanVertexBuffer* const vertexBuffer = m_VertexBufferManager->GetVertexBuffer(meshComponents[i]->GetMeshId());
 
+			const auto& graphicsPipeline = m_VkGraphicsPipelineManager->GetPipeline(meshComponents[i]->GetShaderType());
+			vkCmdBindPipeline(cmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline->Get());
+
 			for (const auto& subMesh : meshComponents[i]->GetSubMeshes())
 			{
 				// Bind vertex & index buffers
@@ -290,12 +293,12 @@ namespace Banshee
 				// Bind descriptor set
 				const uint32 dynamicOffset = static_cast<uint32>(m_MaterialDynamicBufferMemAlignment) * subMesh.GetMaterialIndex();
 				auto currentDescriptorSet = m_DescriptorSets[_imgIndex]->Get();
-				vkCmdBindDescriptorSets(cmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_VkGraphicsPipeline->GetLayout(), 0, 1, &currentDescriptorSet, 1, &dynamicOffset);
+				vkCmdBindDescriptorSets(cmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline->GetLayout(), 0, 1, &currentDescriptorSet, 1, &dynamicOffset);
 
 				// Push constants
 				const glm::mat4& modelMatrix = entityModelMatrix * subMesh.localTransform;
 				const PushConstant pc(modelMatrix, subMesh.GetTexId(), subMesh.HasTexture());
-				vkCmdPushConstants(cmdBuffer, m_VkGraphicsPipeline->GetLayout(), VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(PushConstant), &pc);
+				vkCmdPushConstants(cmdBuffer, graphicsPipeline->GetLayout(), VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(PushConstant), &pc);
 
 				vkCmdDrawIndexed(cmdBuffer, static_cast<uint32>(subMesh.indices.size()), 1, 0, 0, 0);
 			}

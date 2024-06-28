@@ -15,7 +15,7 @@ namespace Banshee
 	class VulkanDescriptorSetLayout;
 	class VulkanDescriptorPool;
 	class VulkanDescriptorSet;
-	class VulkanGraphicsPipeline;
+	class VulkanGraphicsPipelineManager;
 	class VulkanCommandPool;
 	class VulkanCommandBuffer;
 	class VulkanFramebuffer;
@@ -62,7 +62,7 @@ namespace Banshee
 		std::unique_ptr<VulkanTextureManager> m_VkTextureManager;
 		std::unique_ptr<VulkanDescriptorSetLayout> m_VkDescriptorSetLayout;
 		std::unique_ptr<VulkanDescriptorPool> m_VkDescriptorPool;
-		std::unique_ptr<VulkanGraphicsPipeline> m_VkGraphicsPipeline;
+		std::unique_ptr<VulkanGraphicsPipelineManager> m_VkGraphicsPipelineManager;
 		std::vector<std::unique_ptr<VulkanUniformBuffer>> m_VPUniformBuffers;
 		std::vector<std::unique_ptr<VulkanUniformBuffer>> m_MaterialUniformBuffers;
 		std::vector<std::unique_ptr<VulkanUniformBuffer>> m_LightUniformBuffers;

@@ -4,6 +4,7 @@
 #include "Foundation/DLLConfig.h"
 #include "Graphics/Mesh.h"
 #include "Graphics/PrimitiveShape.h"
+#include "Graphics/ShaderType.h"
 #include <string>
 
 namespace Banshee
@@ -16,12 +17,13 @@ namespace Banshee
 
 		BANSHEE_ENGINE void SetTexture(const char* _pathToTexture) noexcept;
 		void SetMeshId(const uint32 _meshId) noexcept { m_MeshId = _meshId; }
-		void SetModel(const char* _modelName);
 		void SetSubMesh(const Mesh& _subMesh) { m_Meshes.push_back(_subMesh); }
 		void SetSubMeshes(const std::vector<Mesh>& subMeshes) { m_Meshes = subMeshes; }
+		void SetShaderType(const ShaderType _shaderType) noexcept { m_ShaderType = _shaderType; }
 
 		uint32 GetMeshId() const noexcept { return m_MeshId; }
 		uint16 GetTexId() const noexcept { return m_TexId; }
+		ShaderType GetShaderType() const noexcept { return m_ShaderType; }
 		const std::vector<Mesh>& GetSubMeshes() noexcept { return m_Meshes; }
 		const std::string& GetModelName() const noexcept { return m_ModelName; }
 		const std::string GetModelPath() const;
@@ -32,6 +34,7 @@ namespace Banshee
 	private:
 		uint32 m_MeshId;
 		uint16 m_TexId;
+		ShaderType m_ShaderType;
 		std::vector<Mesh> m_Meshes;
 		std::string m_ModelName;
 		bool m_HasTexture;

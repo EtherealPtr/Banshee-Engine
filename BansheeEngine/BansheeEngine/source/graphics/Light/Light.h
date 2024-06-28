@@ -15,6 +15,7 @@ namespace Banshee
         {
             m_Entity = EntityManager::Instance().CreateEntity();
             const std::shared_ptr<MeshComponent>& meshComponent = m_Entity->AddComponent<MeshComponent>(PrimitiveShape::Cube);
+            meshComponent->SetShaderType(ShaderType::Unlit);
             m_Transform = m_Entity->GetTransform();
             m_Transform.get()->SetPosition(m_LightData.location);
         }

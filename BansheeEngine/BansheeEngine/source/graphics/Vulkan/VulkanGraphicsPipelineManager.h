@@ -1,0 +1,32 @@
+#pragma once
+
+#include "Foundation/Platform.h"
+#include "Graphics/ShaderType.h"
+#include <memory>
+#include <unordered_map>
+#include <string>
+
+typedef struct VkDevice_T* VkDevice;
+typedef struct VkRenderPass_T* VkRenderPass;
+typedef struct VkDescriptorSetLayout_T* VkDescriptorSetLayout;
+
+namespace Banshee
+{
+    class VulkanGraphicsPipeline;
+
+    class VulkanGraphicsPipelineManager
+    {
+    public:
+        VulkanGraphicsPipelineManager(const VkDevice& _device, const VkRenderPass& _renderPass, const VkDescriptorSetLayout& _descriptorSetLayout, const uint32 _width, const uint32 _height);
+
+        const std::shared_ptr<VulkanGraphicsPipeline>& GetPipeline(const ShaderType _shaderType) { return m_Pipelines[_shaderType]; }
+
+    private:
+        VkDevice m_Device;
+        VkRenderPass m_RenderPass;
+        VkDescriptorSetLayout m_DescriptorSetLayout;
+        uint32 m_Width;
+        uint32 m_Height;
+        std::unordered_map<ShaderType, std::shared_ptr<VulkanGraphicsPipeline>> m_Pipelines;
+    };
+} // End of Banshee namespace

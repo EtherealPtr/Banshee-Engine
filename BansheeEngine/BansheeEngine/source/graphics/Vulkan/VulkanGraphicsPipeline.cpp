@@ -12,7 +12,7 @@
 
 namespace Banshee
 {
-	VulkanGraphicsPipeline::VulkanGraphicsPipeline(const VkDevice& _logicalDevice, const VkRenderPass& _renderPass, const VkDescriptorSetLayout& _descriptorSetLayout, const uint32 _w, const uint32 _h) :
+	VulkanGraphicsPipeline::VulkanGraphicsPipeline(const VkDevice& _logicalDevice, const VkRenderPass& _renderPass, const VkDescriptorSetLayout& _descriptorSetLayout, const uint32 _w, const uint32 _h, const char* _vertShaderPath, const char* _fragShaderPath) :
 		m_LogicalDevice(_logicalDevice),
 		m_PipelineLayout(VK_NULL_HANDLE),
 		m_GraphicsPipeline(VK_NULL_HANDLE)
@@ -20,13 +20,11 @@ namespace Banshee
 		BE_LOG(LogCategory::Trace, "[GRAPHICS PIPELINE]: Creating graphics pipeline");
 
 		// Vertex creation stage
-		const std::string basicVertPath = "Shaders/basic_vert.spv";
-		const std::string basicFragPath = "Shaders/basic_frag.spv";
-		BE_LOG(LogCategory::Trace, "[GRAPHICS PIPELINE]: Using vertex shader %s", basicVertPath.c_str());
-		BE_LOG(LogCategory::Trace, "[GRAPHICS PIPELINE]: Using frag shader %s", basicFragPath.c_str());
+		BE_LOG(LogCategory::Trace, "[GRAPHICS PIPELINE]: Using vertex shader %s", _vertShaderPath);
+		BE_LOG(LogCategory::Trace, "[GRAPHICS PIPELINE]: Using frag shader %s", _fragShaderPath);
 
-		auto vertShaderBinary = ResourceManager::Instance().GetFileManager()->ReadBinaryFile(basicVertPath.c_str());
-		auto fragShaderBinary = ResourceManager::Instance().GetFileManager()->ReadBinaryFile(basicFragPath.c_str());
+		auto vertShaderBinary = ResourceManager::Instance().GetFileManager()->ReadBinaryFile(_vertShaderPath);
+		auto fragShaderBinary = ResourceManager::Instance().GetFileManager()->ReadBinaryFile(_fragShaderPath);
 
 		VkShaderModule vertexShaderModule = VulkanUtils::CreateShaderModule(_logicalDevice, vertShaderBinary);
 		VkShaderModule fragmentShaderModule = VulkanUtils::CreateShaderModule(_logicalDevice, fragShaderBinary);

@@ -13,7 +13,7 @@ namespace Banshee
 	class VulkanGraphicsPipeline
 	{
 	public:
-		VulkanGraphicsPipeline(const VkDevice& _logicalDevice, const VkRenderPass& _renderPass, const VkDescriptorSetLayout& _descriptorSetLayout, const uint32 _w, const uint32 _h);
+		VulkanGraphicsPipeline(const VkDevice& _logicalDevice, const VkRenderPass& _renderPass, const VkDescriptorSetLayout& _descriptorSetLayout, const uint32 _w, const uint32 _h, const char* _vertShaderPath = "Shaders/Standard/standard_vert.spv", const char* _fragShaderPath = "Shaders/Standard/standard_frag.spv");
 		~VulkanGraphicsPipeline();
 
 		VkPipeline Get() const noexcept { return m_GraphicsPipeline; }

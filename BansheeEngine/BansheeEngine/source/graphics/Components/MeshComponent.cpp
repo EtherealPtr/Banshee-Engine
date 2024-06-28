@@ -6,18 +6,18 @@ namespace Banshee
 	MeshComponent::MeshComponent(const std::string& _modelPath) :
 		m_MeshId(0),
 		m_TexId(0),
+		m_ShaderType(ShaderType::Standard),
 		m_Meshes(),
-		m_ModelName(""),
-		m_HasModel(false),
+		m_ModelName(ResourceManager::Instance().GetAssetName(_modelPath)),
+		m_HasModel(true),
 		m_HasTexture(false),
 		m_Color(glm::vec3(1.0f))
-	{
-		SetModel(_modelPath.c_str());
-	}
+	{}
 
 	MeshComponent::MeshComponent(const PrimitiveShape _basicShape, const glm::vec3& _color) :
 		m_MeshId(0),
 		m_TexId(0),
+		m_ShaderType(ShaderType::Standard),
 		m_Meshes(),
 		m_ModelName(""),
 		m_HasModel(false),
@@ -25,12 +25,6 @@ namespace Banshee
 		m_Color(_color)
 	{
 		SetMeshId(static_cast<uint32>(_basicShape));
-	}
-
-	void MeshComponent::SetModel(const char* _modelName)
-	{
-		m_ModelName = ResourceManager::Instance().GetAssetName(_modelName);
-		m_HasModel = true;
 	}
 
 	void MeshComponent::SetTexture(const char* _pathToTexture) noexcept

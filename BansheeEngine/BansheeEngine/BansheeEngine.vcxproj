@@ -123,6 +123,7 @@
     <ClCompile Include="Source\Graphics\Vulkan\VulkanDescriptorPool.cpp" />
     <ClCompile Include="Source\Graphics\Vulkan\VulkanDescriptorSet.cpp" />
     <ClCompile Include="Source\Graphics\Vulkan\VulkanDescriptorSetLayout.cpp" />
+    <ClCompile Include="Source\Graphics\Vulkan\VulkanGraphicsPipelineManager.cpp" />
     <ClCompile Include="Source\Graphics\Vulkan\VulkanUniformBuffer.cpp" />
     <ClCompile Include="Source\Graphics\Vulkan\VulkanVertexBufferManager.cpp" />
     <ClCompile Include="source\Graphics\Window.cpp" />
@@ -150,6 +151,7 @@
     <ClInclude Include="Source\Foundation\Timer\Timer.h" />
     <ClInclude Include="Source\Graphics\Light\Light.h" />
     <ClInclude Include="Source\Graphics\Light\LightData.h" />
+    <ClInclude Include="Source\Graphics\ShaderType.h" />
     <ClInclude Include="Source\Graphics\Systems\ModelLoadingSystem.h" />
     <ClInclude Include="Source\Components.h" />
     <ClInclude Include="Source\Graphics\Material.h" />
@@ -209,6 +211,7 @@
     <ClInclude Include="Source\Graphics\Vulkan\VulkanTextureSampler.h" />
     <ClInclude Include="Source\Foundation\Components\TransformComponent.h" />
     <ClInclude Include="Source\Graphics\Vulkan\VulkanTextureManager.h" />
+    <ClInclude Include="Source\Graphics\Vulkan\VulkanGraphicsPipelineManager.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Res\config.ini" />
