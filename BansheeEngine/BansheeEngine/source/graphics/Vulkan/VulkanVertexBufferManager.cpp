@@ -37,8 +37,7 @@ namespace Banshee
 		if (vertexBuffer != m_VertexBuffers.end())
 		{
 			const auto duplicatedMesh = MeshSystem::Instance().GetMeshComponentById(meshId);
-			const auto& subMeshes = duplicatedMesh->GetSubMeshes();
-			_meshComponent->SetSubMeshes(subMeshes);
+			_meshComponent->SetSubMeshes(duplicatedMesh->GetSubMeshes());
 			return;
 		}
 		else
@@ -72,8 +71,8 @@ namespace Banshee
 			_meshComponent->SetMeshId(modelId);
 
 			const auto duplicatedMesh = MeshSystem::Instance().GetMeshComponentById(modelId);
-			const auto& subMeshes = duplicatedMesh->GetSubMeshes();
-			_meshComponent->SetSubMeshes(subMeshes);
+			_meshComponent->SetSubMeshes(duplicatedMesh->GetSubMeshes());
+			return;
 		}
 		else
 		{

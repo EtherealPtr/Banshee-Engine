@@ -10,11 +10,15 @@ namespace Banshee
 		static MeshSystem instance;
 		return instance;
 	}
-
-	void MeshSystem::AddMeshComponent(const std::shared_ptr<MeshComponent>& _component)
+	 
+	void MeshSystem::SetMeshComponents(const std::vector<std::shared_ptr<MeshComponent>>& _meshComponents)
 	{
-		_component->RegisterSystem(this);
-		m_MeshRenderers.emplace_back(_component);
+		m_MeshRenderers = _meshComponents;
+
+		for (const auto& meshComponent : m_MeshRenderers)
+		{
+			meshComponent->RegisterSystem(this);
+		}
 	}
 
 	std::shared_ptr<MeshComponent> MeshSystem::GetMeshComponentById(const uint32 _meshId) const noexcept

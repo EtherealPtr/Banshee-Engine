@@ -13,7 +13,7 @@ namespace Banshee
 	{
 	public:
 		static MeshSystem& Instance() noexcept;
-		void AddMeshComponent(const std::shared_ptr<MeshComponent>& _component);
+		void SetMeshComponents(const std::vector<std::shared_ptr<MeshComponent>>& _meshComponents);
 		const std::vector<std::shared_ptr<MeshComponent>>& GetMeshComponents() const noexcept { return m_MeshRenderers; }
 		std::shared_ptr<MeshComponent> GetMeshComponentById(const uint32 _meshId) const noexcept;
 		virtual void Update() noexcept override {};

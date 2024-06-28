@@ -32,6 +32,7 @@
 #include <vulkan/vulkan.h>
 #include <stdexcept>
 #include <array>
+#include <algorithm>
 
 namespace Banshee
 {
@@ -112,13 +113,22 @@ namespace Banshee
 
 	void VulkanRenderer::FetchMeshComponents() const
 	{
+		std::vector<std::shared_ptr<MeshComponent>> meshComponents{};
+
 		for (const auto& entity : EntityManager::GetAllEntities())
 		{
 			if (const auto& meshComponent = entity->GetComponent<MeshComponent>())
 			{
-				MeshSystem::Instance().AddMeshComponent(meshComponent);
+				meshComponents.push_back(meshComponent);
 			}
 		}
+
+		std::sort(meshComponents.begin(), meshComponents.end(), [](const std::shared_ptr<MeshComponent>& _a, const std::shared_ptr<MeshComponent>& _b) 
+		{
+			return _a->GetShaderType() < _b->GetShaderType();
+		});
+
+		MeshSystem::Instance().SetMeshComponents(meshComponents);
 	}
 
 	void VulkanRenderer::AllocateDynamicBufferSpace()
