@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Component.h"
 #include "Foundation/DLLConfig.h"
+#include "Foundation/Components/Component.h"
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
 

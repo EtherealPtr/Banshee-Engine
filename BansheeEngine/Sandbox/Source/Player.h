@@ -11,11 +11,9 @@ public:
 	Player()
 	{
 		m_PlayerEntity = EntityManager::Instance().CreateEntity();
-		const std::shared_ptr<MeshComponent>& meshComponent = m_PlayerEntity->AddComponent<MeshComponent>("Models/scene0.glb");
-		m_Transform = m_PlayerEntity->GetTransform();
+		m_PlayerEntity->AddComponent<MeshComponent>("Models/scene0.glb");
 	}
 
 private:
 	std::shared_ptr<Entity> m_PlayerEntity;
-	std::shared_ptr<TransformComponent> m_Transform;
 };

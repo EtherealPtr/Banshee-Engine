@@ -5,6 +5,7 @@ namespace Banshee
 {
 	Input::Input() noexcept : 
 		m_Window(nullptr),
+		m_InputBindings{},
 		m_LastMouseX(0.0),
 		m_LastMouseY(0.0),
 		m_MouseXChange(0.0),
@@ -22,7 +23,7 @@ namespace Banshee
 		m_Window = _window;
 	}
 
-	void Input::LockCursor()
+	void Input::LockCursor() noexcept
 	{
 		glfwSetInputMode(m_Window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	}
@@ -60,20 +61,5 @@ namespace Banshee
 	void Input::GetCursorPosition(double& _x, double& _y) const noexcept
 	{
 		glfwGetCursorPos(m_Window, &_x, &_y);
-	}
-
-	void Input::SetInputBindings(const std::vector<InputBinding>& _bindings)
-	{
-		m_InputBindings = _bindings;
-	}
-
-	double Input::GetMouseXChange() const noexcept
-	{
-		return m_MouseXChange;
-	}
-
-	double Input::GetMouseYChange() const noexcept
-	{
-		return m_MouseYChange;
 	}
 } // End of Banshee namespace

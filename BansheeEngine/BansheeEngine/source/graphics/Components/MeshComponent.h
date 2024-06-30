@@ -12,15 +12,13 @@ namespace Banshee
 	class MeshComponent : public Component
 	{
 	public:
-		BANSHEE_ENGINE MeshComponent(const std::string& _modelPath);
-		BANSHEE_ENGINE MeshComponent(const PrimitiveShape _basicShape, const glm::vec3& _color = glm::vec3(1.0f));
+		BANSHEE_ENGINE MeshComponent(const std::string& _modelPath, const ShaderType _shaderType = ShaderType::Standard);
+		BANSHEE_ENGINE MeshComponent(const PrimitiveShape _basicShape, const ShaderType _shaderType = ShaderType::Standard, const glm::vec3& _color = glm::vec3(1.0f));
 
 		BANSHEE_ENGINE void SetTexture(const char* _pathToTexture) noexcept;
 		void SetMeshId(const uint32 _meshId) noexcept { m_MeshId = _meshId; }
 		void SetSubMesh(const Mesh& _subMesh) { m_Meshes.push_back(_subMesh); }
 		void SetSubMeshes(const std::vector<Mesh>& subMeshes) { m_Meshes = subMeshes; }
-		void SetShaderType(const ShaderType _shaderType) noexcept { m_ShaderType = _shaderType; }
-
 		uint32 GetMeshId() const noexcept { return m_MeshId; }
 		uint16 GetTexId() const noexcept { return m_TexId; }
 		ShaderType GetShaderType() const noexcept { return m_ShaderType; }

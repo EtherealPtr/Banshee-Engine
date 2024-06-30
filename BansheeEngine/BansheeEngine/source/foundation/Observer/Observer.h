@@ -2,9 +2,9 @@
 
 namespace Banshee
 {
-	class System
+	class Observer
 	{
 	public:
-		virtual void Update() = 0;
+		virtual void OnNotify() = 0;
 	};
 } // End of Banshee namespace

@@ -21,10 +21,11 @@
 #include "VulkanTextureSampler.h"
 #include "VulkanVertexBufferManager.h"
 #include "Foundation/Entity/EntityManager.h"
-#include "Foundation/Components/TransformComponent.h"
 #include "Graphics/Systems/MeshSystem.h"
+#include "Graphics/Systems/LightSystem.h"
 #include "Foundation/Logging/Logger.h"
-#include "Graphics/Light/Light.h"
+#include "Graphics/Components/TransformComponent.h"
+#include "Graphics/Components/Light/LightComponent.h"
 #include "Graphics/Components/MeshComponent.h"
 #include "Graphics/Material.h"
 #include "Graphics/Window.h"
@@ -37,8 +38,6 @@
 namespace Banshee
 {
 	constexpr uint64 g_MaxEntities = 512;
-
-	Light light(glm::vec3(0.0f, 5.0f, 0.0f));
 
 	VulkanRenderer::VulkanRenderer(const Window* _window) :
 		m_VkInstance(std::make_unique<VulkanInstance>()),
@@ -60,7 +59,7 @@ namespace Banshee
 		m_VkGraphicsPipelineManager(std::make_unique<VulkanGraphicsPipelineManager>(m_VkDevice->GetLogicalDevice(), m_VkRenderPass->Get(), m_VkDescriptorSetLayout->Get(), m_VkSwapchain->GetWidth(), m_VkSwapchain->GetHeight())),
 		m_Camera(std::make_unique<Camera>(45.0f, static_cast<float>(_window->GetWidth()) / _window->GetHeight(), 0.1f, 100.0f))
 	{
-		FetchMeshComponents();
+		FetchGraphicsComponents();
 		AllocateDynamicBufferSpace();
 
 		const size_t numOfSwapImages = m_VkSwapchain->GetImageViews().size();
@@ -99,8 +98,8 @@ namespace Banshee
 			}
 		}
 
+		RegisterLightObservers();
 		UpdateMaterialData();
-		UpdateLightData();
 		m_VkTextureManager->UploadTextures();
 		BE_LOG(LogCategory::Trace, "[RENDERER]: Vulkan initialized");
 	}
@@ -111,9 +110,10 @@ namespace Banshee
 		_aligned_free(m_MaterialDynamicBufferMemBlock);
 	}
 
-	void VulkanRenderer::FetchMeshComponents() const
+	void VulkanRenderer::FetchGraphicsComponents() const
 	{
 		std::vector<std::shared_ptr<MeshComponent>> meshComponents{};
+		std::vector<std::shared_ptr<LightComponent>> lightComponents{};
 
 		for (const auto& entity : EntityManager::GetAllEntities())
 		{
@@ -121,14 +121,21 @@ namespace Banshee
 			{
 				meshComponents.push_back(meshComponent);
 			}
+
+			if (const auto& lightComponent = entity->GetComponent<LightComponent>())
+			{
+				lightComponents.push_back(lightComponent);
+			}
 		}
 
-		std::sort(meshComponents.begin(), meshComponents.end(), [](const std::shared_ptr<MeshComponent>& _a, const std::shared_ptr<MeshComponent>& _b) 
+		// Sort mesh components based on shader type
+		std::sort(meshComponents.begin(), meshComponents.end(), [](const std::shared_ptr<MeshComponent>& _a, const std::shared_ptr<MeshComponent>& _b) noexcept
 		{
 			return _a->GetShaderType() < _b->GetShaderType();
 		});
 
 		MeshSystem::Instance().SetMeshComponents(meshComponents);
+		LightSystem::Instance().SetLightComponents(lightComponents);
 	}
 
 	void VulkanRenderer::AllocateDynamicBufferSpace()
@@ -136,6 +143,18 @@ namespace Banshee
 		const VkDeviceSize minUniformBufferOffset = m_VkDevice->GetLimits().minUniformBufferOffsetAlignment;
 		m_MaterialDynamicBufferMemAlignment = (sizeof(Material) + minUniformBufferOffset - 1) & ~(m_VkDevice->GetLimits().minUniformBufferOffsetAlignment - 1);
 		m_MaterialDynamicBufferMemBlock = static_cast<Material*>(_aligned_malloc(m_MaterialDynamicBufferMemAlignment * g_MaxEntities, m_MaterialDynamicBufferMemAlignment));
+	}
+
+	void VulkanRenderer::RegisterLightObservers() noexcept
+	{
+		const auto& lightComponents = LightSystem::Instance().GetLightComponents();
+		for (const auto& lightComponent : lightComponents)
+		{
+			if (auto transformComponent = lightComponent->GetOwner()->GetTransform())
+			{
+				transformComponent->RegisterObserver(lightComponent);
+			}
+		}
 	}
 
 	void VulkanRenderer::UpdateMaterialData()
@@ -160,13 +179,16 @@ namespace Banshee
 		}
 	}
 
-	void VulkanRenderer::UpdateLightData() noexcept
+	void VulkanRenderer::UpdateLightData()
 	{
-		LightData lightData(light.GetLocation(), light.GetColor());
-
-		for (uint8 i = 0; i < m_DescriptorSets.size(); ++i)
+		const auto& lightComponents = LightSystem::Instance().GetLightComponents();
+		for (const auto& lightComponent : lightComponents)
 		{
-			m_LightUniformBuffers[i]->CopyData(&lightData);
+			if (auto transformComponent = lightComponent->GetOwner()->GetTransform())
+			{
+				LightData lightData(transformComponent->GetPosition(), lightComponent->GetColor());
+				m_LightUniformBuffers[m_CurrentFrameIndex]->CopyData(&lightData);
+			}
 		}
 	}
 
@@ -199,6 +221,8 @@ namespace Banshee
 		ViewProjMatrix viewProjMatrix = m_Camera->GetViewProjMatrix();
 		viewProjMatrix.proj[1][1] *= -1.0f;
 		m_VPUniformBuffers[m_CurrentFrameIndex]->CopyData(&viewProjMatrix);
+
+		UpdateLightData();
 	}
 
 	void VulkanRenderer::DrawFrame(const double _deltaTime)
@@ -288,7 +312,12 @@ namespace Banshee
 		const std::vector<std::shared_ptr<MeshComponent>>& meshComponents = MeshSystem::Instance().GetMeshComponents();
 		for (uint32 i = 0; i < meshComponents.size(); ++i)
 		{
-			const glm::mat4& entityModelMatrix = meshComponents[i]->GetOwner()->GetTransform()->GetModel();
+            glm::mat4 entityModelMatrix = glm::mat4(1.0f);
+            if (auto transform = meshComponents[i]->GetOwner()->GetTransform())
+            {
+                entityModelMatrix = transform->GetModel();
+            }
+
 			const VulkanVertexBuffer* const vertexBuffer = m_VertexBufferManager->GetVertexBuffer(meshComponents[i]->GetMeshId());
 
 			const auto& graphicsPipeline = m_VkGraphicsPipelineManager->GetPipeline(meshComponents[i]->GetShaderType());

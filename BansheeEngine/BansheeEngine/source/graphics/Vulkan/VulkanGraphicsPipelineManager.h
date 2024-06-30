@@ -4,7 +4,6 @@
 #include "Graphics/ShaderType.h"
 #include <memory>
 #include <unordered_map>
-#include <string>
 
 typedef struct VkDevice_T* VkDevice;
 typedef struct VkRenderPass_T* VkRenderPass;
@@ -22,11 +21,6 @@ namespace Banshee
         const std::shared_ptr<VulkanGraphicsPipeline>& GetPipeline(const ShaderType _shaderType) { return m_Pipelines[_shaderType]; }
 
     private:
-        VkDevice m_Device;
-        VkRenderPass m_RenderPass;
-        VkDescriptorSetLayout m_DescriptorSetLayout;
-        uint32 m_Width;
-        uint32 m_Height;
         std::unordered_map<ShaderType, std::shared_ptr<VulkanGraphicsPipeline>> m_Pipelines;
     };
 } // End of Banshee namespace

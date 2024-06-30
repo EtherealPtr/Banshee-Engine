@@ -36,7 +36,7 @@ namespace Banshee
 		static uint32 SetNextMaterialIndex() noexcept
 		{
 			static uint32 nextIndex = 0;
-			return nextIndex++;
+			return ++nextIndex;
 		}
 
 	private:

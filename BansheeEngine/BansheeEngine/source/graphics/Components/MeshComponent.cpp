@@ -3,10 +3,10 @@
 
 namespace Banshee
 {
-	MeshComponent::MeshComponent(const std::string& _modelPath) :
+	MeshComponent::MeshComponent(const std::string& _modelPath, const ShaderType _shaderType) :
 		m_MeshId(0),
 		m_TexId(0),
-		m_ShaderType(ShaderType::Standard),
+		m_ShaderType(_shaderType),
 		m_Meshes(),
 		m_ModelName(ResourceManager::Instance().GetAssetName(_modelPath)),
 		m_HasModel(true),
@@ -14,10 +14,10 @@ namespace Banshee
 		m_Color(glm::vec3(1.0f))
 	{}
 
-	MeshComponent::MeshComponent(const PrimitiveShape _basicShape, const glm::vec3& _color) :
+	MeshComponent::MeshComponent(const PrimitiveShape _basicShape, const ShaderType _shaderType, const glm::vec3& _color) :
 		m_MeshId(0),
 		m_TexId(0),
-		m_ShaderType(ShaderType::Standard),
+		m_ShaderType(_shaderType),
 		m_Meshes(),
 		m_ModelName(""),
 		m_HasModel(false),

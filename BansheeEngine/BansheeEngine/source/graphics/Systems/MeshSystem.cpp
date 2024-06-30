@@ -15,10 +15,10 @@ namespace Banshee
 	{
 		m_MeshRenderers = _meshComponents;
 
-		for (const auto& meshComponent : m_MeshRenderers)
-		{
-			meshComponent->RegisterSystem(this);
-		}
+		//for (const auto& meshComponent : m_MeshRenderers)
+		//{
+		//	meshComponent->RegisterObserver(this);
+		//}
 	}
 
 	std::shared_ptr<MeshComponent> MeshSystem::GetMeshComponentById(const uint32 _meshId) const noexcept

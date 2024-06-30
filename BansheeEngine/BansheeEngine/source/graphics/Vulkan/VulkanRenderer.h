@@ -40,10 +40,11 @@ namespace Banshee
 	private:
 		void AllocateDynamicBufferSpace();
 		void UpdateMaterialData();
-		void UpdateLightData() noexcept;
+		void UpdateLightData();
+		void RegisterLightObservers() noexcept;
 		void UpdateDescriptorSets(const uint8 _descriptorSetIndex);
 		void RecordRenderCommands(const uint8 _imgIndex);
-		void FetchMeshComponents() const;
+		void FetchGraphicsComponents() const;
 
 	private:
 		std::unique_ptr<VulkanInstance> m_VkInstance;

@@ -1,5 +1,5 @@
 #include "Component.h"
-#include "Foundation/Systems/System.h"
+#include "Foundation/Observer/Observer.h"
 
 namespace Banshee
 {
@@ -14,18 +14,21 @@ namespace Banshee
 		}
 	}
 
-	void Component::RegisterSystem(System* _system)
+	void Component::RegisterObserver(const std::shared_ptr<Observer>& _observer) noexcept
 	{
-		m_Systems.emplace_back(_system);
+		if (!_observer.get())
+			return;
+
+		m_Observers.emplace_back(_observer);
 	}
 
 	void Component::NotifyObservers() const
 	{
-		for (System* const system : m_Systems)
+		for (const auto& observer : m_Observers)
 		{
-			if (system)
+			if (observer)
 			{
-				system->Update();
+				observer->OnNotify();
 			}
 		}
 	}

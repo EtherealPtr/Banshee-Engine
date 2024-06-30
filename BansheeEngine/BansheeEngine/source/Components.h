@@ -1,9 +1,7 @@
 #pragma once
 
-// -----Foundation Layer Components-----
-#include "Foundation/Components/TransformComponent.h"
-// -------------------------------------
-
 // -----Graphics Layer Components-----
+#include "Graphics/Components/TransformComponent.h"
 #include "Graphics/Components/MeshComponent.h"
+#include "Graphics/Components/Light/LightComponent.h"
 // -----------------------------------

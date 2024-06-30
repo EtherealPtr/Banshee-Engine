@@ -108,7 +108,7 @@
     <ClCompile Include="Source\Foundation\Input\Input.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Foundation\Components\TransformComponent.cpp">
+    <ClCompile Include="Source\Graphics\Components\TransformComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\Foundation\ResourceManager\ResourceManager.cpp">
@@ -136,6 +136,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\Graphics\Vulkan\VulkanGraphicsPipelineManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Graphics\Components\Light\LightComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -284,7 +287,7 @@
     <ClInclude Include="Source\Foundation\Input\InputMapping.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Foundation\Components\TransformComponent.h">
+    <ClInclude Include="Source\Graphics\Components\TransformComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Foundation\ResourceManager\ResourceManager.h">
@@ -299,7 +302,7 @@
     <ClInclude Include="Source\Graphics\Vulkan\VulkanTextureManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Foundation\Systems\System.h">
+    <ClInclude Include="Source\Foundation\Observer\Observer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Graphics\Camera.h">
@@ -326,16 +329,19 @@
     <ClInclude Include="Source\Foundation\Timer\Timer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Graphics\Light\Light.h">
+    <ClInclude Include="Source\Graphics\Components\Light\LightComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Graphics\Light\LightData.h">
+    <ClInclude Include="Source\Graphics\Components\Light\LightData.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Graphics\Vulkan\VulkanGraphicsPipelineManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Graphics\ShaderType.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Graphics\Systems\LightSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

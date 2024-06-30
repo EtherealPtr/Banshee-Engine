@@ -37,7 +37,15 @@ namespace Banshee
 		if (vertexBuffer != m_VertexBuffers.end())
 		{
 			const auto duplicatedMesh = MeshSystem::Instance().GetMeshComponentById(meshId);
-			_meshComponent->SetSubMeshes(duplicatedMesh->GetSubMeshes());
+			if (!duplicatedMesh || duplicatedMesh->GetSubMeshes().empty())
+			{
+				return;
+			}
+
+			auto subMesh = duplicatedMesh->GetSubMeshes()[0];
+			subMesh.SetTexId(_meshComponent->GetTexId());
+			subMesh.material.SetDiffuseColor(_meshComponent->GetColor());
+			_meshComponent->SetSubMesh(subMesh);
 			return;
 		}
 		else
