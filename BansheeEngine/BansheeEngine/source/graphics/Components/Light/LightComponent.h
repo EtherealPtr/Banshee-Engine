@@ -10,7 +10,7 @@ namespace Banshee
     class LightComponent : public Component, public Observer
     {
     public:
-        BANSHEE_ENGINE LightComponent(const glm::vec3& _color) noexcept :
+        BANSHEE_ENGINE LightComponent(const glm::vec3& _color = glm::vec3(1.0f)) noexcept :
             m_LightData{ glm::vec3(0.0f), _color },
             m_NeedsUpdate(true)
         {}

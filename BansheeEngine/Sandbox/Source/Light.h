@@ -12,10 +12,10 @@ public:
 	Light()
 	{
 		m_Entity = EntityManager::Instance().CreateEntity();
-		m_Entity->AddComponent<MeshComponent>(PrimitiveShape::Cube, ShaderType::Unlit, glm::vec3(1.0f, 0.0f, 0.0f));
-		m_Entity->AddComponent<LightComponent>(glm::vec3(1.0f, 0.0f, 0.0f));
+		m_Entity->AddComponent<MeshComponent>(PrimitiveShape::Cube, ShaderType::Unlit);
+		m_Entity->AddComponent<LightComponent>();
 		m_Transform = m_Entity->AddComponent<TransformComponent>();
-		m_Transform->SetPosition(glm::vec3(0.0f, 5.0f, 0.0f));
+		m_Transform->SetPosition(glm::vec3(0.0f, 5.0f, 10.0f));
 	}
 
 private:

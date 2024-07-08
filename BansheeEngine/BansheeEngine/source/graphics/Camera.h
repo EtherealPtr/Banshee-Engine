@@ -13,6 +13,7 @@ namespace Banshee
 		const ViewProjMatrix& GetViewProjMatrix() const noexcept { return m_ViewProjMatrix; }
 		const glm::mat4& GetViewMatrix() const noexcept { return m_ViewProjMatrix.view; }
 		const glm::mat4& GetProjectionMatrix() const noexcept { return m_ViewProjMatrix.proj; }
+		const glm::vec3& GetPosition() const noexcept { return m_Position; }
 		void ProcessInput(const double _deltaTime);
 
 	private:

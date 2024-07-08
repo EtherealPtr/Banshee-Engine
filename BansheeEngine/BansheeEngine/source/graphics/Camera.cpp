@@ -11,6 +11,8 @@ namespace Banshee
 		m_Yaw(-90.0f),
 		m_Pitch(0.0f)
 	{
+		Input::Instance().LockCursor();
+
 		m_Position = glm::vec3(0.0f, 2.0f, 2.0f);
 		m_Up = glm::vec3(0.0f, 1.0f, 0.0f);
 		m_Right = glm::vec3(1.0f, 0.0f, 0.0f);
@@ -18,8 +20,6 @@ namespace Banshee
 
 		UpdateViewMatrix();
 		UpdateProjectionMatrix();
-
-		Input::Instance().LockCursor();
 	}
 
 	void Camera::ProcessInput(const double _deltaTime)
@@ -58,7 +58,7 @@ namespace Banshee
 		double xoffset = Input::Instance().GetMouseXChange();
 		double yoffset = Input::Instance().GetMouseYChange();
 
-		constexpr double baseSensitivity = 50.0;
+		constexpr double baseSensitivity = 25.0;
 		const double sensitivity = baseSensitivity * _deltaTime;
 		xoffset *= sensitivity;
 		yoffset *= sensitivity;
@@ -66,10 +66,10 @@ namespace Banshee
 		m_Yaw += static_cast<float>(xoffset);
 		m_Pitch -= static_cast<float>(yoffset);
 
-		if (m_Pitch > 89.0)
-			m_Pitch = 89.0;
-		if (m_Pitch < -89.0)
-			m_Pitch = -89.0;
+		if (m_Pitch > 89.0f)
+			m_Pitch = 89.0f;
+		if (m_Pitch < -89.0f)
+			m_Pitch = -89.0f;
 
 		UpdateViewMatrix();
 	}

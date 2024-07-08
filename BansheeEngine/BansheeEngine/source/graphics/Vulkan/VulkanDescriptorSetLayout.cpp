@@ -27,7 +27,7 @@ namespace Banshee
 		layoutBindings[1].binding = 1;
 		layoutBindings[1].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC;
 		layoutBindings[1].descriptorCount = 1;
-		layoutBindings[1].stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
+		layoutBindings[1].stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
 		layoutBindings[1].pImmutableSamplers = nullptr;
 		BE_LOG(LogCategory::Trace, "[DESCRIPTOR SET LAYOUT]: Added descriptor of type VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC at binding 1");
 

@@ -98,7 +98,6 @@ namespace Banshee
 			}
 		}
 
-		RegisterLightObservers();
 		UpdateMaterialData();
 		m_VkTextureManager->UploadTextures();
 		BE_LOG(LogCategory::Trace, "[RENDERER]: Vulkan initialized");
@@ -145,18 +144,6 @@ namespace Banshee
 		m_MaterialDynamicBufferMemBlock = static_cast<Material*>(_aligned_malloc(m_MaterialDynamicBufferMemAlignment * g_MaxEntities, m_MaterialDynamicBufferMemAlignment));
 	}
 
-	void VulkanRenderer::RegisterLightObservers() noexcept
-	{
-		const auto& lightComponents = LightSystem::Instance().GetLightComponents();
-		for (const auto& lightComponent : lightComponents)
-		{
-			if (auto transformComponent = lightComponent->GetOwner()->GetTransform())
-			{
-				transformComponent->RegisterObserver(lightComponent);
-			}
-		}
-	}
-
 	void VulkanRenderer::UpdateMaterialData()
 	{
 		// Update dynamic buffer with material data
@@ -164,7 +151,7 @@ namespace Banshee
 		{
 			for (const auto& subMesh : meshComponent->GetSubMeshes())
 			{
-				auto material = subMesh.material;
+				const Material material = subMesh.material;
 				Material* materialData = (Material*)((uint64)m_MaterialDynamicBufferMemBlock + (subMesh.GetMaterialIndex() * m_MaterialDynamicBufferMemAlignment));
 				const glm::vec3 diffuseColor = material.GetDiffuseColor();
 				const glm::vec3 specularColor = material.GetSpecularColor();
@@ -186,7 +173,9 @@ namespace Banshee
 		{
 			if (auto transformComponent = lightComponent->GetOwner()->GetTransform())
 			{
-				LightData lightData(transformComponent->GetPosition(), lightComponent->GetColor());
+				// TODO: Enable support for multiple light sources
+				const glm::vec3 lightPos = glm::vec3(m_Camera->GetViewMatrix() * glm::vec4(transformComponent->GetPosition(), 1.0f));
+				LightData lightData(lightPos, lightComponent->GetColor());
 				m_LightUniformBuffers[m_CurrentFrameIndex]->CopyData(&lightData);
 			}
 		}
@@ -282,7 +271,7 @@ namespace Banshee
 		renderPassInfo.renderArea.extent = VkExtent2D({ m_VkSwapchain->GetWidth(), m_VkSwapchain->GetHeight() });
 
 		// Clear attachments
-        const VkClearColorValue clearColor = { 0.0f, 0.0f, 0.5f, 1.0f };
+        const VkClearColorValue clearColor = { 0.1f, 0.1f, 0.1f, 1.0f };
 		const VkClearDepthStencilValue clearDepthStencil{ 1.0f, 0 };
 
 		std::array<VkClearValue, 2> clearAttachments{};
