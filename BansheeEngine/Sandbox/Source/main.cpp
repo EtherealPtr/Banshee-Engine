@@ -1,20 +1,18 @@
 #include <Banshee.h>
 #include "Player.h"
-#include "DummyObject.h"
+#include "Light.h"
 
 class ClientApp : public Banshee::Application
 {
 public:
-	ClientApp() : 
+	ClientApp() :
 		m_Player(),
-		m_DummyOne(),
-		m_DummyTwo()
+		m_Light()
 	{}
 
 private:
 	Player m_Player;
-	DummyObjectOne m_DummyOne;
-	DummyObjectTwo m_DummyTwo;
+	Light m_Light;
 };
 
 std::unique_ptr<Banshee::Application> CreateApplication()

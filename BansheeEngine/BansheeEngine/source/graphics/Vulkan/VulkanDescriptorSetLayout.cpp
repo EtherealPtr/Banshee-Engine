@@ -8,18 +8,18 @@
 
 namespace Banshee
 {
-	VulkanDescriptorSetLayout::VulkanDescriptorSetLayout(const VkDevice& _logicalDevice, const uint32 _shaderStage) :
+	VulkanDescriptorSetLayout::VulkanDescriptorSetLayout(const VkDevice& _logicalDevice) :
 		m_LogicalDevice(_logicalDevice),
 		m_DescriptorSetLayout(VK_NULL_HANDLE)
 	{
 		BE_LOG(LogCategory::Trace, "[DESCRIPTOR SET LAYOUT]: Creating descriptor set layout");
 
 		// View-projection binding
-		std::array<VkDescriptorSetLayoutBinding, 4> layoutBindings{};
+		std::array<VkDescriptorSetLayoutBinding, 5> layoutBindings{};
 		layoutBindings[0].binding = 0;
 		layoutBindings[0].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
 		layoutBindings[0].descriptorCount = 1;
-		layoutBindings[0].stageFlags = _shaderStage;
+		layoutBindings[0].stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
 		layoutBindings[0].pImmutableSamplers = nullptr;
 		BE_LOG(LogCategory::Trace, "[DESCRIPTOR SET LAYOUT]: Added descriptor of type VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER at binding 0");
 
@@ -27,7 +27,7 @@ namespace Banshee
 		layoutBindings[1].binding = 1;
 		layoutBindings[1].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC;
 		layoutBindings[1].descriptorCount = 1;
-		layoutBindings[1].stageFlags = _shaderStage;
+		layoutBindings[1].stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
 		layoutBindings[1].pImmutableSamplers = nullptr;
 		BE_LOG(LogCategory::Trace, "[DESCRIPTOR SET LAYOUT]: Added descriptor of type VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC at binding 1");
 
@@ -47,6 +47,14 @@ namespace Banshee
 		layoutBindings[3].stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
 		layoutBindings[3].pImmutableSamplers = nullptr;
 		BE_LOG(LogCategory::Trace, "[DESCRIPTOR SET LAYOUT]: Added descriptor of type VK_DESCRIPTOR_TYPE_SAMPLER at binding 3");
+
+		// Light uniform buffer binding
+		layoutBindings[4].binding = 4;
+		layoutBindings[4].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+		layoutBindings[4].descriptorCount = 1;
+		layoutBindings[4].stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
+		layoutBindings[4].pImmutableSamplers = nullptr;
+		BE_LOG(LogCategory::Trace, "[DESCRIPTOR SET LAYOUT]: Added descriptor of type VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER at binding 4");
 
 		VkDescriptorSetLayoutCreateInfo layoutCreateInfo{};
 		layoutCreateInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;

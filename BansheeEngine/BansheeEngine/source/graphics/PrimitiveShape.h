@@ -9,6 +9,7 @@ namespace Banshee
 		Empty,
 		Triangle,
 		Square,
-		Pyramid
+		Pyramid,
+		Cube
 	};
 } // End of Banshee namespace

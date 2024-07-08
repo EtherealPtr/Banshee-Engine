@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Foundation/DLLConfig.h"
 #include "InputSystem.h"
 #include "InputMapping.h"
 
@@ -8,18 +9,18 @@ namespace Banshee
 	class Input : public InputSystem
 	{
 	public:
-		static Input& Instance() noexcept;
+		BANSHEE_ENGINE static Input& Instance() noexcept;
 
 		virtual void Initialize(GLFWwindow* _window) noexcept override;
 		virtual void Update() override;
 		virtual bool IsKeyPressed(const int32 _key) const noexcept override;
 		virtual bool IsMouseButtonPressed(const int32 _button) const noexcept override;
 		virtual void GetCursorPosition(double& _x, double& _y) const noexcept override;
-		virtual void SetInputBindings(const std::vector<InputBinding>& _bindings) override;
-		virtual double GetMouseXChange() const noexcept override;
-		virtual double GetMouseYChange() const noexcept override;
+		virtual void SetInputBindings(const std::vector<InputBinding>& _bindings) override { m_InputBindings = _bindings; }
+		virtual double GetMouseXChange() const noexcept override { return m_MouseXChange; }
+		virtual double GetMouseYChange() const noexcept override { return m_MouseYChange; }
 
-		void LockCursor();
+		void LockCursor() noexcept;
 
 		Input(const Input&) = delete;
 		Input(Input&&) = delete;
@@ -28,7 +29,6 @@ namespace Banshee
 
 	private:
 		Input() noexcept;
-		virtual ~Input() = default;
 
 	private:
 		GLFWwindow* m_Window;

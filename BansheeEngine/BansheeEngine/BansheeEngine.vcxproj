@@ -104,6 +104,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Source\Foundation\Timer\Timer.cpp" />
+    <ClCompile Include="Source\Graphics\Components\Light\LightComponent.cpp" />
     <ClCompile Include="Source\Graphics\Systems\ModelLoadingSystem.cpp" />
     <ClCompile Include="Source\Foundation\Components\Component.cpp" />
     <ClCompile Include="Source\Graphics\Components\MeshComponent.cpp" />
@@ -123,6 +124,7 @@
     <ClCompile Include="Source\Graphics\Vulkan\VulkanDescriptorPool.cpp" />
     <ClCompile Include="Source\Graphics\Vulkan\VulkanDescriptorSet.cpp" />
     <ClCompile Include="Source\Graphics\Vulkan\VulkanDescriptorSetLayout.cpp" />
+    <ClCompile Include="Source\Graphics\Vulkan\VulkanGraphicsPipelineManager.cpp" />
     <ClCompile Include="Source\Graphics\Vulkan\VulkanUniformBuffer.cpp" />
     <ClCompile Include="Source\Graphics\Vulkan\VulkanVertexBufferManager.cpp" />
     <ClCompile Include="source\Graphics\Window.cpp" />
@@ -141,17 +143,21 @@
     <ClCompile Include="source\Graphics\Vulkan\VulkanFence.cpp" />
     <ClCompile Include="source\Graphics\Vulkan\VulkanVertexBuffer.cpp" />
     <ClCompile Include="Source\Graphics\Vulkan\VulkanTextureSampler.cpp" />
-    <ClCompile Include="Source\Foundation\Components\TransformComponent.cpp" />
+    <ClCompile Include="Source\Graphics\Components\TransformComponent.cpp" />
     <ClCompile Include="Source\Graphics\Vulkan\VulkanTextureManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Dependencies\tinygltf\tiny_gltf.h" />
     <ClInclude Include="Dependencies\tinyobjloader\tiny_obj_loader.h" />
     <ClInclude Include="Source\Foundation\Timer\Timer.h" />
+    <ClInclude Include="Source\Graphics\Components\Light\LightComponent.h" />
+    <ClInclude Include="Source\Graphics\Components\Light\LightData.h" />
+    <ClInclude Include="Source\Graphics\ShaderType.h" />
+    <ClInclude Include="Source\Graphics\Systems\LightSystem.h" />
     <ClInclude Include="Source\Graphics\Systems\ModelLoadingSystem.h" />
     <ClInclude Include="Source\Components.h" />
-    <ClInclude Include="Source\Graphics\Components\Material.h" />
-    <ClInclude Include="Source\Graphics\Components\Mesh.h" />
+    <ClInclude Include="Source\Graphics\Material.h" />
+    <ClInclude Include="Source\Graphics\Mesh.h" />
     <ClInclude Include="Source\Foundation\ResourceManager\Image\Image.h" />
     <ClInclude Include="Source\Foundation\ResourceManager\Image\ImageManager.h" />
     <ClInclude Include="Source\Foundation\ResourceManager\ResourceManager.h" />
@@ -164,7 +170,7 @@
     <ClInclude Include="Source\Foundation\Entity\EntityManager.h" />
     <ClInclude Include="source\foundation\Logging\LogCategories.h" />
     <ClInclude Include="Dependencies\stb_image\stb_image.h" />
-    <ClInclude Include="Source\Foundation\Systems\System.h" />
+    <ClInclude Include="Source\Foundation\Observer\Observer.h" />
     <ClInclude Include="Source\Graphics\Camera.h" />
     <ClInclude Include="Source\Graphics\MVP.h" />
     <ClInclude Include="Source\Foundation\Components\Component.h" />
@@ -205,8 +211,9 @@
     <ClInclude Include="source\Graphics\Vulkan\VulkanFence.h" />
     <ClInclude Include="source\Graphics\Vulkan\VulkanVertexBuffer.h" />
     <ClInclude Include="Source\Graphics\Vulkan\VulkanTextureSampler.h" />
-    <ClInclude Include="Source\Foundation\Components\TransformComponent.h" />
+    <ClInclude Include="Source\Graphics\Components\TransformComponent.h" />
     <ClInclude Include="Source\Graphics\Vulkan\VulkanTextureManager.h" />
+    <ClInclude Include="Source\Graphics\Vulkan\VulkanGraphicsPipelineManager.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Res\config.ini" />

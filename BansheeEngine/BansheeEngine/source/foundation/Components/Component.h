@@ -6,30 +6,31 @@
 namespace Banshee
 {
 	class Entity;
-	class System;
+	class Observer;
 
 	class Component
 	{
 	public:
 		Component() noexcept :
 			m_Dirty(false),
-			m_Owner(nullptr)
+			m_Owner(nullptr),
+			m_Observers{nullptr}
 		{}
 
 		virtual ~Component() noexcept = default;
 
 		void SetDirty(const bool _dirty);
 		bool GetDirty() const noexcept { return m_Dirty; }
-		void SetOwner(const Entity* _owner) noexcept { m_Owner = _owner; }
-		const Entity* GetOwner() const noexcept { return m_Owner; }
-		void RegisterSystem(System* _system);
+		void SetOwner(Entity* _owner) noexcept { m_Owner = _owner; }
+		Entity* GetOwner() const noexcept { return m_Owner; }
+		void RegisterObserver(const std::shared_ptr<Observer>& _observer) noexcept;
 
 	private:
 		void NotifyObservers() const;
 
 	protected:
 		bool m_Dirty;
-		const Entity* m_Owner;
-		std::vector<System*> m_Systems;
+		Entity* m_Owner;
+		std::vector<std::shared_ptr<Observer>> m_Observers;
 	};
 } // End of Banshee namespace

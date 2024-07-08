@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Foundation/Platform.h"
-#include <chrono>
 
 namespace Banshee
 {
@@ -22,11 +21,11 @@ namespace Banshee
         double GetDeltaTime() const noexcept { return m_DeltaTime; }
 
     private:
-        double m_LastTime = 0.0;
-        double m_DeltaTime = 0.0;
-        double m_ElapsedTime = 0.0;
-        int32 m_FrameCount = 0;
-        int32 m_Fps = 0;
-        bool m_FpsDisplayEnabled = false;
+        double m_LastTime;
+        double m_DeltaTime;
+        double m_ElapsedTime;
+        int32 m_FrameCount;
+        int32 m_Fps;
+        bool m_FpsDisplayEnabled;
     };
 } // End of Banshee namespace

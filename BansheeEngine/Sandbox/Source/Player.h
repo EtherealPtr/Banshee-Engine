@@ -10,13 +10,13 @@ class Player
 public:
 	Player()
 	{
-		m_PlayerEntity = EntityManager::Instance().CreateEntity();
-		const std::shared_ptr<MeshComponent>& meshComponent = m_PlayerEntity->AddComponent<MeshComponent>("Models/texturetest.glb");
-		//meshComponent->SetTexture("Textures/viking_room.png");
-		m_Transform = m_PlayerEntity->GetTransform();
+		m_Entity = EntityManager::Instance().CreateEntity();
+		m_Entity->AddComponent<MeshComponent>("Models/scene2.glb");
+		m_Transform = m_Entity->AddComponent<TransformComponent>();
+		m_Transform->SetPosition(glm::vec3(0.0f, 0.0f, -1.0f));
 	}
 
 private:
-	std::shared_ptr<Entity> m_PlayerEntity;
+	std::shared_ptr<Entity> m_Entity;
 	std::shared_ptr<TransformComponent> m_Transform;
 };

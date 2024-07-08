@@ -71,12 +71,16 @@ namespace Banshee
 				// Load vertex data
 				const auto& positionsAccessor = _model.accessors[primitive.attributes.find("POSITION")->second];
 				const auto& textureAccessor = _model.accessors[primitive.attributes.find("TEXCOORD_0")->second];
+				const auto& normalAccessor = _model.accessors[primitive.attributes.find("NORMAL")->second];
 				const auto& positionsBufferView = _model.bufferViews[positionsAccessor.bufferView];
 				const auto& texCoordsBufferView = _model.bufferViews[textureAccessor.bufferView];
+				const auto& normalsBufferView = _model.bufferViews[normalAccessor.bufferView];
 				const auto& positionsBuffer = _model.buffers[positionsBufferView.buffer];
 				const auto& texCoordsBuffer = _model.buffers[texCoordsBufferView.buffer];
+				const auto& normalsBuffer = _model.buffers[normalsBufferView.buffer];
 				const float* positions = reinterpret_cast<const float*>(&(positionsBuffer.data[positionsBufferView.byteOffset + positionsAccessor.byteOffset]));
 				const float* texCoords = reinterpret_cast<const float*>(&(texCoordsBuffer.data[texCoordsBufferView.byteOffset + textureAccessor.byteOffset]));
+				const float* normals = reinterpret_cast<const float*>(&(normalsBuffer.data[normalsBufferView.byteOffset + normalAccessor.byteOffset]));
 
 				std::vector<Vertex> subMeshVertices(positionsAccessor.count);
 				for (size_t j = 0; j < positionsAccessor.count; ++j) 
@@ -89,6 +93,11 @@ namespace Banshee
 					subMeshVertices[j].texCoord = glm::vec2(
 						texCoords[j * 2 + 0],
 						texCoords[j * 2 + 1]
+					);
+					subMeshVertices[j].normal = glm::vec3(
+						normals[j * 3 + 0],
+						normals[j * 3 + 1],
+						normals[j * 3 + 2]
 					);
 				}
 

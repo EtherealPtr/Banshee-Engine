@@ -12,7 +12,7 @@
 
 namespace Banshee
 {
-	VulkanGraphicsPipeline::VulkanGraphicsPipeline(const VkDevice& _logicalDevice, const VkRenderPass& _renderPass, const VkDescriptorSetLayout& _descriptorSetLayout, const uint32 _w, const uint32 _h) :
+	VulkanGraphicsPipeline::VulkanGraphicsPipeline(const VkDevice& _logicalDevice, const VkRenderPass& _renderPass, const VkDescriptorSetLayout& _descriptorSetLayout, const uint32 _w, const uint32 _h, const char* _vertShaderPath, const char* _fragShaderPath) :
 		m_LogicalDevice(_logicalDevice),
 		m_PipelineLayout(VK_NULL_HANDLE),
 		m_GraphicsPipeline(VK_NULL_HANDLE)
@@ -20,13 +20,11 @@ namespace Banshee
 		BE_LOG(LogCategory::Trace, "[GRAPHICS PIPELINE]: Creating graphics pipeline");
 
 		// Vertex creation stage
-		const std::string basicVertPath = "Shaders/basic_vert.spv";
-		const std::string basicFragPath = "Shaders/basic_frag.spv";
-		BE_LOG(LogCategory::Trace, "[GRAPHICS PIPELINE]: Using vertex shader %s", basicVertPath.c_str());
-		BE_LOG(LogCategory::Trace, "[GRAPHICS PIPELINE]: Using frag shader %s", basicFragPath.c_str());
+		BE_LOG(LogCategory::Trace, "[GRAPHICS PIPELINE]: Using vertex shader %s", _vertShaderPath);
+		BE_LOG(LogCategory::Trace, "[GRAPHICS PIPELINE]: Using frag shader %s", _fragShaderPath);
 
-		auto vertShaderBinary = ResourceManager::Instance().GetFileManager()->ReadBinaryFile(basicVertPath.c_str());
-		auto fragShaderBinary = ResourceManager::Instance().GetFileManager()->ReadBinaryFile(basicFragPath.c_str());
+		auto vertShaderBinary = ResourceManager::Instance().GetFileManager()->ReadBinaryFile(_vertShaderPath);
+		auto fragShaderBinary = ResourceManager::Instance().GetFileManager()->ReadBinaryFile(_fragShaderPath);
 
 		VkShaderModule vertexShaderModule = VulkanUtils::CreateShaderModule(_logicalDevice, vertShaderBinary);
 		VkShaderModule fragmentShaderModule = VulkanUtils::CreateShaderModule(_logicalDevice, fragShaderBinary);
@@ -52,7 +50,7 @@ namespace Banshee
 		inputBindingDescription.stride = sizeof(Vertex);
 		inputBindingDescription.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
 
-		std::array<VkVertexInputAttributeDescription, 2> inputAttributeDescriptions{};
+		std::array<VkVertexInputAttributeDescription, 3> inputAttributeDescriptions{};
 		inputAttributeDescriptions[0].binding = 0;
 		inputAttributeDescriptions[0].location = 0;
 		inputAttributeDescriptions[0].format = VK_FORMAT_R32G32B32_SFLOAT;
@@ -62,6 +60,11 @@ namespace Banshee
 		inputAttributeDescriptions[1].location = 1;
 		inputAttributeDescriptions[1].format = VK_FORMAT_R32G32_SFLOAT;
 		inputAttributeDescriptions[1].offset = offsetof(Vertex, texCoord);
+
+		inputAttributeDescriptions[2].binding = 0;
+		inputAttributeDescriptions[2].location = 2;
+		inputAttributeDescriptions[2].format = VK_FORMAT_R32G32B32_SFLOAT;
+		inputAttributeDescriptions[2].offset = offsetof(Vertex, normal);
 
 		VkPipelineVertexInputStateCreateInfo vertexInputCreateInfo{};
 		vertexInputCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
