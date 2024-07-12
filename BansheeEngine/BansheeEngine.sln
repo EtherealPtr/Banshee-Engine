@@ -2,9 +2,9 @@
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33403.182
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BansheeEngine", "BansheeEngine\BansheeEngine.vcxproj", "{B809594C-796D-40F9-BB8F-C9FBB23C7673}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sandbox", "Sandbox\Sandbox.vcxproj", "{EFD50C38-F292-4D58-A3EF-7E0F198404E3}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BansheeEngine", "BansheeEngine\BansheeEngine.vcxproj", "{B809594C-796D-40F9-BB8F-C9FBB23C7673}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "glfw", "BansheeEngine\Dependencies\glfw-3.3.8\generated\src\glfw.vcxproj", "{92658B93-6F4C-3D54-A0C2-62531B46E10C}"
 EndProject
