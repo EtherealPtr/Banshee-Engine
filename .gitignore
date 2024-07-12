@@ -46,6 +46,10 @@ ipch/
 *.VC.db
 *.VC.VC.opendb
 
+# Visual Studio generated files
+*.exp
+*.lib
+
 # Custom generated files
 temp/
 banshee_generated/
