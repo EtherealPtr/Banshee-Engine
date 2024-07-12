@@ -74,8 +74,9 @@
       <AdditionalLibraryDirectories>$(ProjectDir)Dependencies\glfw-3.3.8\lib;$(ProjectDir)Dependencies\vulkan\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /y "$(TargetDir)BansheeEngine.dll" "$(SolutionDir)Binaries\Sandbox-$(Configuration)"
-</Command>
+      <Command>if not exist "$(SolutionDir)Binaries\Sandbox-$(Configuration)" mkdir "$(SolutionDir)Binaries\Sandbox-$(Configuration)"
+
+xcopy /y "$(TargetDir)BansheeEngine.dll" "$(SolutionDir)Binaries\Sandbox-$(Configuration)\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -98,8 +99,9 @@
       <AdditionalLibraryDirectories>$(ProjectDir)Dependencies\glfw-3.3.8\lib;$(ProjectDir)Dependencies\vulkan\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /y "$(TargetDir)BansheeEngine.dll" "$(SolutionDir)Binaries\Sandbox-$(Configuration)"
-</Command>
+      <Command>if not exist "$(SolutionDir)Binaries\Sandbox-$(Configuration)" mkdir "$(SolutionDir)Binaries\Sandbox-$(Configuration)"
+
+xcopy /y "$(TargetDir)BansheeEngine.dll" "$(SolutionDir)Binaries\Sandbox-$(Configuration)\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
