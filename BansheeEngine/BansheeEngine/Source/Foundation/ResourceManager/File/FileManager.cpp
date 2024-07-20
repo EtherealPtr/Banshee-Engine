@@ -17,7 +17,10 @@ namespace Banshee
 
 	FileManager::~FileManager()
 	{
-		m_LogFile.close();
+		if (m_LogFile.is_open())
+		{
+			m_LogFile.close();
+		}
 	}
 
 	void FileManager::InitializeDirPaths()
@@ -39,7 +42,7 @@ namespace Banshee
 			}
 		}
 		
-		BE_LOG(LogCategory::Warning, "Failed to initialize paths");
+		BE_LOG(LogCategory::Warning, "[FILEMANAGER]: Failed to initialize paths");
 	}
 
 	void FileManager::CreateGeneratedFolder()
@@ -51,27 +54,33 @@ namespace Banshee
 			return;
 		}
 
-		//BE_LOG(LogCategory::Info, "Created banshee generated directory");
 		std::filesystem::create_directory(m_GeneratedDirPath);
 	}
 
 	void FileManager::OpenLogFile()
 	{
 		m_LogFile.open(m_GeneratedDirPath + "/logs.txt", std::ios::out);
+
+		if (!m_LogFile)
+		{
+			BE_LOG(LogCategory::Warning, "[FILEMANAGER]: Failed to open log file");
+		}
 	}
 
 	void FileManager::WriteToLogFile(const char* _logData)
 	{
-		m_LogFile << _logData << '\n';
+		if (m_LogFile.is_open()) 
+		{
+			m_LogFile << _logData << '\n';
+		}
 	}
 
 	std::vector<char> FileManager::ReadBinaryFile(const char* _fileName)
 	{
 		std::ifstream inputFile(m_EngineResDirPath + _fileName, std::ios::binary | std::ios::ate);
-
 		if (!inputFile.is_open())
 		{
-			BE_LOG(LogCategory::Warning, "Failed to read binary file: %s", _fileName);
+			BE_LOG(LogCategory::Warning, "[FILEMANAGER]: Failed to read binary file: %s", _fileName);
 		}
 
 		const size_t fileSize = static_cast<size_t>(inputFile.tellg());
@@ -84,13 +93,13 @@ namespace Banshee
 		return buffer;
 	}
 	
-	std::ifstream FileManager::ReadFile(const char* _filePath)
+	std::ifstream FileManager::ReadFile(const char* _filePath) const
 	{
 		std::ifstream file(m_EngineResDirPath + _filePath);
 
 		if (!file.is_open())
 		{
-			BE_LOG(LogCategory::Error, "Failed to open file: %s", _filePath);
+			BE_LOG(LogCategory::Error, "[FILEMANAGER]: Failed to open file: %s", _filePath);
 		}
 
 		return file;
