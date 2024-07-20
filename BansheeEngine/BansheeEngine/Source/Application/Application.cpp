@@ -15,7 +15,7 @@ namespace Banshee
 		m_Timer(std::make_unique<Timer>())
 	{
 		BE_LOG(LogCategory::Trace, "[APPLICATION]: Banshee initializing");
-		EngineConfig configSettings = m_INIParser->ParseConfigSettings("config.ini");
+		const EngineConfig configSettings = m_INIParser->ParseConfigSettings("config.ini");
 		m_Window = std::make_unique<Window>(configSettings.windowWidth, configSettings.windowHeight, configSettings.windowTitle.c_str());
 		Input::Instance().Initialize(m_Window->GetWindow());
 	}

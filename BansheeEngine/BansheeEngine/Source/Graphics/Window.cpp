@@ -20,14 +20,22 @@ namespace Banshee
 		glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 
 		m_Window = glfwCreateWindow(_width, _height, _title, nullptr, nullptr);
-		assert(m_Window != nullptr);
+		if (!m_Window)
+		{
+			glfwTerminate();
+			throw std::runtime_error("ERROR: Failed to create GLFW window");
+		}
+
 		BE_LOG(LogCategory::Info, "[WINDOW]: Created window");
 	}
 
 	Window::~Window()
 	{
-		glfwDestroyWindow(m_Window);
-		m_Window = nullptr;
+		if (m_Window)
+		{
+			glfwDestroyWindow(m_Window);
+			m_Window = nullptr;
+		}
 
 		glfwTerminate();
 	}
