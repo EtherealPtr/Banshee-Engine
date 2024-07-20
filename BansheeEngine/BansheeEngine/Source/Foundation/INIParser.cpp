@@ -6,36 +6,46 @@
 
 namespace Banshee
 {
-	EngineConfig INIParser::ParseConfigSettings(const char* _filePath)
+	EngineConfig INIParser::ParseConfigSettings(const std::string& _filePath)
 	{
 		EngineConfig config{};
 
-		std::ifstream file = ResourceManager::Instance().GetFileManager()->ReadFile(_filePath);
+		std::ifstream file = ResourceManager::Instance().GetFileManager()->ReadFile(_filePath.c_str());
+		if (!file.is_open()) 
+		{
+			return config;
+		}
 
 		std::string line = "";
-		while (std::getline(file, line))
+
+		while (std::getline(file, line)) 
 		{
 			// Skip comments or empty lines
-			if (line.empty() || line[0] == '#' || line[0] == ';') continue;
-
-			// Split the line into key-value pairs
-			std::istringstream iss(line);
-			std::string key = "", value = "";
-
-			if (std::getline(std::getline(iss, key, '='), value))
+			if (line.empty() || line.front() == '#' || line.front() == ';') 
 			{
-				if (key == "WindowTitle")
-				{
-					config.windowTitle = value;
-				}
-				else if (key == "WindowWidth")
-				{
-					config.windowWidth = static_cast<uint16>(std::stoi(value));
-				}
-				else if (key == "WindowHeight")
-				{
-					config.windowHeight = static_cast<uint16>(std::stoi(value));
-				}
+				continue;
+			}
+
+			size_t delimiterPos = line.find('=');
+			if (delimiterPos == std::string::npos) 
+			{
+				continue;
+			}
+
+			const std::string key = line.substr(0, delimiterPos);
+			const std::string value = line.substr(delimiterPos + 1);
+
+			if (key == "WindowTitle")
+			{
+				config.windowTitle = value;
+			}
+			else if (key == "WindowWidth")
+			{
+				config.windowWidth = static_cast<uint16>(std::stoi(value));
+			}
+			else if (key == "WindowHeight") 
+			{
+				config.windowHeight = static_cast<uint16>(std::stoi(value));
 			}
 		}
 

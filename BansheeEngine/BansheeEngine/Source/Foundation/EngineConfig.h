@@ -7,7 +7,7 @@ namespace Banshee
 {
 	struct EngineConfig
 	{
-		EngineConfig() :
+		EngineConfig() noexcept :
 			windowWidth(400),
 			windowHeight(300),
 			windowTitle("Untitled")
