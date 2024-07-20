@@ -8,11 +8,11 @@ using namespace Banshee;
 class Player
 {
 public:
-	Player()
+	Player() : 
+		m_Entity(EntityManager::Instance().CreateEntity()),
+		m_Transform(m_Entity->AddComponent<TransformComponent>())
 	{
-		m_Entity = EntityManager::Instance().CreateEntity();
 		m_Entity->AddComponent<MeshComponent>("Models/scene2.glb");
-		m_Transform = m_Entity->AddComponent<TransformComponent>();
 		m_Transform->SetPosition(glm::vec3(0.0f, 0.0f, -1.0f));
 	}
 

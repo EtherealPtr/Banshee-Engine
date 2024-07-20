@@ -9,12 +9,12 @@ using namespace Banshee;
 class Light
 {
 public:
-	Light()
+	Light() : 
+		m_Entity(EntityManager::Instance().CreateEntity()),
+		m_Transform(m_Entity->AddComponent<TransformComponent>())
 	{
-		m_Entity = EntityManager::Instance().CreateEntity();
 		m_Entity->AddComponent<MeshComponent>(PrimitiveShape::Cube, ShaderType::Unlit);
 		m_Entity->AddComponent<LightComponent>();
-		m_Transform = m_Entity->AddComponent<TransformComponent>();
 		m_Transform->SetPosition(glm::vec3(0.0f, 5.0f, 10.0f));
 	}
 
