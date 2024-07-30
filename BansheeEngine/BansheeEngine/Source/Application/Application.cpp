@@ -1,6 +1,6 @@
 #include "Application.h"
-#include "Foundation/Input/Input.h"
 #include "Foundation/Logging/Logger.h"
+#include "Foundation/Input/Input.h"
 #include "Foundation/INIParser.h"
 #include "Foundation/Timer/Timer.h"
 #include "Graphics/Window.h"
@@ -16,7 +16,7 @@ namespace Banshee
 	{
 		BE_LOG(LogCategory::Trace, "[APPLICATION]: Banshee initializing");
 		const EngineConfig configSettings = m_INIParser->ParseConfigSettings("config.ini");
-		m_Window = std::make_unique<Window>(configSettings.windowWidth, configSettings.windowHeight, configSettings.windowTitle.c_str());
+		m_Window = std::make_unique<Window>(configSettings.m_WindowWidth, configSettings.m_WindowHeight, configSettings.m_WindowTitle.c_str());
 		Input::Instance().Initialize(m_Window->GetWindow());
 	}
 
