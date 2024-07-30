@@ -7,20 +7,10 @@ namespace Banshee
 {
 	FileManager::FileManager() : 
 		m_GeneratedDirPath(""),
-		m_EngineResDirPath(""),
-		m_LogFile{}
+		m_EngineResDirPath("")
 	{
 		InitializeDirPaths();
 		CreateGeneratedFolder();
-		OpenLogFile();
-	}
-
-	FileManager::~FileManager()
-	{
-		if (m_LogFile.is_open())
-		{
-			m_LogFile.close();
-		}
 	}
 
 	void FileManager::InitializeDirPaths()
@@ -55,24 +45,6 @@ namespace Banshee
 		}
 
 		std::filesystem::create_directory(m_GeneratedDirPath);
-	}
-
-	void FileManager::OpenLogFile()
-	{
-		m_LogFile.open(m_GeneratedDirPath + "/logs.txt", std::ios::out);
-
-		if (!m_LogFile)
-		{
-			BE_LOG(LogCategory::Warning, "[FILEMANAGER]: Failed to open log file");
-		}
-	}
-
-	void FileManager::WriteToLogFile(const char* _logData)
-	{
-		if (m_LogFile.is_open()) 
-		{
-			m_LogFile << _logData << '\n';
-		}
 	}
 
 	std::vector<char> FileManager::ReadBinaryFile(const char* _fileName)
