@@ -7,7 +7,7 @@ namespace Banshee
 {
 	struct InputBinding
 	{
-		int32 key;
-		std::function<void()> callback;
+		int32 m_Key;
+		std::function<void()> m_Callback;
 	};
 } // End of Banshee namespace

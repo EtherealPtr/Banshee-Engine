@@ -66,7 +66,7 @@
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(ProjectDir)Source;$(ProjectDir)Dependencies\glfw-3.3.8\include;$(ProjectDir)Dependencies\vulkan\include;$(ProjectDir)Dependencies\stb_image;$(ProjectDir)Dependencies\glm;$(ProjectDir)Dependencies\tinygltf;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <MultiProcessorCompilation>false</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -90,7 +90,7 @@ xcopy /y "$(TargetDir)BansheeEngine.dll" "$(SolutionDir)Binaries\Sandbox-$(Confi
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(ProjectDir)Source;$(ProjectDir)Dependencies\glfw-3.3.8\include;$(ProjectDir)Dependencies\vulkan\include;$(ProjectDir)Dependencies\stb_image;$(ProjectDir)Dependencies\glm;$(ProjectDir)Dependencies\tinygltf;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <MultiProcessorCompilation>false</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -107,6 +107,7 @@ xcopy /y "$(TargetDir)BansheeEngine.dll" "$(SolutionDir)Binaries\Sandbox-$(Confi
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Foundation\Input\KeyboardMouseInput.cpp" />
     <ClCompile Include="Source\Foundation\Logging\Logger.cpp" />
     <ClCompile Include="Source\Foundation\Observer\Subject.cpp" />
     <ClCompile Include="Source\Foundation\Paths\PathManager.cpp" />
@@ -117,7 +118,6 @@ xcopy /y "$(TargetDir)BansheeEngine.dll" "$(SolutionDir)Binaries\Sandbox-$(Confi
     <ClCompile Include="Source\Graphics\Components\MeshComponent.cpp" />
     <ClCompile Include="Source\Foundation\ResourceManager\Image\ImageManager.cpp" />
     <ClCompile Include="Source\Foundation\ResourceManager\ResourceManager.cpp" />
-    <ClCompile Include="Source\Foundation\Input\Input.cpp" />
     <ClCompile Include="Source\Graphics\Systems\MeshSystem.cpp" />
     <ClCompile Include="Source\Foundation\Entity\EntityManager.cpp" />
     <ClCompile Include="Source\Foundation\Entity\Entity.cpp" />
@@ -155,6 +155,8 @@ xcopy /y "$(TargetDir)BansheeEngine.dll" "$(SolutionDir)Binaries\Sandbox-$(Confi
   <ItemGroup>
     <ClInclude Include="Dependencies\tinygltf\tiny_gltf.h" />
     <ClInclude Include="Dependencies\tinyobjloader\tiny_obj_loader.h" />
+    <ClInclude Include="Source\Foundation\Input\InputDevice.h" />
+    <ClInclude Include="Source\Foundation\Input\KeyboardMouseInput.h" />
     <ClInclude Include="Source\Foundation\Observer\Subject.h" />
     <ClInclude Include="Source\Foundation\Paths\PathManager.h" />
     <ClInclude Include="Source\Foundation\Timer\Timer.h" />
@@ -171,8 +173,6 @@ xcopy /y "$(TargetDir)BansheeEngine.dll" "$(SolutionDir)Binaries\Sandbox-$(Confi
     <ClInclude Include="Source\Foundation\ResourceManager\ResourceManager.h" />
     <ClInclude Include="Source\Foundation\Input\InputMapping.h" />
     <ClInclude Include="Source\Foundation\Input\InputBinding.h" />
-    <ClInclude Include="Source\Foundation\Input\Input.h" />
-    <ClInclude Include="Source\Foundation\Input\InputSystem.h" />
     <ClInclude Include="Source\Graphics\Systems\MeshSystem.h" />
     <ClInclude Include="Source\Graphics\Components\MeshComponent.h" />
     <ClInclude Include="Source\Foundation\Entity\EntityManager.h" />
