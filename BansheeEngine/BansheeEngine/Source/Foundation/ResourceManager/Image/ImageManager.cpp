@@ -30,12 +30,12 @@ namespace Banshee
 		whiteTexturePixels[1] = 255;
 		whiteTexturePixels[2] = 255;
 		whiteTexturePixels[3] = 255;
-		image->pixels = whiteTexturePixels;
-		image->imageWidth = 1;
-		image->imageHeight = 1;
-		image->imageSize = 4;
+		image->m_Pixels = whiteTexturePixels;
+		image->m_ImageWidth = 1;
+		image->m_ImageHeight = 1;
+		image->m_ImageSize = 4;
 
-		image->imageIndex = static_cast<uint16>(m_Images.size());
+		image->m_ImageIndex = m_Images.size();
 		m_Images.emplace_back(image);
 	}
 
@@ -44,50 +44,50 @@ namespace Banshee
 		const std::shared_ptr<Image> image = std::make_shared<Image>();
 
 		int32 textureChannels = 0;
-		image->pixels = stbi_load(_pathToImage, &image->imageWidth, &image->imageHeight, &textureChannels, STBI_rgb_alpha);
-		image->imageSize = image->imageWidth * image->imageHeight * 4;
+		image->m_Pixels = stbi_load(_pathToImage, &image->m_ImageWidth, &image->m_ImageHeight, &textureChannels, STBI_rgb_alpha);
+		image->m_ImageSize = image->m_ImageWidth * image->m_ImageHeight * 4;
 
-		if (!image->pixels)
+		if (!image->m_Pixels)
 		{
 			BE_LOG(LogCategory::Error, "[RESOURCE]: Failed to load texture image %s", _pathToImage);
 			throw std::runtime_error("ERROR: Failed to load texture image");
 		}
 
-		image->imageIndex = static_cast<uint16>(m_Images.size());
+		image->m_ImageIndex = m_Images.size();
 		m_Images.emplace_back(image);
 		BE_LOG(LogCategory::Trace, "[RESOURCE]: Loaded image %s", _pathToImage);
 
-		return image->imageIndex;
+		return image->m_ImageIndex;
 	}
 
-	uint16 ImageManager::LoadImageFromMemory(const unsigned char* _bytes, const int _size)
+	uint16 ImageManager::LoadImageFromMemory(const unsigned char* _bytes, const int32 _size)
 	{
 		const std::shared_ptr<Image> image = std::make_shared<Image>();
 
 		int32 textureChannels = 0;
-		image->pixels = stbi_load_from_memory(_bytes, _size, &image->imageWidth, &image->imageHeight, &textureChannels, STBI_rgb_alpha);
-		image->imageSize = image->imageWidth * image->imageHeight * 4;
+		image->m_Pixels = stbi_load_from_memory(_bytes, _size, &image->m_ImageWidth, &image->m_ImageHeight, &textureChannels, STBI_rgb_alpha);
+		image->m_ImageSize = image->m_ImageWidth * image->m_ImageHeight * 4;
 
-		if (!image->pixels)
+		if (!image->m_Pixels)
 		{
 			BE_LOG(LogCategory::Error, "[RESOURCE]: Failed to load texture image from memory");
 			throw std::runtime_error("ERROR: Failed to load texture image from memory");
 		}
 
-		image->imageIndex = static_cast<uint16>(m_Images.size());
+		image->m_ImageIndex = m_Images.size();
 		m_Images.emplace_back(image);
 		BE_LOG(LogCategory::Trace, "[RESOURCE]: Loaded image from memory");
 
-		return image->imageIndex;
+		return image->m_ImageIndex;
 	}
 
 	void ImageManager::UnloadImages() const
 	{
 		for (const auto& image : m_Images)
 		{
-			if (image->pixels)
+			if (image->m_Pixels)
 			{
-				stbi_image_free(image->pixels);
+				stbi_image_free(image->m_Pixels);
 			}
 		}
 

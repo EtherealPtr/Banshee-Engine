@@ -1,7 +1,6 @@
 #include "VulkanGraphicsPipeline.h"
 #include "VulkanUtils.h"
 #include "Foundation/ResourceManager/ResourceManager.h"
-#include "Foundation/ResourceManager/File/FileManager.h"
 #include "Foundation/Logging/Logger.h"
 #include "Graphics/Vertex.h"
 #include "Graphics/MVP.h"
@@ -23,8 +22,8 @@ namespace Banshee
 		BE_LOG(LogCategory::Trace, "[GRAPHICS PIPELINE]: Using vertex shader %s", _vertShaderPath);
 		BE_LOG(LogCategory::Trace, "[GRAPHICS PIPELINE]: Using frag shader %s", _fragShaderPath);
 
-		auto vertShaderBinary = ResourceManager::Instance().GetFileManager()->ReadBinaryFile(_vertShaderPath);
-		auto fragShaderBinary = ResourceManager::Instance().GetFileManager()->ReadBinaryFile(_fragShaderPath);
+		auto vertShaderBinary = g_ResourceManager.ReadBinaryFile(_vertShaderPath);
+		auto fragShaderBinary = g_ResourceManager.ReadBinaryFile(_fragShaderPath);
 
 		VkShaderModule vertexShaderModule = VulkanUtils::CreateShaderModule(_logicalDevice, vertShaderBinary);
 		VkShaderModule fragmentShaderModule = VulkanUtils::CreateShaderModule(_logicalDevice, fragShaderBinary);

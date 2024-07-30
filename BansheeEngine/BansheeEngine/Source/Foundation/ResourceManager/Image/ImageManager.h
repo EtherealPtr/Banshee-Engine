@@ -16,8 +16,13 @@ namespace Banshee
 
 		const std::vector<std::shared_ptr<Image>>& GetImages() const noexcept { return m_Images; }
 		uint16 LoadImage(const char* _pathToImage);
-		uint16 LoadImageFromMemory(const unsigned char* _bytes, const int _size);
+		uint16 LoadImageFromMemory(const unsigned char* _bytes, const int32 _size);
 		void UnloadImages() const;
+
+		ImageManager(const ImageManager&) = delete;
+		ImageManager(ImageManager&&) = delete;
+		void operator=(const ImageManager&) = delete;
+		void operator=(ImageManager&&) = delete;
 
 	private:
 		void CreateDefaultImage();

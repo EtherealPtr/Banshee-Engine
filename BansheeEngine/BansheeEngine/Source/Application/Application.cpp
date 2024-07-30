@@ -1,5 +1,4 @@
 #include "Application.h"
-#include "Foundation/Paths/PathManager.h"
 #include "Foundation/Logging/Logger.h"
 #include "Foundation/INIParser.h"
 #include "Foundation/Timer/Timer.h"
@@ -14,7 +13,6 @@ namespace Banshee
 		m_Renderer{ nullptr },
 		m_Timer{ std::make_unique<Timer>() }
 	{
-		PathManager::InitializePaths();
 		BE_LOG(LogCategory::Trace, "[APPLICATION]: Banshee initializing");
 		const EngineConfig configSettings = m_INIParser->ParseConfigSettings("config.ini");
 		m_Window = std::make_unique<Window>(configSettings.m_WindowWidth, configSettings.m_WindowHeight, configSettings.m_WindowTitle.c_str());

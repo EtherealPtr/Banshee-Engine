@@ -8,6 +8,8 @@ namespace Banshee
 {
 	FileManager::FileManager() 
 	{
+		PathManager::InitializePaths();
+
 		if (!std::filesystem::exists(PathManager::GetGeneratedDirPath()))
 		{
 			std::filesystem::create_directory(PathManager::GetGeneratedDirPath());

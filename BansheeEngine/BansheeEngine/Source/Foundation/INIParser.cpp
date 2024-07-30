@@ -1,13 +1,12 @@
 #include "INIParser.h"
 #include "Foundation/ResourceManager/ResourceManager.h"
-#include "Foundation/ResourceManager/File/FileManager.h"
 #include "Foundation/Logging/Logger.h"
 
 namespace Banshee
 {
 	const EngineConfig& INIParser::ParseConfigSettings(const std::string& _filePath)
 	{
-		std::ifstream file = ResourceManager::Instance().GetFileManager()->ReadFile(_filePath.c_str());
+		std::ifstream file = g_ResourceManager.ReadFile(_filePath.c_str());
 		if (!file.is_open())
 		{
 			return m_Config;
