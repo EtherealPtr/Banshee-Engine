@@ -24,6 +24,9 @@ The next update will bring the following enhancements:
 <li> Support for multiple lights in a scene </li>
 </ul>
 
+<h1>Getting Started</h1>
+To get started, clone the repository and open the solution file in Microsoft Visual Studio 2022. After that, simply click the Local Windows Debugger button to build and run the project. Please note that a project build system is not yet in place, but one will be coming soon. Additionally, Banshee has only been tested on Windows, so compatibility with other operating systems is not guaranteed.
+
 <h1>The Plan</h1>
 Banshee aims to be a user-friendly, plug-and-play engine. It outputs core functionality to a Dynamic-Link Library (DLL) file, enabling users to link their projects with the Banshee library and start rendering shapes or custom models immediately. The engine’s robust input handling system allows easy control of shapes using a mouse and keyboard.
 
