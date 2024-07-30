@@ -45,7 +45,7 @@ namespace Banshee
 		return glfwWindowShouldClose(m_Window);
 	}
 
-	void Window::Update() noexcept
+	void Window::PollEvents() noexcept
 	{
 		glfwPollEvents();
 	}

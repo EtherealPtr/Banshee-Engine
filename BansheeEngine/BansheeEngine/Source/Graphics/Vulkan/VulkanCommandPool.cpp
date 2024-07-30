@@ -5,7 +5,7 @@
 
 namespace Banshee
 {
-	VulkanCommandPool::VulkanCommandPool(const VkDevice& _logicalDevice, const unsigned int _queueFamilyIndex) :
+	VulkanCommandPool::VulkanCommandPool(const VkDevice& _logicalDevice, const uint32 _queueFamilyIndex) :
 		m_LogicalDevice(_logicalDevice),
 		m_CommandPool(VK_NULL_HANDLE)
 	{

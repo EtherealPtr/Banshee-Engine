@@ -1,7 +1,6 @@
 #include "VulkanTextureManager.h"
 #include "VulkanUtils.h"
 #include "Foundation/ResourceManager/ResourceManager.h"
-#include "Foundation/ResourceManager/Image/ImageManager.h"
 #include "Foundation/ResourceManager/Image/Image.h"
 #include "Foundation/Logging/Logger.h"
 #include <vulkan/vulkan.h>
@@ -9,7 +8,7 @@
 
 namespace Banshee
 {
-	VulkanTextureManager::VulkanTextureManager(const VkDevice& _device, const VkPhysicalDevice& _gpu, const VkQueue& _graphicsQueue, const VkCommandPool& _commandPool) :
+	VulkanTextureManager::VulkanTextureManager(const VkDevice& _device, const VkPhysicalDevice& _gpu, const VkQueue& _graphicsQueue, const VkCommandPool& _commandPool) noexcept :
 		m_LogicalDevice(_device),
 		m_PhysicalDevice(_gpu),
 		m_GraphicsQueue(_graphicsQueue),
@@ -29,11 +28,11 @@ namespace Banshee
 
 	void VulkanTextureManager::UploadTextures()
 	{
-		const std::vector<std::shared_ptr<Image>>& images = ResourceManager::Instance().GetImageManager()->GetImages();
+		const std::vector<std::shared_ptr<Image>>& images = g_ResourceManager.GetImages();
 
 		for (const auto& image : images)
 		{
-			CreateStagingBuffer(image->imageSize, image->pixels, image->imageWidth, image->imageHeight);
+			CreateStagingBuffer(image->m_ImageSize, image->m_Pixels, image->m_ImageWidth, image->m_ImageHeight);
 		}
 	}
 

@@ -1,7 +1,6 @@
 #include "ModelLoadingSystem.h"
 #include "Foundation/Logging/Logger.h"
 #include "Foundation/ResourceManager/ResourceManager.h"
-#include "Foundation/ResourceManager/Image/ImageManager.h"
 #include "Graphics/Components/MeshComponent.h"
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtc/type_ptr.hpp"
@@ -19,7 +18,7 @@ namespace Banshee
 		auto* textureIds = data->first;
 		auto* textureIdMap = data->second;
 
-		const uint16 textureId = ResourceManager::Instance().GetImageManager()->LoadImageFromMemory(_bytes, _size);
+		const uint16 textureId = g_ResourceManager.LoadImageFromMemory(_bytes, _size);
 		textureIds->push_back(textureId);
 		(*textureIdMap)[_image_idx] = textureId;
 

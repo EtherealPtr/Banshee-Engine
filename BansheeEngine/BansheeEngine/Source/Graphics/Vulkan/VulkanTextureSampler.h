@@ -12,7 +12,7 @@ namespace Banshee
 		VulkanTextureSampler(const VkDevice& _device, const VkPhysicalDevice& _gpu);
 		~VulkanTextureSampler();
 
-		VkSampler Get() const { return m_TextureSampler; }
+		VkSampler Get() const noexcept { return m_TextureSampler; }
 
 	private:
 		VkDevice m_LogicalDevice;

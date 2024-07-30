@@ -11,7 +11,7 @@ namespace Banshee
 		VulkanInstance();
 		~VulkanInstance();
 
-		VkInstance Get() const { return m_Instance; }
+		VkInstance Get() const noexcept { return m_Instance; }
 
 	private:
 		void SetupDebugCallback();

@@ -32,7 +32,7 @@ namespace Banshee
 	class VulkanRenderer
 	{
 	public:
-		VulkanRenderer(const Window* _window);
+		explicit VulkanRenderer(const Window* _window);
 		~VulkanRenderer() noexcept;
 
 		void DrawFrame(const double _deltaTime);
@@ -41,7 +41,6 @@ namespace Banshee
 		void AllocateDynamicBufferSpace();
 		void UpdateMaterialData();
 		void UpdateLightData();
-		void RegisterLightObservers() noexcept;
 		void UpdateDescriptorSets(const uint8 _descriptorSetIndex);
 		void RecordRenderCommands(const uint8 _imgIndex);
 		void FetchGraphicsComponents() const;

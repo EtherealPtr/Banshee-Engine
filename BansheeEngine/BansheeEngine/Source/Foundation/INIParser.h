@@ -7,6 +7,9 @@ namespace Banshee
 	class INIParser
 	{
 	public:
-		static EngineConfig ParseConfigSettings(const std::string& _filePath);
+		const EngineConfig& ParseConfigSettings(const std::string& _filePath);
+
+	private:
+		EngineConfig m_Config{};
 	};
 } // End of Banshee namespace

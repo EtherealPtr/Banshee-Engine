@@ -10,7 +10,7 @@ typedef enum VkDescriptorType VkDescriptorType;
 
 struct DescriptorSetWriteBufferProperties
 {
-	DescriptorSetWriteBufferProperties(const uint32 _binding, const VkDescriptorType _descType, const VkBuffer& _buffer, const uint64 _bufferRance) :
+	DescriptorSetWriteBufferProperties(const uint32 _binding, const VkDescriptorType _descType, const VkBuffer& _buffer, const uint64 _bufferRance) noexcept :
 		binding(_binding),
 		descriptorType(_descType),
 		buffer(_buffer),

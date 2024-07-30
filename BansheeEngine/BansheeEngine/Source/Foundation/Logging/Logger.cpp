@@ -1,58 +1,43 @@
 #include "Logger.h"
-#include "Foundation/ResourceManager/ResourceManager.h"
-#include "Foundation/ResourceManager/File/FileManager.h"
-#include <stdarg.h>
+#include "Foundation/Paths/PathManager.h"
 
 namespace Banshee
 {
-	#define STRINGIFY(text) #text
-	
-	constexpr auto g_Reset	= "\033[0m";
-	constexpr auto g_Red	= "\033[31m";
-	constexpr auto g_Green	= "\033[32m";
-	constexpr auto g_Yellow	= "\033[33m";
+	const Logger g_Logger{};
 
-	Logger& Logger::Instance()
+	Logger::Logger() :
+		m_LogFile{},
+		m_LogEvent{}
 	{
-		static Logger s_Logger;
-		return s_Logger;
+		m_LogEvent = [this](const char* _logData) { WriteToLogFile(_logData); };
 	}
 
-	void Logger::PrintLog(const LogCategory _category, const char* _format, ...)
+	Logger::~Logger()
 	{
-		va_list argList = nullptr;
-		va_start(argList, _format);
-
-		const std::string categoryText = GetLogCategoryName(_category);
-
-		const uint16 size = 1024;
-		char userLog[size]{};
-		vsnprintf_s(userLog, size, _format, argList);
-		va_end(argList);
-
-		const std::string outputLog = categoryText + userLog;
-
-		switch (_category)
+		if (m_LogFile.is_open())
 		{
-		case LogCategory::Trace:	printf("%s%s\n", g_Reset, outputLog.c_str()); break;
-		case LogCategory::Info:		printf("%s%s\n", g_Green, outputLog.c_str()); break;
-		case LogCategory::Warning:	printf("%s%s\n", g_Yellow, outputLog.c_str()); break;
-		case LogCategory::Error:	printf("%s%s\n", g_Red, outputLog.c_str()); break;
-		default:					printf("%s\n", outputLog.c_str());
+			m_LogFile.close();
 		}
-
-		ResourceManager::Instance().GetFileManager()->WriteToLogFile(outputLog.c_str());
 	}
 
-	std::string Logger::GetLogCategoryName(const LogCategory _category)
+	void Logger::OpenLogFile()
 	{
-		switch (_category)
+		if (m_LogFile.is_open())
 		{
-		case LogCategory::Trace:	return STRINGIFY([TRACE]);
-		case LogCategory::Info:		return STRINGIFY([INFO]);
-		case LogCategory::Warning:	return STRINGIFY([WARNING]);
-		case LogCategory::Error:	return STRINGIFY([ERROR]);
-		default:					return "";
+			return;
 		}
+
+		m_LogFile.open(PathManager::GetGeneratedDirPath() + "logs.txt", std::ios::out | std::ios::trunc);
+		
+		if (!m_LogFile.is_open())
+		{
+			throw std::runtime_error("ERROR: Failed to open log file.");
+		}
+	}
+
+	void Logger::WriteToLogFile(const char* _logData)
+	{
+		OpenLogFile();
+		m_LogFile << _logData << '\n';
 	}
 } // End of Banshee namespace

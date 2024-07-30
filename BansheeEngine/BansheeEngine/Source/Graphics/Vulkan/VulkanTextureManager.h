@@ -17,7 +17,7 @@ namespace Banshee
 {
 	struct VulkanImage
 	{
-		VulkanImage(const VkImage& _image, const VkImageView _imageView, const VkDeviceMemory& _imageMemory) :
+		VulkanImage(const VkImage& _image, const VkImageView _imageView, const VkDeviceMemory& _imageMemory) noexcept :
 			image(_image),
 			imageView(_imageView),
 			imageMemory(_imageMemory)
@@ -31,7 +31,7 @@ namespace Banshee
 	class VulkanTextureManager
 	{
 	public:
-		VulkanTextureManager(const VkDevice& _device, const VkPhysicalDevice& _gpu, const VkQueue& _graphicsQueue, const VkCommandPool& _commandPool);
+		VulkanTextureManager(const VkDevice& _device, const VkPhysicalDevice& _gpu, const VkQueue& _graphicsQueue, const VkCommandPool& _commandPool) noexcept;
 		~VulkanTextureManager();
 
 		std::vector<VkImageView> GetTextureImageViews() const;
