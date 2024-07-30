@@ -13,7 +13,7 @@ namespace Banshee
 		~Window();
 
 		bool ShouldWindowClose() const noexcept;
-		void Update() noexcept;
+		void PollEvents() noexcept;
 		GLFWwindow* GetWindow() const noexcept { return m_Window; }
 		uint16 GetWidth() const noexcept;
 		uint16 GetHeight() const noexcept;
