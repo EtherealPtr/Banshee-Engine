@@ -1,6 +1,7 @@
 #include "ResourceManager.h"
 #include "File/FileManager.h"
 #include "Image/ImageManager.h"
+#include "Foundation/Paths/PathManager.h"
 
 namespace Banshee
 {
@@ -17,13 +18,8 @@ namespace Banshee
 
     uint16 ResourceManager::LoadImageResource(const char* _pathToImage)
     {
-        const std::string fullPath = m_FileManager->GetEngineResDirPath() + _pathToImage;
+        const std::string fullPath = PathManager::GetEngineResDirPath() + _pathToImage;
         return m_ImageManager->LoadImage(fullPath.c_str());
-    }
-
-    const char* ResourceManager::GetEngineResDirPath() noexcept
-    {
-        return m_FileManager->GetEngineResDirPath().c_str();
     }
 
     std::string ResourceManager::GetAssetName(const std::string& _assetName)

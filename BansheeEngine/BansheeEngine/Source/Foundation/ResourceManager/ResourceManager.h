@@ -17,7 +17,6 @@ namespace Banshee
 		uint16 LoadImageResource(const char* _pathToImage);
 		const std::shared_ptr<FileManager>& GetFileManager() const noexcept { return m_FileManager; }
 		const std::shared_ptr<ImageManager>& GetImageManager() const noexcept { return m_ImageManager; }
-		const char* GetEngineResDirPath() noexcept;
 		std::string GetAssetName(const std::string& _assetName);
 
 		ResourceManager(const ResourceManager&) = delete;
@@ -25,7 +24,6 @@ namespace Banshee
 		ResourceManager(ResourceManager&&) = delete;
 		ResourceManager& operator=(ResourceManager&&) = delete;
 
-	private:
 		ResourceManager();
 		~ResourceManager() = default;
 

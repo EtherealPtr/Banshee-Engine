@@ -1,4 +1,5 @@
 #include "MeshComponent.h"
+#include "Foundation/Paths/PathManager.h"
 #include "Foundation/ResourceManager/ResourceManager.h"
 
 namespace Banshee
@@ -36,6 +37,6 @@ namespace Banshee
 	const std::string MeshComponent::GetModelPath() const
 	{
 		const std::string modelsFolder = "Models/";
-		return ResourceManager::Instance().GetEngineResDirPath() + modelsFolder + m_ModelName;
+		return PathManager::GetEngineResDirPath() + modelsFolder + m_ModelName;
 	}
 } // End of Banshee namespace

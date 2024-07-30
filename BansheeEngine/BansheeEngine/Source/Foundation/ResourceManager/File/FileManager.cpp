@@ -1,55 +1,22 @@
 #include "FileManager.h"
 #include "Foundation/Logging/Logger.h"
 #include "Foundation/DLLConfig.h"
+#include "Foundation/Paths/PathManager.h"
 #include <filesystem>
 
 namespace Banshee
 {
-	FileManager::FileManager() : 
-		m_GeneratedDirPath(""),
-		m_EngineResDirPath("")
+	FileManager::FileManager() 
 	{
-		InitializeDirPaths();
-		CreateGeneratedFolder();
-	}
-
-	void FileManager::InitializeDirPaths()
-	{
-		std::filesystem::path currentFilePath(__FILE__);
-		std::filesystem::path currentFileDirectory = currentFilePath.parent_path();
-
-		// Traverse the directory tree upwards until we find the "Res" folder
-		for (std::filesystem::path directory = currentFileDirectory; !directory.empty(); directory = directory.parent_path()) 
+		if (!std::filesystem::exists(PathManager::GetGeneratedDirPath()))
 		{
-			for (const auto& entry : std::filesystem::directory_iterator(directory)) 
-			{
-				if (entry.is_directory() && entry.path().filename() == "Res")
-				{
-					m_GeneratedDirPath = entry.path().parent_path().generic_string() + '/';
-					m_EngineResDirPath = entry.path().generic_string() + '/';
-					return;
-				}
-			}
+			std::filesystem::create_directory(PathManager::GetGeneratedDirPath());
 		}
-		
-		BE_LOG(LogCategory::Warning, "[FILEMANAGER]: Failed to initialize paths");
-	}
-
-	void FileManager::CreateGeneratedFolder()
-	{
-		m_GeneratedDirPath += "Banshee_Generated/";
-
-		if (std::filesystem::exists(m_GeneratedDirPath))
-		{
-			return;
-		}
-
-		std::filesystem::create_directory(m_GeneratedDirPath);
 	}
 
 	std::vector<char> FileManager::ReadBinaryFile(const char* _fileName)
 	{
-		std::ifstream inputFile(m_EngineResDirPath + _fileName, std::ios::binary | std::ios::ate);
+		std::ifstream inputFile(PathManager::GetEngineResDirPath() + _fileName, std::ios::binary | std::ios::ate);
 		if (!inputFile.is_open())
 		{
 			BE_LOG(LogCategory::Warning, "[FILEMANAGER]: Failed to read binary file: %s", _fileName);
@@ -67,7 +34,8 @@ namespace Banshee
 	
 	std::ifstream FileManager::ReadFile(const char* _filePath) const
 	{
-		std::ifstream file(m_EngineResDirPath + _filePath);
+		const std::string fullPath = PathManager::GetEngineResDirPath() + _filePath;
+		std::ifstream file(fullPath);
 
 		if (!file.is_open())
 		{

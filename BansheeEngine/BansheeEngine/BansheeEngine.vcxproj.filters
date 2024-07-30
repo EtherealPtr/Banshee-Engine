@@ -144,6 +144,9 @@
     <ClCompile Include="Source\Foundation\Logging\Logger.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Foundation\Paths\PathManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\foundation\Logging\Logger.h">
@@ -348,6 +351,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Foundation\Observer\Subject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Foundation\Paths\PathManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

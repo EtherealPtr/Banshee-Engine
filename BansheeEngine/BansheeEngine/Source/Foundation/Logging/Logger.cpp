@@ -1,22 +1,15 @@
 #include "Logger.h"
+#include "Foundation/Paths/PathManager.h"
 
 namespace Banshee
 {
-	const Logger g_Logger;
+	const Logger g_Logger{};
 
-	Logger::Logger()
-		: m_LogFile{}
+	Logger::Logger() :
+		m_LogFile{},
+		m_LogEvent{}
 	{
-		if (!m_LogFile.is_open())
-		{
-			m_LogFile.open("C:/Projects/Banshee-Engine/BansheeEngine/BansheeEngine/Banshee_Generated/logs.txt", std::ios::out | std::ios::app);
-			if (!m_LogFile)
-			{
-				throw std::runtime_error("ERROR: Failed to open log file.");
-			}
-		}
-
-		m_LogEvent = [this](const char* logData) { WriteToLogFile(logData); };
+		m_LogEvent = [this](const char* _logData) { WriteToLogFile(_logData); };
 	}
 
 	Logger::~Logger()
@@ -27,11 +20,24 @@ namespace Banshee
 		}
 	}
 
-	void Logger::WriteToLogFile(const char* _logData)
+	void Logger::OpenLogFile()
 	{
 		if (m_LogFile.is_open())
 		{
-			m_LogFile << _logData << '\n';
+			return;
 		}
+
+		m_LogFile.open(PathManager::GetGeneratedDirPath() + "logs.txt", std::ios::out | std::ios::trunc);
+		
+		if (!m_LogFile.is_open())
+		{
+			throw std::runtime_error("ERROR: Failed to open log file.");
+		}
+	}
+
+	void Logger::WriteToLogFile(const char* _logData)
+	{
+		OpenLogFile();
+		m_LogFile << _logData << '\n';
 	}
 } // End of Banshee namespace

@@ -109,6 +109,7 @@ xcopy /y "$(TargetDir)BansheeEngine.dll" "$(SolutionDir)Binaries\Sandbox-$(Confi
   <ItemGroup>
     <ClCompile Include="Source\Foundation\Logging\Logger.cpp" />
     <ClCompile Include="Source\Foundation\Observer\Subject.cpp" />
+    <ClCompile Include="Source\Foundation\Paths\PathManager.cpp" />
     <ClCompile Include="Source\Foundation\Timer\Timer.cpp" />
     <ClCompile Include="Source\Graphics\Components\Light\LightComponent.cpp" />
     <ClCompile Include="Source\Graphics\Systems\ModelLoadingSystem.cpp" />
@@ -155,6 +156,7 @@ xcopy /y "$(TargetDir)BansheeEngine.dll" "$(SolutionDir)Binaries\Sandbox-$(Confi
     <ClInclude Include="Dependencies\tinygltf\tiny_gltf.h" />
     <ClInclude Include="Dependencies\tinyobjloader\tiny_obj_loader.h" />
     <ClInclude Include="Source\Foundation\Observer\Subject.h" />
+    <ClInclude Include="Source\Foundation\Paths\PathManager.h" />
     <ClInclude Include="Source\Foundation\Timer\Timer.h" />
     <ClInclude Include="Source\Graphics\Components\Light\LightComponent.h" />
     <ClInclude Include="Source\Graphics\Components\Light\LightData.h" />

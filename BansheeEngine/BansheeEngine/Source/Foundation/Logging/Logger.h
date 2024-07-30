@@ -17,7 +17,13 @@ namespace Banshee
 		template<typename... Args>
 		void PrintLog(const LogCategory _category, const char* _format, Args... _args) const;
 
+		Logger(const Logger&) = delete;
+		Logger& operator=(const Logger&) = delete;
+		Logger(Logger&&) = delete;
+		Logger& operator=(Logger&&) = delete;
+
 	private:
+		void OpenLogFile();
 		void WriteToLogFile(const char* _logData);
 
 	private:
