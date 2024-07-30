@@ -37,7 +37,7 @@
 
 namespace Banshee
 {
-	constexpr uint64 g_MaxEntities = 512;
+	constexpr uint64 g_MaxEntities{ 512 };
 
 	VulkanRenderer::VulkanRenderer(const Window* _window) :
 		m_VkInstance(std::make_unique<VulkanInstance>()),
@@ -57,7 +57,7 @@ namespace Banshee
 		m_VkDescriptorSetLayout(std::make_unique<VulkanDescriptorSetLayout>(m_VkDevice->GetLogicalDevice())),
 		m_VkDescriptorPool(std::make_unique<VulkanDescriptorPool>(m_VkDevice->GetLogicalDevice(), static_cast<uint16>(m_VkSwapchain->GetImageViews().size()))),
 		m_VkGraphicsPipelineManager(std::make_unique<VulkanGraphicsPipelineManager>(m_VkDevice->GetLogicalDevice(), m_VkRenderPass->Get(), m_VkDescriptorSetLayout->Get(), m_VkSwapchain->GetWidth(), m_VkSwapchain->GetHeight())),
-		m_Camera(std::make_unique<Camera>(45.0f, static_cast<float>(_window->GetWidth()) / _window->GetHeight(), 0.1f, 100.0f))
+		m_Camera(std::make_unique<Camera>(45.0f, static_cast<float>(_window->GetWidth()) / _window->GetHeight(), 0.1f, 100.0f, _window->GetWindow()))
 	{
 		FetchGraphicsComponents();
 		AllocateDynamicBufferSpace();
@@ -129,9 +129,9 @@ namespace Banshee
 
 		// Sort mesh components based on shader type
 		std::sort(meshComponents.begin(), meshComponents.end(), [](const std::shared_ptr<MeshComponent>& _a, const std::shared_ptr<MeshComponent>& _b) noexcept
-		{
-			return _a->GetShaderType() < _b->GetShaderType();
-		});
+			{
+				return _a->GetShaderType() < _b->GetShaderType();
+			});
 
 		MeshSystem::Instance().SetMeshComponents(meshComponents);
 		LightSystem::Instance().SetLightComponents(lightComponents);
@@ -188,7 +188,7 @@ namespace Banshee
 		const DescriptorSetWriteTextureProperties texturesDescWriteProperties(2, VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE, m_VkTextureManager->GetTextureImageViews(), VK_NULL_HANDLE);
 		const DescriptorSetWriteTextureProperties samplerDescWriteProperties(3, VK_DESCRIPTOR_TYPE_SAMPLER, {}, m_VkTextureSampler->Get());
 		const DescriptorSetWriteBufferProperties lightBufferDescWriteProperties(4, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, m_LightUniformBuffers[_descriptorSetIndex]->GetBuffer(), m_LightUniformBuffers[_descriptorSetIndex]->GetBufferSize());
-		
+
 		const std::vector<DescriptorSetWriteBufferProperties> descriptorSetWriteBufferProperties =
 		{
 			viewProjBufferDescWriteProperties,
@@ -208,7 +208,7 @@ namespace Banshee
 
 		// Update uniform buffer with the ViewProjMatrix
 		ViewProjMatrix viewProjMatrix = m_Camera->GetViewProjMatrix();
-		viewProjMatrix.proj[1][1] *= -1.0f;
+		viewProjMatrix.m_Proj[1][1] *= -1.0f;
 		m_VPUniformBuffers[m_CurrentFrameIndex]->CopyData(&viewProjMatrix);
 
 		UpdateLightData();
@@ -271,7 +271,7 @@ namespace Banshee
 		renderPassInfo.renderArea.extent = VkExtent2D({ m_VkSwapchain->GetWidth(), m_VkSwapchain->GetHeight() });
 
 		// Clear attachments
-        const VkClearColorValue clearColor = { 0.1f, 0.1f, 0.1f, 1.0f };
+		const VkClearColorValue clearColor = { 0.1f, 0.1f, 0.1f, 1.0f };
 		const VkClearDepthStencilValue clearDepthStencil{ 1.0f, 0 };
 
 		std::array<VkClearValue, 2> clearAttachments{};
@@ -301,11 +301,11 @@ namespace Banshee
 		const std::vector<std::shared_ptr<MeshComponent>>& meshComponents = MeshSystem::Instance().GetMeshComponents();
 		for (uint32 i = 0; i < meshComponents.size(); ++i)
 		{
-            glm::mat4 entityModelMatrix = glm::mat4(1.0f);
-            if (auto transform = meshComponents[i]->GetOwner()->GetTransform())
-            {
-                entityModelMatrix = transform->GetModel();
-            }
+			glm::mat4 entityModelMatrix = glm::mat4(1.0f);
+			if (auto transform = meshComponents[i]->GetOwner()->GetTransform())
+			{
+				entityModelMatrix = transform->GetModel();
+			}
 
 			const VulkanVertexBuffer* const vertexBuffer = m_VertexBufferManager->GetVertexBuffer(meshComponents[i]->GetMeshId());
 

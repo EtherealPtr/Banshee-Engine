@@ -10,7 +10,7 @@ namespace Banshee
 	class TransformComponent : public Component
 	{
 	public:
-		BANSHEE_ENGINE TransformComponent() :
+		BANSHEE_ENGINE TransformComponent() noexcept :
 			m_Position(glm::vec3(0.0f, 0.0f, 0.0f)),
 			m_Rotation(glm::quat(1.0f, 0.0f, 0.0f, 0.0f)),
 			m_Scale(glm::vec3(1.0f))

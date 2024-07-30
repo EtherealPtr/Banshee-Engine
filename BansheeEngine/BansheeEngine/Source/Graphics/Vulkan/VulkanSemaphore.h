@@ -14,7 +14,7 @@ namespace Banshee
 		VulkanSemaphore(const VkDevice& _logicalDevice, const uint16 _count = 1);
 		~VulkanSemaphore();
 
-		std::vector<std::pair<VkSemaphore, VkSemaphore>>& Get() { return m_Semaphores; }
+		std::vector<std::pair<VkSemaphore, VkSemaphore>>& Get() noexcept { return m_Semaphores; }
 
 	private:
 		VkDevice m_LogicalDevice;

@@ -5,7 +5,7 @@
 
 namespace Banshee
 {
-	VulkanFence::VulkanFence(const VkDevice& _logicalDevice, const uint16_t _count) :
+	VulkanFence::VulkanFence(const VkDevice& _logicalDevice, const uint16 _count) :
 		m_LogicalDevice(_logicalDevice),
 		m_Fences{ VK_NULL_HANDLE }
 	{
@@ -37,12 +37,12 @@ namespace Banshee
 		}
 	}
 
-	void VulkanFence::Wait(const uint16_t _fenceIndex) const
+	void VulkanFence::Wait(const uint16 _fenceIndex) const noexcept
 	{
 		vkWaitForFences(m_LogicalDevice, 1, &m_Fences[_fenceIndex], VK_TRUE, UINT64_MAX);
 	}
 
-	void VulkanFence::Reset(const uint16_t _fenceIndex) const
+	void VulkanFence::Reset(const uint16 _fenceIndex) const noexcept
 	{
 		vkResetFences(m_LogicalDevice, 1, &m_Fences[_fenceIndex]);
 	}

@@ -18,11 +18,11 @@ namespace Banshee
 		VulkanSwapchain(const VkDevice& _logicalDevice, const VkPhysicalDevice& _gpu, const VkSurfaceKHR& _surface, const uint32 _w, const uint32 _h);
 		~VulkanSwapchain();
 
-		VkSwapchainKHR Get() const { return m_Swapchain; }
-		std::vector<VkImageView> GetImageViews() const { return m_SwapchainImageViews; }
-		uint32 GetFormat() const { return m_Format; }
-		uint32 GetWidth() const { return m_Width; }
-		uint32 GetHeight() const { return m_Height; }
+		VkSwapchainKHR Get() const noexcept { return m_Swapchain; }
+		std::vector<VkImageView> GetImageViews() const noexcept { return m_SwapchainImageViews; }
+		uint32 GetFormat() const noexcept { return m_Format; }
+		uint32 GetWidth() const noexcept { return m_Width; }
+		uint32 GetHeight() const noexcept { return m_Height; }
 
 	private:
 		VkSwapchainKHR m_Swapchain;

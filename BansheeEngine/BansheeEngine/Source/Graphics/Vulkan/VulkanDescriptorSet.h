@@ -19,7 +19,7 @@ namespace Banshee
 
 		void UpdateDescriptorSet(const std::vector<DescriptorSetWriteBufferProperties>& _descriptorSetWriteBufProperties);
 		void UpdateDescriptorSet(const std::vector<DescriptorSetWriteTextureProperties>& _descriptorSetWriteTexProperties);
-		VkDescriptorSet Get() const { return m_DescriptorSet; }
+		VkDescriptorSet Get() const noexcept { return m_DescriptorSet; }
 
 	private:
 		VkDevice m_LogicalDevice;

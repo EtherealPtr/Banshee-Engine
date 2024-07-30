@@ -14,9 +14,9 @@ namespace Banshee
 		VulkanFence(const VkDevice& _logicalDevice, const uint16 _count = 1);
 		~VulkanFence();
 
-		void Wait(const uint16 _fenceIndex = 1) const;
-		void Reset(const uint16 _fenceIndex = 1) const;
-		std::vector<VkFence>& Get() { return m_Fences; }
+		void Wait(const uint16 _fenceIndex = 1) const noexcept;
+		void Reset(const uint16 _fenceIndex = 1) const noexcept;
+		std::vector<VkFence>& Get() noexcept { return m_Fences; }
 
 	private:
 		VkDevice m_LogicalDevice;

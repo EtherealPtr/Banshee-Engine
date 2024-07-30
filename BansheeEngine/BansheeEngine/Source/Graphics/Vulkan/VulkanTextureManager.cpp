@@ -9,7 +9,7 @@
 
 namespace Banshee
 {
-	VulkanTextureManager::VulkanTextureManager(const VkDevice& _device, const VkPhysicalDevice& _gpu, const VkQueue& _graphicsQueue, const VkCommandPool& _commandPool) :
+	VulkanTextureManager::VulkanTextureManager(const VkDevice& _device, const VkPhysicalDevice& _gpu, const VkQueue& _graphicsQueue, const VkCommandPool& _commandPool) noexcept :
 		m_LogicalDevice(_device),
 		m_PhysicalDevice(_gpu),
 		m_GraphicsQueue(_graphicsQueue),
