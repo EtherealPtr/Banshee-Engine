@@ -11,7 +11,7 @@ class DummyObjectOne
 public:
 	DummyObjectOne()
 	{
-		m_Entity = EntityManager::Instance().CreateEntity();
+		m_Entity = g_EntityManager.CreateEntity();
 		const std::shared_ptr<MeshComponent>& meshComponent = m_Entity->AddComponent<MeshComponent>(PrimitiveShape::Cube, ShaderType::Standard, glm::vec3(1.0f, 1.0f, 1.0f));
 		meshComponent->SetTexture("Textures/wood.jpg");
 		m_Transform = m_Entity->AddComponent<TransformComponent>();

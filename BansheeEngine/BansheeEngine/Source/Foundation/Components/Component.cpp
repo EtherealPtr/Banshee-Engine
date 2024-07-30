@@ -17,7 +17,9 @@ namespace Banshee
 	void Component::RegisterObserver(const std::shared_ptr<Observer>& _observer) noexcept
 	{
 		if (!_observer.get())
+		{
 			return;
+		}
 
 		m_Observers.emplace_back(_observer);
 	}

@@ -7,9 +7,14 @@ namespace Banshee
 	class EntityManager
 	{
 	public:
-		BANSHEE_ENGINE static EntityManager& Instance() noexcept;
-		BANSHEE_ENGINE static std::shared_ptr<Entity> CreateEntity();
-		const static std::vector<std::shared_ptr<Entity>>& GetAllEntities() noexcept { return m_Entities; }
+		BANSHEE_ENGINE EntityManager() noexcept :
+			m_TotalEntities{ 0 },
+			m_Entities{}
+		{}
+		BANSHEE_ENGINE ~EntityManager() = default;
+
+		BANSHEE_ENGINE std::shared_ptr<Entity> CreateEntity() const;
+		const std::vector<std::shared_ptr<Entity>>& GetAllEntities() const noexcept { return m_Entities; }
 
 		EntityManager(const EntityManager&) = delete;
 		EntityManager(EntityManager&&) = delete;
@@ -17,12 +22,9 @@ namespace Banshee
 		void operator=(EntityManager&&) = delete;
 
 	private:
-		EntityManager() noexcept {};
-		~EntityManager() {};
-
-	private:
-		static EntityManager s_EntityManager;
-		static uint32 m_TotalEntities;
-		static std::vector<std::shared_ptr<Entity>> m_Entities;
+		mutable uint32 m_TotalEntities;
+		mutable std::vector<std::shared_ptr<Entity>> m_Entities;
 	};
+
+	BANSHEE_ENGINE extern const EntityManager g_EntityManager;
 } // End of Banshee namespace
