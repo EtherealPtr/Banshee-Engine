@@ -2,32 +2,29 @@
 #include "Foundation/ResourceManager/ResourceManager.h"
 #include "Foundation/ResourceManager/File/FileManager.h"
 #include "Foundation/Logging/Logger.h"
-#include <sstream>
 
 namespace Banshee
 {
-	EngineConfig INIParser::ParseConfigSettings(const std::string& _filePath)
+	EngineConfig& INIParser::ParseConfigSettings(const std::string& _filePath)
 	{
-		EngineConfig config{};
-
 		std::ifstream file = ResourceManager::Instance().GetFileManager()->ReadFile(_filePath.c_str());
-		if (!file.is_open()) 
+		if (!file.is_open())
 		{
-			return config;
+			return m_Config;
 		}
 
 		std::string line = "";
 
-		while (std::getline(file, line)) 
+		while (std::getline(file, line))
 		{
 			// Skip comments or empty lines
-			if (line.empty() || line.front() == '#' || line.front() == ';') 
+			if (line.empty() || line.front() == '#' || line.front() == ';')
 			{
 				continue;
 			}
 
-			size_t delimiterPos = line.find('=');
-			if (delimiterPos == std::string::npos) 
+			const size_t delimiterPos = line.find('=');
+			if (delimiterPos == std::string::npos)
 			{
 				continue;
 			}
@@ -37,19 +34,19 @@ namespace Banshee
 
 			if (key == "WindowTitle")
 			{
-				config.windowTitle = value;
+				m_Config.m_WindowTitle = { value.c_str() };
 			}
 			else if (key == "WindowWidth")
 			{
-				config.windowWidth = static_cast<uint16>(std::stoi(value));
+				m_Config.m_WindowWidth = { std::stoul(value) };
 			}
-			else if (key == "WindowHeight") 
+			else if (key == "WindowHeight")
 			{
-				config.windowHeight = static_cast<uint16>(std::stoi(value));
+				m_Config.m_WindowHeight = { std::stoul(value) };
 			}
 		}
 
 		BE_LOG(LogCategory::Info, "[CONFIG]: Loaded config.ini");
-		return config;
+		return m_Config;
 	}
 } // End of Banshee namespace
