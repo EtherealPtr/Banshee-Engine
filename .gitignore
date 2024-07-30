@@ -51,5 +51,5 @@ ipch/
 *.lib
 
 # Custom generated files
-temp/
-banshee_generated/
+Binaries/
+Banshee_Generated/
