@@ -7,9 +7,9 @@ namespace Banshee
 	enum PrimitiveShape : uint8
 	{
 		Empty,
-		Triangle,
-		Square,
-		Pyramid,
-		Cube
+		TriangleShape,
+		SquareShape,
+		PyramidShape,
+		CubeShape
 	};
 } // End of Banshee namespace

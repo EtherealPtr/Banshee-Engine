@@ -2,7 +2,7 @@
 #include "Foundation/Logging/Logger.h"
 #include "Foundation/ResourceManager/ResourceManager.h"
 #include "Graphics/Components/MeshComponent.h"
-#include "Graphics/ShapeFactory.h"
+#include "Graphics/Shapes/ShapeFactory.h"
 #include "Graphics/Systems/ModelLoadingSystem.h"
 #include "Graphics/Systems/MeshSystem.h"
 #include <stdexcept>

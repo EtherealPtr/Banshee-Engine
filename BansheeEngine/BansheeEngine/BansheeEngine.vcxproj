@@ -107,12 +107,15 @@ xcopy /y "$(TargetDir)BansheeEngine.dll" "$(SolutionDir)Binaries\Sandbox-$(Confi
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Graphics\Shapes\Pyramid.cpp" />
+    <ClCompile Include="Source\Graphics\Shapes\Cube.cpp" />
     <ClCompile Include="Source\Foundation\Input\KeyboardMouseInput.cpp" />
     <ClCompile Include="Source\Foundation\Logging\Logger.cpp" />
     <ClCompile Include="Source\Foundation\Observer\Subject.cpp" />
     <ClCompile Include="Source\Foundation\Paths\PathManager.cpp" />
     <ClCompile Include="Source\Foundation\Timer\Timer.cpp" />
     <ClCompile Include="Source\Graphics\Components\Light\LightComponent.cpp" />
+    <ClCompile Include="Source\Graphics\Shapes\Triangle.cpp" />
     <ClCompile Include="Source\Graphics\Systems\ModelLoadingSystem.cpp" />
     <ClCompile Include="Source\Foundation\Components\Component.cpp" />
     <ClCompile Include="Source\Graphics\Components\MeshComponent.cpp" />
@@ -125,7 +128,7 @@ xcopy /y "$(TargetDir)BansheeEngine.dll" "$(SolutionDir)Binaries\Sandbox-$(Confi
     <ClCompile Include="source\application\Application.cpp" />
     <ClCompile Include="Source\Foundation\ResourceManager\File\FileManager.cpp" />
     <ClCompile Include="Source\Graphics\Camera.cpp" />
-    <ClCompile Include="Source\Graphics\ShapeFactory.cpp" />
+    <ClCompile Include="Source\Graphics\Shapes\ShapeFactory.cpp" />
     <ClCompile Include="Source\Graphics\Vulkan\VulkanDepthBuffer.cpp" />
     <ClCompile Include="Source\Graphics\Vulkan\VulkanDescriptorPool.cpp" />
     <ClCompile Include="Source\Graphics\Vulkan\VulkanDescriptorSet.cpp" />
@@ -151,8 +154,11 @@ xcopy /y "$(TargetDir)BansheeEngine.dll" "$(SolutionDir)Binaries\Sandbox-$(Confi
     <ClCompile Include="Source\Graphics\Vulkan\VulkanTextureSampler.cpp" />
     <ClCompile Include="Source\Graphics\Components\TransformComponent.cpp" />
     <ClCompile Include="Source\Graphics\Vulkan\VulkanTextureManager.cpp" />
+    <ClCompile Include="Source\Graphics\Shapes\Square.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Graphics\Shapes\Pyramid.h" />
+    <ClInclude Include="Source\Graphics\Shapes\Cube.h" />
     <ClInclude Include="Dependencies\tinygltf\tiny_gltf.h" />
     <ClInclude Include="Dependencies\tinyobjloader\tiny_obj_loader.h" />
     <ClInclude Include="Source\Foundation\Input\InputDevice.h" />
@@ -163,6 +169,8 @@ xcopy /y "$(TargetDir)BansheeEngine.dll" "$(SolutionDir)Binaries\Sandbox-$(Confi
     <ClInclude Include="Source\Graphics\Components\Light\LightComponent.h" />
     <ClInclude Include="Source\Graphics\Components\Light\LightData.h" />
     <ClInclude Include="Source\Graphics\ShaderType.h" />
+    <ClInclude Include="Source\Graphics\Shapes\Shape.h" />
+    <ClInclude Include="Source\Graphics\Shapes\Triangle.h" />
     <ClInclude Include="Source\Graphics\Systems\LightSystem.h" />
     <ClInclude Include="Source\Graphics\Systems\ModelLoadingSystem.h" />
     <ClInclude Include="Source\Components.h" />
@@ -193,7 +201,7 @@ xcopy /y "$(TargetDir)BansheeEngine.dll" "$(SolutionDir)Binaries\Sandbox-$(Confi
     <ClInclude Include="source\foundation\Logging\Logger.h" />
     <ClInclude Include="source\foundation\Platform.h" />
     <ClInclude Include="Source\Graphics\PrimitiveShape.h" />
-    <ClInclude Include="Source\Graphics\ShapeFactory.h" />
+    <ClInclude Include="Source\Graphics\Shapes\ShapeFactory.h" />
     <ClInclude Include="source\Graphics\Vertex.h" />
     <ClInclude Include="Source\Graphics\Vulkan\VulkanDepthBuffer.h" />
     <ClInclude Include="Source\Graphics\Vulkan\VulkanDescriptorPool.h" />
@@ -222,6 +230,7 @@ xcopy /y "$(TargetDir)BansheeEngine.dll" "$(SolutionDir)Binaries\Sandbox-$(Confi
     <ClInclude Include="Source\Graphics\Components\TransformComponent.h" />
     <ClInclude Include="Source\Graphics\Vulkan\VulkanTextureManager.h" />
     <ClInclude Include="Source\Graphics\Vulkan\VulkanGraphicsPipelineManager.h" />
+    <ClInclude Include="Source\Graphics\Shapes\Square.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Res\config.ini" />
