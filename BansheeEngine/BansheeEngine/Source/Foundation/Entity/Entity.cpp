@@ -5,6 +5,7 @@ namespace Banshee
 {
 	Entity::Entity(const uint32 _id) noexcept :
 		m_Id{ _id },
-		m_Components{}
+		m_Components{},
+		m_TransformComponent{}
 	{}
 } // End of Banshee namespace

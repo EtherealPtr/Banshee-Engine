@@ -2,14 +2,17 @@
 
 #include "Foundation/DLLConfig.h"
 #include "Foundation/Platform.h"
-#include "Foundation/Components/Component.h"
 #include <vector>
 #include <memory>
+#include <concepts>
 
 namespace Banshee
 {
 	class Component;
 	class TransformComponent;
+
+	template<typename T>
+	concept IsComponent = std::is_base_of<Component, T>::value;
 
 	class Entity : public std::enable_shared_from_this<Entity>
 	{
@@ -20,9 +23,11 @@ namespace Banshee
 		BANSHEE_ENGINE const uint32 GetUniqueId() const noexcept { return m_Id; }
 
 		template<typename T, typename... Args>
+		requires IsComponent<T>
 		std::shared_ptr<T> AddComponent(Args&&... _args);
 
 		template<typename T>
+		requires IsComponent<T>
 		std::shared_ptr<T> GetComponent() const noexcept;
 
 		const std::shared_ptr<TransformComponent>& GetTransform() const noexcept { return m_TransformComponent; }
@@ -34,10 +39,9 @@ namespace Banshee
 	};
 
 	template<typename T, typename... Args>
+	requires IsComponent<T>
 	std::shared_ptr<T> Entity::AddComponent(Args&&... _args)
 	{
-		static_assert(std::is_base_of<Component, T>::value, "T must derive from Component");
-
 		auto component = std::make_shared<T>(std::forward<Args>(_args)...);
 		component->SetOwner(shared_from_this());
 		m_Components.emplace_back(component);
@@ -51,6 +55,7 @@ namespace Banshee
 	}
 
 	template<typename T>
+	requires IsComponent<T>
 	std::shared_ptr<T> Entity::GetComponent() const noexcept
 	{
 		static_assert(std::is_base_of<Component, T>::value, "T must derive from Component");
