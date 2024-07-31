@@ -19,6 +19,11 @@ namespace Banshee
 		BANSHEE_ENGINE void InitializeRenderer();
 		BANSHEE_ENGINE void Run() const;
 
+		Application(const Application&) = delete;
+		Application(Application&&) = delete;
+		void operator=(const Application&) = delete;
+		void operator=(Application&&) = delete;
+
 	private:
 		std::unique_ptr<INIParser> m_INIParser;
 		std::unique_ptr<Window> m_Window;

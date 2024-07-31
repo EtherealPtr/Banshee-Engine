@@ -114,7 +114,7 @@ namespace Banshee
 		std::vector<std::shared_ptr<MeshComponent>> meshComponents{};
 		std::vector<std::shared_ptr<LightComponent>> lightComponents{};
 
-		for (const auto& entity : g_EntityManager.GetAllEntities())
+		for (const auto& entity : EntityManager::GetAllEntities())
 		{
 			if (const auto& meshComponent = entity->GetComponent<MeshComponent>())
 			{

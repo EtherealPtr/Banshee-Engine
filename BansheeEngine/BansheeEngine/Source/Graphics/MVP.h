@@ -9,8 +9,8 @@ namespace Banshee
 	{
 		ViewProjMatrix() noexcept = default;
 		ViewProjMatrix(const glm::mat4& _view, const glm::mat4& _proj) noexcept :
-			m_View(_view),
-			m_Proj(_proj)
+			m_View{ _view },
+			m_Proj{ _proj }
 		{}
 
 		glm::mat4 m_View{ glm::mat4(1.0f) };
@@ -20,9 +20,9 @@ namespace Banshee
 	struct PushConstant
 	{
 		PushConstant(const glm::mat4& _model, const uint16 _texId, const uint16 _hasCustomTexture) noexcept :
-			m_Model(_model),
-			m_TextureIndex(_texId),
-			m_HasCustomTexture(_hasCustomTexture)
+			m_Model{ _model },
+			m_TextureIndex{ _texId },
+			m_HasCustomTexture{ _hasCustomTexture }
 		{}
 
 		const glm::mat4 m_Model{ glm::mat4(1.0f) };

@@ -14,15 +14,20 @@ namespace Banshee
 			vertices{},
 			indices{},
 			material{},
-			localTransform(1.0f),
-			m_MaterialIndex(SetNextMaterialIndex()),
-			m_TexId(0),
-			m_HasTexture(false)
+			localTransform{ 1.0f },
+			m_MaterialIndex{ SetNextMaterialIndex() },
+			m_TexId{ 0 },
+			m_HasTexture{ false }
 		{}
 
 		~Mesh() = default;
 
-		void SetTexId(const uint16 _texId) noexcept { m_TexId = _texId; m_HasTexture = true; }
+		void SetTexId(const uint16 _texId) noexcept
+		{
+			m_TexId = _texId;
+			m_HasTexture = true;
+		}
+
 		bool HasTexture() const noexcept { return m_HasTexture; }
 		uint16 GetTexId() const noexcept { return m_TexId; }
 		uint32 GetMaterialIndex() const noexcept { return m_MaterialIndex; }
@@ -35,7 +40,7 @@ namespace Banshee
 	private:
 		static uint32 SetNextMaterialIndex() noexcept
 		{
-			static uint32 nextIndex = 0;
+			static uint32 nextIndex{ 0 };
 			return ++nextIndex;
 		}
 

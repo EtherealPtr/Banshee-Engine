@@ -1,6 +1,7 @@
 #include "Camera.h"
 #include "Foundation/Input/InputMapping.h"
 #include <glm/gtc/matrix_transform.hpp>
+#include <algorithm>
 
 namespace Banshee
 {
@@ -26,7 +27,7 @@ namespace Banshee
 	{
 		ProcessKeyboardInput(_deltaTime);
 		ProcessMouseInput(_deltaTime);
-		m_InputDevice.Update();
+		m_InputDevice.UpdateMousePosition();
 	}
 
 	void Camera::ProcessKeyboardInput(const double _deltaTime)
@@ -66,11 +67,7 @@ namespace Banshee
 
 		m_Yaw += static_cast<float>(xoffset);
 		m_Pitch -= static_cast<float>(yoffset);
-
-		if (m_Pitch > 89.0f)
-			m_Pitch = 89.0f;
-		if (m_Pitch < -89.0f)
-			m_Pitch = -89.0f;
+		m_Pitch = std::clamp(m_Pitch, -89.0f, 89.0f);
 
 		UpdateViewMatrix();
 	}

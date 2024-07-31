@@ -35,8 +35,8 @@ namespace Banshee
 		ShaderType m_ShaderType;
 		std::vector<Mesh> m_Meshes;
 		std::string m_ModelName;
+		glm::vec3 m_Color;
 		bool m_HasTexture;
 		bool m_HasModel;
-		glm::vec3 m_Color;
 	};
 } // End of Banshee namespace

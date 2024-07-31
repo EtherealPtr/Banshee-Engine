@@ -58,12 +58,12 @@ namespace Banshee
 		inputAttributeDescriptions[1].binding = 0;
 		inputAttributeDescriptions[1].location = 1;
 		inputAttributeDescriptions[1].format = VK_FORMAT_R32G32_SFLOAT;
-		inputAttributeDescriptions[1].offset = offsetof(Vertex, texCoord);
+		inputAttributeDescriptions[1].offset = offsetof(Vertex, m_TexCoord);
 
 		inputAttributeDescriptions[2].binding = 0;
 		inputAttributeDescriptions[2].location = 2;
 		inputAttributeDescriptions[2].format = VK_FORMAT_R32G32B32_SFLOAT;
-		inputAttributeDescriptions[2].offset = offsetof(Vertex, normal);
+		inputAttributeDescriptions[2].offset = offsetof(Vertex, m_Normal);
 
 		VkPipelineVertexInputStateCreateInfo vertexInputCreateInfo{};
 		vertexInputCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;

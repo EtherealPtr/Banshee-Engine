@@ -9,13 +9,13 @@ using namespace Banshee;
 class DummyObjectOne
 {
 public:
-	DummyObjectOne()
+	DummyObjectOne() : 
+		m_Entity(EntityManager::CreateEntity()),
+		m_Transform(m_Entity->AddComponent<TransformComponent>())
 	{
-		m_Entity = g_EntityManager.CreateEntity();
-		const std::shared_ptr<MeshComponent>& meshComponent = m_Entity->AddComponent<MeshComponent>(PrimitiveShape::Cube, ShaderType::Standard, glm::vec3(1.0f, 1.0f, 1.0f));
+		const auto& meshComponent = m_Entity->AddComponent<MeshComponent>(PrimitiveShape::Cube, ShaderType::Standard, glm::vec3(1.0f, 1.0f, 1.0f));
 		meshComponent->SetTexture("Textures/wood.jpg");
-		m_Transform = m_Entity->AddComponent<TransformComponent>();
-		m_Transform->SetPosition(glm::vec3(10.0f, 3.0f, 0.0f));
+		m_Transform->SetPosition(glm::vec3(0.0f, 3.0f, 0.0f));
 	}
 
 private:

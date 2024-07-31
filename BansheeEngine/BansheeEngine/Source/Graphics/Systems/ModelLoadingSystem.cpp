@@ -84,16 +84,16 @@ namespace Banshee
 				std::vector<Vertex> subMeshVertices(positionsAccessor.count);
 				for (size_t j = 0; j < positionsAccessor.count; ++j) 
 				{
-					subMeshVertices[j].position = glm::vec3(
+					subMeshVertices[j].m_Position = glm::vec3(
 						positions[j * 3 + 0],
 						positions[j * 3 + 1],
 						positions[j * 3 + 2]
 					);
-					subMeshVertices[j].texCoord = glm::vec2(
+					subMeshVertices[j].m_TexCoord = glm::vec2(
 						texCoords[j * 2 + 0],
 						texCoords[j * 2 + 1]
 					);
-					subMeshVertices[j].normal = glm::vec3(
+					subMeshVertices[j].m_Normal = glm::vec3(
 						normals[j * 3 + 0],
 						normals[j * 3 + 1],
 						normals[j * 3 + 2]

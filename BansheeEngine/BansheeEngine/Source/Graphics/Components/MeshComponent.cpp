@@ -10,9 +10,9 @@ namespace Banshee
 		m_ShaderType{ _shaderType },
 		m_Meshes{},
 		m_ModelName{ g_ResourceManager.GetAssetName(_modelPath) },
+		m_Color{ glm::vec3{1.0f} },
 		m_HasModel{ true },
-		m_HasTexture{ false },
-		m_Color{ glm::vec3{1.0f} }
+		m_HasTexture{ false }
 	{}
 
 	MeshComponent::MeshComponent(const PrimitiveShape _basicShape, const ShaderType _shaderType, const glm::vec3& _color) :
@@ -21,9 +21,9 @@ namespace Banshee
 		m_ShaderType{ _shaderType },
 		m_Meshes{},
 		m_ModelName{ "" },
+		m_Color{ _color },
 		m_HasModel{ false },
-		m_HasTexture{ false },
-		m_Color{ _color }
+		m_HasTexture{ false }
 	{
 		SetMeshId(static_cast<uint32>(_basicShape));
 	}

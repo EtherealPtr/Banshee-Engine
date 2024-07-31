@@ -7,7 +7,7 @@
 namespace Banshee
 {
 	Window::Window(const uint16 _width, const uint16 _height, const char* _title) :
-		m_Window(nullptr)
+		m_Window{ nullptr }
 	{
 		BE_LOG(LogCategory::Trace, "[WINDOW]: Creating window");
 
@@ -52,14 +52,14 @@ namespace Banshee
 
 	uint16 Window::GetWidth() const noexcept
 	{
-		int w = 0;
+		int w{ 0 };
 		glfwGetFramebufferSize(m_Window, &w, nullptr);
 		return w;
 	}
 
 	uint16 Window::GetHeight() const noexcept
 	{
-		int h = 0;
+		int h{ 0 };
 		glfwGetFramebufferSize(m_Window, nullptr, &h);
 		return h;
 	}
