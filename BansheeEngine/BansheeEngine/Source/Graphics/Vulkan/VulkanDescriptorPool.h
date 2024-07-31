@@ -13,7 +13,12 @@ namespace Banshee
 		VulkanDescriptorPool(const VkDevice& _logicalDevice, const uint32 _maxSets);
 		~VulkanDescriptorPool();
 
-		VkDescriptorPool Get() const { return m_DescriptorPool; }
+		VkDescriptorPool Get() const noexcept { return m_DescriptorPool; }
+
+		VulkanDescriptorPool(const VulkanDescriptorPool&) = delete;
+		VulkanDescriptorPool& operator=(const VulkanDescriptorPool&) = delete;
+		VulkanDescriptorPool(VulkanDescriptorPool&&) = delete;
+		VulkanDescriptorPool& operator=(VulkanDescriptorPool&&) = delete;
 
 	private:
 		VkDevice m_LogicalDevice;

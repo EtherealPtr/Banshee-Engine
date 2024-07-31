@@ -24,6 +24,11 @@ namespace Banshee
 		uint32 GetWidth() const noexcept { return m_Width; }
 		uint32 GetHeight() const noexcept { return m_Height; }
 
+		VulkanSwapchain(const VulkanSwapchain&) = delete;
+		VulkanSwapchain& operator=(const VulkanSwapchain&) = delete;
+		VulkanSwapchain(VulkanSwapchain&&) = delete;
+		VulkanSwapchain& operator=(VulkanSwapchain&&) = delete;
+
 	private:
 		VkSwapchainKHR m_Swapchain;
 		VkDevice m_Device;

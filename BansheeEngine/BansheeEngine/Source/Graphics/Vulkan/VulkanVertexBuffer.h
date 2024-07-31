@@ -20,6 +20,11 @@ namespace Banshee
 
 		void Bind(const VkCommandBuffer& _commandBuffer, const uint64 _indexOffset) const noexcept;
 
+		VulkanVertexBuffer(const VulkanVertexBuffer&) = delete;
+		VulkanVertexBuffer& operator=(const VulkanVertexBuffer&) = delete;
+		VulkanVertexBuffer(VulkanVertexBuffer&&) = delete;
+		VulkanVertexBuffer& operator=(VulkanVertexBuffer&&) = delete;
+
 	private:
 		void CreateVertexBuffer(void* _data, const uint64 _size);
 		void CreateIndexBuffer(void* _data, const uint64 _size);

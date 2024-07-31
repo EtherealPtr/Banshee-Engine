@@ -5,11 +5,11 @@
 namespace Banshee
 {
 	VulkanDepthBuffer::VulkanDepthBuffer(const VkDevice& _logicalDevice, const VkPhysicalDevice& _gpu, const uint32 _w, const uint32 _h) :
-		m_LogicalDevice(_logicalDevice),
-		m_DepthImage(VK_NULL_HANDLE),
-		m_DepthImageView(VK_NULL_HANDLE),
-		m_DepthImageMemory(VK_NULL_HANDLE),
-		m_DepthFormat(VK_FORMAT_UNDEFINED)
+		m_LogicalDevice{ _logicalDevice },
+		m_DepthImage{ VK_NULL_HANDLE },
+		m_DepthImageView{ VK_NULL_HANDLE },
+		m_DepthImageMemory{ VK_NULL_HANDLE },
+		m_DepthFormat{ VK_FORMAT_UNDEFINED }
 	{
 		m_DepthFormat = VulkanUtils::FindSupportedFormat
 		(

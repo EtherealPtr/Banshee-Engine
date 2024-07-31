@@ -8,16 +8,16 @@
 #include <stdexcept>
 
 #ifdef NDEBUG
-const bool g_EnableValidationLayers = false;
+constexpr bool g_EnableValidationLayers{ false };
 #else
-const bool g_EnableValidationLayers = true;
+constexpr bool g_EnableValidationLayers{ true };
 #endif
 
 namespace Banshee
 {
 	VulkanInstance::VulkanInstance() :
-		m_Instance(VK_NULL_HANDLE),
-		m_DebugMessenger(VK_NULL_HANDLE)
+		m_Instance{ VK_NULL_HANDLE },
+		m_DebugMessenger{ VK_NULL_HANDLE }
 	{
 		BE_LOG(LogCategory::Trace, "[INSTANCE]: Creating Vulkan instance");
 
@@ -60,13 +60,13 @@ namespace Banshee
 			validationLayers.emplace_back("VK_LAYER_KHRONOS_validation");
 
 			VulkanUtils::CheckInstanceLayerSupport(validationLayers);
-			instanceCreateInfo.enabledLayerCount = static_cast<unsigned int>(validationLayers.size());
+			instanceCreateInfo.enabledLayerCount = (uint32)(validationLayers.size());
 			instanceCreateInfo.ppEnabledLayerNames = validationLayers.data();
 		}
 
 		// Enable instance extensions
 		VulkanUtils::CheckInstanceExtSupport(requiredInstanceExtensions);
-		instanceCreateInfo.enabledExtensionCount = static_cast<unsigned int>(requiredInstanceExtensions.size());
+		instanceCreateInfo.enabledExtensionCount = (uint32)(requiredInstanceExtensions.size());
 		instanceCreateInfo.ppEnabledExtensionNames = requiredInstanceExtensions.data();
 
 		if (vkCreateInstance(&instanceCreateInfo, nullptr, &m_Instance) != VK_SUCCESS)
@@ -107,4 +107,4 @@ namespace Banshee
 			BE_LOG(LogCategory::Warning, "[INSTANCE]: Failed to create vulkan debug messenger");
 		}
 	}
-}
+} // End of Banshee namespace

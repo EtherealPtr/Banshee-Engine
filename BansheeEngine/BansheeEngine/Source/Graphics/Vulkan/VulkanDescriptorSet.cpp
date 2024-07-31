@@ -7,9 +7,9 @@
 namespace Banshee
 {
 	VulkanDescriptorSet::VulkanDescriptorSet(const VkDevice& _logicalDevice, const VkDescriptorPool& _descriptorPool, const VkDescriptorSetLayout& _descriptorLayout) :
-		m_LogicalDevice(_logicalDevice),
-		m_DescriptorPool(_descriptorPool),
-		m_DescriptorSet(VK_NULL_HANDLE)
+		m_LogicalDevice{ _logicalDevice },
+		m_DescriptorPool{ _descriptorPool },
+		m_DescriptorSet{ VK_NULL_HANDLE }
 	{
 		VkDescriptorSetAllocateInfo allocInfo{};
 		allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
@@ -34,15 +34,15 @@ namespace Banshee
 		{
 			VkDescriptorBufferInfo bufferInfo{};
 			bufferInfo.offset = 0;
-			bufferInfo.buffer = writeBufProperties.buffer;
-			bufferInfo.range = writeBufProperties.bufferRange;
+			bufferInfo.buffer = writeBufProperties.m_Buffer;
+			bufferInfo.range = writeBufProperties.m_BufferRange;
 
 			VkWriteDescriptorSet descriptorSetWriter{};
 			descriptorSetWriter.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
 			descriptorSetWriter.dstSet = m_DescriptorSet;
-			descriptorSetWriter.dstBinding = writeBufProperties.binding;
+			descriptorSetWriter.dstBinding = writeBufProperties.m_Binding;
 			descriptorSetWriter.descriptorCount = 1;
-			descriptorSetWriter.descriptorType = writeBufProperties.descriptorType;
+			descriptorSetWriter.descriptorType = writeBufProperties.m_DescriptorType;
 			descriptorSetWriter.pBufferInfo = &bufferInfo;
 			descriptorSetWriter.pImageInfo = nullptr;
 
@@ -57,15 +57,15 @@ namespace Banshee
 			std::vector<VkDescriptorImageInfo> imageInfos{};
 			uint32 descriptorCount = 1;
 
-			if (writeTexProperties.imageViews.size() > 0)
+			if (writeTexProperties.m_ImageViews.size() > 0)
 			{
-				descriptorCount = static_cast<uint32>(writeTexProperties.imageViews.size());
+				descriptorCount = static_cast<uint32>(writeTexProperties.m_ImageViews.size());
 
-				for (uint32 i = 0; i < writeTexProperties.imageViews.size(); ++i)
+				for (uint32 i = 0; i < writeTexProperties.m_ImageViews.size(); ++i)
 				{
 					VkDescriptorImageInfo imageInfo{};
 					imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-					imageInfo.imageView = writeTexProperties.imageViews[i];
+					imageInfo.imageView = writeTexProperties.m_ImageViews[i];
 					imageInfo.sampler = VK_NULL_HANDLE;
 					imageInfos.emplace_back(imageInfo);
 				}
@@ -75,16 +75,16 @@ namespace Banshee
 				VkDescriptorImageInfo imageInfo{};
 				imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
 				imageInfo.imageView = VK_NULL_HANDLE;
-				imageInfo.sampler = writeTexProperties.sampler;
+				imageInfo.sampler = writeTexProperties.m_Sampler;
 				imageInfos.emplace_back(imageInfo);
 			}
 
 			VkWriteDescriptorSet descriptorSetWriter{};
 			descriptorSetWriter.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
 			descriptorSetWriter.dstSet = m_DescriptorSet;
-			descriptorSetWriter.dstBinding = writeTexProperties.binding;
+			descriptorSetWriter.dstBinding = writeTexProperties.m_Binding;
 			descriptorSetWriter.descriptorCount = descriptorCount;
-			descriptorSetWriter.descriptorType = writeTexProperties.descriptorType;
+			descriptorSetWriter.descriptorType = writeTexProperties.m_DescriptorType;
 			descriptorSetWriter.pBufferInfo = nullptr;
 			descriptorSetWriter.pImageInfo = imageInfos.data();
 

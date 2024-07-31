@@ -16,6 +16,11 @@ namespace Banshee
 
 		std::vector<std::pair<VkSemaphore, VkSemaphore>>& Get() noexcept { return m_Semaphores; }
 
+		VulkanSemaphore(const VulkanSemaphore&) = delete;
+		VulkanSemaphore& operator=(const VulkanSemaphore&) = delete;
+		VulkanSemaphore(VulkanSemaphore&&) = delete;
+		VulkanSemaphore& operator=(VulkanSemaphore&&) = delete;
+
 	private:
 		VkDevice m_LogicalDevice;
 		std::vector<std::pair<VkSemaphore, VkSemaphore>> m_Semaphores;

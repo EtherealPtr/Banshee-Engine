@@ -15,11 +15,15 @@ namespace Banshee
 		VulkanUniformBuffer(const VkDevice& _logicalDevice, const VkPhysicalDevice& _gpu, const uint64 _size);
 		~VulkanUniformBuffer();
 
-		void CopyData(void* _pData);
-
+		void CopyData(void* _pData) const noexcept;
 		VkBuffer GetBuffer() const noexcept { return m_Buffer; }
 		uint64 GetBufferSize() const noexcept { return m_BufferSize; }
 		VkDeviceMemory GetBufferMemory() const noexcept { return m_BufferMemory; }
+
+		VulkanUniformBuffer(const VulkanUniformBuffer&) = delete;
+		VulkanUniformBuffer& operator=(const VulkanUniformBuffer&) = delete;
+		VulkanUniformBuffer(VulkanUniformBuffer&&) = delete;
+		VulkanUniformBuffer& operator=(VulkanUniformBuffer&&) = delete;
 
 	private:
 		VkDevice m_LogicalDevice;

@@ -6,9 +6,9 @@
 namespace Banshee
 {
 	VulkanCommandBuffer::VulkanCommandBuffer(const VkDevice& _logicalDevice, const VkCommandPool& _pool, const uint16 _count) :
-		m_LogicalDevice(_logicalDevice),
-		m_CommandPool(_pool),
-		m_CommandBuffers(_count, VK_NULL_HANDLE)
+		m_LogicalDevice{ _logicalDevice },
+		m_CommandPool{ _pool },
+		m_CommandBuffers{ _count, VK_NULL_HANDLE }
 	{
 		BE_LOG(LogCategory::Trace, "[COMMAND BUFFER]: Creating command buffer");
 
@@ -28,10 +28,10 @@ namespace Banshee
 
 	VulkanCommandBuffer::~VulkanCommandBuffer()
 	{
-		vkFreeCommandBuffers(m_LogicalDevice, m_CommandPool, static_cast<uint32_t>(m_CommandBuffers.size()), m_CommandBuffers.data());
+		vkFreeCommandBuffers(m_LogicalDevice, m_CommandPool, (uint32)m_CommandBuffers.size(), m_CommandBuffers.data());
 	}
 
-	void VulkanCommandBuffer::Begin(const uint16 _bufferIndex) const
+	void VulkanCommandBuffer::Begin(const uint16 _bufferIndex) const noexcept
 	{
 		VkCommandBufferBeginInfo beginInfo{};
 		beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
@@ -40,7 +40,7 @@ namespace Banshee
 		vkBeginCommandBuffer(m_CommandBuffers[_bufferIndex], &beginInfo);
 	}
 
-	void VulkanCommandBuffer::End(const uint16 _bufferIndex) const
+	void VulkanCommandBuffer::End(const uint16 _bufferIndex) const noexcept
 	{
 		vkEndCommandBuffer(m_CommandBuffers[_bufferIndex]);
 	}
@@ -62,4 +62,4 @@ namespace Banshee
 			throw std::runtime_error("ERROR: Failed to submit command buffer to queue");
 		}
 	}
-}
+} // End of Banshee namespace

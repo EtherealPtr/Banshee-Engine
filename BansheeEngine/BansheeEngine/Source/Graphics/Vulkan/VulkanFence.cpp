@@ -6,7 +6,7 @@
 namespace Banshee
 {
 	VulkanFence::VulkanFence(const VkDevice& _logicalDevice, const uint16 _count) :
-		m_LogicalDevice(_logicalDevice),
+		m_LogicalDevice{ _logicalDevice },
 		m_Fences{ VK_NULL_HANDLE }
 	{
 		BE_LOG(LogCategory::Trace, "[FENCE]: Creating %d fences", _count);

@@ -12,9 +12,9 @@
 namespace Banshee
 {
 	VulkanGraphicsPipeline::VulkanGraphicsPipeline(const VkDevice& _logicalDevice, const VkRenderPass& _renderPass, const VkDescriptorSetLayout& _descriptorSetLayout, const uint32 _w, const uint32 _h, const char* _vertShaderPath, const char* _fragShaderPath) :
-		m_LogicalDevice(_logicalDevice),
-		m_PipelineLayout(VK_NULL_HANDLE),
-		m_GraphicsPipeline(VK_NULL_HANDLE)
+		m_LogicalDevice{ _logicalDevice },
+		m_PipelineLayout{ VK_NULL_HANDLE },
+		m_GraphicsPipeline{ VK_NULL_HANDLE }
 	{
 		BE_LOG(LogCategory::Trace, "[GRAPHICS PIPELINE]: Creating graphics pipeline");
 

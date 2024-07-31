@@ -7,8 +7,8 @@
 namespace Banshee
 {
 	VulkanSurface::VulkanSurface(GLFWwindow* _window, const VkInstance& _instance) :
-		m_Surface(VK_NULL_HANDLE),
-		m_VkInstance(_instance)
+		m_Surface{ VK_NULL_HANDLE },
+		m_VkInstance{ _instance }
 	{
 		BE_LOG(LogCategory::Trace, "[SURFACE]: Creating Vulkan surface");
 
@@ -30,4 +30,4 @@ namespace Banshee
 		vkDestroySurfaceKHR(m_VkInstance, m_Surface, nullptr);
 		m_Surface = VK_NULL_HANDLE;
 	}
-}
+} // End of Banshee namespace

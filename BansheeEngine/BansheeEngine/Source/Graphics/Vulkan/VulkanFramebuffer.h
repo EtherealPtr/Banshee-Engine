@@ -18,6 +18,11 @@ namespace Banshee
 
 		const std::vector<VkFramebuffer>& Get() const noexcept { return m_Framebuffers; }
 
+		VulkanFramebuffer(const VulkanFramebuffer&) = delete;
+		VulkanFramebuffer& operator=(const VulkanFramebuffer&) = delete;
+		VulkanFramebuffer(VulkanFramebuffer&&) = delete;
+		VulkanFramebuffer& operator=(VulkanFramebuffer&&) = delete;
+
 	private:
 		VkDevice m_Device;
 		std::vector<VkFramebuffer> m_Framebuffers;

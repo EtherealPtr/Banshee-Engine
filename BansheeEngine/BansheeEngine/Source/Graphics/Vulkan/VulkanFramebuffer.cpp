@@ -7,8 +7,8 @@
 namespace Banshee
 {
 	VulkanFramebuffer::VulkanFramebuffer(const VkDevice& _logicalDevice, const VkRenderPass& _renderPass, const std::vector<VkImageView>& _imageViews, const VkImageView& _depthImageView, const uint32 _w, const uint32 _h) :
-		m_Device(_logicalDevice),
-		m_Framebuffers(_imageViews.size(), VK_NULL_HANDLE)
+		m_Device{ _logicalDevice },
+		m_Framebuffers{ _imageViews.size(), VK_NULL_HANDLE }
 	{
 		BE_LOG(LogCategory::Trace, "[FRAMEBUFFER]: Creating %d framebuffers", _imageViews.size());
 

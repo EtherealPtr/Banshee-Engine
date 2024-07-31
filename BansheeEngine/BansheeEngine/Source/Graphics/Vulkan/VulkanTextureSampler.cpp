@@ -5,10 +5,10 @@
 
 namespace Banshee
 {
-	VulkanTextureSampler::VulkanTextureSampler(const VkDevice& _device, const VkPhysicalDevice& _gpu) : 
-		m_LogicalDevice(_device),
-		m_PhysicalDevice(_gpu),
-		m_TextureSampler(VK_NULL_HANDLE)
+	VulkanTextureSampler::VulkanTextureSampler(const VkDevice& _device, const VkPhysicalDevice& _gpu) :
+		m_LogicalDevice{ _device },
+		m_PhysicalDevice{ _gpu },
+		m_TextureSampler{ VK_NULL_HANDLE }
 	{
 		BE_LOG(LogCategory::Trace, "[SAMPLER]: Creating texture sampler");
 
@@ -55,4 +55,4 @@ namespace Banshee
 	{
 		vkDestroySampler(m_LogicalDevice, m_TextureSampler, nullptr);
 	}
-}
+} // End of Banshee namespace

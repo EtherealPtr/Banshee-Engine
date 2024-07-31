@@ -6,14 +6,14 @@ namespace Banshee
 {
 	VulkanVertexBuffer::VulkanVertexBuffer(const VkDevice& _logicalDevice, const VkPhysicalDevice& _physicalDevice, const VkCommandPool& _commandPool, const VkQueue& _graphicsQueue,
 		void* _vertexData, const uint64 _sizeOfVertexData, void* _indexData, const uint64 _sizeOfIndexData) :
-		m_LogicalDevice(_logicalDevice),
-		m_PhysicalDevice(_physicalDevice),
-		m_CommandPool(_commandPool),
-		m_GraphicsQueue(_graphicsQueue),
-		m_VertexBuffer(VK_NULL_HANDLE),
-		m_IndexBuffer(VK_NULL_HANDLE),
-		m_VertexBufferMemory(VK_NULL_HANDLE),
-		m_IndexBufferMemory(VK_NULL_HANDLE)
+		m_LogicalDevice{ _logicalDevice },
+		m_PhysicalDevice{ _physicalDevice },
+		m_CommandPool{ _commandPool },
+		m_GraphicsQueue{ _graphicsQueue },
+		m_VertexBuffer{ VK_NULL_HANDLE },
+		m_IndexBuffer{ VK_NULL_HANDLE },
+		m_VertexBufferMemory{ VK_NULL_HANDLE },
+		m_IndexBufferMemory{ VK_NULL_HANDLE }
 	{
 		CreateVertexBuffer(_vertexData, _sizeOfVertexData);
 		CreateIndexBuffer(_indexData, _sizeOfIndexData);
@@ -44,7 +44,7 @@ namespace Banshee
 			stagingBuffer, stagingBufferMemory);
 
 		// Map the memory
-		void* mappedData = nullptr;
+		void* mappedData{ nullptr };
 		vkMapMemory(m_LogicalDevice, stagingBufferMemory, 0, _size, 0, &mappedData);
 
 		// Copy the vertex data to the staging buffer
@@ -80,7 +80,7 @@ namespace Banshee
 			stagingBuffer, stagingBufferMemory);
 
 		// Map the memory
-		void* mappedData = nullptr;
+		void* mappedData{ nullptr };
 		vkMapMemory(m_LogicalDevice, stagingBufferMemory, 0, _size, 0, &mappedData);
 
 		// Copy the index data to the staging buffer

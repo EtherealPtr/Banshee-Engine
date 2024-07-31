@@ -15,6 +15,11 @@ namespace Banshee
 
 		VkDescriptorSetLayout Get() const noexcept { return m_DescriptorSetLayout; }
 
+		VulkanDescriptorSetLayout(const VulkanDescriptorSetLayout&) = delete;
+		VulkanDescriptorSetLayout& operator=(const VulkanDescriptorSetLayout&) = delete;
+		VulkanDescriptorSetLayout(VulkanDescriptorSetLayout&&) = delete;
+		VulkanDescriptorSetLayout& operator=(VulkanDescriptorSetLayout&&) = delete;
+
 	private:
 		VkDevice m_LogicalDevice;
 		VkDescriptorSetLayout m_DescriptorSetLayout;

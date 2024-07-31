@@ -6,8 +6,8 @@
 namespace Banshee
 {
 	VulkanSemaphore::VulkanSemaphore(const VkDevice& _logicalDevice, const uint16 _count) :
-		m_LogicalDevice(_logicalDevice),
-		m_Semaphores(_count, { VK_NULL_HANDLE, VK_NULL_HANDLE })
+		m_LogicalDevice{ _logicalDevice },
+		m_Semaphores{ _count, { VK_NULL_HANDLE, VK_NULL_HANDLE } }
 	{
 		BE_LOG(LogCategory::Trace, "[SEMAPHORE]: Creating %d semaphores", _count);
 
@@ -39,4 +39,4 @@ namespace Banshee
 			semaphores.second = VK_NULL_HANDLE;
 		}
 	}
-}
+} // End of Banshee namespace

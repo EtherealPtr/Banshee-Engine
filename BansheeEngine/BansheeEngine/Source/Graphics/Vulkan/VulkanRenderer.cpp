@@ -46,7 +46,7 @@ namespace Banshee
 		m_VkSwapchain(std::make_unique<VulkanSwapchain>(m_VkDevice->GetLogicalDevice(), m_VkDevice->GetPhysicalDevice(), m_VkSurface->Get(), _window->GetWidth(), _window->GetHeight())),
 		m_DepthBuffer(std::make_unique<VulkanDepthBuffer>(m_VkDevice->GetLogicalDevice(), m_VkDevice->GetPhysicalDevice(), m_VkSwapchain->GetWidth(), m_VkSwapchain->GetHeight())),
 		m_VkRenderPass(std::make_unique<VulkanRenderPass>(m_VkDevice->GetLogicalDevice(), m_VkSwapchain->GetFormat(), m_DepthBuffer->GetFormat())),
-		m_VkCommandPool(std::make_unique<VulkanCommandPool>(m_VkDevice->GetLogicalDevice(), m_VkDevice->GetQueueIndices().graphicsQueueFamilyIndex)),
+		m_VkCommandPool(std::make_unique<VulkanCommandPool>(m_VkDevice->GetLogicalDevice(), m_VkDevice->GetQueueIndices().m_GraphicsQueueFamilyIndex)),
 		m_VkCommandBuffers(std::make_unique<VulkanCommandBuffer>(m_VkDevice->GetLogicalDevice(), m_VkCommandPool->Get(), static_cast<uint16>(m_VkSwapchain->GetImageViews().size()))),
 		m_VkFramebuffers(std::make_unique<VulkanFramebuffer>(m_VkDevice->GetLogicalDevice(), m_VkRenderPass->Get(), m_VkSwapchain->GetImageViews(), m_DepthBuffer->GetImageView(), m_VkSwapchain->GetWidth(), m_VkSwapchain->GetHeight())),
 		m_VkSemaphores(std::make_unique<VulkanSemaphore>(m_VkDevice->GetLogicalDevice(), static_cast<uint16>(m_VkSwapchain->GetImageViews().size()))),

@@ -16,14 +16,14 @@ namespace Banshee
 	{
 		bool Validate() const noexcept
 		{
-			return (graphicsQueueFamilyIndex != UINT32_MAX) &&
-				   (transferQueueFamilyIndex != UINT32_MAX) &&
-				   (presentationQueueFamilyIndex != UINT32_MAX);
+			return (m_GraphicsQueueFamilyIndex != UINT32_MAX) &&
+				   (m_TransferQueueFamilyIndex != UINT32_MAX) &&
+				   (m_PresentationQueueFamilyIndex != UINT32_MAX);
 		}
 
-		uint32 graphicsQueueFamilyIndex{ UINT32_MAX };
-		uint32 transferQueueFamilyIndex{ UINT32_MAX };
-		uint32 presentationQueueFamilyIndex{ UINT32_MAX };
+		uint32 m_GraphicsQueueFamilyIndex{ UINT32_MAX };
+		uint32 m_TransferQueueFamilyIndex{ UINT32_MAX };
+		uint32 m_PresentationQueueFamilyIndex{ UINT32_MAX };
 	};
 
 	class VulkanDevice
@@ -38,11 +38,16 @@ namespace Banshee
 		VkQueue GetGraphicsQueue() const noexcept { return m_GraphicsQueue; }
 		VkQueue GetPresentationQueue() const noexcept { return m_PresentQueue; }
 		VkQueue GetTransferQueue() const noexcept { return m_TransferQueue; }
-		VkPhysicalDeviceLimits GetLimits();
+		VkPhysicalDeviceLimits GetLimits() const noexcept;
+
+		VulkanDevice(const VulkanDevice&) = delete;
+		VulkanDevice& operator=(const VulkanDevice&) = delete;
+		VulkanDevice(VulkanDevice&&) = delete;
+		VulkanDevice& operator=(VulkanDevice&&) = delete;
 
 	private:
 		void PickPhysicalDevice(const VkInstance& _vkInstance);
-		bool CheckDeviceFeatures(const VkPhysicalDevice& _gpu);
+		bool CheckDeviceFeatures(const VkPhysicalDevice& _gpu) const noexcept;
 		uint32 RateDeviceSuitability(const VkPhysicalDevice& _gpu, const VkPhysicalDeviceProperties& _deviceProperties);
 		void SetupQueueFamilyIndices();
 		void CreateLogicalDevice();

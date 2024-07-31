@@ -7,8 +7,8 @@
 namespace Banshee
 {
 	VulkanRenderPass::VulkanRenderPass(const VkDevice& _device, const uint32 _colorFormat, const uint32 _depthFormat) :
-		m_Device(_device),
-		m_RenderPass(VK_NULL_HANDLE)
+		m_Device{ _device },
+		m_RenderPass{ VK_NULL_HANDLE }
 	{
 		BE_LOG(LogCategory::Trace, "[RENDER PASS]: Creating render pass");
 

@@ -10,10 +10,10 @@
 namespace Banshee
 {
 	VulkanVertexBufferManager::VulkanVertexBufferManager(const VkDevice& _logicalDevice, const VkPhysicalDevice& _physicalDevice, const VkCommandPool& _commandPool, const VkQueue& _graphicsQueue) :
-		m_LogicalDevice(_logicalDevice),
-		m_PhysicalDevice(_physicalDevice),
-		m_CommandPool(_commandPool),
-		m_GraphicsQueue(_graphicsQueue),
+		m_LogicalDevice{ _logicalDevice },
+		m_PhysicalDevice{ _physicalDevice },
+		m_CommandPool{ _commandPool },
+		m_GraphicsQueue{ _graphicsQueue },
 		m_VertexBuffers{}
 	{}
 
@@ -31,9 +31,9 @@ namespace Banshee
 	{
 		assert(_meshComponent != nullptr);
 
-		const uint32 meshId = _meshComponent->GetMeshId();
-		auto vertexBuffer = m_VertexBuffers.find(meshId);
-		
+		const uint32 meshId{ _meshComponent->GetMeshId() };
+		auto vertexBuffer{ m_VertexBuffers.find(meshId) };
+
 		if (vertexBuffer != m_VertexBuffers.end())
 		{
 			const auto duplicatedMesh = MeshSystem::Instance().GetMeshComponentById(meshId);
@@ -52,7 +52,7 @@ namespace Banshee
 		{
 			std::vector<Vertex> vertices{};
 			std::vector<uint32> indices{};
-		
+
 			ShapeFactory::GetShapeData(static_cast<PrimitiveShape>(meshId), vertices, indices);
 			Mesh mesh{};
 			mesh.vertices = vertices;
@@ -69,8 +69,8 @@ namespace Banshee
 	{
 		assert(_meshComponent != nullptr);
 
-		const std::string modelName = _meshComponent->GetModelName();
-		uint32 modelId = 0;
+		const std::string modelName{ _meshComponent->GetModelName() };
+		uint32 modelId{ 0 };
 
 		auto it = m_ModelNameToIdMap.find(modelName);
 		if (it != m_ModelNameToIdMap.end())
@@ -84,8 +84,8 @@ namespace Banshee
 		}
 		else
 		{
-			modelId = static_cast<uint32>(m_ModelNameToIdMap.size());
-			constexpr uint32 modelIdOffset = 1000;
+			modelId = (uint32)(m_ModelNameToIdMap.size());
+			constexpr uint32 modelIdOffset{ 1000 };
 			modelId += modelIdOffset;
 			m_ModelNameToIdMap[modelName] = modelId;
 			_meshComponent->SetMeshId(modelId);

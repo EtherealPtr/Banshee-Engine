@@ -9,8 +9,8 @@
 namespace Banshee
 {
 	VulkanDescriptorSetLayout::VulkanDescriptorSetLayout(const VkDevice& _logicalDevice) :
-		m_LogicalDevice(_logicalDevice),
-		m_DescriptorSetLayout(VK_NULL_HANDLE)
+		m_LogicalDevice{ _logicalDevice },
+		m_DescriptorSetLayout{ VK_NULL_HANDLE }
 	{
 		BE_LOG(LogCategory::Trace, "[DESCRIPTOR SET LAYOUT]: Creating descriptor set layout");
 
@@ -32,7 +32,7 @@ namespace Banshee
 		BE_LOG(LogCategory::Trace, "[DESCRIPTOR SET LAYOUT]: Added descriptor of type VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC at binding 1");
 
 		// Textures
-		const uint32 MAX_TEXTURES = 16;
+		constexpr uint32 MAX_TEXTURES{ 16 };
 		layoutBindings[2].binding = 2;
 		layoutBindings[2].descriptorType = VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE;
 		layoutBindings[2].descriptorCount = MAX_TEXTURES;
@@ -72,9 +72,11 @@ namespace Banshee
 	VulkanDescriptorSetLayout::~VulkanDescriptorSetLayout()
 	{
 		if (m_DescriptorSetLayout == VK_NULL_HANDLE)
+		{
 			return;
+		}
 
 		vkDestroyDescriptorSetLayout(m_LogicalDevice, m_DescriptorSetLayout, nullptr);
 		m_DescriptorSetLayout = VK_NULL_HANDLE;
 	}
-}
+} // End of Banshee namespace

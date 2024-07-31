@@ -18,6 +18,11 @@ namespace Banshee
 		void Reset(const uint16 _fenceIndex = 1) const noexcept;
 		std::vector<VkFence>& Get() noexcept { return m_Fences; }
 
+		VulkanFence(const VulkanFence&) = delete;
+		VulkanFence& operator=(const VulkanFence&) = delete;
+		VulkanFence(VulkanFence&&) = delete;
+		VulkanFence& operator=(VulkanFence&&) = delete;
+
 	private:
 		VkDevice m_LogicalDevice;
 		std::vector<VkFence> m_Fences;

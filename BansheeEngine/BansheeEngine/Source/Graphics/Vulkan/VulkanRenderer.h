@@ -37,6 +37,11 @@ namespace Banshee
 
 		void DrawFrame(const double _deltaTime);
 
+		VulkanRenderer(const VulkanRenderer&) = delete;
+		VulkanRenderer& operator=(const VulkanRenderer&) = delete;
+		VulkanRenderer(VulkanRenderer&&) = delete;
+		VulkanRenderer& operator=(VulkanRenderer&&) = delete;
+
 	private:
 		void AllocateDynamicBufferSpace();
 		void UpdateMaterialData();

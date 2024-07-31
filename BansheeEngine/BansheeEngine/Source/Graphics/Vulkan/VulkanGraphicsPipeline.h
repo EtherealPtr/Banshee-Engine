@@ -19,6 +19,11 @@ namespace Banshee
 		VkPipeline Get() const noexcept { return m_GraphicsPipeline; }
 		VkPipelineLayout GetLayout() const noexcept { return m_PipelineLayout; }
 
+		VulkanGraphicsPipeline(const VulkanGraphicsPipeline&) = delete;
+		VulkanGraphicsPipeline& operator=(const VulkanGraphicsPipeline&) = delete;
+		VulkanGraphicsPipeline(VulkanGraphicsPipeline&&) = delete;
+		VulkanGraphicsPipeline& operator=(VulkanGraphicsPipeline&&) = delete;
+
 	private:
 		VkDevice m_LogicalDevice;
 		VkPipelineLayout m_PipelineLayout;

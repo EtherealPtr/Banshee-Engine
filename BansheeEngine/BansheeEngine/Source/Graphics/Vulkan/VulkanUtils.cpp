@@ -6,12 +6,12 @@ namespace Banshee
 {
 	void VulkanUtils::CheckInstanceExtSupport(const std::vector<const char*>& _requiredExtensions)
 	{
-		unsigned int extensionCount = 0;
+		uint32 extensionCount{ 0 };
 		vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount, nullptr);
 		std::vector<VkExtensionProperties> extensions(extensionCount);
 		vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount, extensions.data());
 
-		bool found = false;
+		bool found{ false };
 
 		for (int i = 0; i < _requiredExtensions.size(); ++i)
 		{
@@ -30,12 +30,12 @@ namespace Banshee
 
 	void VulkanUtils::CheckInstanceLayerSupport(const std::vector<const char*>& _requiredLayers)
 	{
-		unsigned int layerCount = 0;
+		uint32 layerCount{ 0 };
 		vkEnumerateInstanceLayerProperties(&layerCount, nullptr);
 		std::vector<VkLayerProperties> layers(layerCount);
 		vkEnumerateInstanceLayerProperties(&layerCount, layers.data());
 
-		bool found = false;
+		bool found{ false };
 
 		for (int i = 0; i < _requiredLayers.size(); ++i)
 		{
@@ -54,12 +54,12 @@ namespace Banshee
 
 	void VulkanUtils::CheckDeviceExtSupport(const VkPhysicalDevice& _gpu, const std::vector<const char*>& _requiredExtensions)
 	{
-		unsigned int extensionCount = 0;
+		uint32 extensionCount{ 0 };
 		vkEnumerateDeviceExtensionProperties(_gpu, nullptr, &extensionCount, nullptr);
 		std::vector<VkExtensionProperties> extensions(extensionCount);
 		vkEnumerateDeviceExtensionProperties(_gpu, nullptr, &extensionCount, extensions.data());
 
-		bool found = false;
+		bool found{ false };
 
 		for (int i = 0; i < _requiredExtensions.size(); ++i)
 		{
@@ -81,7 +81,7 @@ namespace Banshee
 		VkShaderModuleCreateInfo shaderCreateInfo{};
 		shaderCreateInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
 		shaderCreateInfo.codeSize = _shaderBinaryCode.size();
-		shaderCreateInfo.pCode = reinterpret_cast<const unsigned int*>(_shaderBinaryCode.data());
+		shaderCreateInfo.pCode = reinterpret_cast<const uint32*>(_shaderBinaryCode.data());
 
 		VkShaderModule shaderModule = VK_NULL_HANDLE;
 		if (vkCreateShaderModule(_logicalDevice, &shaderCreateInfo, nullptr, &shaderModule) != VK_SUCCESS)
@@ -187,12 +187,12 @@ namespace Banshee
 		vkBindImageMemory(_logicalDevice, _image, _imageMemory, 0);
 	}
 
-	uint32 VulkanUtils::FindMemoryTypeIndex(const VkPhysicalDevice& _gpu, const uint32 _memoryTypeBits, const uint32 _memoryPropertyFlags)
+	uint32 VulkanUtils::FindMemoryTypeIndex(const VkPhysicalDevice& _gpu, const uint32 _memoryTypeBits, const uint32 _memoryPropertyFlags) noexcept
 	{
 		VkPhysicalDeviceMemoryProperties memoryProperties{};
 		vkGetPhysicalDeviceMemoryProperties(_gpu, &memoryProperties);
 
-		for (uint32_t i = 0; i < memoryProperties.memoryTypeCount; ++i)
+		for (uint32 i = 0; i < memoryProperties.memoryTypeCount; ++i)
 		{
 			if ((_memoryTypeBits & (1 << i)) &&
 				(memoryProperties.memoryTypes[i].propertyFlags & _memoryPropertyFlags) == _memoryPropertyFlags)
@@ -237,11 +237,11 @@ namespace Banshee
 		throw std::runtime_error("ERROR: Failed to find supported format");
 	}
 
-	bool VulkanUtils::HasStencilComponent(const VkFormat _format)
+	constexpr bool VulkanUtils::HasStencilComponent(const VkFormat _format) noexcept
 	{
 		return _format == VK_FORMAT_D32_SFLOAT_S8_UINT || _format == VK_FORMAT_D24_UNORM_S8_UINT;
 	}
-	
+
 	void VulkanUtils::TransitionImageLayout(const VkDevice& _logicalDevice, const VkCommandPool& _commandPool, const VkQueue& _queue, VkImage& _image, const VkFormat _imageFormat, const VkImageLayout _oldLayout, const VkImageLayout _newLayout)
 	{
 		VkCommandBuffer cmdBuffer = BeginSingleTimeCommands(_logicalDevice, _commandPool, _queue);
@@ -268,7 +268,7 @@ namespace Banshee
 		{
 			barrier.srcAccessMask = 0;
 			barrier.dstAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
-			
+
 			srcStage = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
 			dstStage = VK_PIPELINE_STAGE_TRANSFER_BIT;
 		}
@@ -298,7 +298,7 @@ namespace Banshee
 		EndSingleTimeCommands(_logicalDevice, _commandPool, _queue, cmdBuffer);
 	}
 
-	void VulkanUtils::CopyBufferToImage(const VkDevice& _logicalDevice, const VkCommandPool& _commandPool, const VkQueue& _queue, const VkBuffer& _srcBuffer, const VkImage& _image, const uint32 _w, const uint32 _h)
+	void VulkanUtils::CopyBufferToImage(const VkDevice& _logicalDevice, const VkCommandPool& _commandPool, const VkQueue& _queue, const VkBuffer& _srcBuffer, const VkImage& _image, const uint32 _w, const uint32 _h) noexcept
 	{
 		VkCommandBuffer cmdBuffer = BeginSingleTimeCommands(_logicalDevice, _commandPool, _queue);
 
@@ -328,7 +328,7 @@ namespace Banshee
 		EndSingleTimeCommands(_logicalDevice, _commandPool, _queue, cmdBuffer);
 	}
 
-	VkCommandBuffer VulkanUtils::BeginSingleTimeCommands(const VkDevice& _logicalDevice, const VkCommandPool& _commandPool, const VkQueue& _queue)
+	VkCommandBuffer VulkanUtils::BeginSingleTimeCommands(const VkDevice& _logicalDevice, const VkCommandPool& _commandPool, const VkQueue& _queue) noexcept
 	{
 		VkCommandBufferAllocateInfo allocInfo{};
 		allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
@@ -348,7 +348,7 @@ namespace Banshee
 		return commandBuffer;
 	}
 
-	void VulkanUtils::EndSingleTimeCommands(const VkDevice& _logicalDevice, const VkCommandPool& _commandPool, const VkQueue& _queue, const VkCommandBuffer& _commandBuffer)
+	void VulkanUtils::EndSingleTimeCommands(const VkDevice& _logicalDevice, const VkCommandPool& _commandPool, const VkQueue& _queue, const VkCommandBuffer& _commandBuffer) noexcept
 	{
 		vkEndCommandBuffer(_commandBuffer);
 

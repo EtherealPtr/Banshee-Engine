@@ -8,32 +8,35 @@ typedef struct VkImageView_T* VkImageView;
 typedef struct VkSampler_T* VkSampler;
 typedef enum VkDescriptorType VkDescriptorType;
 
-struct DescriptorSetWriteBufferProperties
+namespace Banshee
 {
-	DescriptorSetWriteBufferProperties(const uint32 _binding, const VkDescriptorType _descType, const VkBuffer& _buffer, const uint64 _bufferRance) noexcept :
-		binding(_binding),
-		descriptorType(_descType),
-		buffer(_buffer),
-		bufferRange(_bufferRance)
-	{}
+	struct DescriptorSetWriteBufferProperties
+	{
+		DescriptorSetWriteBufferProperties(const uint32 _binding, const VkDescriptorType _descType, const VkBuffer& _buffer, const uint64 _bufferRance) noexcept :
+			m_Binding(_binding),
+			m_DescriptorType(_descType),
+			m_Buffer(_buffer),
+			m_BufferRange(_bufferRance)
+		{}
 
-	uint32 binding;
-	VkDescriptorType descriptorType;
-	VkBuffer buffer;
-	uint64 bufferRange;
-};
+		uint32 m_Binding;
+		VkDescriptorType m_DescriptorType;
+		VkBuffer m_Buffer;
+		uint64 m_BufferRange;
+	};
 
-struct DescriptorSetWriteTextureProperties
-{
-	DescriptorSetWriteTextureProperties(const uint32 _binding, const VkDescriptorType _descType, const std::vector<VkImageView>& _imageViews, const VkSampler& _sampler) :
-		binding(_binding),
-		descriptorType(_descType),
-		imageViews(_imageViews),
-		sampler(_sampler)
-	{}
+	struct DescriptorSetWriteTextureProperties
+	{
+		DescriptorSetWriteTextureProperties(const uint32 _binding, const VkDescriptorType _descType, const std::vector<VkImageView>& _imageViews, const VkSampler& _sampler) :
+			m_Binding(_binding),
+			m_DescriptorType(_descType),
+			m_ImageViews(_imageViews),
+			m_Sampler(_sampler)
+		{}
 
-	uint32 binding;
-	VkDescriptorType descriptorType;
-	std::vector<VkImageView> imageViews;
-	VkSampler sampler;
-};
+		uint32 m_Binding;
+		VkDescriptorType m_DescriptorType;
+		std::vector<VkImageView> m_ImageViews;
+		VkSampler m_Sampler;
+	};
+} // End of Banshee namespace

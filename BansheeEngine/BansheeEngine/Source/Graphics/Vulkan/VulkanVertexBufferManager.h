@@ -19,6 +19,11 @@ namespace Banshee
 		void CreateModelVertexBuffer(MeshComponent* _meshComponent);
 		VulkanVertexBuffer* GetVertexBuffer(const uint32 _bufferId);
 
+		VulkanVertexBufferManager(const VulkanVertexBufferManager&) = delete;
+		VulkanVertexBufferManager& operator=(const VulkanVertexBufferManager&) = delete;
+		VulkanVertexBufferManager(VulkanVertexBufferManager&&) = delete;
+		VulkanVertexBufferManager& operator=(VulkanVertexBufferManager&&) = delete;
+
 	private:
 		VkDevice m_LogicalDevice;
 		VkPhysicalDevice m_PhysicalDevice;

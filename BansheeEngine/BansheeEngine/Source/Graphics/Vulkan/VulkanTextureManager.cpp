@@ -9,20 +9,20 @@
 namespace Banshee
 {
 	VulkanTextureManager::VulkanTextureManager(const VkDevice& _device, const VkPhysicalDevice& _gpu, const VkQueue& _graphicsQueue, const VkCommandPool& _commandPool) noexcept :
-		m_LogicalDevice(_device),
-		m_PhysicalDevice(_gpu),
-		m_GraphicsQueue(_graphicsQueue),
-		m_CommandPool(_commandPool),
-		m_TextureImageFormat(VK_FORMAT_R8G8B8A8_SRGB)
+		m_LogicalDevice{ _device },
+		m_PhysicalDevice{ _gpu },
+		m_GraphicsQueue{ _graphicsQueue },
+		m_CommandPool{ _commandPool },
+		m_TextureImageFormat{ VK_FORMAT_R8G8B8A8_SRGB }
 	{}
 
 	VulkanTextureManager::~VulkanTextureManager()
 	{
 		for (const auto& image : m_TextureImages)
 		{
-			vkDestroyImageView(m_LogicalDevice, image.imageView, nullptr);
-			vkDestroyImage(m_LogicalDevice, image.image, nullptr);
-			vkFreeMemory(m_LogicalDevice, image.imageMemory, nullptr);
+			vkDestroyImageView(m_LogicalDevice, image.m_ImageView, nullptr);
+			vkDestroyImage(m_LogicalDevice, image.m_Image, nullptr);
+			vkFreeMemory(m_LogicalDevice, image.m_ImageMemory, nullptr);
 		}
 	}
 
@@ -43,7 +43,7 @@ namespace Banshee
 
 		for (const auto& image : m_TextureImages)
 		{
-			imageViews.emplace_back(image.imageView);
+			imageViews.emplace_back(image.m_ImageView);
 		}
 
 		return imageViews;
@@ -53,7 +53,7 @@ namespace Banshee
 	{
 		VkBuffer stagingBuffer{};
 		VkDeviceMemory stagingBufferMemory{};
-		
+
 		VulkanUtils::CreateBuffer
 		(
 			m_LogicalDevice,
@@ -67,7 +67,7 @@ namespace Banshee
 
 		void* data = nullptr;
 		vkMapMemory(m_LogicalDevice, stagingBufferMemory, 0, _sizeOfBuffer, 0, &data);
-		memcpy(data, _pixels, static_cast<size_t>(_sizeOfBuffer));
+		memcpy(data, _pixels, _sizeOfBuffer);
 		vkUnmapMemory(m_LogicalDevice, stagingBufferMemory);
 
 		CreateTextureImage(stagingBuffer, _imgW, _imgH);

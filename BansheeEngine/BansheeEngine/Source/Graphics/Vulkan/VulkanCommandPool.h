@@ -15,6 +15,11 @@ namespace Banshee
 
 		VkCommandPool Get() const noexcept { return m_CommandPool; }
 
+		VulkanCommandPool(const VulkanCommandPool&) = delete;
+		VulkanCommandPool& operator=(const VulkanCommandPool&) = delete;
+		VulkanCommandPool(VulkanCommandPool&&) = delete;
+		VulkanCommandPool& operator=(VulkanCommandPool&&) = delete;
+
 	private:
 		VkDevice m_LogicalDevice;
 		VkCommandPool m_CommandPool;

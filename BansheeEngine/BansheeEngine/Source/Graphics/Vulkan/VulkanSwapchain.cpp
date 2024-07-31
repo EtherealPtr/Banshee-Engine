@@ -8,7 +8,7 @@
 
 namespace Banshee
 {
-	VkSurfaceFormatKHR PickSurfaceFormat(const VkPhysicalDevice& _gpu, const VkSurfaceKHR& _surface)
+	static VkSurfaceFormatKHR PickSurfaceFormat(const VkPhysicalDevice& _gpu, const VkSurfaceKHR& _surface)
 	{
 		// Query available surface formats
 		uint32 formatCount = 0;
@@ -30,7 +30,7 @@ namespace Banshee
 		return surfaceFormats[0];
 	}
 
-	VkPresentModeKHR PickPresentMode(const VkPhysicalDevice& _gpu, const VkSurfaceKHR& _surface)
+	static VkPresentModeKHR PickPresentMode(const VkPhysicalDevice& _gpu, const VkSurfaceKHR& _surface)
 	{
 		// Query available present modes
 		uint32 presentModeCount = 0;
@@ -54,7 +54,7 @@ namespace Banshee
 		return VK_PRESENT_MODE_FIFO_KHR;
 	}
 
-	VkExtent2D PickExtent(const VkSurfaceCapabilitiesKHR& _surfaceCapabilities, const uint32 _w, const uint32 _h)
+	static VkExtent2D PickExtent(const VkSurfaceCapabilitiesKHR& _surfaceCapabilities, const uint32 _w, const uint32 _h) noexcept
 	{
 		// If the surface extent is undefined, set it to the window size (_w, _h)
 		if (_surfaceCapabilities.currentExtent.width == UINT32_MAX)
@@ -69,9 +69,9 @@ namespace Banshee
 		return _surfaceCapabilities.currentExtent;
 	}
 
-	uint32 PickImageCount(const VkSurfaceCapabilitiesKHR& _surfaceCapabilities)
+	static uint32 PickImageCount(const VkSurfaceCapabilitiesKHR& _surfaceCapabilities)
 	{
-		uint32 imageCount = _surfaceCapabilities.minImageCount + 1;
+		const uint32 imageCount{ _surfaceCapabilities.minImageCount + 1 };
 
 		if (_surfaceCapabilities.maxImageCount > 0 && imageCount > _surfaceCapabilities.maxImageCount)
 		{
@@ -84,13 +84,13 @@ namespace Banshee
 	}
 
 	VulkanSwapchain::VulkanSwapchain(const VkDevice& _logicalDevice, const VkPhysicalDevice& _gpu, const VkSurfaceKHR& _surface, const uint32 _w, const uint32 _h) :
-		m_Swapchain(VK_NULL_HANDLE),
-		m_Device(_logicalDevice),
+		m_Swapchain{ VK_NULL_HANDLE },
+		m_Device{ _logicalDevice },
 		m_SwapchainImages{},
 		m_SwapchainImageViews{},
-		m_Format(0),
-		m_Width(0),
-		m_Height(0)
+		m_Format{ 0 },
+		m_Width{ 0 },
+		m_Height{ 0 }
 	{
 		BE_LOG(LogCategory::Trace, "[SWAPCHAIN]: Creating Vulkan Swapchain");
 
@@ -99,14 +99,14 @@ namespace Banshee
 		vkGetPhysicalDeviceSurfaceCapabilitiesKHR(_gpu, _surface, &surfaceCapabilities);
 
 		// Pick swapchain surface format and color space
-		VkSurfaceFormatKHR surfaceFormat = PickSurfaceFormat(_gpu, _surface);
+		const VkSurfaceFormatKHR surfaceFormat = PickSurfaceFormat(_gpu, _surface);
 		m_Format = static_cast<unsigned int>(surfaceFormat.format);
 
 		// Pick swapchain present mode
-		VkPresentModeKHR presentMode = PickPresentMode(_gpu, _surface);
+		const VkPresentModeKHR presentMode = PickPresentMode(_gpu, _surface);
 
 		// Pick swapchain extent
-		VkExtent2D extent = PickExtent(surfaceCapabilities, _w, _h);
+		const VkExtent2D extent = PickExtent(surfaceCapabilities, _w, _h);
 		m_Width = extent.width;
 		m_Height = extent.height;
 
@@ -162,4 +162,4 @@ namespace Banshee
 		vkDestroySwapchainKHR(m_Device, m_Swapchain, nullptr);
 		m_Swapchain = VK_NULL_HANDLE;
 	}
-}
+} // End of Banshee namespace

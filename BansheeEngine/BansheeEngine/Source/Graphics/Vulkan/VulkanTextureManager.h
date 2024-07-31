@@ -18,14 +18,14 @@ namespace Banshee
 	struct VulkanImage
 	{
 		VulkanImage(const VkImage& _image, const VkImageView _imageView, const VkDeviceMemory& _imageMemory) noexcept :
-			image(_image),
-			imageView(_imageView),
-			imageMemory(_imageMemory)
+			m_Image{ _image },
+			m_ImageView{ _imageView },
+			m_ImageMemory{ _imageMemory }
 		{}
 
-		VkImage image;
-		VkImageView imageView;
-		VkDeviceMemory imageMemory;
+		VkImage m_Image;
+		VkImageView m_ImageView;
+		VkDeviceMemory m_ImageMemory;
 	};
 
 	class VulkanTextureManager
@@ -36,6 +36,11 @@ namespace Banshee
 
 		std::vector<VkImageView> GetTextureImageViews() const;
 		void UploadTextures();
+
+		VulkanTextureManager(const VulkanTextureManager&) = delete;
+		VulkanTextureManager& operator=(const VulkanTextureManager&) = delete;
+		VulkanTextureManager(VulkanTextureManager&&) = delete;
+		VulkanTextureManager& operator=(VulkanTextureManager&&) = delete;
 
 	private:
 		void CreateStagingBuffer(const uint64 _sizeOfBuffer, const unsigned char* _pixels, const uint32 _imgW, const uint32 _imgH);

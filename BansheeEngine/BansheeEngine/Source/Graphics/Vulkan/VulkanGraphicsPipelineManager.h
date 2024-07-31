@@ -20,6 +20,11 @@ namespace Banshee
 
         const std::shared_ptr<VulkanGraphicsPipeline>& GetPipeline(const ShaderType _shaderType) { return m_Pipelines[_shaderType]; }
 
+        VulkanGraphicsPipelineManager(const VulkanGraphicsPipelineManager&) = delete;
+        VulkanGraphicsPipelineManager& operator=(const VulkanGraphicsPipelineManager&) = delete;
+        VulkanGraphicsPipelineManager(VulkanGraphicsPipelineManager&&) = delete;
+        VulkanGraphicsPipelineManager& operator=(VulkanGraphicsPipelineManager&&) = delete;
+
     private:
         std::unordered_map<ShaderType, std::shared_ptr<VulkanGraphicsPipeline>> m_Pipelines;
     };

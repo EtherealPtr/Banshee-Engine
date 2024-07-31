@@ -6,10 +6,10 @@
 namespace Banshee
 {
 	VulkanUniformBuffer::VulkanUniformBuffer(const VkDevice& _logicalDevice, const VkPhysicalDevice& _gpu, const uint64 _size) :
-		m_LogicalDevice(_logicalDevice),
-		m_Buffer(VK_NULL_HANDLE),
-		m_BufferMemory(VK_NULL_HANDLE),
-		m_BufferSize(_size)
+		m_LogicalDevice{ _logicalDevice },
+		m_Buffer{ VK_NULL_HANDLE },
+		m_BufferMemory{ VK_NULL_HANDLE },
+		m_BufferSize{ _size }
 	{
 		// Create buffer object
 		VkBufferCreateInfo bufferCreateInfo{};
@@ -44,10 +44,10 @@ namespace Banshee
 		m_Buffer = VK_NULL_HANDLE;
 	}
 
-	void VulkanUniformBuffer::CopyData(void* _pData)
+	void VulkanUniformBuffer::CopyData(void* _pData) const noexcept
 	{
 		// Map the memory
-		void* mappedData = nullptr;
+		void* mappedData{ nullptr };
 		vkMapMemory(m_LogicalDevice, m_BufferMemory, 0, m_BufferSize, 0, &mappedData);
 
 		// Copy the data to the buffer
@@ -56,4 +56,4 @@ namespace Banshee
 		// Unmap the memory
 		vkUnmapMemory(m_LogicalDevice, m_BufferMemory);
 	}
-}
+} // End of Banshee namespace

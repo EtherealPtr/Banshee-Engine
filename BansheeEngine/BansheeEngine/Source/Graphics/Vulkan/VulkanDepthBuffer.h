@@ -20,6 +20,11 @@ namespace Banshee
 		VkFormat GetFormat() const noexcept { return m_DepthFormat; }
 		VkImageView GetImageView() const noexcept { return m_DepthImageView; }
 
+		VulkanDepthBuffer(const VulkanDepthBuffer&) = delete;
+		VulkanDepthBuffer& operator=(const VulkanDepthBuffer&) = delete;
+		VulkanDepthBuffer(VulkanDepthBuffer&&) = delete;
+		VulkanDepthBuffer& operator=(VulkanDepthBuffer&&) = delete;
+
 	private:
 		VkDevice m_LogicalDevice;
 		VkImage m_DepthImage;
