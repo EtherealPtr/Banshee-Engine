@@ -75,6 +75,6 @@ namespace Banshee
 		std::unique_ptr<Camera> m_Camera;
 		uint8 m_CurrentFrameIndex;
 		size_t m_MaterialDynamicBufferMemAlignment;
-		Material* m_MaterialDynamicBufferMemBlock;
+		std::unique_ptr<Material, void(*)(Material*)> m_MaterialDynamicBufferMemBlock;
 	};
 } // End of Banshee namespace
