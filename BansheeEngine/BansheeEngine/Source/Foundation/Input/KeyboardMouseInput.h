@@ -18,6 +18,8 @@ namespace Banshee
 		virtual double GetYChange() const noexcept override { return m_MouseYChange; }
 		bool IsKeyPressed(const int32 _key) const noexcept;
 		void GetCursorPosition(double& _x, double& _y) const noexcept;
+		void UpdateKeyInputs();
+		void UpdateMousePosition();
 
 	private:
 		void LockCursor() noexcept;

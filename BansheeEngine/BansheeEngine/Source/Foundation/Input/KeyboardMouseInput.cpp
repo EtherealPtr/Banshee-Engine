@@ -16,6 +16,12 @@ namespace Banshee
 
 	void KeyboardMouseInput::Update()
 	{
+		UpdateKeyInputs();
+		UpdateMousePosition();
+	}
+
+	void KeyboardMouseInput::UpdateKeyInputs()
+	{
 		for (const auto& binding : m_InputBindings)
 		{
 			if (IsKeyPressed(binding.m_Key))
@@ -23,7 +29,10 @@ namespace Banshee
 				binding.m_Callback();
 			}
 		}
+	}
 
+	void KeyboardMouseInput::UpdateMousePosition()
+	{
 		double mouseX{ 0.0 }, mouseY{ 0.0 };
 		GetCursorPosition(mouseX, mouseY);
 
