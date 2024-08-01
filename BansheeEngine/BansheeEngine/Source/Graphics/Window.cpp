@@ -6,7 +6,7 @@
 
 namespace Banshee
 {
-	Window::Window(const uint16 _width, const uint16 _height, const char* _title) :
+	Window::Window(const uint16 _width, const uint16 _height, const std::string_view _title) :
 		m_Window{ nullptr }
 	{
 		BE_LOG(LogCategory::Trace, "[WINDOW]: Creating window");
@@ -19,7 +19,7 @@ namespace Banshee
 		glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
 		glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 
-		m_Window = glfwCreateWindow(_width, _height, _title, nullptr, nullptr);
+		m_Window = glfwCreateWindow(_width, _height, _title.data(), nullptr, nullptr);
 		if (!m_Window)
 		{
 			glfwTerminate();

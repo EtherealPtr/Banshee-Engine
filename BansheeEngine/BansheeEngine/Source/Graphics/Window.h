@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Foundation/Platform.h"
+#include <string>
 
 struct GLFWwindow;
 
@@ -9,7 +10,7 @@ namespace Banshee
 	class Window
 	{
 	public:
-		Window(const uint16 _width, const uint16 _height, const char* _title);
+		Window(const uint16 _width, const uint16 _height, const std::string_view _title);
 		~Window();
 
 		bool ShouldWindowClose() const noexcept;

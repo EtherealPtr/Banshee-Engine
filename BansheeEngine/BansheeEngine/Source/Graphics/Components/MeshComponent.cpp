@@ -4,7 +4,7 @@
 
 namespace Banshee
 {
-	MeshComponent::MeshComponent(const std::string& _modelPath, const ShaderType _shaderType) :
+	MeshComponent::MeshComponent(std::string_view _modelPath, const ShaderType _shaderType) :
 		m_MeshId{ 0 },
 		m_TexId{ 0 },
 		m_ShaderType{ _shaderType },
@@ -28,15 +28,15 @@ namespace Banshee
 		SetMeshId(static_cast<uint32>(_basicShape));
 	}
 
-	void MeshComponent::SetTexture(const char* _pathToTexture)
+	void MeshComponent::SetTexture(std::string_view _pathToTexture)
 	{
-		m_TexId = g_ResourceManager.LoadImageResource(_pathToTexture);
+		m_TexId = g_ResourceManager.LoadImageResource(_pathToTexture.data());
 		m_HasTexture = true;
 	}
 
 	const std::string MeshComponent::GetModelPath() const
 	{
-		const std::string modelsFolder = "Models/";
-		return PathManager::GetEngineResDirPath() + modelsFolder + m_ModelName;
+		const std::string_view modelsFolder{ "Models/" };
+		return PathManager::GetEngineResDirPath() + modelsFolder.data() + m_ModelName;
 	}
 } // End of Banshee namespace

@@ -18,11 +18,11 @@ namespace Banshee
 		ResourceManager();
 		~ResourceManager() = default;
 
-		uint16 LoadImageResource(const char* _pathToImage) const;
+		uint16 LoadImageResource(std::string_view _pathToImage) const;
 		uint16 LoadImageFromMemory(const unsigned char* _bytes, const int32 _size) const;
-		std::string GetAssetName(const std::string& _assetName) const;
-		std::ifstream ReadFile(const char* _filePath) const;
-		std::vector<char> ReadBinaryFile(const char* _fileName) const;
+		std::string GetAssetName(std::string_view _assetName) const;
+		std::ifstream ReadFile(std::string_view _filePath) const;
+		std::vector<char> ReadBinaryFile(std::string_view _fileName) const;
 		const std::vector<std::shared_ptr<Image>>& GetImages() const noexcept;
 
 		ResourceManager(const ResourceManager&) = delete;

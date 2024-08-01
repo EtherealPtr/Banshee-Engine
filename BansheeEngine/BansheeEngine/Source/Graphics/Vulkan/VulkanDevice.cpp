@@ -45,7 +45,7 @@ namespace Banshee
 		std::vector<VkPhysicalDevice> physicalDevices(deviceCount);
 		vkEnumeratePhysicalDevices(_vkInstance, &deviceCount, physicalDevices.data());
 
-		std::string preferredDeviceName{ "" };
+		std::string_view preferredDeviceName{ "" };
 		uint32 maxScore{ 0 };
 
 		for (const auto& gpu : physicalDevices)
@@ -74,7 +74,7 @@ namespace Banshee
 			throw std::runtime_error("ERROR: Failed to pick a suitable GPU\n");
 		}
 
-		BE_LOG(LogCategory::Info, "[DEVICE]: Selected GPU: %s", preferredDeviceName.c_str());
+		BE_LOG(LogCategory::Info, "[DEVICE]: Selected GPU: %s", preferredDeviceName.data());
 	}
 
 	uint32 VulkanDevice::RateDeviceSuitability(const VkPhysicalDevice& _gpu, const VkPhysicalDeviceProperties& _deviceProperties)
@@ -134,7 +134,7 @@ namespace Banshee
 	{
 		assert(m_PhysicalDevice != VK_NULL_HANDLE);
 
-		uint32 queueFamilyCount = 0;
+		uint32 queueFamilyCount{ 0 };
 		vkGetPhysicalDeviceQueueFamilyProperties(m_PhysicalDevice, &queueFamilyCount, nullptr);
 		std::vector<VkQueueFamilyProperties> queueFamilies(queueFamilyCount);
 		vkGetPhysicalDeviceQueueFamilyProperties(m_PhysicalDevice, &queueFamilyCount, queueFamilies.data());
@@ -157,7 +157,7 @@ namespace Banshee
 				}
 			}
 
-			VkBool32 presentSupport = VK_FALSE;
+			VkBool32 presentSupport{ VK_FALSE };
 			vkGetPhysicalDeviceSurfaceSupportKHR(m_PhysicalDevice, i, m_Surface, &presentSupport);
 
 			if (m_QueueIndices.m_PresentationQueueFamilyIndex == UINT32_MAX && presentSupport)

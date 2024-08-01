@@ -4,9 +4,9 @@
 
 namespace Banshee
 {
-	const EngineConfig& INIParser::ParseConfigSettings(const std::string& _filePath)
+	const EngineConfig& INIParser::ParseConfigSettings(std::string_view _filePath)
 	{
-		std::ifstream file = g_ResourceManager.ReadFile(_filePath.c_str());
+		std::ifstream file = g_ResourceManager.ReadFile(_filePath.data());
 		if (!file.is_open())
 		{
 			return m_Config;
@@ -23,25 +23,25 @@ namespace Banshee
 			}
 
 			const size_t delimiterPos = line.find('=');
-			if (delimiterPos == std::string::npos)
+			if (delimiterPos == std::string_view::npos)
 			{
 				continue;
 			}
 
-			const std::string key = line.substr(0, delimiterPos);
-			const std::string value = line.substr(delimiterPos + 1);
+			const std::string_view key = std::string_view(line).substr(0, delimiterPos);
+			const std::string_view value = std::string_view(line).substr(delimiterPos + 1);
 
 			if (key == "WindowTitle")
 			{
-				m_Config.m_WindowTitle = { value.c_str() };
+				m_Config.m_WindowTitle = value;
 			}
 			else if (key == "WindowWidth")
 			{
-				m_Config.m_WindowWidth = { std::stoul(value) };
+				m_Config.m_WindowWidth = std::stoul(std::string(value));
 			}
 			else if (key == "WindowHeight")
 			{
-				m_Config.m_WindowHeight = { std::stoul(value) };
+				m_Config.m_WindowHeight = std::stoul(std::string(value));
 			}
 		}
 

@@ -69,10 +69,10 @@ namespace Banshee
 	{
 		assert(_meshComponent != nullptr);
 
-		const std::string modelName{ _meshComponent->GetModelName() };
+		const std::string_view modelName{ _meshComponent->GetModelName() };
 		uint32 modelId{ 0 };
 
-		auto it = m_ModelNameToIdMap.find(modelName);
+		auto it = m_ModelNameToIdMap.find(modelName.data());
 		if (it != m_ModelNameToIdMap.end())
 		{
 			modelId = it->second;
@@ -87,7 +87,7 @@ namespace Banshee
 			modelId = (uint32)(m_ModelNameToIdMap.size());
 			constexpr uint32 modelIdOffset{ 1000 };
 			modelId += modelIdOffset;
-			m_ModelNameToIdMap[modelName] = modelId;
+			m_ModelNameToIdMap[modelName.data()] = modelId;
 			_meshComponent->SetMeshId(modelId);
 		}
 
@@ -99,7 +99,7 @@ namespace Banshee
 
 		std::vector<Vertex> vertices{};
 		std::vector<uint32> indices{};
-		const ModelLoadingSystem modelLoadingSystem(_meshComponent->GetModelPath().c_str(), _meshComponent, vertices, indices);
+		const ModelLoadingSystem modelLoadingSystem{ _meshComponent->GetModelPath().c_str(), _meshComponent, vertices, indices };
 
 		GenerateBuffers(modelId, vertices.data(), sizeof(Vertex) * vertices.size(), indices.data(), sizeof(uint32) * indices.size());
 	}

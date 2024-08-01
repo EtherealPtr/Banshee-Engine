@@ -15,7 +15,7 @@ namespace Banshee
 	{
 		BE_LOG(LogCategory::Trace, "[APPLICATION]: Banshee initializing");
 		const EngineConfig configSettings = m_INIParser->ParseConfigSettings("config.ini");
-		m_Window = std::make_unique<Window>(configSettings.m_WindowWidth, configSettings.m_WindowHeight, configSettings.m_WindowTitle.c_str());
+		m_Window = std::make_unique<Window>(configSettings.m_WindowWidth, configSettings.m_WindowHeight, configSettings.m_WindowTitle);
 	}
 
 	Application::~Application()
@@ -26,7 +26,7 @@ namespace Banshee
 	void Application::InitializeRenderer()
 	{
 		BE_LOG(LogCategory::Trace, "[APPLICATION]: Beginning post-client initialization step");
-		m_Renderer = std::make_unique<VulkanRenderer>(m_Window.get());
+		m_Renderer = std::make_unique<VulkanRenderer>(m_Window);
 	}
 
 	void Application::Run() const

@@ -39,9 +39,9 @@ namespace Banshee
 {
 	constexpr uint64 g_MaxEntities{ 512 };
 
-	VulkanRenderer::VulkanRenderer(const Window* _window) :
+	VulkanRenderer::VulkanRenderer(const std::unique_ptr<Window>& _window) :
 		m_VkInstance{ std::make_unique<VulkanInstance>() },
-		m_VkSurface{ std::make_unique<VulkanSurface>(_window->GetWindow(), m_VkInstance->Get()) },
+		m_VkSurface{ std::make_unique<VulkanSurface>(_window->GetWindow(), m_VkInstance->Get())},
 		m_VkDevice{ std::make_unique<VulkanDevice>(m_VkInstance->Get(), m_VkSurface->Get()) },
 		m_VkSwapchain{ std::make_unique<VulkanSwapchain>(m_VkDevice->GetLogicalDevice(), m_VkDevice->GetPhysicalDevice(), m_VkSurface->Get(), _window->GetWidth(), _window->GetHeight()) },
 		m_DepthBuffer{ std::make_unique<VulkanDepthBuffer>(m_VkDevice->GetLogicalDevice(), m_VkDevice->GetPhysicalDevice(), m_VkSwapchain->GetWidth(), m_VkSwapchain->GetHeight()) },

@@ -15,7 +15,7 @@ namespace Banshee
 		~Logger();
 
 		template<typename... Args>
-		void PrintLog(const LogCategory _category, const char* _format, Args... _args) const;
+		void PrintLog(const LogCategory _category, std::string_view _format, Args... _args) const;
 
 		Logger(const Logger&) = delete;
 		Logger& operator=(const Logger&) = delete;
@@ -34,16 +34,16 @@ namespace Banshee
 	extern const Logger g_Logger; // Defined in Logger.cpp
 
 	template<typename... Args>
-	inline void Logger::PrintLog(const LogCategory _category, const char* _format, Args... _args) const
+	inline void Logger::PrintLog(const LogCategory _category, std::string_view _format, Args... _args) const
 	{
 		std::ostringstream oss{};
-		std::string categoryText{};
-	
-		const std::string reset{ "\033[0m" };
-		const std::string red{ "\033[31m" };
-		const std::string green{ "\033[32m" };
-		const std::string yellow{ "\033[33m" };
-		std::string color{ reset };
+		std::string_view categoryText{};
+
+		constexpr std::string_view reset{ "\033[0m" };
+		constexpr std::string_view red{ "\033[31m" };
+		constexpr std::string_view green{ "\033[32m" };
+		constexpr std::string_view yellow{ "\033[33m" };
+		std::string_view color{ reset };
 	
 		switch (_category)
 		{
@@ -65,11 +65,11 @@ namespace Banshee
 		}
 	
 		char buffer[1024]{};
-		snprintf(buffer, sizeof(buffer), _format, _args...);
+		snprintf(buffer, sizeof(buffer), _format.data(), _args...);
 		oss << categoryText << buffer;
-	
+
 		const std::string outputLog{ oss.str() };
-		printf("%s%s\n", color.c_str(), outputLog.c_str());
+		printf("%s%s\n", color.data(), outputLog.c_str());
 		m_LogEvent(outputLog.c_str());
 	}
 

@@ -32,7 +32,7 @@ namespace Banshee
 	class VulkanRenderer
 	{
 	public:
-		explicit VulkanRenderer(const Window* _window);
+		explicit VulkanRenderer(const std::unique_ptr<Window>& _window);
 		~VulkanRenderer() noexcept;
 
 		void DrawFrame(const double _deltaTime);
