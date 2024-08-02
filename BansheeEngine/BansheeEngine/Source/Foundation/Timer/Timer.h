@@ -10,6 +10,7 @@ namespace Banshee
 	public:
 		Timer() noexcept :
 			m_LastTime{ clock_t::now() },
+			m_StartTime{ clock_t::now() },
 			m_DeltaTime{ 0.0 },
 			m_ElapsedTime{ 0.0 },
 			m_FrameCount{ 0 },
@@ -20,12 +21,15 @@ namespace Banshee
 		void Update();
 		void ToggleFpsDisplay() noexcept { m_FpsDisplayEnabled = !m_FpsDisplayEnabled; }
 		double GetDeltaTime() const noexcept { return m_DeltaTime; }
+		void StartTimer() noexcept;
+		void StopTimer() const;
 
 	private:
 		using clock_t = std::chrono::steady_clock;
 		using time_point_t = std::chrono::time_point<clock_t>;
 
 		time_point_t m_LastTime;
+		time_point_t m_StartTime;
 		double m_DeltaTime;
 		double m_ElapsedTime;
 		int32 m_FrameCount;

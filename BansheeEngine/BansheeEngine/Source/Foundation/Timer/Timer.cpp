@@ -26,4 +26,15 @@ namespace Banshee
             BE_LOG(LogCategory::Trace, "FPS: %d", m_Fps);
         }
 	}
+
+    void Timer::StartTimer() noexcept
+    {
+        m_StartTime = clock_t::now();
+    }
+
+    void Timer::StopTimer() const
+    {
+        const auto elapsedTime = std::chrono::duration_cast<std::chrono::milliseconds>(clock_t::now() - m_StartTime).count();
+        BE_LOG(LogCategory::Trace, "Elapsed time: %d", elapsedTime);
+    }
 } // End of Banshee namespace
