@@ -2,18 +2,16 @@
 
 #include <memory>
 #include <vector>
-#include "Graphics/Components/Light/LightComponent.h"
 
 namespace Banshee
 {
+    class LightComponent;
+
     class LightSystem
     {
     public:
-        static LightSystem& Instance() noexcept
-        {
-            static LightSystem instance;
-            return instance;
-        }
+        LightSystem() noexcept = default;
+        ~LightSystem() noexcept = default;
 
         void SetLightComponents(const std::vector<std::shared_ptr<LightComponent>>& _lightComponents) { m_LightComponents = _lightComponents; }
         const std::vector<std::shared_ptr<LightComponent>>& GetLightComponents() const noexcept { return m_LightComponents; }
@@ -22,10 +20,6 @@ namespace Banshee
         LightSystem(LightSystem&&) = delete;
         LightSystem& operator=(const LightSystem&) = delete;
         LightSystem& operator=(LightSystem&&) = delete;
-
-    protected:
-        LightSystem() noexcept = default;
-        ~LightSystem() noexcept = default;
 
     private:
         std::vector<std::shared_ptr<LightComponent>> m_LightComponents;

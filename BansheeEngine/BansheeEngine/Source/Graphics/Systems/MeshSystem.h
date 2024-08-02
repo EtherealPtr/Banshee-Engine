@@ -11,7 +11,9 @@ namespace Banshee
 	class MeshSystem
 	{
 	public:
-		static MeshSystem& Instance() noexcept;
+		MeshSystem() noexcept = default;
+		~MeshSystem() noexcept = default;
+
 		void SetMeshComponents(const std::vector<std::shared_ptr<MeshComponent>>& _meshComponents);
 		const std::vector<std::shared_ptr<MeshComponent>>& GetMeshComponents() const noexcept { return m_MeshRenderers; }
 		std::shared_ptr<MeshComponent> GetMeshComponentById(const uint32 _meshId) const noexcept;
@@ -20,10 +22,6 @@ namespace Banshee
 		MeshSystem(MeshSystem&&) = delete;
 		void operator=(const MeshSystem&) = delete;
 		void operator=(MeshSystem&&) = delete;
-
-	protected:
-		MeshSystem() noexcept = default;
-		~MeshSystem() noexcept = default;
 
 	private:
 		std::vector<std::shared_ptr<MeshComponent>> m_MeshRenderers;

@@ -20,7 +20,7 @@ namespace Banshee
 	class ModelLoadingSystem
 	{
 	public:
-		ModelLoadingSystem(const char* _modelPath, MeshComponent* _meshComponent, std::vector<Vertex>& _vertices, std::vector<uint32>& _indices);
+		ModelLoadingSystem(const char* _modelPath, MeshComponent* const _meshComponent, std::vector<Vertex>& _vertices, std::vector<uint32>& _indices);
 		~ModelLoadingSystem() = default;
 
 		ModelLoadingSystem(const ModelLoadingSystem&) = delete;
@@ -29,9 +29,9 @@ namespace Banshee
 		void operator=(ModelLoadingSystem&&) = delete;
 
 	private:
-		void LoadModel(const tinygltf::Model& _model, MeshComponent* _meshComponent, std::vector<Vertex>& _vertices, std::vector<uint32>& _indices);
+		void LoadModel(const tinygltf::Model& _model, MeshComponent* const _meshComponent, std::vector<Vertex>& _vertices, std::vector<uint32>& _indices);
 		void GetNodeTransform(const tinygltf::Node& _node, glm::mat4& _outTransform) const noexcept;
-		void LoadMaterial(const tinygltf::Model& _model, const tinygltf::Primitive& _primitive, Mesh* _subMesh);
+		void LoadMaterial(const tinygltf::Model& _model, const tinygltf::Primitive& _primitive, Mesh* const _subMesh);
 
 	private:
 		std::vector<uint16> m_TextureIds;

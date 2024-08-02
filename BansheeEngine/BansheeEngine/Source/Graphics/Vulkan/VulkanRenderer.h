@@ -28,12 +28,14 @@ namespace Banshee
 	class Window;
 	class Camera;
 	class Material;
+	class MeshSystem;
+	class LightSystem;
 
 	class VulkanRenderer
 	{
 	public:
 		explicit VulkanRenderer(const std::unique_ptr<Window>& _window);
-		~VulkanRenderer() noexcept;
+		~VulkanRenderer();
 
 		void DrawFrame(const double _deltaTime);
 
@@ -43,7 +45,7 @@ namespace Banshee
 		VulkanRenderer& operator=(VulkanRenderer&&) = delete;
 
 	private:
-		void AllocateDynamicBufferSpace();
+		void AllocateDynamicBufferSpace() noexcept;
 		void UpdateMaterialData();
 		void UpdateLightData();
 		void UpdateDescriptorSets(const uint8 _descriptorSetIndex);
@@ -75,6 +77,8 @@ namespace Banshee
 		std::unique_ptr<Camera> m_Camera;
 		uint8 m_CurrentFrameIndex;
 		size_t m_MaterialDynamicBufferMemAlignment;
-		std::unique_ptr<Material, void(*)(Material*)> m_MaterialDynamicBufferMemBlock;
+		std::unique_ptr<Material, void(*)(Material*) noexcept> m_MaterialDynamicBufferMemBlock;
+		std::unique_ptr<MeshSystem> m_MeshSystem;
+		std::unique_ptr<LightSystem> m_LightSystem;
 	};
 } // End of Banshee namespace

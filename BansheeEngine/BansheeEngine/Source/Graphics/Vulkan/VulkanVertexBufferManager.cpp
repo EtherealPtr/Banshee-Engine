@@ -27,16 +27,16 @@ namespace Banshee
 		);
 	}
 
-	void VulkanVertexBufferManager::CreateBasicShapeVertexBuffer(MeshComponent* _meshComponent)
+	void VulkanVertexBufferManager::CreateBasicShapeVertexBuffer(MeshComponent* const _meshComponent, const MeshSystem* const _meshSystem)
 	{
-		assert(_meshComponent != nullptr);
+		assert(_meshComponent != nullptr && _meshSystem != nullptr);
 
 		const uint32 meshId{ _meshComponent->GetMeshId() };
 		auto vertexBuffer{ m_VertexBuffers.find(meshId) };
 
 		if (vertexBuffer != m_VertexBuffers.end())
 		{
-			const auto duplicatedMesh = MeshSystem::Instance().GetMeshComponentById(meshId);
+			const auto duplicatedMesh = _meshSystem->GetMeshComponentById(meshId);
 			if (!duplicatedMesh || duplicatedMesh->GetSubMeshes().empty())
 			{
 				return;
@@ -65,9 +65,9 @@ namespace Banshee
 		}
 	}
 
-	void VulkanVertexBufferManager::CreateModelVertexBuffer(MeshComponent* _meshComponent)
+	void VulkanVertexBufferManager::CreateModelVertexBuffer(MeshComponent* const _meshComponent, const MeshSystem* const _meshSystem)
 	{
-		assert(_meshComponent != nullptr);
+		assert(_meshComponent != nullptr && _meshSystem != nullptr);
 
 		const std::string_view modelName{ _meshComponent->GetModelName() };
 		uint32 modelId{ 0 };
@@ -78,7 +78,7 @@ namespace Banshee
 			modelId = it->second;
 			_meshComponent->SetMeshId(modelId);
 
-			const auto duplicatedMesh = MeshSystem::Instance().GetMeshComponentById(modelId);
+			const auto duplicatedMesh = _meshSystem->GetMeshComponentById(modelId);
 			_meshComponent->SetSubMeshes(duplicatedMesh->GetSubMeshes());
 			return;
 		}

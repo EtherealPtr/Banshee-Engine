@@ -25,7 +25,7 @@ namespace Banshee
 		return true;
 	}
 
-	ModelLoadingSystem::ModelLoadingSystem(const char* _modelPath, MeshComponent* _meshComponent, std::vector<Vertex>& _vertices, std::vector<uint32>& _indices)
+	ModelLoadingSystem::ModelLoadingSystem(const char* _modelPath, MeshComponent* const _meshComponent, std::vector<Vertex>& _vertices, std::vector<uint32>& _indices)
 	{
 		assert(_meshComponent != nullptr);
 
@@ -45,7 +45,7 @@ namespace Banshee
 		LoadModel(model, _meshComponent, _vertices, _indices);
 	}
 
-	void ModelLoadingSystem::LoadModel(const tinygltf::Model& _model, MeshComponent* _meshComponent, std::vector<Vertex>& _vertices, std::vector<uint32>& _indices)
+	void ModelLoadingSystem::LoadModel(const tinygltf::Model& _model, MeshComponent* const _meshComponent, std::vector<Vertex>& _vertices, std::vector<uint32>& _indices)
 	{
 		assert(_meshComponent != nullptr);
 
@@ -159,7 +159,7 @@ namespace Banshee
         }
 	}
 
-	void ModelLoadingSystem::LoadMaterial(const tinygltf::Model& _model, const tinygltf::Primitive& _primitive, Mesh* _subMesh)
+	void ModelLoadingSystem::LoadMaterial(const tinygltf::Model& _model, const tinygltf::Primitive& _primitive, Mesh* const _subMesh)
 	{
 		assert(_subMesh != nullptr);
 
