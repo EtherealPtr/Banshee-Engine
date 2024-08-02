@@ -1,22 +1,23 @@
 #pragma once
 
 #include "Foundation/Platform.h"
+#include "Foundation/ResourceManager/Image/Image.h"
 #include <vector>
 #include <memory>
+#include <string>
+#include <functional>
 
 namespace Banshee
 {
-	struct Image;
-
 	class ImageManager
 	{
 	public:
 		ImageManager();
 		~ImageManager();
 
-		const std::vector<std::shared_ptr<Image>>& GetImages() const noexcept { return m_Images; }
-		uint16 LoadImage(const char* _pathToImage);
-		uint16 LoadImageFromMemory(const unsigned char* _bytes, const int32 _size);
+		const std::vector<Image>& GetImages() const noexcept { return m_Images; }
+		uint16 LoadImage(std::string_view _pathToImage) const;
+		uint16 LoadImageFromMemory(const unsigned char* _bytes, const int32 _size) const;
 		void UnloadImages() const;
 
 		ImageManager(const ImageManager&) = delete;
@@ -28,6 +29,8 @@ namespace Banshee
 		void CreateDefaultImage();
 
 	private:
-		std::vector<std::shared_ptr<Image>> m_Images;
+		std::vector<Image> m_Images;
+		using OnImageLoaded = std::function<void(const Image&)>;
+		OnImageLoaded m_OnImageLoaded;
 	};
 } // End of Banshee namespace

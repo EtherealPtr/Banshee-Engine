@@ -16,7 +16,7 @@ namespace Banshee
 		}
 	}
 
-	std::vector<char> FileManager::ReadBinaryFile(std::string_view _fileName)
+	std::vector<char> FileManager::ReadBinaryFile(std::string_view _fileName) const
 	{
 		std::ifstream inputFile(PathManager::GetEngineResDirPath() + _fileName.data(), std::ios::binary | std::ios::ate);
 		if (!inputFile.is_open())

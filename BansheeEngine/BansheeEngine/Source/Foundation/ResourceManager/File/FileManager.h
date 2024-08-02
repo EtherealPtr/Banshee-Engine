@@ -10,7 +10,7 @@ namespace Banshee
 	public:
 		FileManager();
 
-		std::vector<char> ReadBinaryFile(std::string_view _fileName);
+		std::vector<char> ReadBinaryFile(std::string_view _fileName) const;
 		std::ifstream ReadFile(std::string_view _filePath) const;
 		std::string GetAssetName(std::string_view _assetPath) const;
 

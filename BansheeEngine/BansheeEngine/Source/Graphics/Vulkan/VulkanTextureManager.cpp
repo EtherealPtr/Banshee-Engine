@@ -28,11 +28,11 @@ namespace Banshee
 
 	void VulkanTextureManager::UploadTextures()
 	{
-		const std::vector<std::shared_ptr<Image>>& images = g_ResourceManager.GetImages();
+		const std::vector<Image>& images = g_ResourceManager.GetImages();
 
 		for (const auto& image : images)
 		{
-			CreateStagingBuffer(image->m_ImageSize, image->m_Pixels, image->m_ImageWidth, image->m_ImageHeight);
+			CreateStagingBuffer(image.m_ImageSize, image.m_Pixels, image.m_ImageWidth, image.m_ImageHeight);
 		}
 	}
 
