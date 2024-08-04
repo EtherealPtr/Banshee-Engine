@@ -4,12 +4,10 @@
 #include "Graphics/Components/TransformComponent.h"
 #include "Graphics/Components/Light/LightComponent.h"
 #include "Graphics/Components/MeshComponent.h"
-#include "Graphics/Material.h"
 #include "Graphics/Window.h"
-#include <vulkan/vulkan.h>
-#include <stdexcept>
 #include <array>
 #include <algorithm>
+#include <vulkan/vulkan.h>
 
 namespace Banshee
 {
@@ -44,7 +42,7 @@ namespace Banshee
 		AllocateDynamicBufferSpace();
 		CreateDescriptorSetWriteBufferProperties();
 
-		const size_t numOfSwapImages = m_VkSwapchain.GetImageViews().size();
+		const size_t numOfSwapImages{ m_VkSwapchain.GetImageViews().size() };
 		m_VPUniformBuffers.reserve(numOfSwapImages);
 		m_MaterialUniformBuffers.reserve(numOfSwapImages);
 		m_LightUniformBuffers.reserve(numOfSwapImages);
@@ -102,7 +100,7 @@ namespace Banshee
 			}
 		}
 
-		// Sort mesh components based on shader type
+		// Sort mesh components based on shader type (optimization)
 		std::sort(meshComponents.begin(), meshComponents.end(), [](const std::shared_ptr<MeshComponent>& _a, const std::shared_ptr<MeshComponent>& _b) noexcept
 			{
 				return _a->GetShaderType() < _b->GetShaderType();
@@ -151,7 +149,7 @@ namespace Banshee
 			}
 		}
 
-		for (uint8 i = 0; i < m_DescriptorSets.size(); ++i)
+		for (size_t i = 0; i < m_DescriptorSets.size(); ++i)
 		{
 			m_MaterialUniformBuffers[i].CopyData(m_MaterialDynamicBufferMemBlock.get());
 		}
@@ -192,7 +190,7 @@ namespace Banshee
 		m_DescriptorSetWriteTextureProperties[0].SetImageView(m_VkTextureManager.GetTextureImageViews());
 		m_DescriptorSetWriteTextureProperties[1].SetSampler(m_VkTextureSampler.Get());
 
-		for (uint8 i = 0; i < m_DescriptorSets.size(); ++i)
+		for (size_t i = 0; i < m_DescriptorSets.size(); ++i)
 		{
 			m_DescriptorSets[i].UpdateDescriptorSet(m_DescriptorSetWriteTextureProperties);
 		}
@@ -217,7 +215,7 @@ namespace Banshee
 
 		// Update the camera's position and rotation
 		m_Camera.ProcessInput(_deltaTime);
-		
+
 		// Get the semaphores to use for this frame
 		VkSemaphore waitSemaphore = m_VkSemaphores.Get()[m_CurrentFrameIndex].first;
 		VkSemaphore signalSemaphore = m_VkSemaphores.Get()[m_CurrentFrameIndex].second;
@@ -269,7 +267,7 @@ namespace Banshee
 		renderPassInfo.renderArea.extent = VkExtent2D({ m_VkSwapchain.GetWidth(), m_VkSwapchain.GetHeight() });
 
 		// Clear attachments
-		const VkClearColorValue clearColor = { 0.1f, 0.1f, 0.1f, 1.0f };
+		const VkClearColorValue clearColor{ 0.1f, 0.1f, 0.1f, 1.0f };
 		const VkClearDepthStencilValue clearDepthStencil{ 1.0f, 0 };
 
 		std::array<VkClearValue, 2> clearAttachments{};
@@ -297,7 +295,7 @@ namespace Banshee
 		UpdateDescriptorSets(_imgIndex);
 
 		const std::vector<std::shared_ptr<MeshComponent>>& meshComponents = m_MeshSystem.GetMeshComponents();
-		for (uint32 i = 0; i < meshComponents.size(); ++i)
+		for (size_t i = 0; i < meshComponents.size(); ++i)
 		{
 			glm::mat4 entityModelMatrix = glm::mat4(1.0f);
 			if (auto transform = meshComponents[i]->GetOwner()->GetTransform())

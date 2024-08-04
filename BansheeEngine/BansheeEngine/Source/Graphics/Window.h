@@ -19,6 +19,11 @@ namespace Banshee
 		uint16 GetWidth() const noexcept;
 		uint16 GetHeight() const noexcept;
 
+		Window(const Window&) = delete;
+		Window(Window&&) = delete;
+		void operator=(const Window&) = delete;
+		void operator=(Window&&) = delete;
+
 	private:
 		GLFWwindow* m_Window;
 	};

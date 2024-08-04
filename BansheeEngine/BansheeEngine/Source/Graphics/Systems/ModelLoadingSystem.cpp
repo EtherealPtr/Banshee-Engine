@@ -25,7 +25,7 @@ namespace Banshee
 		return true;
 	}
 
-	ModelLoadingSystem::ModelLoadingSystem(const char* _modelPath, MeshComponent* const _meshComponent, std::vector<Vertex>& _vertices, std::vector<uint32>& _indices)
+	ModelLoadingSystem::ModelLoadingSystem(std::string_view _modelPath, MeshComponent* const _meshComponent, std::vector<Vertex>& _vertices, std::vector<uint32>& _indices)
 	{
 		assert(_meshComponent != nullptr);
 
@@ -36,7 +36,7 @@ namespace Banshee
 		std::pair<std::vector<uint16>*, std::unordered_map<uint16, uint16>*> data = { &m_TextureIds, &m_TextureIdMap };
 
 		loader.SetImageLoader(LoadImageDataCallback, &data);
-		if (!loader.LoadBinaryFromFile(&model, &err, &warn, _modelPath))
+		if (!loader.LoadBinaryFromFile(&model, &err, &warn, _modelPath.data()))
 		{
 			BE_LOG(LogCategory::Error, "[MODEL LOADING SYSTEM]: Failed to load model: %s", err.c_str());
 			throw std::runtime_error("Failed to load model");

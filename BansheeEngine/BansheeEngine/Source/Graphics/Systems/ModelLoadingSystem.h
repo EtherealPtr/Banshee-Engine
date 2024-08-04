@@ -2,6 +2,7 @@
 
 #include "Foundation/Platform.h"
 #include "Graphics/Vertex.h"
+#include <string>
 #include <vector>
 #include <unordered_map>
 
@@ -20,7 +21,7 @@ namespace Banshee
 	class ModelLoadingSystem
 	{
 	public:
-		ModelLoadingSystem(const char* _modelPath, MeshComponent* const _meshComponent, std::vector<Vertex>& _vertices, std::vector<uint32>& _indices);
+		ModelLoadingSystem(std::string_view _modelPath, MeshComponent* const _meshComponent, std::vector<Vertex>& _vertices, std::vector<uint32>& _indices);
 		~ModelLoadingSystem() = default;
 
 		ModelLoadingSystem(const ModelLoadingSystem&) = delete;
