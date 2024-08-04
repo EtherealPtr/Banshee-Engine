@@ -22,11 +22,6 @@ namespace Banshee
 		void UpdateDescriptorSet(const std::vector<DescriptorSetWriteTextureProperties>& _descriptorSetWriteTexProperties);
 		VkDescriptorSet Get() const noexcept { return m_DescriptorSet; }
 
-		VulkanDescriptorSet(const VulkanDescriptorSet&) = delete;
-		VulkanDescriptorSet& operator=(const VulkanDescriptorSet&) = delete;
-		VulkanDescriptorSet(VulkanDescriptorSet&&) = delete;
-		VulkanDescriptorSet& operator=(VulkanDescriptorSet&&) = delete;
-
 	private:
 		VkDevice m_LogicalDevice;
 		VkDescriptorPool m_DescriptorPool;

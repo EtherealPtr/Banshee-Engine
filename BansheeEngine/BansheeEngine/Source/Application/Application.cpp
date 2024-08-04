@@ -26,7 +26,7 @@ namespace Banshee
 	void Application::InitializeRenderer()
 	{
 		BE_LOG(LogCategory::Trace, "[APPLICATION]: Beginning post-client initialization step");
-		m_Renderer = std::make_unique<VulkanRenderer>(m_Window);
+		m_Renderer = std::make_unique<VulkanRenderer>(*m_Window.get());
 	}
 
 	void Application::Run() const

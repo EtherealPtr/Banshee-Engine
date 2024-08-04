@@ -20,11 +20,6 @@ namespace Banshee
 		uint64 GetBufferSize() const noexcept { return m_BufferSize; }
 		VkDeviceMemory GetBufferMemory() const noexcept { return m_BufferMemory; }
 
-		VulkanUniformBuffer(const VulkanUniformBuffer&) = delete;
-		VulkanUniformBuffer& operator=(const VulkanUniformBuffer&) = delete;
-		VulkanUniformBuffer(VulkanUniformBuffer&&) = delete;
-		VulkanUniformBuffer& operator=(VulkanUniformBuffer&&) = delete;
-
 	private:
 		VkDevice m_LogicalDevice;
 		VkBuffer m_Buffer;

@@ -1,35 +1,11 @@
 #include "VulkanRenderer.h"
-#include "VulkanInstance.h"
-#include "VulkanSurface.h"
-#include "VulkanDevice.h"
-#include "VulkanSwapchain.h"
-#include "VulkanDepthBuffer.h"
-#include "VulkanRenderPass.h"
-#include "VulkanDescriptorSetLayout.h"
-#include "VulkanDescriptorPool.h"
-#include "VulkanDescriptorSet.h"
-#include "VulkanGraphicsPipeline.h"
-#include "VulkanGraphicsPipelineManager.h"
-#include "VulkanCommandPool.h"
-#include "VulkanCommandBuffer.h"
-#include "VulkanFramebuffer.h"
-#include "VulkanSemaphore.h"
-#include "VulkanFence.h"
-#include "VulkanUniformBuffer.h"
-#include "VulkanDescriptorSetProperties.h"
-#include "VulkanTextureManager.h"
-#include "VulkanTextureSampler.h"
-#include "VulkanVertexBufferManager.h"
-#include "Foundation/Entity/EntityManager.h"
-#include "Graphics/Systems/MeshSystem.h"
-#include "Graphics/Systems/LightSystem.h"
 #include "Foundation/Logging/Logger.h"
+#include "Foundation/Entity/EntityManager.h"
 #include "Graphics/Components/TransformComponent.h"
 #include "Graphics/Components/Light/LightComponent.h"
 #include "Graphics/Components/MeshComponent.h"
 #include "Graphics/Material.h"
 #include "Graphics/Window.h"
-#include "Graphics/Camera.h"
 #include <vulkan/vulkan.h>
 #include <stdexcept>
 #include <array>
@@ -39,33 +15,35 @@ namespace Banshee
 {
 	constexpr uint64 g_MaxEntities{ 512 };
 
-	VulkanRenderer::VulkanRenderer(const std::unique_ptr<Window>& _window) :
-		m_VkInstance{ std::make_unique<VulkanInstance>() },
-		m_VkSurface{ std::make_unique<VulkanSurface>(_window->GetWindow(), m_VkInstance->Get()) },
-		m_VkDevice{ std::make_unique<VulkanDevice>(m_VkInstance->Get(), m_VkSurface->Get()) },
-		m_VkSwapchain{ std::make_unique<VulkanSwapchain>(m_VkDevice->GetLogicalDevice(), m_VkDevice->GetPhysicalDevice(), m_VkSurface->Get(), _window->GetWidth(), _window->GetHeight()) },
-		m_DepthBuffer{ std::make_unique<VulkanDepthBuffer>(m_VkDevice->GetLogicalDevice(), m_VkDevice->GetPhysicalDevice(), m_VkSwapchain->GetWidth(), m_VkSwapchain->GetHeight()) },
-		m_VkRenderPass{ std::make_unique<VulkanRenderPass>(m_VkDevice->GetLogicalDevice(), m_VkSwapchain->GetFormat(), m_DepthBuffer->GetFormat()) },
-		m_VkCommandPool{ std::make_unique<VulkanCommandPool>(m_VkDevice->GetLogicalDevice(), m_VkDevice->GetQueueIndices().m_GraphicsQueueFamilyIndex) },
-		m_VkCommandBuffers{ std::make_unique<VulkanCommandBuffer>(m_VkDevice->GetLogicalDevice(), m_VkCommandPool->Get(), static_cast<uint16>(m_VkSwapchain->GetImageViews().size())) },
-		m_VkFramebuffers{ std::make_unique<VulkanFramebuffer>(m_VkDevice->GetLogicalDevice(), m_VkRenderPass->Get(), m_VkSwapchain->GetImageViews(), m_DepthBuffer->GetImageView(), m_VkSwapchain->GetWidth(), m_VkSwapchain->GetHeight()) },
-		m_VkSemaphores{ std::make_unique<VulkanSemaphore>(m_VkDevice->GetLogicalDevice(), static_cast<uint16>(m_VkSwapchain->GetImageViews().size())) },
-		m_VkInFlightFences{ std::make_unique<VulkanFence>(m_VkDevice->GetLogicalDevice(), static_cast<uint16>(m_VkSwapchain->GetImageViews().size())) },
-		m_VertexBufferManager{ std::make_unique<VulkanVertexBufferManager>(m_VkDevice->GetLogicalDevice(), m_VkDevice->GetPhysicalDevice(), m_VkCommandPool->Get(), m_VkDevice->GetGraphicsQueue()) },
-		m_VkTextureSampler{ std::make_unique<VulkanTextureSampler>(m_VkDevice->GetLogicalDevice(), m_VkDevice->GetPhysicalDevice()) },
-		m_VkTextureManager{ std::make_unique<VulkanTextureManager>(m_VkDevice->GetLogicalDevice(), m_VkDevice->GetPhysicalDevice(), m_VkDevice->GetGraphicsQueue(), m_VkCommandPool->Get()) },
-		m_VkDescriptorSetLayout{ std::make_unique<VulkanDescriptorSetLayout>(m_VkDevice->GetLogicalDevice()) },
-		m_VkDescriptorPool{ std::make_unique<VulkanDescriptorPool>(m_VkDevice->GetLogicalDevice(), static_cast<uint16>(m_VkSwapchain->GetImageViews().size())) },
-		m_VkGraphicsPipelineManager{ std::make_unique<VulkanGraphicsPipelineManager>(m_VkDevice->GetLogicalDevice(), m_VkRenderPass->Get(), m_VkDescriptorSetLayout->Get(), m_VkSwapchain->GetWidth(), m_VkSwapchain->GetHeight()) },
-		m_Camera{ std::make_unique<Camera>(45.0f, static_cast<float>(_window->GetWidth()) / _window->GetHeight(), 0.1f, 100.0f, _window->GetWindow()) },
+	VulkanRenderer::VulkanRenderer(const Window& _window) :
+		m_VkInstance{},
+		m_VkSurface{ _window.GetWindow(), m_VkInstance.Get() },
+		m_VkDevice{ m_VkInstance.Get(), m_VkSurface.Get() },
+		m_VkSwapchain{ m_VkDevice.GetLogicalDevice(), m_VkDevice.GetPhysicalDevice(), m_VkSurface.Get(), _window.GetWidth(), _window.GetHeight() },
+		m_DepthBuffer{ m_VkDevice.GetLogicalDevice(), m_VkDevice.GetPhysicalDevice(), m_VkSwapchain.GetWidth(), m_VkSwapchain.GetHeight() },
+		m_VkRenderPass{ m_VkDevice.GetLogicalDevice(), m_VkSwapchain.GetFormat(), static_cast<uint32>(m_DepthBuffer.GetFormat()) },
+		m_VkCommandPool{ m_VkDevice.GetLogicalDevice(), m_VkDevice.GetQueueIndices().m_GraphicsQueueFamilyIndex },
+		m_VkCommandBuffers{ m_VkDevice.GetLogicalDevice(), m_VkCommandPool.Get(), static_cast<uint16>(m_VkSwapchain.GetImageViews().size()) },
+		m_VkFramebuffers{ m_VkDevice.GetLogicalDevice(), m_VkRenderPass.Get(), m_VkSwapchain.GetImageViews(), m_DepthBuffer.GetImageView(), m_VkSwapchain.GetWidth(), m_VkSwapchain.GetHeight() },
+		m_VkSemaphores{ m_VkDevice.GetLogicalDevice(), static_cast<uint16>(m_VkSwapchain.GetImageViews().size()) },
+		m_VkInFlightFences{ m_VkDevice.GetLogicalDevice(), static_cast<uint16>(m_VkSwapchain.GetImageViews().size()) },
+		m_VertexBufferManager{ m_VkDevice.GetLogicalDevice(), m_VkDevice.GetPhysicalDevice(), m_VkCommandPool.Get(), m_VkDevice.GetGraphicsQueue() },
+		m_VkTextureSampler{ m_VkDevice.GetLogicalDevice(), m_VkDevice.GetPhysicalDevice() },
+		m_VkTextureManager{ m_VkDevice.GetLogicalDevice(), m_VkDevice.GetPhysicalDevice(), m_VkDevice.GetGraphicsQueue(), m_VkCommandPool.Get() },
+		m_VkDescriptorSetLayout{ m_VkDevice.GetLogicalDevice() },
+		m_VkDescriptorPool{ m_VkDevice.GetLogicalDevice(), static_cast<uint16>(m_VkSwapchain.GetImageViews().size()) },
+		m_VkGraphicsPipelineManager{ m_VkDevice.GetLogicalDevice(), m_VkRenderPass.Get(), m_VkDescriptorSetLayout.Get(), m_VkSwapchain.GetWidth(), m_VkSwapchain.GetHeight() },
+		m_Camera{ 45.0f, static_cast<float>(_window.GetWidth()) / _window.GetHeight(), 0.1f, 100.0f, _window.GetWindow() },
+		m_CurrentFrameIndex{ 0 },
+		m_MaterialDynamicBufferMemAlignment{ 0 },
 		m_MaterialDynamicBufferMemBlock{ nullptr, [](Material* ptr) noexcept { _aligned_free(ptr); } },
-		m_MeshSystem{ std::make_unique<MeshSystem>() },
-		m_LightSystem{ std::make_unique<LightSystem>() }
+		m_MeshSystem{},
+		m_LightSystem{}
 	{
 		FetchGraphicsComponents();
 		AllocateDynamicBufferSpace();
 
-		const size_t numOfSwapImages = m_VkSwapchain->GetImageViews().size();
+		const size_t numOfSwapImages = m_VkSwapchain.GetImageViews().size();
 		m_VPUniformBuffers.reserve(numOfSwapImages);
 		m_MaterialUniformBuffers.reserve(numOfSwapImages);
 		m_LightUniformBuffers.reserve(numOfSwapImages);
@@ -73,46 +51,38 @@ namespace Banshee
 
 		for (size_t i = 0; i < numOfSwapImages; ++i)
 		{
-			// Create view-proj UBO
-			m_VPUniformBuffers.emplace_back(std::make_unique<VulkanUniformBuffer>(m_VkDevice->GetLogicalDevice(), m_VkDevice->GetPhysicalDevice(), sizeof(ViewProjMatrix)));
-
-			// Create Dynamic Material UBO
-			m_MaterialUniformBuffers.emplace_back(std::make_unique<VulkanUniformBuffer>(m_VkDevice->GetLogicalDevice(), m_VkDevice->GetPhysicalDevice(), m_MaterialDynamicBufferMemAlignment * g_MaxEntities));
-
-			// Create Light UBO
-			m_LightUniformBuffers.emplace_back(std::make_unique<VulkanUniformBuffer>(m_VkDevice->GetLogicalDevice(), m_VkDevice->GetPhysicalDevice(), sizeof(LightData)));
-
-			// Create descriptor sets
-			m_DescriptorSets.emplace_back(std::make_unique<VulkanDescriptorSet>(m_VkDevice->GetLogicalDevice(), m_VkDescriptorPool->Get(), m_VkDescriptorSetLayout->Get()));
+			m_VPUniformBuffers.emplace_back(m_VkDevice.GetLogicalDevice(), m_VkDevice.GetPhysicalDevice(), sizeof(ViewProjMatrix));
+			m_MaterialUniformBuffers.emplace_back(m_VkDevice.GetLogicalDevice(), m_VkDevice.GetPhysicalDevice(), m_MaterialDynamicBufferMemAlignment * g_MaxEntities);
+			m_LightUniformBuffers.emplace_back(m_VkDevice.GetLogicalDevice(), m_VkDevice.GetPhysicalDevice(), sizeof(LightData));
+			m_DescriptorSets.emplace_back(m_VkDevice.GetLogicalDevice(), m_VkDescriptorPool.Get(), m_VkDescriptorSetLayout.Get());
 		}
 
-		m_CurrentFrameIndex = 0;
-		for (const auto& meshComponent : m_MeshSystem->GetMeshComponents())
+		for (const auto& meshComponent : m_MeshSystem.GetMeshComponents())
 		{
 			meshComponent->SetDirty(true);
 
 			if (meshComponent->HasModel())
 			{
-				m_VertexBufferManager->CreateModelVertexBuffer(meshComponent.get(), m_MeshSystem.get());
+				m_VertexBufferManager.CreateModelVertexBuffer(meshComponent.get(), &m_MeshSystem);
 			}
 			else
 			{
-				m_VertexBufferManager->CreateBasicShapeVertexBuffer(meshComponent.get(), m_MeshSystem.get());
+				m_VertexBufferManager.CreateBasicShapeVertexBuffer(meshComponent.get(), &m_MeshSystem);
 			}
 		}
 
 		UpdateMaterialData();
-		m_VkTextureManager->UploadTextures();
+		m_VkTextureManager.UploadTextures();
 		BE_LOG(LogCategory::Trace, "[RENDERER]: Vulkan initialized");
 	}
 
 	VulkanRenderer::~VulkanRenderer()
 	{
-		vkDeviceWaitIdle(m_VkDevice->GetLogicalDevice());
+		vkDeviceWaitIdle(m_VkDevice.GetLogicalDevice());
 		BE_LOG(LogCategory::Trace, "[RENDERER]: Vulkan shutting down");
 	}
 
-	void VulkanRenderer::FetchGraphicsComponents() const
+	void VulkanRenderer::FetchGraphicsComponents()
 	{
 		std::vector<std::shared_ptr<MeshComponent>> meshComponents{};
 		std::vector<std::shared_ptr<LightComponent>> lightComponents{};
@@ -136,21 +106,21 @@ namespace Banshee
 				return _a->GetShaderType() < _b->GetShaderType();
 			});
 
-		m_MeshSystem->SetMeshComponents(meshComponents);
-		m_LightSystem->SetLightComponents(lightComponents);
+		m_MeshSystem.SetMeshComponents(meshComponents);
+		m_LightSystem.SetLightComponents(lightComponents);
 	}
 
 	void VulkanRenderer::AllocateDynamicBufferSpace() noexcept
 	{
-		const VkDeviceSize minUniformBufferOffset = m_VkDevice->GetLimits().minUniformBufferOffsetAlignment;
-		m_MaterialDynamicBufferMemAlignment = (sizeof(Material) + minUniformBufferOffset - 1) & ~(m_VkDevice->GetLimits().minUniformBufferOffsetAlignment - 1);
+		const VkDeviceSize minUniformBufferOffset = m_VkDevice.GetLimits().minUniformBufferOffsetAlignment;
+		m_MaterialDynamicBufferMemAlignment = (sizeof(Material) + minUniformBufferOffset - 1) & ~(m_VkDevice.GetLimits().minUniformBufferOffsetAlignment - 1);
 		m_MaterialDynamicBufferMemBlock.reset(static_cast<Material*>(_aligned_malloc(m_MaterialDynamicBufferMemAlignment * g_MaxEntities, m_MaterialDynamicBufferMemAlignment)));
 	}
 
 	void VulkanRenderer::UpdateMaterialData()
 	{
 		// Update dynamic buffer with material data
-		for (const auto& meshComponent : m_MeshSystem->GetMeshComponents())
+		for (const auto& meshComponent : m_MeshSystem.GetMeshComponents())
 		{
 			for (const auto& subMesh : meshComponent->GetSubMeshes())
 			{
@@ -165,32 +135,32 @@ namespace Banshee
 
 		for (uint8 i = 0; i < m_DescriptorSets.size(); ++i)
 		{
-			m_MaterialUniformBuffers[i]->CopyData(m_MaterialDynamicBufferMemBlock.get());
+			m_MaterialUniformBuffers[i].CopyData(m_MaterialDynamicBufferMemBlock.get());
 		}
 	}
 
 	void VulkanRenderer::UpdateLightData()
 	{
-		const auto& lightComponents = m_LightSystem->GetLightComponents();
+		const auto& lightComponents = m_LightSystem.GetLightComponents();
 		for (const auto& lightComponent : lightComponents)
 		{
 			if (auto transformComponent = lightComponent->GetOwner()->GetTransform())
 			{
 				// TODO: Enable support for multiple light sources
-				const glm::vec3 lightPos = glm::vec3(m_Camera->GetViewMatrix() * glm::vec4(transformComponent->GetPosition(), 1.0f));
+				const glm::vec3 lightPos = glm::vec3(m_Camera.GetViewMatrix() * glm::vec4(transformComponent->GetPosition(), 1.0f));
 				LightData lightData(lightPos, lightComponent->GetColor());
-				m_LightUniformBuffers[m_CurrentFrameIndex]->CopyData(&lightData);
+				m_LightUniformBuffers[m_CurrentFrameIndex].CopyData(&lightData);
 			}
 		}
 	}
 
 	void VulkanRenderer::UpdateDescriptorSets(const uint8 _descriptorSetIndex)
 	{
-		const DescriptorSetWriteBufferProperties viewProjBufferDescWriteProperties(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, m_VPUniformBuffers[_descriptorSetIndex]->GetBuffer(), m_VPUniformBuffers[_descriptorSetIndex]->GetBufferSize());
-		const DescriptorSetWriteBufferProperties materialDynamicBufferDescWriteProperties(1, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC, m_MaterialUniformBuffers[_descriptorSetIndex]->GetBuffer(), m_MaterialDynamicBufferMemAlignment);
-		const DescriptorSetWriteTextureProperties texturesDescWriteProperties(2, VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE, m_VkTextureManager->GetTextureImageViews(), VK_NULL_HANDLE);
-		const DescriptorSetWriteTextureProperties samplerDescWriteProperties(3, VK_DESCRIPTOR_TYPE_SAMPLER, {}, m_VkTextureSampler->Get());
-		const DescriptorSetWriteBufferProperties lightBufferDescWriteProperties(4, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, m_LightUniformBuffers[_descriptorSetIndex]->GetBuffer(), m_LightUniformBuffers[_descriptorSetIndex]->GetBufferSize());
+		const DescriptorSetWriteBufferProperties viewProjBufferDescWriteProperties(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, m_VPUniformBuffers[_descriptorSetIndex].GetBuffer(), m_VPUniformBuffers[_descriptorSetIndex].GetBufferSize());
+		const DescriptorSetWriteBufferProperties materialDynamicBufferDescWriteProperties(1, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC, m_MaterialUniformBuffers[_descriptorSetIndex].GetBuffer(), m_MaterialDynamicBufferMemAlignment);
+		const DescriptorSetWriteTextureProperties texturesDescWriteProperties(2, VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE, m_VkTextureManager.GetTextureImageViews(), VK_NULL_HANDLE);
+		const DescriptorSetWriteTextureProperties samplerDescWriteProperties(3, VK_DESCRIPTOR_TYPE_SAMPLER, {}, m_VkTextureSampler.Get());
+		const DescriptorSetWriteBufferProperties lightBufferDescWriteProperties(4, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, m_LightUniformBuffers[_descriptorSetIndex].GetBuffer(), m_LightUniformBuffers[_descriptorSetIndex].GetBufferSize());
 
 		const std::vector<DescriptorSetWriteBufferProperties> descriptorSetWriteBufferProperties =
 		{
@@ -199,7 +169,7 @@ namespace Banshee
 			lightBufferDescWriteProperties
 		};
 
-		m_DescriptorSets[_descriptorSetIndex]->UpdateDescriptorSet(descriptorSetWriteBufferProperties);
+		m_DescriptorSets[_descriptorSetIndex].UpdateDescriptorSet(descriptorSetWriteBufferProperties);
 
 		const std::vector<DescriptorSetWriteTextureProperties> descriptorSetWriteTextureProperties =
 		{
@@ -207,42 +177,57 @@ namespace Banshee
 			samplerDescWriteProperties
 		};
 
-		m_DescriptorSets[_descriptorSetIndex]->UpdateDescriptorSet(descriptorSetWriteTextureProperties);
+		m_DescriptorSets[_descriptorSetIndex].UpdateDescriptorSet(descriptorSetWriteTextureProperties);
 
 		// Update uniform buffer with the ViewProjMatrix
-		ViewProjMatrix viewProjMatrix = m_Camera->GetViewProjMatrix();
+		ViewProjMatrix viewProjMatrix = m_Camera.GetViewProjMatrix();
 		viewProjMatrix.m_Proj[1][1] *= -1.0f;
-		m_VPUniformBuffers[m_CurrentFrameIndex]->CopyData(&viewProjMatrix);
+		m_VPUniformBuffers[m_CurrentFrameIndex].CopyData(&viewProjMatrix);
 
 		UpdateLightData();
 	}
 
 	void VulkanRenderer::DrawFrame(const double _deltaTime)
 	{
-		uint32 imgIndex = 0;
+		uint32 imgIndex{ 0 };
 
-		m_VkInFlightFences->Wait(m_CurrentFrameIndex);
-		m_VkInFlightFences->Reset(m_CurrentFrameIndex);
+		m_VkInFlightFences.Wait(m_CurrentFrameIndex);
+		m_VkInFlightFences.Reset(m_CurrentFrameIndex);
 
-		vkAcquireNextImageKHR(m_VkDevice->GetLogicalDevice(), m_VkSwapchain->Get(), UINT64_MAX,
-			m_VkSemaphores->Get()[m_CurrentFrameIndex].first, VK_NULL_HANDLE, &imgIndex);
+		vkAcquireNextImageKHR
+		(
+			m_VkDevice.GetLogicalDevice(),
+			m_VkSwapchain.Get(),
+			UINT64_MAX,
+			m_VkSemaphores.Get()[m_CurrentFrameIndex].first,
+			VK_NULL_HANDLE,
+			&imgIndex
+		);
 
 		// Update the camera's position and rotation
-		m_Camera->ProcessInput(_deltaTime);
+		m_Camera.ProcessInput(_deltaTime);
 
 		// Get the semaphores to use for this frame
-		VkSemaphore waitSemaphore = m_VkSemaphores->Get()[m_CurrentFrameIndex].first;
-		VkSemaphore signalSemaphore = m_VkSemaphores->Get()[m_CurrentFrameIndex].second;
+		VkSemaphore waitSemaphore = m_VkSemaphores.Get()[m_CurrentFrameIndex].first;
+		VkSemaphore signalSemaphore = m_VkSemaphores.Get()[m_CurrentFrameIndex].second;
 
 		// Get the command buffer for this image index
-		VkCommandBuffer cmdBuffer = m_VkCommandBuffers->Get()[imgIndex];
+		VkCommandBuffer cmdBuffer = m_VkCommandBuffers.Get()[imgIndex];
 
 		// Reset the command buffer and record render commands
 		vkResetCommandBuffer(cmdBuffer, 0);
 		RecordRenderCommands(imgIndex);
 
 		// Submit the command buffer and signal the next semaphore
-		m_VkCommandBuffers->Submit(imgIndex, m_VkDevice->GetGraphicsQueue(), waitSemaphore, signalSemaphore, m_VkInFlightFences->Get()[m_CurrentFrameIndex], VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT);
+		m_VkCommandBuffers.Submit
+		(
+			imgIndex,
+			m_VkDevice.GetGraphicsQueue(),
+			waitSemaphore,
+			signalSemaphore,
+			m_VkInFlightFences.Get()[m_CurrentFrameIndex],
+			VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT
+		);
 
 		// Present the current image and wait for the current signal semaphore
 		VkPresentInfoKHR presentInfo{};
@@ -250,28 +235,27 @@ namespace Banshee
 		presentInfo.waitSemaphoreCount = 1;
 		presentInfo.pWaitSemaphores = &signalSemaphore;
 
-		VkSwapchainKHR swapchains[] = { m_VkSwapchain->Get() };
+		VkSwapchainKHR swapchains[] = { m_VkSwapchain.Get() };
 		presentInfo.swapchainCount = 1;
 		presentInfo.pSwapchains = swapchains;
 		presentInfo.pImageIndices = &imgIndex;
 		presentInfo.pResults = nullptr;
 
-		vkQueuePresentKHR(m_VkDevice->GetPresentationQueue(), &presentInfo);
-
-		m_CurrentFrameIndex = (m_CurrentFrameIndex + 1) % m_VkSwapchain->GetImageViews().size();
+		vkQueuePresentKHR(m_VkDevice.GetPresentationQueue(), &presentInfo);
+		m_CurrentFrameIndex = (m_CurrentFrameIndex + 1) % m_VkSwapchain.GetImageViews().size();
 	}
 
 	void VulkanRenderer::RecordRenderCommands(const uint8 _imgIndex)
 	{
-		const VkCommandBuffer cmdBuffer = m_VkCommandBuffers->Get()[_imgIndex];
-		m_VkCommandBuffers->Begin(_imgIndex);
+		const VkCommandBuffer cmdBuffer = m_VkCommandBuffers.Get()[_imgIndex];
+		m_VkCommandBuffers.Begin(_imgIndex);
 
 		VkRenderPassBeginInfo renderPassInfo{};
 		renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-		renderPassInfo.renderPass = m_VkRenderPass->Get();
-		renderPassInfo.framebuffer = m_VkFramebuffers->Get()[_imgIndex];
+		renderPassInfo.renderPass = m_VkRenderPass.Get();
+		renderPassInfo.framebuffer = m_VkFramebuffers.Get()[_imgIndex];
 		renderPassInfo.renderArea.offset = { 0, 0 };
-		renderPassInfo.renderArea.extent = VkExtent2D({ m_VkSwapchain->GetWidth(), m_VkSwapchain->GetHeight() });
+		renderPassInfo.renderArea.extent = VkExtent2D({ m_VkSwapchain.GetWidth(), m_VkSwapchain.GetHeight() });
 
 		// Clear attachments
 		const VkClearColorValue clearColor = { 0.1f, 0.1f, 0.1f, 1.0f };
@@ -288,20 +272,20 @@ namespace Banshee
 		VkViewport viewport{};
 		viewport.x = 0.0f;
 		viewport.y = 0.0f;
-		viewport.width = static_cast<float>(m_VkSwapchain->GetWidth());
-		viewport.height = static_cast<float>(m_VkSwapchain->GetHeight());
+		viewport.width = static_cast<float>(m_VkSwapchain.GetWidth());
+		viewport.height = static_cast<float>(m_VkSwapchain.GetHeight());
 		viewport.minDepth = 0.0f;
 		viewport.maxDepth = 1.0f;
 		vkCmdSetViewport(cmdBuffer, 0, 1, &viewport);
 
 		VkRect2D scissor{};
 		scissor.offset = { 0, 0 };
-		scissor.extent = VkExtent2D({ m_VkSwapchain->GetWidth(), m_VkSwapchain->GetHeight() });
+		scissor.extent = VkExtent2D({ m_VkSwapchain.GetWidth(), m_VkSwapchain.GetHeight() });
 		vkCmdSetScissor(cmdBuffer, 0, 1, &scissor);
 
 		UpdateDescriptorSets(_imgIndex);
 
-		const std::vector<std::shared_ptr<MeshComponent>>& meshComponents = m_MeshSystem->GetMeshComponents();
+		const std::vector<std::shared_ptr<MeshComponent>>& meshComponents = m_MeshSystem.GetMeshComponents();
 		for (uint32 i = 0; i < meshComponents.size(); ++i)
 		{
 			glm::mat4 entityModelMatrix = glm::mat4(1.0f);
@@ -310,9 +294,9 @@ namespace Banshee
 				entityModelMatrix = transform->GetModel();
 			}
 
-			const VulkanVertexBuffer* const vertexBuffer = m_VertexBufferManager->GetVertexBuffer(meshComponents[i]->GetMeshId());
+			const VulkanVertexBuffer* const vertexBuffer = m_VertexBufferManager.GetVertexBuffer(meshComponents[i]->GetMeshId());
 
-			const auto& graphicsPipeline = m_VkGraphicsPipelineManager->GetPipeline(meshComponents[i]->GetShaderType());
+			const auto& graphicsPipeline = m_VkGraphicsPipelineManager.GetPipeline(meshComponents[i]->GetShaderType());
 			vkCmdBindPipeline(cmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline->Get());
 
 			for (const auto& subMesh : meshComponents[i]->GetSubMeshes())
@@ -323,7 +307,7 @@ namespace Banshee
 
 				// Bind descriptor set
 				const uint32 dynamicOffset = static_cast<uint32>(m_MaterialDynamicBufferMemAlignment) * subMesh.GetMaterialIndex();
-				auto currentDescriptorSet = m_DescriptorSets[_imgIndex]->Get();
+				auto currentDescriptorSet = m_DescriptorSets[_imgIndex].Get();
 				vkCmdBindDescriptorSets(cmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline->GetLayout(), 0, 1, &currentDescriptorSet, 1, &dynamicOffset);
 
 				// Push constants
@@ -336,6 +320,6 @@ namespace Banshee
 		}
 
 		vkCmdEndRenderPass(cmdBuffer);
-		m_VkCommandBuffers->End(_imgIndex);
+		m_VkCommandBuffers.End(_imgIndex);
 	}
 } // End of Banshee namespace
