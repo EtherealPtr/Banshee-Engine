@@ -12,12 +12,19 @@ namespace Banshee
 {
 	struct DescriptorSetWriteBufferProperties
 	{
-		DescriptorSetWriteBufferProperties(const uint32 _binding, const VkDescriptorType _descType, const VkBuffer& _buffer, const uint64 _bufferRance) noexcept :
-			m_Binding(_binding),
-			m_DescriptorType(_descType),
-			m_Buffer(_buffer),
-			m_BufferRange(_bufferRance)
-		{}
+		DescriptorSetWriteBufferProperties() noexcept = default;
+
+		void Initialize(const uint32 _binding, const VkDescriptorType _descType) noexcept
+		{
+			m_Binding = _binding;
+			m_DescriptorType = _descType;
+		}
+
+		void SetBuffer(const VkBuffer& _buffer, const uint64 _bufferRange) noexcept
+		{
+			m_Buffer = _buffer;
+			m_BufferRange = _bufferRange;
+		}
 
 		uint32 m_Binding;
 		VkDescriptorType m_DescriptorType;
@@ -27,12 +34,23 @@ namespace Banshee
 
 	struct DescriptorSetWriteTextureProperties
 	{
-		DescriptorSetWriteTextureProperties(const uint32 _binding, const VkDescriptorType _descType, const std::vector<VkImageView>& _imageViews, const VkSampler& _sampler) :
-			m_Binding(_binding),
-			m_DescriptorType(_descType),
-			m_ImageViews(_imageViews),
-			m_Sampler(_sampler)
-		{}
+		DescriptorSetWriteTextureProperties() noexcept = default;
+
+		void Initialize(const uint32 _binding, const VkDescriptorType _descType) noexcept
+		{
+			m_Binding = _binding;
+			m_DescriptorType = _descType;
+		}
+
+		void SetImageView(const std::vector<VkImageView>& _imageViews) noexcept
+		{
+			m_ImageViews = _imageViews;
+		}
+
+		void SetSampler(const VkSampler& _sampler) noexcept
+		{
+			m_Sampler = _sampler;
+		}
 
 		uint32 m_Binding;
 		VkDescriptorType m_DescriptorType;

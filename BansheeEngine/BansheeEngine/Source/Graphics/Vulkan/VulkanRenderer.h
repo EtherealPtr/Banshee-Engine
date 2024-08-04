@@ -46,12 +46,14 @@ namespace Banshee
 		VulkanRenderer& operator=(VulkanRenderer&&) = delete;
 
 	private:
+		void FetchGraphicsComponents();
 		void AllocateDynamicBufferSpace() noexcept;
+		void CreateDescriptorSetWriteBufferProperties();
 		void UpdateMaterialData();
 		void UpdateLightData();
 		void UpdateDescriptorSets(const uint8 _descriptorSetIndex);
+		void StaticUpdateDescriptorSets() noexcept;
 		void RecordRenderCommands(const uint8 _imgIndex);
-		void FetchGraphicsComponents();
 
 	private:
 		VulkanInstance m_VkInstance;
@@ -76,10 +78,12 @@ namespace Banshee
 		std::vector<VulkanUniformBuffer> m_LightUniformBuffers;
 		std::vector<VulkanDescriptorSet> m_DescriptorSets;
 		Camera m_Camera;
+		MeshSystem m_MeshSystem;
+		LightSystem m_LightSystem;
 		uint8 m_CurrentFrameIndex;
 		uint64 m_MaterialDynamicBufferMemAlignment;
 		std::unique_ptr<Material, void(*)(Material*) noexcept> m_MaterialDynamicBufferMemBlock;
-		MeshSystem m_MeshSystem;
-		LightSystem m_LightSystem;
+		std::vector<DescriptorSetWriteBufferProperties> m_DescriptorSetWriteBufferProperties;
+		std::vector<DescriptorSetWriteTextureProperties> m_DescriptorSetWriteTextureProperties;
 	};
 } // End of Banshee namespace

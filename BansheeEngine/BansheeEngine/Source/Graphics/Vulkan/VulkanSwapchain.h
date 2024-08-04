@@ -19,7 +19,7 @@ namespace Banshee
 		~VulkanSwapchain();
 
 		VkSwapchainKHR Get() const noexcept { return m_Swapchain; }
-		std::vector<VkImageView> GetImageViews() const noexcept { return m_SwapchainImageViews; }
+		const std::vector<VkImageView>& GetImageViews() const noexcept { return m_SwapchainImageViews; }
 		uint32 GetFormat() const noexcept { return m_Format; }
 		uint32 GetWidth() const noexcept { return m_Width; }
 		uint32 GetHeight() const noexcept { return m_Height; }

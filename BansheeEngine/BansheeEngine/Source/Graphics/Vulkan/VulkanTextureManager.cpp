@@ -13,7 +13,9 @@ namespace Banshee
 		m_PhysicalDevice{ _gpu },
 		m_GraphicsQueue{ _graphicsQueue },
 		m_CommandPool{ _commandPool },
-		m_TextureImageFormat{ VK_FORMAT_R8G8B8A8_SRGB }
+		m_TextureImageFormat{ VK_FORMAT_R8G8B8A8_SRGB },
+		m_TextureImages{},
+		m_TextureImageViews{}
 	{}
 
 	VulkanTextureManager::~VulkanTextureManager()
@@ -36,17 +38,9 @@ namespace Banshee
 		}
 	}
 
-	std::vector<VkImageView> VulkanTextureManager::GetTextureImageViews() const
+	const std::vector<VkImageView>& VulkanTextureManager::GetTextureImageViews() const noexcept
 	{
-		std::vector<VkImageView> imageViews{};
-		imageViews.reserve(m_TextureImages.size());
-
-		for (const auto& image : m_TextureImages)
-		{
-			imageViews.emplace_back(image.m_ImageView);
-		}
-
-		return imageViews;
+		return m_TextureImageViews;
 	}
 
 	void VulkanTextureManager::CreateStagingBuffer(const uint64 _sizeOfBuffer, const unsigned char* _pixels, const uint32 _imgW, const uint32 _imgH)
@@ -136,6 +130,7 @@ namespace Banshee
 
 		VulkanUtils::CreateImageView(m_LogicalDevice, textureImage, m_TextureImageFormat, VK_IMAGE_ASPECT_COLOR_BIT, textureImageView);
 		m_TextureImages.emplace_back(textureImage, textureImageView, textureImageMemory);
+		m_TextureImageViews.emplace_back(textureImageView);
 		BE_LOG(LogCategory::Info, "[TEXTURE]: Created texture image object (total textures: %d)", m_TextureImages.size());
 	}
 } // End of Banshee namespace

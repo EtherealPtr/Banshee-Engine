@@ -34,7 +34,7 @@ namespace Banshee
 		VulkanTextureManager(const VkDevice& _device, const VkPhysicalDevice& _gpu, const VkQueue& _graphicsQueue, const VkCommandPool& _commandPool) noexcept;
 		~VulkanTextureManager();
 
-		std::vector<VkImageView> GetTextureImageViews() const;
+		const std::vector<VkImageView>& GetTextureImageViews() const noexcept;
 		void UploadTextures();
 
 		VulkanTextureManager(const VulkanTextureManager&) = delete;
@@ -53,5 +53,6 @@ namespace Banshee
 		VkCommandPool m_CommandPool;
 		VkFormat m_TextureImageFormat;
 		std::vector<VulkanImage> m_TextureImages;
+		std::vector<VkImageView> m_TextureImageViews;
 	};
 } // End of Banshee namespace

@@ -15,6 +15,7 @@ namespace Banshee
 			m_ElapsedTime{ 0.0 },
 			m_FrameCount{ 0 },
 			m_Fps{ 0 },
+			m_TimerRunning{ false },
 			m_FpsDisplayEnabled{ false }
 		{}
 
@@ -22,7 +23,7 @@ namespace Banshee
 		void ToggleFpsDisplay() noexcept { m_FpsDisplayEnabled = !m_FpsDisplayEnabled; }
 		double GetDeltaTime() const noexcept { return m_DeltaTime; }
 		void StartTimer() noexcept;
-		void StopTimer() const;
+		void StopTimer();
 
 	private:
 		using clock_t = std::chrono::steady_clock;
@@ -34,6 +35,7 @@ namespace Banshee
 		double m_ElapsedTime;
 		int32 m_FrameCount;
 		int32 m_Fps;
+		bool m_TimerRunning;
 		bool m_FpsDisplayEnabled;
 	};
 } // End of Banshee namespace

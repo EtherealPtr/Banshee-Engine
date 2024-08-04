@@ -28,7 +28,7 @@ namespace Banshee
 		vkFreeDescriptorSets(m_LogicalDevice, m_DescriptorPool, 1, &m_DescriptorSet);
 	}
 
-	void VulkanDescriptorSet::UpdateDescriptorSet(const std::vector<DescriptorSetWriteBufferProperties>& _descriptorSetWriteBufProperties)
+	void VulkanDescriptorSet::UpdateDescriptorSet(const std::vector<DescriptorSetWriteBufferProperties>& _descriptorSetWriteBufProperties) const noexcept
 	{
 		for (const auto& writeBufProperties : _descriptorSetWriteBufProperties)
 		{
@@ -50,7 +50,7 @@ namespace Banshee
 		}
 	}
 
-	void VulkanDescriptorSet::UpdateDescriptorSet(const std::vector<DescriptorSetWriteTextureProperties>& _descriptorSetWriteTexProperties)
+	void VulkanDescriptorSet::UpdateDescriptorSet(const std::vector<DescriptorSetWriteTextureProperties>& _descriptorSetWriteTexProperties) const noexcept
 	{
 		for (const auto& writeTexProperties : _descriptorSetWriteTexProperties)
 		{

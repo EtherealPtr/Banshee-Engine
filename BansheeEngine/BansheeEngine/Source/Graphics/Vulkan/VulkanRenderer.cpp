@@ -13,7 +13,7 @@
 
 namespace Banshee
 {
-	constexpr uint64 g_MaxEntities{ 512 };
+	constexpr static uint64 g_MaxEntities{ 512 };
 
 	VulkanRenderer::VulkanRenderer(const Window& _window) :
 		m_VkInstance{},
@@ -34,14 +34,15 @@ namespace Banshee
 		m_VkDescriptorPool{ m_VkDevice.GetLogicalDevice(), static_cast<uint16>(m_VkSwapchain.GetImageViews().size()) },
 		m_VkGraphicsPipelineManager{ m_VkDevice.GetLogicalDevice(), m_VkRenderPass.Get(), m_VkDescriptorSetLayout.Get(), m_VkSwapchain.GetWidth(), m_VkSwapchain.GetHeight() },
 		m_Camera{ 45.0f, static_cast<float>(_window.GetWidth()) / _window.GetHeight(), 0.1f, 100.0f, _window.GetWindow() },
+		m_MeshSystem{},
+		m_LightSystem{},
 		m_CurrentFrameIndex{ 0 },
 		m_MaterialDynamicBufferMemAlignment{ 0 },
-		m_MaterialDynamicBufferMemBlock{ nullptr, [](Material* ptr) noexcept { _aligned_free(ptr); } },
-		m_MeshSystem{},
-		m_LightSystem{}
+		m_MaterialDynamicBufferMemBlock{ nullptr, [](Material* _ptr) noexcept { _aligned_free(_ptr); } }
 	{
 		FetchGraphicsComponents();
 		AllocateDynamicBufferSpace();
+		CreateDescriptorSetWriteBufferProperties();
 
 		const size_t numOfSwapImages = m_VkSwapchain.GetImageViews().size();
 		m_VPUniformBuffers.reserve(numOfSwapImages);
@@ -73,6 +74,7 @@ namespace Banshee
 
 		UpdateMaterialData();
 		m_VkTextureManager.UploadTextures();
+		StaticUpdateDescriptorSets();
 		BE_LOG(LogCategory::Trace, "[RENDERER]: Vulkan initialized");
 	}
 
@@ -117,6 +119,22 @@ namespace Banshee
 		m_MaterialDynamicBufferMemBlock.reset(static_cast<Material*>(_aligned_malloc(m_MaterialDynamicBufferMemAlignment * g_MaxEntities, m_MaterialDynamicBufferMemAlignment)));
 	}
 
+	void VulkanRenderer::CreateDescriptorSetWriteBufferProperties()
+	{
+		constexpr uint32 descriptorWriteBufferCount{ 3 };
+		constexpr uint32 descriptorWriteTextureCount{ 2 };
+
+		m_DescriptorSetWriteBufferProperties.resize(descriptorWriteBufferCount);
+		m_DescriptorSetWriteTextureProperties.resize(descriptorWriteTextureCount);
+
+		m_DescriptorSetWriteBufferProperties[0].Initialize(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER);
+		m_DescriptorSetWriteBufferProperties[1].Initialize(1, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC);
+		m_DescriptorSetWriteBufferProperties[2].Initialize(4, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER);
+
+		m_DescriptorSetWriteTextureProperties[0].Initialize(2, VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE);
+		m_DescriptorSetWriteTextureProperties[1].Initialize(3, VK_DESCRIPTOR_TYPE_SAMPLER);
+	}
+
 	void VulkanRenderer::UpdateMaterialData()
 	{
 		// Update dynamic buffer with material data
@@ -156,28 +174,10 @@ namespace Banshee
 
 	void VulkanRenderer::UpdateDescriptorSets(const uint8 _descriptorSetIndex)
 	{
-		const DescriptorSetWriteBufferProperties viewProjBufferDescWriteProperties(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, m_VPUniformBuffers[_descriptorSetIndex].GetBuffer(), m_VPUniformBuffers[_descriptorSetIndex].GetBufferSize());
-		const DescriptorSetWriteBufferProperties materialDynamicBufferDescWriteProperties(1, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC, m_MaterialUniformBuffers[_descriptorSetIndex].GetBuffer(), m_MaterialDynamicBufferMemAlignment);
-		const DescriptorSetWriteTextureProperties texturesDescWriteProperties(2, VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE, m_VkTextureManager.GetTextureImageViews(), VK_NULL_HANDLE);
-		const DescriptorSetWriteTextureProperties samplerDescWriteProperties(3, VK_DESCRIPTOR_TYPE_SAMPLER, {}, m_VkTextureSampler.Get());
-		const DescriptorSetWriteBufferProperties lightBufferDescWriteProperties(4, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, m_LightUniformBuffers[_descriptorSetIndex].GetBuffer(), m_LightUniformBuffers[_descriptorSetIndex].GetBufferSize());
-
-		const std::vector<DescriptorSetWriteBufferProperties> descriptorSetWriteBufferProperties =
-		{
-			viewProjBufferDescWriteProperties,
-			materialDynamicBufferDescWriteProperties,
-			lightBufferDescWriteProperties
-		};
-
-		m_DescriptorSets[_descriptorSetIndex].UpdateDescriptorSet(descriptorSetWriteBufferProperties);
-
-		const std::vector<DescriptorSetWriteTextureProperties> descriptorSetWriteTextureProperties =
-		{
-			texturesDescWriteProperties,
-			samplerDescWriteProperties
-		};
-
-		m_DescriptorSets[_descriptorSetIndex].UpdateDescriptorSet(descriptorSetWriteTextureProperties);
+		m_DescriptorSetWriteBufferProperties[0].SetBuffer(m_VPUniformBuffers[_descriptorSetIndex].GetBuffer(), m_VPUniformBuffers[_descriptorSetIndex].GetBufferSize());
+		m_DescriptorSetWriteBufferProperties[1].SetBuffer(m_MaterialUniformBuffers[_descriptorSetIndex].GetBuffer(), m_MaterialDynamicBufferMemAlignment);
+		m_DescriptorSetWriteBufferProperties[2].SetBuffer(m_LightUniformBuffers[_descriptorSetIndex].GetBuffer(), m_LightUniformBuffers[_descriptorSetIndex].GetBufferSize());
+		m_DescriptorSets[_descriptorSetIndex].UpdateDescriptorSet(m_DescriptorSetWriteBufferProperties);
 
 		// Update uniform buffer with the ViewProjMatrix
 		ViewProjMatrix viewProjMatrix = m_Camera.GetViewProjMatrix();
@@ -185,6 +185,17 @@ namespace Banshee
 		m_VPUniformBuffers[m_CurrentFrameIndex].CopyData(&viewProjMatrix);
 
 		UpdateLightData();
+	}
+
+	void VulkanRenderer::StaticUpdateDescriptorSets() noexcept
+	{
+		m_DescriptorSetWriteTextureProperties[0].SetImageView(m_VkTextureManager.GetTextureImageViews());
+		m_DescriptorSetWriteTextureProperties[1].SetSampler(m_VkTextureSampler.Get());
+
+		for (uint8 i = 0; i < m_DescriptorSets.size(); ++i)
+		{
+			m_DescriptorSets[i].UpdateDescriptorSet(m_DescriptorSetWriteTextureProperties);
+		}
 	}
 
 	void VulkanRenderer::DrawFrame(const double _deltaTime)
@@ -206,7 +217,7 @@ namespace Banshee
 
 		// Update the camera's position and rotation
 		m_Camera.ProcessInput(_deltaTime);
-
+		
 		// Get the semaphores to use for this frame
 		VkSemaphore waitSemaphore = m_VkSemaphores.Get()[m_CurrentFrameIndex].first;
 		VkSemaphore signalSemaphore = m_VkSemaphores.Get()[m_CurrentFrameIndex].second;
