@@ -25,12 +25,14 @@
 #include "Graphics/Systems/LightSystem.h"
 #include "Graphics/Camera.h"
 #include <vector>
+#include <unordered_map>
 #include <memory>
 
 namespace Banshee
 {
 	class Window;
 	class Material;
+	class TransformComponent;
 
 	class VulkanRenderer
 	{
@@ -85,5 +87,6 @@ namespace Banshee
 		std::unique_ptr<Material, void(*)(Material*) noexcept> m_MaterialDynamicBufferMemBlock;
 		std::vector<DescriptorSetWriteBufferProperties> m_DescriptorSetWriteBufferProperties;
 		std::vector<DescriptorSetWriteTextureProperties> m_DescriptorSetWriteTextureProperties;
+		std::unordered_map<uint32, std::shared_ptr<TransformComponent>> m_EntityTransformMap;
 	};
 } // End of Banshee namespace

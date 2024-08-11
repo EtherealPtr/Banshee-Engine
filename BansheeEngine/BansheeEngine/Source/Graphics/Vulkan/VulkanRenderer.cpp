@@ -91,12 +91,17 @@ namespace Banshee
 		{
 			if (const auto& meshComponent = entity->GetComponent<MeshComponent>())
 			{
-				meshComponents.push_back(meshComponent);
+				meshComponents.emplace_back(meshComponent);
 			}
 
 			if (const auto& lightComponent = entity->GetComponent<LightComponent>())
 			{
-				lightComponents.push_back(lightComponent);
+				lightComponents.emplace_back(lightComponent);
+			}
+
+			if (const auto& transformComponent = entity->GetComponent<TransformComponent>())
+			{
+				m_EntityTransformMap[entity->GetUniqueId()] = transformComponent;
 			}
 		}
 
@@ -160,7 +165,7 @@ namespace Banshee
 		const auto& lightComponents = m_LightSystem.GetLightComponents();
 		for (const auto& lightComponent : lightComponents)
 		{
-			if (auto transformComponent = lightComponent->GetOwner()->GetTransform())
+			if (auto transformComponent = m_EntityTransformMap.find(lightComponent->GetOwner()->GetUniqueId())->second.get())
 			{
 				// TODO: Enable support for multiple light sources
 				const glm::vec3 lightPos = glm::vec3(m_Camera.GetViewMatrix() * glm::vec4(transformComponent->GetPosition(), 1.0f));
@@ -298,7 +303,7 @@ namespace Banshee
 		for (size_t i = 0; i < meshComponents.size(); ++i)
 		{
 			glm::mat4 entityModelMatrix = glm::mat4(1.0f);
-			if (auto transform = meshComponents[i]->GetOwner()->GetTransform())
+			if (auto transform = m_EntityTransformMap[meshComponents[i]->GetOwner()->GetUniqueId()])
 			{
 				entityModelMatrix = transform->GetModel();
 			}
