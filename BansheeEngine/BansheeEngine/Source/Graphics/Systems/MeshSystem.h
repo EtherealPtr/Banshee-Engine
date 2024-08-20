@@ -3,27 +3,33 @@
 #include "Foundation/Platform.h"
 #include <memory>
 #include <vector>
+#include <unordered_map>
 
 namespace Banshee
 {
-	class MeshComponent;
+	class Mesh;
 
 	class MeshSystem
 	{
 	public:
-		MeshSystem() noexcept = default;
+		MeshSystem() noexcept;
 		~MeshSystem() noexcept = default;
 
-		void SetMeshComponents(const std::vector<std::shared_ptr<MeshComponent>>& _meshComponents);
-		const std::vector<std::shared_ptr<MeshComponent>>& GetMeshComponents() const noexcept { return m_MeshRenderers; }
-		std::shared_ptr<MeshComponent> GetMeshComponentById(const uint32 _meshId) const noexcept;
+		void AddMeshes(const std::vector<Mesh>& _meshes);
+		const std::vector<Mesh>& GetAllSubMeshes();
+		const std::vector<Mesh>& GetSubMeshes(const uint32 _bufferId) const;
 
 		MeshSystem(const MeshSystem&) = delete;
 		MeshSystem(MeshSystem&&) = delete;
-		void operator=(const MeshSystem&) = delete;
-		void operator=(MeshSystem&&) = delete;
+		MeshSystem& operator=(const MeshSystem&) = delete;
+		MeshSystem& operator=(MeshSystem&&) = delete;
 
 	private:
-		std::vector<std::shared_ptr<MeshComponent>> m_MeshRenderers;
+		void UpdateSubMeshCache();
+
+	private:
+		std::vector<Mesh> m_CachedSubMeshes;
+		std::unordered_map<uint32, std::vector<Mesh>> m_VertexBufferIdToSubMeshes;
+		bool m_IsCacheDirty;
 	};
 } // End of Banshee namespace

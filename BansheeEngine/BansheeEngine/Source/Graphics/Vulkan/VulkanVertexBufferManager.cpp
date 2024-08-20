@@ -1,14 +1,16 @@
 #include "VulkanVertexBufferManager.h"
+#include "Foundation/Entity/Entity.h"
 #include "Foundation/Logging/Logger.h"
 #include "Foundation/ResourceManager/ResourceManager.h"
-#include "Graphics/Components/MeshComponent.h"
+#include "Graphics/Mesh.h"
 #include "Graphics/Shapes/ShapeFactory.h"
 #include "Graphics/Systems/ModelLoadingSystem.h"
 #include "Graphics/Systems/MeshSystem.h"
-#include <stdexcept>
 
 namespace Banshee
 {
+	uint32 VulkanVertexBufferManager::s_NextBufferId{ 0 };
+
 	VulkanVertexBufferManager::VulkanVertexBufferManager(const VkDevice& _logicalDevice, const VkPhysicalDevice& _physicalDevice, const VkCommandPool& _commandPool, const VkQueue& _graphicsQueue) :
 		m_LogicalDevice{ _logicalDevice },
 		m_PhysicalDevice{ _physicalDevice },
@@ -29,91 +31,54 @@ namespace Banshee
 
 	void VulkanVertexBufferManager::CreateBasicShapeVertexBuffer(MeshComponent* const _meshComponent, const MeshSystem* const _meshSystem)
 	{
-		assert(_meshComponent != nullptr && _meshSystem != nullptr);
-
-		const uint32 meshId{ _meshComponent->GetMeshId() };
-		auto vertexBuffer{ m_VertexBuffers.find(meshId) };
-
-		if (vertexBuffer != m_VertexBuffers.end())
-		{
-			const auto duplicatedMesh = _meshSystem->GetMeshComponentById(meshId);
-			if (!duplicatedMesh || duplicatedMesh->GetSubMeshes().empty())
-			{
-				return;
-			}
-
-			auto subMesh = duplicatedMesh->GetSubMeshes()[0];
-			subMesh.SetTexId(_meshComponent->GetTexId());
-			subMesh.material.SetDiffuseColor(_meshComponent->GetColor());
-			_meshComponent->SetSubMesh(subMesh);
-			return;
-		}
-		else
-		{
-			std::vector<Vertex> vertices{};
-			std::vector<uint32> indices{};
-
-			ShapeFactory::GetShapeData(static_cast<PrimitiveShape>(meshId), vertices, indices);
-			Mesh mesh{};
-			mesh.vertices = vertices;
-			mesh.indices = indices;
-			mesh.SetTexId(_meshComponent->GetTexId());
-			mesh.material.SetDiffuseColor(_meshComponent->GetColor());
-			_meshComponent->SetSubMesh(mesh);
-
-			GenerateBuffers(meshId, vertices.data(), sizeof(Vertex) * vertices.size(), indices.data(), sizeof(uint32) * indices.size());
-		}
+		// TODO
 	}
 
-	void VulkanVertexBufferManager::CreateModelVertexBuffer(MeshComponent* const _meshComponent, const MeshSystem* const _meshSystem)
+	void VulkanVertexBufferManager::CreateModelVertexBuffer(MeshComponent& _meshComponent, MeshSystem& _meshSystem)
 	{
-		assert(_meshComponent != nullptr && _meshSystem != nullptr);
+		const std::string_view modelName{ _meshComponent.GetModelName() };
 
-		const std::string_view modelName{ _meshComponent->GetModelName() };
-		uint32 modelId{ 0 };
-
-		auto it = m_ModelNameToIdMap.find(modelName.data());
-		if (it != m_ModelNameToIdMap.end())
+		auto modelBufferId = m_ModelNameToBufferId.find(modelName.data());
+		if (modelBufferId != m_ModelNameToBufferId.end())
 		{
-			modelId = it->second;
-			_meshComponent->SetMeshId(modelId);
+			_meshComponent.SetVertexBufferId(modelBufferId->second);
 
-			const auto duplicatedMesh = _meshSystem->GetMeshComponentById(modelId);
-			_meshComponent->SetSubMeshes(duplicatedMesh->GetSubMeshes());
+			std::vector<Mesh> duplicatedMeshes{};
+			const auto& originalSubMeshes = _meshSystem.GetSubMeshes(modelBufferId->second);
+			duplicatedMeshes.reserve(originalSubMeshes.size());
+
+			for (const auto& subMesh : originalSubMeshes)
+			{
+				Mesh duplicatedSubMesh = subMesh;
+				duplicatedSubMesh.SetOwner(_meshComponent.GetOwner());
+				duplicatedMeshes.emplace_back(duplicatedSubMesh);
+			}
+
+			_meshSystem.AddMeshes(duplicatedMeshes);
 			return;
 		}
-		else
-		{
-			modelId = (uint32)(m_ModelNameToIdMap.size());
-			constexpr uint32 modelIdOffset{ 1000 };
-			modelId += modelIdOffset;
-			m_ModelNameToIdMap[modelName.data()] = modelId;
-			_meshComponent->SetMeshId(modelId);
-		}
 
-		auto vertexBuffer = m_VertexBuffers.find(modelId);
-		if (vertexBuffer != m_VertexBuffers.end())
-		{
-			return;
-		}
+		const uint32 bufferId = ++s_NextBufferId;
+		_meshComponent.SetVertexBufferId(bufferId);
+		m_ModelNameToBufferId[modelName.data()] = bufferId;
 
 		std::vector<Vertex> vertices{};
 		std::vector<uint32> indices{};
-		const ModelLoadingSystem modelLoadingSystem{ _meshComponent->GetModelPath().c_str(), _meshComponent, vertices, indices };
+		const ModelLoadingSystem modelLoadingSystem{ _meshComponent, _meshSystem, vertices, indices };
 
-		GenerateBuffers(modelId, vertices.data(), sizeof(Vertex) * vertices.size(), indices.data(), sizeof(uint32) * indices.size());
+		GenerateBuffers(bufferId, vertices.data(), sizeof(Vertex) * vertices.size(), indices.data(), sizeof(uint32) * indices.size());
 	}
 
-	VulkanVertexBuffer* VulkanVertexBufferManager::GetVertexBuffer(const uint32 _meshId)
+	VulkanVertexBuffer* VulkanVertexBufferManager::GetVertexBuffer(const uint32 _bufferId)
 	{
-		auto vertexBuffer = m_VertexBuffers.find(_meshId);
+		auto vertexBuffer = m_VertexBuffers.find(_bufferId);
 		if (vertexBuffer != m_VertexBuffers.end())
 		{
 			return &vertexBuffer->second;
 		}
 		else
 		{
-			BE_LOG(LogCategory::Error, "[VERTEX MANAGER]: Failed to find vertex buffer with id: %d", _meshId);
+			BE_LOG(LogCategory::Error, "[VERTEX MANAGER]: Failed to find vertex buffer with id: %d", _bufferId);
 			throw std::runtime_error("Mesh id not found in vertex buffers map");
 		}
 	}

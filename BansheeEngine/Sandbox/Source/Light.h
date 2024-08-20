@@ -10,8 +10,8 @@ class Light
 {
 public:
 	Light() : 
-		m_Entity(EntityManager::CreateEntity()),
-		m_Transform(m_Entity->AddComponent<TransformComponent>())
+		m_Entity{ EntityManager::CreateEntity() },
+		m_Transform{ m_Entity->AddComponent<TransformComponent>() }
 	{
 		m_Entity->AddComponent<MeshComponent>(PrimitiveShape::CubeShape, ShaderType::Unlit);
 		m_Entity->AddComponent<LightComponent>();

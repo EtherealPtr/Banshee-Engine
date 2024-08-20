@@ -15,22 +15,23 @@ namespace tinygltf
 
 namespace Banshee
 {
+	class MeshSystem;
 	class MeshComponent;
-	struct Mesh;
+	class Mesh;
 
 	class ModelLoadingSystem
 	{
 	public:
-		ModelLoadingSystem(std::string_view _modelPath, MeshComponent* const _meshComponent, std::vector<Vertex>& _vertices, std::vector<uint32>& _indices);
+		ModelLoadingSystem(MeshComponent& _meshComponent, MeshSystem& _meshSystem, std::vector<Vertex>& _vertices, std::vector<uint32>& _indices);
 		~ModelLoadingSystem() = default;
 
 		ModelLoadingSystem(const ModelLoadingSystem&) = delete;
 		ModelLoadingSystem(ModelLoadingSystem&&) = delete;
-		void operator=(const ModelLoadingSystem&) = delete;
-		void operator=(ModelLoadingSystem&&) = delete;
+		ModelLoadingSystem& operator=(const ModelLoadingSystem&) = delete;
+		ModelLoadingSystem& operator=(ModelLoadingSystem&&) = delete;
 
 	private:
-		void LoadModel(const tinygltf::Model& _model, MeshComponent* const _meshComponent, std::vector<Vertex>& _vertices, std::vector<uint32>& _indices);
+		void LoadModel(const tinygltf::Model& _model, MeshComponent& _meshComponent, MeshSystem& _meshSystem, std::vector<Vertex>& _vertices, std::vector<uint32>& _indices);
 		void GetNodeTransform(const tinygltf::Node& _node, glm::mat4& _outTransform) const noexcept;
 		void LoadMaterial(const tinygltf::Model& _model, const tinygltf::Primitive& _primitive, Mesh* const _subMesh);
 

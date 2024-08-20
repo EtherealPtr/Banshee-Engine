@@ -3,6 +3,17 @@
 
 namespace Banshee
 {
+    Timer::Timer() noexcept :
+        m_LastTime{ clock_t::now() },
+        m_StartTime{ clock_t::now() },
+        m_DeltaTime{ 0.0 },
+        m_ElapsedTime{ 0.0 },
+        m_FrameCount{ 0 },
+        m_Fps{ 0 },
+        m_TimerRunning{ false },
+        m_FpsDisplayEnabled{ false }
+    {}
+
 	void Timer::Update()
 	{
         const auto currentTime = clock_t::now();

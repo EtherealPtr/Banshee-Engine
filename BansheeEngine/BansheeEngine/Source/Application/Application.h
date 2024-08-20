@@ -1,14 +1,20 @@
 #pragma once
 
 #include "Foundation/DLLConfig.h"
+#include "Foundation/INIParser.h"
 #include <memory>
+//#include <iostream>
+
+//void* operator new(size_t size)
+//{
+//	std::cout << "Allocating " << size << " bytes\n";
+//	return malloc(size);
+//}
 
 namespace Banshee
 {
-	class INIParser;
 	class Window;
 	class VulkanRenderer;
-	class Timer;
 
 	class Application
 	{
@@ -21,13 +27,12 @@ namespace Banshee
 
 		Application(const Application&) = delete;
 		Application(Application&&) = delete;
-		void operator=(const Application&) = delete;
-		void operator=(Application&&) = delete;
+		Application& operator=(const Application&) = delete;
+		Application& operator=(Application&&) = delete;
 
 	private:
-		std::unique_ptr<INIParser> m_INIParser;
+		INIParser m_INIParser;
 		std::unique_ptr<Window> m_Window;
 		std::unique_ptr<VulkanRenderer> m_Renderer;
-		std::unique_ptr<Timer> m_Timer;
 	};
 } // End of Banshee namespace

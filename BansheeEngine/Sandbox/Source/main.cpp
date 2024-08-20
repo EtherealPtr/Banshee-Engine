@@ -7,12 +7,19 @@ class ClientApp : public Banshee::Application
 public:
 	ClientApp() :
 		m_Player(),
-		m_Light()
-	{}
+		m_Player2()
+	{
+		m_Player2.SetPosition(glm::vec3(10.0f, 0.0f, 0.0f));
+	}
+
+	ClientApp(const ClientApp&) = delete;
+	ClientApp(ClientApp&&) = delete;
+	ClientApp& operator=(const ClientApp&) = delete;
+	ClientApp& operator=(ClientApp&&) = delete;
 
 private:
 	Player m_Player;
-	Light m_Light;
+	Player m_Player2;
 };
 
 std::unique_ptr<Banshee::Application> CreateApplication()

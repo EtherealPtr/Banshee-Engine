@@ -8,22 +8,18 @@ namespace Banshee
 	class Timer
 	{
 	public:
-		Timer() noexcept :
-			m_LastTime{ clock_t::now() },
-			m_StartTime{ clock_t::now() },
-			m_DeltaTime{ 0.0 },
-			m_ElapsedTime{ 0.0 },
-			m_FrameCount{ 0 },
-			m_Fps{ 0 },
-			m_TimerRunning{ false },
-			m_FpsDisplayEnabled{ false }
-		{}
+		Timer() noexcept;
 
 		void Update();
 		void ToggleFpsDisplay() noexcept { m_FpsDisplayEnabled = !m_FpsDisplayEnabled; }
 		double GetDeltaTime() const noexcept { return m_DeltaTime; }
 		void StartTimer() noexcept;
 		void StopTimer();
+
+		Timer(const Timer&) = delete;
+		Timer(Timer&&) = delete;
+		void operator=(const Timer&) = delete;
+		void operator=(Timer&&) = delete;
 
 	private:
 		using clock_t = std::chrono::steady_clock;
