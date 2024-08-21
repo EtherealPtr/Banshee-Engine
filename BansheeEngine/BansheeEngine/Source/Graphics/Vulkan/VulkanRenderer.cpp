@@ -3,7 +3,7 @@
 #include "Foundation/Entity/EntityManager.h"
 #include "Graphics/Components/TransformComponent.h"
 #include "Graphics/Components/Light/LightComponent.h"
-#include "Graphics/Components/MeshComponent.h"
+#include "Graphics/Mesh.h"
 #include "Graphics/Window.h"
 #include <array>
 #include <algorithm>
@@ -56,20 +56,6 @@ namespace Banshee
 			m_DescriptorSets.emplace_back(m_VkDevice.GetLogicalDevice(), m_VkDescriptorPool.Get(), m_VkDescriptorSetLayout.Get());
 		}
 
-		for (const auto& meshComponent : m_MeshSystem.GetMeshComponents())
-		{
-			meshComponent->SetDirty(true);
-
-			if (meshComponent->HasModel())
-			{
-				m_VertexBufferManager.CreateModelVertexBuffer(meshComponent.get(), &m_MeshSystem);
-			}
-			else
-			{
-				m_VertexBufferManager.CreateBasicShapeVertexBuffer(meshComponent.get(), &m_MeshSystem);
-			}
-		}
-
 		UpdateMaterialData();
 		m_VkTextureManager.UploadTextures();
 		StaticUpdateDescriptorSets();
@@ -84,29 +70,36 @@ namespace Banshee
 
 	void VulkanRenderer::FetchGraphicsComponents()
 	{
-		std::vector<std::shared_ptr<MeshComponent>> meshComponents{};
 		std::vector<std::shared_ptr<LightComponent>> lightComponents{};
 
 		for (const auto& entity : EntityManager::GetAllEntities())
 		{
 			if (const auto& meshComponent = entity->GetComponent<MeshComponent>())
 			{
-				meshComponents.push_back(meshComponent);
+				meshComponent->SetDirty(true);
+				MeshComponent& meshComp = *meshComponent.get();
+
+				if (meshComponent->HasModel())
+				{
+					m_VertexBufferManager.CreateModelVertexBuffer(meshComp, m_MeshSystem);
+				}
+				else
+				{
+					m_VertexBufferManager.CreateBasicShapeVertexBuffer(meshComp, m_MeshSystem);
+				}
 			}
 
 			if (const auto& lightComponent = entity->GetComponent<LightComponent>())
 			{
-				lightComponents.push_back(lightComponent);
+				lightComponents.emplace_back(lightComponent);
+			}
+
+			if (const auto& transformComponent = entity->GetComponent<TransformComponent>())
+			{
+				m_EntityTransformMap[entity->GetUniqueId()] = transformComponent;
 			}
 		}
 
-		// Sort mesh components based on shader type (optimization)
-		std::sort(meshComponents.begin(), meshComponents.end(), [](const std::shared_ptr<MeshComponent>& _a, const std::shared_ptr<MeshComponent>& _b) noexcept
-			{
-				return _a->GetShaderType() < _b->GetShaderType();
-			});
-
-		m_MeshSystem.SetMeshComponents(meshComponents);
 		m_LightSystem.SetLightComponents(lightComponents);
 	}
 
@@ -136,17 +129,14 @@ namespace Banshee
 	void VulkanRenderer::UpdateMaterialData()
 	{
 		// Update dynamic buffer with material data
-		for (const auto& meshComponent : m_MeshSystem.GetMeshComponents())
+		for (const auto& subMesh : m_MeshSystem.GetAllSubMeshes())
 		{
-			for (const auto& subMesh : meshComponent->GetSubMeshes())
-			{
-				const Material material = subMesh.material;
-				Material* materialData = (Material*)((uint64)m_MaterialDynamicBufferMemBlock.get() + (subMesh.GetMaterialIndex() * m_MaterialDynamicBufferMemAlignment));
-				const glm::vec3 diffuseColor = material.GetDiffuseColor();
-				const glm::vec3 specularColor = material.GetSpecularColor();
-				const float shininess = material.GetShininess();
-				*materialData = { diffuseColor, specularColor, shininess };
-			}
+			const Material material = subMesh.GetMaterial();
+			Material* materialData = (Material*)((uint64)m_MaterialDynamicBufferMemBlock.get() + (subMesh.GetMaterialIndex() * m_MaterialDynamicBufferMemAlignment));
+			const glm::vec3 diffuseColor = material.GetDiffuseColor();
+			const glm::vec3 specularColor = material.GetSpecularColor();
+			const float shininess = material.GetShininess();
+			*materialData = { diffuseColor, specularColor, shininess };
 		}
 
 		for (size_t i = 0; i < m_DescriptorSets.size(); ++i)
@@ -160,7 +150,7 @@ namespace Banshee
 		const auto& lightComponents = m_LightSystem.GetLightComponents();
 		for (const auto& lightComponent : lightComponents)
 		{
-			if (auto transformComponent = lightComponent->GetOwner()->GetTransform())
+			if (const auto& transformComponent = m_EntityTransformMap.find(lightComponent->GetOwner()->GetUniqueId())->second.get())
 			{
 				// TODO: Enable support for multiple light sources
 				const glm::vec3 lightPos = glm::vec3(m_Camera.GetViewMatrix() * glm::vec4(transformComponent->GetPosition(), 1.0f));
@@ -294,38 +284,34 @@ namespace Banshee
 
 		UpdateDescriptorSets(_imgIndex);
 
-		const std::vector<std::shared_ptr<MeshComponent>>& meshComponents = m_MeshSystem.GetMeshComponents();
-		for (size_t i = 0; i < meshComponents.size(); ++i)
+		for (const auto& subMesh : m_MeshSystem.GetAllSubMeshes())
 		{
-			glm::mat4 entityModelMatrix = glm::mat4(1.0f);
-			if (auto transform = meshComponents[i]->GetOwner()->GetTransform())
+			glm::mat4 entityModelMatrix{ glm::mat4(1.0f) };
+			if (const auto& transform = m_EntityTransformMap[subMesh.GetOwner()->GetUniqueId()])
 			{
 				entityModelMatrix = transform->GetModel();
 			}
 
-			const VulkanVertexBuffer* const vertexBuffer = m_VertexBufferManager.GetVertexBuffer(meshComponents[i]->GetMeshId());
+			const VulkanVertexBuffer* const vertexBuffer = m_VertexBufferManager.GetVertexBuffer(subMesh.GetParentBufferId());
 
-			const auto& graphicsPipeline = m_VkGraphicsPipelineManager.GetPipeline(meshComponents[i]->GetShaderType());
+			const auto& graphicsPipeline = m_VkGraphicsPipelineManager.GetPipeline(subMesh.GetMaterial().GetShaderType());
 			vkCmdBindPipeline(cmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline->Get());
+			 
+			// Bind vertex & index buffers
+			const VkDeviceSize indexOffset = subMesh.GetIndexOffset() * sizeof(uint32);
+			vertexBuffer->Bind(cmdBuffer, indexOffset);
 
-			for (const auto& subMesh : meshComponents[i]->GetSubMeshes())
-			{
-				// Bind vertex & index buffers
-				const VkDeviceSize indexOffset = subMesh.indexOffset * sizeof(uint32);
-				vertexBuffer->Bind(cmdBuffer, indexOffset);
+			// Bind descriptor set
+			const uint32 dynamicOffset = static_cast<uint32>(m_MaterialDynamicBufferMemAlignment) * subMesh.GetMaterialIndex();
+			auto currentDescriptorSet = m_DescriptorSets[_imgIndex].Get();
+			vkCmdBindDescriptorSets(cmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline->GetLayout(), 0, 1, &currentDescriptorSet, 1, &dynamicOffset);
 
-				// Bind descriptor set
-				const uint32 dynamicOffset = static_cast<uint32>(m_MaterialDynamicBufferMemAlignment) * subMesh.GetMaterialIndex();
-				auto currentDescriptorSet = m_DescriptorSets[_imgIndex].Get();
-				vkCmdBindDescriptorSets(cmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline->GetLayout(), 0, 1, &currentDescriptorSet, 1, &dynamicOffset);
+			// Push constants
+			const glm::mat4& modelMatrix = entityModelMatrix * subMesh.GetLocalTransform();
+			const PushConstant pc(modelMatrix, subMesh.GetTexId(), subMesh.HasTexture());
+			vkCmdPushConstants(cmdBuffer, graphicsPipeline->GetLayout(), VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(PushConstant), &pc);
 
-				// Push constants
-				const glm::mat4& modelMatrix = entityModelMatrix * subMesh.localTransform;
-				const PushConstant pc(modelMatrix, subMesh.GetTexId(), subMesh.HasTexture());
-				vkCmdPushConstants(cmdBuffer, graphicsPipeline->GetLayout(), VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(PushConstant), &pc);
-
-				vkCmdDrawIndexed(cmdBuffer, static_cast<uint32>(subMesh.indices.size()), 1, 0, 0, 0);
-			}
+			vkCmdDrawIndexed(cmdBuffer, static_cast<uint32>(subMesh.GetIndices().size()), 1, 0, 0, 0);
 		}
 
 		vkCmdEndRenderPass(cmdBuffer);

@@ -45,7 +45,7 @@ namespace Banshee
 		std::vector<VkPhysicalDevice> physicalDevices(deviceCount);
 		vkEnumeratePhysicalDevices(_vkInstance, &deviceCount, physicalDevices.data());
 
-		std::string_view preferredDeviceName{ "" };
+		std::string preferredDeviceName{ "" };
 		uint32 maxScore{ 0 };
 
 		for (const auto& gpu : physicalDevices)
