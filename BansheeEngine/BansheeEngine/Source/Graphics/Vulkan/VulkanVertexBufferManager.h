@@ -17,7 +17,7 @@ namespace Banshee
 		VulkanVertexBufferManager(const VkDevice& _logicalDevice, const VkPhysicalDevice& _physicalDevice, const VkCommandPool& _commandPool, const VkQueue& _graphicsQueue);
 
 		void GenerateBuffers(const uint32 _bufferId, void* _vertexData, const uint64 _sizeOfVertexData, void* _indexData, const uint64 _sizeOfIndexData);
-		void CreateBasicShapeVertexBuffer(MeshComponent* const _meshComponent, const MeshSystem* const _meshSystem);
+		void CreateBasicShapeVertexBuffer(MeshComponent& _meshComponent, MeshSystem& _meshSystem);
 		void CreateModelVertexBuffer(MeshComponent& _meshComponent, MeshSystem& _meshSystem);
 		VulkanVertexBuffer* GetVertexBuffer(const uint32 _bufferId);
 

@@ -29,9 +29,27 @@ namespace Banshee
 		);
 	}
 
-	void VulkanVertexBufferManager::CreateBasicShapeVertexBuffer(MeshComponent* const _meshComponent, const MeshSystem* const _meshSystem)
+	void VulkanVertexBufferManager::CreateBasicShapeVertexBuffer(MeshComponent& _meshComponent, MeshSystem& _meshSystem)
 	{
-		// TODO
+		const uint32 bufferId{ ++s_NextBufferId };
+		_meshComponent.SetVertexBufferId(bufferId);
+
+		std::vector<Vertex> vertices{};
+		std::vector<uint32> indices{};
+		ShapeFactory::GetShapeData(_meshComponent.GetBasicShape(), vertices, indices);
+
+		GenerateBuffers(bufferId, vertices.data(), sizeof(Vertex) * vertices.size(), indices.data(), sizeof(uint32) * indices.size());
+
+		Mesh basicShape{ _meshComponent.GetBasicShape(), _meshComponent.GetShaderType() };
+		Material basicShapeMaterial{};
+		basicShapeMaterial.SetShaderType(_meshComponent.GetShaderType());
+		basicShapeMaterial.SetDiffuseColor(_meshComponent.GetDiffuseColor());
+		basicShape.SetParentVertexBufferId(s_NextBufferId);
+		basicShape.SetIndices(indices);
+		basicShape.SetOwner(_meshComponent.GetOwner());
+		basicShape.SetMaterial(basicShapeMaterial);
+
+		_meshSystem.AddMesh(basicShape);
 	}
 
 	void VulkanVertexBufferManager::CreateModelVertexBuffer(MeshComponent& _meshComponent, MeshSystem& _meshSystem)
@@ -44,12 +62,12 @@ namespace Banshee
 			_meshComponent.SetVertexBufferId(modelBufferId->second);
 
 			std::vector<Mesh> duplicatedMeshes{};
-			const auto& originalSubMeshes = _meshSystem.GetSubMeshes(modelBufferId->second);
+			const auto& originalSubMeshes{ _meshSystem.GetSubMeshes(modelBufferId->second) };
 			duplicatedMeshes.reserve(originalSubMeshes.size());
 
 			for (const auto& subMesh : originalSubMeshes)
 			{
-				Mesh duplicatedSubMesh = subMesh;
+				Mesh duplicatedSubMesh{ subMesh };
 				duplicatedSubMesh.SetOwner(_meshComponent.GetOwner());
 				duplicatedMeshes.emplace_back(duplicatedSubMesh);
 			}
@@ -58,7 +76,7 @@ namespace Banshee
 			return;
 		}
 
-		const uint32 bufferId = ++s_NextBufferId;
+		const uint32 bufferId{ ++s_NextBufferId };
 		_meshComponent.SetVertexBufferId(bufferId);
 		m_ModelNameToBufferId[modelName.data()] = bufferId;
 

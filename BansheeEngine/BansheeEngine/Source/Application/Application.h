@@ -3,13 +3,6 @@
 #include "Foundation/DLLConfig.h"
 #include "Foundation/INIParser.h"
 #include <memory>
-//#include <iostream>
-
-//void* operator new(size_t size)
-//{
-//	std::cout << "Allocating " << size << " bytes\n";
-//	return malloc(size);
-//}
 
 namespace Banshee
 {
@@ -26,8 +19,8 @@ namespace Banshee
 		BANSHEE_ENGINE void Run() const;
 
 		Application(const Application&) = delete;
-		Application(Application&&) = delete;
 		Application& operator=(const Application&) = delete;
+		Application(Application&&) = delete;
 		Application& operator=(Application&&) = delete;
 
 	private:

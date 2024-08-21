@@ -24,9 +24,9 @@ namespace Banshee
 		VkApplicationInfo appInfo{};
 		appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
 		appInfo.pApplicationName = "Untitled";
-		appInfo.applicationVersion = VK_MAKE_API_VERSION(1, 1, 0, 0);
+		appInfo.applicationVersion = VK_MAKE_API_VERSION(1, 1, 0, 1);
 		appInfo.pEngineName = "None";
-		appInfo.engineVersion = VK_MAKE_API_VERSION(1, 1, 1, 0);
+		appInfo.engineVersion = VK_MAKE_API_VERSION(1, 1, 0, 1);
 		appInfo.apiVersion = VK_API_VERSION_1_3;
 
 		VkInstanceCreateInfo instanceCreateInfo{};
@@ -34,11 +34,11 @@ namespace Banshee
 		instanceCreateInfo.pApplicationInfo = &appInfo;
 
 		// Query the required extensions for GLFW
-		unsigned int glfwExtensionCount = 0;
-		const char** glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
+		unsigned int glfwExtensionCount{ 0 };
+		const char** glfwExtensions{ glfwGetRequiredInstanceExtensions(&glfwExtensionCount) };
 
 		// List the required instance extensions
-		std::vector<const char*> requiredInstanceExtensions;
+		std::vector<const char*> requiredInstanceExtensions{};
 		requiredInstanceExtensions.reserve((size_t)glfwExtensionCount + 1);
 
 		for (size_t i = 0; i < glfwExtensionCount; ++i)
@@ -49,7 +49,7 @@ namespace Banshee
 		instanceCreateInfo.enabledLayerCount = 0;
 		instanceCreateInfo.ppEnabledLayerNames = nullptr;
 
-		std::vector<const char*> validationLayers;
+		std::vector<const char*> validationLayers{};
 
 		if (g_EnableValidationLayers)
 		{

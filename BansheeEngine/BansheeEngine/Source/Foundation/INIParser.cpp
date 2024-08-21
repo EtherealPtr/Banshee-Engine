@@ -6,13 +6,13 @@ namespace Banshee
 {
 	const EngineConfig& INIParser::ParseConfigSettings(std::string_view _filePath)
 	{
-		std::ifstream file = g_ResourceManager.ReadFile(_filePath.data());
+		std::ifstream file{ g_ResourceManager.ReadFile(_filePath.data()) };
 		if (!file.is_open())
 		{
 			return m_Config;
 		}
 
-		std::string line = "";
+		std::string line{ "" };
 
 		while (std::getline(file, line))
 		{
@@ -22,14 +22,14 @@ namespace Banshee
 				continue;
 			}
 
-			const size_t delimiterPos = line.find('=');
+			const size_t delimiterPos{ line.find('=') };
 			if (delimiterPos == std::string_view::npos)
 			{
 				continue;
 			}
 
-			const std::string_view key = std::string_view(line).substr(0, delimiterPos);
-			const std::string_view value = std::string_view(line).substr(delimiterPos + 1);
+			const std::string_view key{ std::string_view(line).substr(0, delimiterPos) };
+			const std::string_view value{ std::string_view(line).substr(delimiterPos + 1) };
 
 			if (key == "WindowTitle")
 			{

@@ -77,15 +77,15 @@ namespace Banshee
 			if (const auto& meshComponent = entity->GetComponent<MeshComponent>())
 			{
 				meshComponent->SetDirty(true);
+				MeshComponent& meshComp = *meshComponent.get();
 
 				if (meshComponent->HasModel())
 				{
-					MeshComponent& meshComp = *meshComponent.get();
 					m_VertexBufferManager.CreateModelVertexBuffer(meshComp, m_MeshSystem);
 				}
 				else
 				{
-					m_VertexBufferManager.CreateBasicShapeVertexBuffer(meshComponent.get(), &m_MeshSystem);
+					m_VertexBufferManager.CreateBasicShapeVertexBuffer(meshComp, m_MeshSystem);
 				}
 			}
 

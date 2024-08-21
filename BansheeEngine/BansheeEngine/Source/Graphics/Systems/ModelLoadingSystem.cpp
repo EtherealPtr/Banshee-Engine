@@ -47,8 +47,8 @@ namespace Banshee
 
 	void ModelLoadingSystem::LoadModel(const tinygltf::Model& _model, MeshComponent& _meshComponent, MeshSystem& _meshSystem, std::vector<Vertex>& _vertices, std::vector<uint32>& _indices)
 	{
-		std::vector<Mesh> subMeshes;
-		size_t totalPrimitives = 0;
+		std::vector<Mesh> subMeshes{};
+		size_t totalPrimitives{ 0 };
 
 		for (const auto& node : _model.nodes)
 		{
@@ -83,18 +83,18 @@ namespace Banshee
 				subMesh.SetIndexOffset(static_cast<uint32>(_indices.size()));
 
 				// Load vertex data
-				const auto& positionsAccessor = _model.accessors[primitive.attributes.find("POSITION")->second];
-				const auto& textureAccessor = _model.accessors[primitive.attributes.find("TEXCOORD_0")->second];
-				const auto& normalAccessor = _model.accessors[primitive.attributes.find("NORMAL")->second];
-				const auto& positionsBufferView = _model.bufferViews[positionsAccessor.bufferView];
-				const auto& texCoordsBufferView = _model.bufferViews[textureAccessor.bufferView];
-				const auto& normalsBufferView = _model.bufferViews[normalAccessor.bufferView];
-				const auto& positionsBuffer = _model.buffers[positionsBufferView.buffer];
-				const auto& texCoordsBuffer = _model.buffers[texCoordsBufferView.buffer];
-				const auto& normalsBuffer = _model.buffers[normalsBufferView.buffer];
-				const float* positions = reinterpret_cast<const float*>(&(positionsBuffer.data[positionsBufferView.byteOffset + positionsAccessor.byteOffset]));
-				const float* texCoords = reinterpret_cast<const float*>(&(texCoordsBuffer.data[texCoordsBufferView.byteOffset + textureAccessor.byteOffset]));
-				const float* normals = reinterpret_cast<const float*>(&(normalsBuffer.data[normalsBufferView.byteOffset + normalAccessor.byteOffset]));
+				const auto& positionsAccessor{ _model.accessors[primitive.attributes.find("POSITION")->second] };
+				const auto& textureAccessor{ _model.accessors[primitive.attributes.find("TEXCOORD_0")->second] };
+				const auto& normalAccessor{ _model.accessors[primitive.attributes.find("NORMAL")->second] };
+				const auto& positionsBufferView{ _model.bufferViews[positionsAccessor.bufferView] };
+				const auto& texCoordsBufferView{ _model.bufferViews[textureAccessor.bufferView] };
+				const auto& normalsBufferView{ _model.bufferViews[normalAccessor.bufferView] };
+				const auto& positionsBuffer{ _model.buffers[positionsBufferView.buffer] };
+				const auto& texCoordsBuffer{ _model.buffers[texCoordsBufferView.buffer] };
+				const auto& normalsBuffer{ _model.buffers[normalsBufferView.buffer] };
+				const float* positions{ reinterpret_cast<const float*>(&(positionsBuffer.data[positionsBufferView.byteOffset + positionsAccessor.byteOffset])) };
+				const float* texCoords{ reinterpret_cast<const float*>(&(texCoordsBuffer.data[texCoordsBufferView.byteOffset + textureAccessor.byteOffset])) };
+				const float* normals{ reinterpret_cast<const float*>(&(normalsBuffer.data[normalsBufferView.byteOffset + normalAccessor.byteOffset])) };
 
 				std::vector<Vertex> subMeshVertices(positionsAccessor.count);
 				for (size_t j = 0; j < positionsAccessor.count; ++j)
@@ -121,10 +121,10 @@ namespace Banshee
 				_vertices.insert(_vertices.end(), subMeshVertices.begin(), subMeshVertices.end());
 
 				// Load index data
-				const auto& indicesAccessor = _model.accessors[primitive.indices];
-				const auto& indicesBufferView = _model.bufferViews[indicesAccessor.bufferView];
-				const auto& indicesBuffer = _model.buffers[indicesBufferView.buffer];
-				const uint16* indices = reinterpret_cast<const uint16*>(&(indicesBuffer.data[indicesBufferView.byteOffset + indicesAccessor.byteOffset]));
+				const auto& indicesAccessor{ _model.accessors[primitive.indices] };
+				const auto& indicesBufferView{ _model.bufferViews[indicesAccessor.bufferView] };
+				const auto& indicesBuffer{ _model.buffers[indicesBufferView.buffer] };
+				const uint16* indices{ reinterpret_cast<const uint16*>(&(indicesBuffer.data[indicesBufferView.byteOffset + indicesAccessor.byteOffset])) };
 				std::vector<uint32> subMeshIndices(indicesAccessor.count);
 				for (size_t j = 0; j < indicesAccessor.count; ++j)
 				{
@@ -133,11 +133,10 @@ namespace Banshee
 
 				_indices.insert(_indices.end(), subMeshIndices.begin(), subMeshIndices.end());
 
-				subMesh.SetVertices(subMeshVertices);
 				subMesh.SetIndices(subMeshIndices);
 				LoadMaterial(_model, primitive, &subMesh);
 
-				subMeshes.push_back(subMesh);
+				subMeshes.emplace_back(subMesh);
 			}
 		}
 
@@ -188,7 +187,7 @@ namespace Banshee
 		if (tinyMaterial.values.find("baseColorFactor") != tinyMaterial.values.end())
 		{
 			const auto& colorFactor = tinyMaterial.values.at("baseColorFactor").ColorFactor();
-			Material mat{ glm::vec3(colorFactor[0], colorFactor[1], colorFactor[2]) };
+			const Material mat{ glm::vec3(colorFactor[0], colorFactor[1], colorFactor[2]) };
 			_subMesh->SetMaterial(mat);
 		}
 

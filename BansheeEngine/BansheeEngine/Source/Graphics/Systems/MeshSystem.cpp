@@ -13,10 +13,17 @@ namespace Banshee
 	{
 		for (const auto& mesh : _meshes)
 		{
-			const uint32 vertexBufferId = mesh.GetParentBufferId();
-			m_VertexBufferIdToSubMeshes[vertexBufferId].push_back(mesh);
+			const uint32 vertexBufferId{ mesh.GetParentBufferId() };
+			m_VertexBufferIdToSubMeshes[vertexBufferId].emplace_back(mesh);
 		}
 
+		m_IsCacheDirty = true;
+	}
+
+	void MeshSystem::AddMesh(const Mesh& _mesh)
+	{
+		const uint32 vertexBufferId{ _mesh.GetParentBufferId() };
+		m_VertexBufferIdToSubMeshes[vertexBufferId].emplace_back(_mesh);
 		m_IsCacheDirty = true;
 	}
 

@@ -16,6 +16,7 @@ namespace Banshee
 		~MeshSystem() noexcept = default;
 
 		void AddMeshes(const std::vector<Mesh>& _meshes);
+		void AddMesh(const Mesh& _mesh);
 		const std::vector<Mesh>& GetAllSubMeshes();
 		const std::vector<Mesh>& GetSubMeshes(const uint32 _bufferId) const;
 

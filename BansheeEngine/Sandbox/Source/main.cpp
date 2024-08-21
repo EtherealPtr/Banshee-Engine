@@ -1,25 +1,27 @@
-#include <Banshee.h>
-#include "Player.h"
+#include "ExampleModel.h"
 #include "Light.h"
+#include <Banshee.h>
 
 class ClientApp : public Banshee::Application
 {
 public:
 	ClientApp() :
-		m_Player(),
-		m_Player2()
+		m_ExampleScene{},
+		m_ExampleScene2{},
+		m_Light{}
 	{
-		m_Player2.SetPosition(glm::vec3(10.0f, 0.0f, 0.0f));
+		m_ExampleScene2.SetPosition(glm::vec3(20.0f, 0.0f, 0.0f));
 	}
 
 	ClientApp(const ClientApp&) = delete;
-	ClientApp(ClientApp&&) = delete;
 	ClientApp& operator=(const ClientApp&) = delete;
+	ClientApp(ClientApp&&) = delete;
 	ClientApp& operator=(ClientApp&&) = delete;
 
 private:
-	Player m_Player;
-	Player m_Player2;
+	ExampleModel m_ExampleScene;
+	ExampleModel m_ExampleScene2;
+	Light m_Light;
 };
 
 std::unique_ptr<Banshee::Application> CreateApplication()
