@@ -70,8 +70,6 @@ namespace Banshee
 
 	void VulkanRenderer::FetchGraphicsComponents()
 	{
-		std::vector<std::shared_ptr<LightComponent>> lightComponents{};
-
 		for (const auto& entity : EntityManager::GetAllEntities())
 		{
 			if (const auto& meshComponent = entity->GetComponent<MeshComponent>())
@@ -91,7 +89,7 @@ namespace Banshee
 
 			if (const auto& lightComponent = entity->GetComponent<LightComponent>())
 			{
-				lightComponents.emplace_back(lightComponent);
+				m_LightSystem.AddLightComponent(lightComponent);
 			}
 
 			if (const auto& transformComponent = entity->GetComponent<TransformComponent>())
@@ -99,8 +97,6 @@ namespace Banshee
 				m_EntityTransformMap[entity->GetUniqueId()] = transformComponent;
 			}
 		}
-
-		m_LightSystem.SetLightComponents(lightComponents);
 	}
 
 	void VulkanRenderer::AllocateDynamicBufferSpace() noexcept
@@ -207,11 +203,11 @@ namespace Banshee
 		m_Camera.ProcessInput(_deltaTime);
 
 		// Get the semaphores to use for this frame
-		VkSemaphore waitSemaphore = m_VkSemaphores.Get()[m_CurrentFrameIndex].first;
-		VkSemaphore signalSemaphore = m_VkSemaphores.Get()[m_CurrentFrameIndex].second;
+		VkSemaphore waitSemaphore{ m_VkSemaphores.Get()[m_CurrentFrameIndex].first };
+		VkSemaphore signalSemaphore{ m_VkSemaphores.Get()[m_CurrentFrameIndex].second };
 
 		// Get the command buffer for this image index
-		VkCommandBuffer cmdBuffer = m_VkCommandBuffers.Get()[imgIndex];
+		VkCommandBuffer cmdBuffer{ m_VkCommandBuffers.Get()[imgIndex] };
 
 		// Reset the command buffer and record render commands
 		vkResetCommandBuffer(cmdBuffer, 0);
@@ -246,7 +242,7 @@ namespace Banshee
 
 	void VulkanRenderer::RecordRenderCommands(const uint8 _imgIndex)
 	{
-		const VkCommandBuffer cmdBuffer = m_VkCommandBuffers.Get()[_imgIndex];
+		const VkCommandBuffer cmdBuffer{ m_VkCommandBuffers.Get()[_imgIndex] };
 		m_VkCommandBuffers.Begin(_imgIndex);
 
 		VkRenderPassBeginInfo renderPassInfo{};
@@ -292,23 +288,23 @@ namespace Banshee
 				entityModelMatrix = transform->GetModel();
 			}
 
-			const VulkanVertexBuffer* const vertexBuffer = m_VertexBufferManager.GetVertexBuffer(subMesh.GetParentBufferId());
+			const VulkanVertexBuffer* const vertexBuffer{ m_VertexBufferManager.GetVertexBuffer(subMesh.GetParentBufferId()) };
 
-			const auto& graphicsPipeline = m_VkGraphicsPipelineManager.GetPipeline(subMesh.GetMaterial().GetShaderType());
+			const auto& graphicsPipeline{ m_VkGraphicsPipelineManager.GetPipeline(subMesh.GetMaterial().GetShaderType()) };
 			vkCmdBindPipeline(cmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline->Get());
-			 
+
 			// Bind vertex & index buffers
-			const VkDeviceSize indexOffset = subMesh.GetIndexOffset() * sizeof(uint32);
+			const VkDeviceSize indexOffset{ subMesh.GetIndexOffset() * sizeof(uint32) };
 			vertexBuffer->Bind(cmdBuffer, indexOffset);
 
 			// Bind descriptor set
-			const uint32 dynamicOffset = static_cast<uint32>(m_MaterialDynamicBufferMemAlignment) * subMesh.GetMaterialIndex();
-			auto currentDescriptorSet = m_DescriptorSets[_imgIndex].Get();
+			const uint32 dynamicOffset{ static_cast<uint32>(m_MaterialDynamicBufferMemAlignment) * subMesh.GetMaterialIndex() };
+			auto currentDescriptorSet{ m_DescriptorSets[_imgIndex].Get() };
 			vkCmdBindDescriptorSets(cmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline->GetLayout(), 0, 1, &currentDescriptorSet, 1, &dynamicOffset);
 
 			// Push constants
-			const glm::mat4& modelMatrix = entityModelMatrix * subMesh.GetLocalTransform();
-			const PushConstant pc(modelMatrix, subMesh.GetTexId(), subMesh.HasTexture());
+			const glm::mat4& modelMatrix{ entityModelMatrix * subMesh.GetLocalTransform() };
+			const PushConstant pc{ modelMatrix, subMesh.GetTexId(), subMesh.HasTexture() };
 			vkCmdPushConstants(cmdBuffer, graphicsPipeline->GetLayout(), VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(PushConstant), &pc);
 
 			vkCmdDrawIndexed(cmdBuffer, static_cast<uint32>(subMesh.GetIndices().size()), 1, 0, 0, 0);

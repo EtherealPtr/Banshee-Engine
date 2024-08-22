@@ -13,7 +13,7 @@ namespace Banshee
         LightSystem() noexcept = default;
         ~LightSystem() noexcept = default;
 
-        void SetLightComponents(const std::vector<std::shared_ptr<LightComponent>>& _lightComponents) { m_LightComponents = _lightComponents; }
+        void AddLightComponent(const std::shared_ptr<LightComponent>& lightComponent) { m_LightComponents.emplace_back(lightComponent); }
         const std::vector<std::shared_ptr<LightComponent>>& GetLightComponents() const noexcept { return m_LightComponents; }
 
         LightSystem(const LightSystem&) = delete;

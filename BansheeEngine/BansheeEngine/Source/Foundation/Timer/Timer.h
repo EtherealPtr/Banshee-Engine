@@ -11,7 +11,7 @@ namespace Banshee
 		Timer() noexcept;
 
 		void Update();
-		void ToggleFpsDisplay() noexcept { m_FpsDisplayEnabled = !m_FpsDisplayEnabled; }
+		void ToggleFpsDisplay(const bool _toggle) noexcept { m_FpsDisplayEnabled = _toggle; }
 		double GetDeltaTime() const noexcept { return m_DeltaTime; }
 		void StartTimer() noexcept;
 		void StopTimer();

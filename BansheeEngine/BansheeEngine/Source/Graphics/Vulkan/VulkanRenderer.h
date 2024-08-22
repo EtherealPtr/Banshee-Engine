@@ -24,9 +24,6 @@
 #include "Graphics/Systems/MeshSystem.h"
 #include "Graphics/Systems/LightSystem.h"
 #include "Graphics/Camera.h"
-#include <vector>
-#include <unordered_map>
-#include <memory>
 
 namespace Banshee
 {

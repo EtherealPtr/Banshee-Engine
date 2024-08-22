@@ -29,9 +29,8 @@ namespace Banshee
 
 	void Application::Run() const
 	{
-		BE_LOG(LogCategory::Trace, "[APPLICATION]: Banshee run");
-
 		Timer timer{};
+		BE_LOG(LogCategory::Trace, "[APPLICATION]: Banshee run");
 
 		while (!m_Window->ShouldWindowClose())
 		{
