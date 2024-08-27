@@ -5,19 +5,33 @@
 
 using namespace Banshee;
 
-class ExampleModel
+class ExampleCustomModel
 {
 public:
-	ExampleModel() :
+	ExampleCustomModel() :
 		m_Entity{ EntityManager::CreateEntity() },
 		m_Transform{ m_Entity->AddComponent<TransformComponent>() }
 	{
-		m_Entity->AddComponent<MeshComponent>("Models/scene2.glb", ShaderType::Standard, glm::vec3(1.0f, 0.0f, 0.0f));
+		auto meshComponent{ m_Entity->AddComponent<CustomMeshComponent>("Models/scene2.glb", ShaderType::Standard) };
+		meshComponent->SetTintColor(glm::vec3(1.0f, 0.0f, 0.0f));
+		m_Transform->SetPosition(glm::vec3(20.0f, 0.0f, 0.0f));
 	}
 
-	void SetPosition(const glm::vec3& _pos)
+private:
+	std::shared_ptr<Entity> m_Entity;
+	std::shared_ptr<TransformComponent> m_Transform;
+};
+
+class ExampleSimpleModel
+{
+public:
+	ExampleSimpleModel() :
+		m_Entity{ EntityManager::CreateEntity() },
+		m_Transform{ m_Entity->AddComponent<TransformComponent>() }
 	{
-		m_Transform->SetPosition(_pos);
+		auto meshComponent{ m_Entity->AddComponent<SimpleMeshComponent>(PrimitiveShape::CubeShape, ShaderType::Standard) };
+		meshComponent->SetTexture("Textures/tiles.jpg");
+		m_Transform->SetPosition(glm::vec3(0.0f, 10.0f, 0.0f));
 	}
 
 private:

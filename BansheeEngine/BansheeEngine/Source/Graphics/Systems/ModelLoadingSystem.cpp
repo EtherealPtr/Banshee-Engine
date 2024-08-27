@@ -2,7 +2,8 @@
 #include "Foundation/Entity/Entity.h"
 #include "Foundation/Logging/Logger.h"
 #include "Foundation/ResourceManager/ResourceManager.h"
-#include "Graphics/Mesh.h"
+#include "Graphics/Components/Mesh/CustomMeshComponent.h"
+#include "Graphics/MeshData.h"
 #include "Graphics/Systems/MeshSystem.h"
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtc/type_ptr.hpp"
@@ -27,7 +28,7 @@ namespace Banshee
 		return true;
 	}
 
-	ModelLoadingSystem::ModelLoadingSystem(MeshComponent& _meshComponent, MeshSystem& _meshSystem, std::vector<Vertex>& _vertices, std::vector<uint32>& _indices)
+	ModelLoadingSystem::ModelLoadingSystem(CustomMeshComponent& _meshComponent, MeshSystem& _meshSystem, std::vector<Vertex>& _vertices, std::vector<uint32>& _indices)
 	{
 		tinygltf::Model model{};
 		tinygltf::TinyGLTF loader{};
@@ -45,21 +46,8 @@ namespace Banshee
 		LoadModel(model, _meshComponent, _meshSystem, _vertices, _indices);
 	}
 
-	void ModelLoadingSystem::LoadModel(const tinygltf::Model& _model, MeshComponent& _meshComponent, MeshSystem& _meshSystem, std::vector<Vertex>& _vertices, std::vector<uint32>& _indices)
+	void ModelLoadingSystem::LoadModel(const tinygltf::Model& _model, CustomMeshComponent& _meshComponent, MeshSystem& _meshSystem, std::vector<Vertex>& _vertices, std::vector<uint32>& _indices)
 	{
-		std::vector<Mesh> subMeshes{};
-		size_t totalPrimitives{ 0 };
-
-		for (const auto& node : _model.nodes)
-		{
-			if (node.mesh >= 0)
-			{
-				totalPrimitives += _model.meshes[node.mesh].primitives.size();
-			}
-		}
-
-		subMeshes.reserve(totalPrimitives);
-
 		for (size_t i = 0; i < _model.nodes.size(); ++i)
 		{
 			const tinygltf::Node& node{ _model.nodes[i] };
@@ -74,10 +62,9 @@ namespace Banshee
 			const tinygltf::Mesh& mesh{ _model.meshes[node.mesh] };
 			for (const auto& primitive : mesh.primitives)
 			{
-				Banshee::Mesh subMesh{ _meshComponent.GetModelName(), _meshComponent.GetShaderType() };
-				subMesh.SetParentVertexBufferId(_meshComponent.GetVertexBufferId());
-				subMesh.SetLocalTransform(nodeTransform);
-				subMesh.SetOwner(_meshComponent.GetOwner());
+				Banshee::MeshData subMesh{};
+				subMesh.SetVertexBufferId(_meshComponent.GetVertexBufferId());
+				subMesh.SetModelMatrix(nodeTransform);
 
 				const uint32 vertexOffset{ static_cast<uint32>(_vertices.size()) };
 				subMesh.SetIndexOffset(static_cast<uint32>(_indices.size()));
@@ -136,11 +123,11 @@ namespace Banshee
 				subMesh.SetIndices(subMeshIndices);
 				LoadMaterial(_model, primitive, &subMesh);
 
-				subMeshes.emplace_back(subMesh);
+				_meshComponent.AddMeshData(subMesh);
 			}
 		}
 
-		_meshSystem.AddMeshes(subMeshes);
+		_meshSystem.AddMeshes(_meshComponent.GetMeshData());
 	}
 
 	void ModelLoadingSystem::GetNodeTransform(const tinygltf::Node& _node, glm::mat4& _outTransform) const noexcept
@@ -176,25 +163,24 @@ namespace Banshee
 		}
 	}
 
-	void ModelLoadingSystem::LoadMaterial(const tinygltf::Model& _model, const tinygltf::Primitive& _primitive, Mesh* const _subMesh)
+	void ModelLoadingSystem::LoadMaterial(const tinygltf::Model& _model, const tinygltf::Primitive& _primitive, MeshData* const _subMesh)
 	{
 		if (_primitive.material < 0)
 		{
 			return;
 		}
 
-		const auto& tinyMaterial = _model.materials[_primitive.material];
+		const auto& tinyMaterial{ _model.materials[_primitive.material] };
 		if (tinyMaterial.values.find("baseColorFactor") != tinyMaterial.values.end())
 		{
-			const auto& colorFactor = tinyMaterial.values.at("baseColorFactor").ColorFactor();
-			const Material mat{ glm::vec3(colorFactor[0], colorFactor[1], colorFactor[2]) };
-			_subMesh->SetMaterial(mat);
+			const auto& colorFactor{ tinyMaterial.values.at("baseColorFactor").ColorFactor() };
+			_subMesh->SetDiffuseColor(glm::vec3(colorFactor[0], colorFactor[1], colorFactor[2]));
 		}
 
 		if (tinyMaterial.values.find("baseColorTexture") != tinyMaterial.values.end())
 		{
-			const int tinyTextureIndex = tinyMaterial.values.at("baseColorTexture").TextureIndex();
-			const uint16 textureId = m_TextureIdMap[tinyTextureIndex];
+			const int tinyTextureIndex{ tinyMaterial.values.at("baseColorTexture").TextureIndex() };
+			const uint16 textureId{ m_TextureIdMap[tinyTextureIndex] };
 			_subMesh->SetTexId(textureId);
 		}
 	}

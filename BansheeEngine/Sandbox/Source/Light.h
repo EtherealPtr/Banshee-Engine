@@ -13,7 +13,7 @@ public:
 		m_Entity{ EntityManager::CreateEntity() },
 		m_Transform{ m_Entity->AddComponent<TransformComponent>() }
 	{
-		m_Entity->AddComponent<MeshComponent>(PrimitiveShape::CubeShape, ShaderType::Unlit);
+		m_Entity->AddComponent<SimpleMeshComponent>(PrimitiveShape::CubeShape, ShaderType::Unlit);
 		m_Entity->AddComponent<LightComponent>();
 		m_Transform->SetPosition(glm::vec3(0.0f, 5.0f, 10.0f));
 	}

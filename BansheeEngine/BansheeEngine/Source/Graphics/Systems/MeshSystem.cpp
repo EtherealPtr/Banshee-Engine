@@ -1,5 +1,5 @@
 #include "MeshSystem.h"
-#include "Graphics/Mesh.h"
+#include "Graphics/MeshData.h"
 
 namespace Banshee
 {
@@ -9,25 +9,25 @@ namespace Banshee
 		m_IsCacheDirty{ true }
 	{}
 
-	void MeshSystem::AddMeshes(const std::vector<Mesh>& _meshes)
+	void MeshSystem::AddMeshes(const std::vector<MeshData>& _meshes)
 	{
 		for (const auto& mesh : _meshes)
 		{
-			const uint32 vertexBufferId{ mesh.GetParentBufferId() };
+			const uint32 vertexBufferId{ mesh.GetVertexBufferId() };
 			m_VertexBufferIdToSubMeshes[vertexBufferId].emplace_back(mesh);
 		}
 
 		m_IsCacheDirty = true;
 	}
 
-	void MeshSystem::AddMesh(const Mesh& _mesh)
+	void MeshSystem::AddMesh(const MeshData& _mesh)
 	{
-		const uint32 vertexBufferId{ _mesh.GetParentBufferId() };
+		const uint32 vertexBufferId{ _mesh.GetVertexBufferId() };
 		m_VertexBufferIdToSubMeshes[vertexBufferId].emplace_back(_mesh);
 		m_IsCacheDirty = true;
 	}
 
-	const std::vector<Mesh>& MeshSystem::GetAllSubMeshes()
+	const std::vector<MeshData>& MeshSystem::GetAllSubMeshes()
 	{
 		if (m_IsCacheDirty)
 		{
@@ -37,9 +37,9 @@ namespace Banshee
 		return m_CachedSubMeshes;
 	}
 
-	const std::vector<Mesh>& MeshSystem::GetSubMeshes(const uint32 _bufferId) const
+	const std::vector<MeshData>& MeshSystem::GetSubMeshes(const uint32 _bufferId) const
 	{
-		static const std::vector<Mesh> empty{};
+		static const std::vector<MeshData> empty{};
 
 		const auto it = m_VertexBufferIdToSubMeshes.find(_bufferId);
 		if (it != m_VertexBufferIdToSubMeshes.end())

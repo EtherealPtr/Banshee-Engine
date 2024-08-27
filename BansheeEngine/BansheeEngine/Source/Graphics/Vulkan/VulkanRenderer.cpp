@@ -3,7 +3,9 @@
 #include "Foundation/Entity/EntityManager.h"
 #include "Graphics/Components/TransformComponent.h"
 #include "Graphics/Components/Light/LightComponent.h"
-#include "Graphics/Mesh.h"
+#include "Graphics/Components/Mesh/SimpleMeshComponent.h"
+#include "Graphics/Components/Mesh/CustomMeshComponent.h"
+#include "Graphics/MeshData.h"
 #include "Graphics/Window.h"
 #include <array>
 #include <algorithm>
@@ -38,7 +40,7 @@ namespace Banshee
 		m_MaterialDynamicBufferMemAlignment{ 0 },
 		m_MaterialDynamicBufferMemBlock{ nullptr, [](Material* _ptr) noexcept { _aligned_free(_ptr); } }
 	{
-		FetchGraphicsComponents();
+		InitializeGraphicsComponents();
 		AllocateDynamicBufferSpace();
 		CreateDescriptorSetWriteBufferProperties();
 
@@ -68,23 +70,18 @@ namespace Banshee
 		BE_LOG(LogCategory::Trace, "[RENDERER]: Vulkan shutting down");
 	}
 
-	void VulkanRenderer::FetchGraphicsComponents()
+	void VulkanRenderer::InitializeGraphicsComponents()
 	{
 		for (const auto& entity : EntityManager::GetAllEntities())
 		{
-			if (const auto& meshComponent = entity->GetComponent<MeshComponent>())
+			if (const auto& singleMesh = entity->GetComponent<SimpleMeshComponent>())
 			{
-				meshComponent->SetDirty(true);
-				MeshComponent& meshComp = *meshComponent.get();
-
-				if (meshComponent->HasModel())
-				{
-					m_VertexBufferManager.CreateModelVertexBuffer(meshComp, m_MeshSystem);
-				}
-				else
-				{
-					m_VertexBufferManager.CreateBasicShapeVertexBuffer(meshComp, m_MeshSystem);
-				}
+				singleMesh.get()->GetMeshData().SetUniqueId(entity->GetUniqueId());
+				m_VertexBufferManager.CreateBasicShapeVertexBuffer(*singleMesh.get(), m_MeshSystem);
+			}
+			else if (const auto& modelMesh = entity->GetComponent<CustomMeshComponent>())
+			{
+				m_VertexBufferManager.CreateModelVertexBuffer(*modelMesh.get(), m_MeshSystem);
 			}
 
 			if (const auto& lightComponent = entity->GetComponent<LightComponent>())
@@ -253,8 +250,8 @@ namespace Banshee
 		renderPassInfo.renderArea.extent = VkExtent2D({ m_VkSwapchain.GetWidth(), m_VkSwapchain.GetHeight() });
 
 		// Clear attachments
-		const VkClearColorValue clearColor{ 0.1f, 0.1f, 0.1f, 1.0f };
-		const VkClearDepthStencilValue clearDepthStencil{ 1.0f, 0 };
+		constexpr VkClearColorValue clearColor{ 0.1f, 0.1f, 0.1f, 1.0f };
+		constexpr VkClearDepthStencilValue clearDepthStencil{ 1.0f, 0 };
 
 		std::array<VkClearValue, 2> clearAttachments{};
 		clearAttachments[0].color = clearColor;
@@ -283,12 +280,12 @@ namespace Banshee
 		for (const auto& subMesh : m_MeshSystem.GetAllSubMeshes())
 		{
 			glm::mat4 entityModelMatrix{ glm::mat4(1.0f) };
-			if (const auto& transform = m_EntityTransformMap[subMesh.GetOwner()->GetUniqueId()])
+			if (const auto& transform = m_EntityTransformMap[subMesh.GetUniqueId()])
 			{
 				entityModelMatrix = transform->GetModel();
 			}
 
-			const VulkanVertexBuffer* const vertexBuffer{ m_VertexBufferManager.GetVertexBuffer(subMesh.GetParentBufferId()) };
+			const VulkanVertexBuffer* const vertexBuffer{ m_VertexBufferManager.GetVertexBuffer(subMesh.GetVertexBufferId()) };
 
 			const auto& graphicsPipeline{ m_VkGraphicsPipelineManager.GetPipeline(subMesh.GetMaterial().GetShaderType()) };
 			vkCmdBindPipeline(cmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline->Get());
@@ -303,8 +300,8 @@ namespace Banshee
 			vkCmdBindDescriptorSets(cmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline->GetLayout(), 0, 1, &currentDescriptorSet, 1, &dynamicOffset);
 
 			// Push constants
-			const glm::mat4& modelMatrix{ entityModelMatrix * subMesh.GetLocalTransform() };
-			const PushConstant pc{ modelMatrix, subMesh.GetTexId(), subMesh.HasTexture() };
+			const glm::mat4& modelMatrix{ entityModelMatrix * subMesh.GetModelMatrix() };
+			const PushConstant pc{ modelMatrix, subMesh.GetTexId() };
 			vkCmdPushConstants(cmdBuffer, graphicsPipeline->GetLayout(), VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(PushConstant), &pc);
 
 			vkCmdDrawIndexed(cmdBuffer, static_cast<uint32>(subMesh.GetIndices().size()), 1, 0, 0, 0);

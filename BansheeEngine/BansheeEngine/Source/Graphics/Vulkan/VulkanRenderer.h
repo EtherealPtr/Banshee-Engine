@@ -45,7 +45,7 @@ namespace Banshee
 		VulkanRenderer& operator=(VulkanRenderer&&) = delete;
 
 	private:
-		void FetchGraphicsComponents();
+		void InitializeGraphicsComponents();
 		void AllocateDynamicBufferSpace() noexcept;
 		void CreateDescriptorSetWriteBufferProperties();
 		void UpdateMaterialData();

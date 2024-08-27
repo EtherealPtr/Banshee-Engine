@@ -56,7 +56,7 @@ namespace Banshee
 			throw std::runtime_error("ERROR: Failed to load texture image");
 		}
 
-		image.m_ImageIndex = static_cast<uint32>(m_Images.size());
+		image.m_ImageIndex = static_cast<uint32>(m_Images.size()) + 1;
 		m_OnImageLoaded(image);
 		BE_LOG(LogCategory::Trace, "[RESOURCE]: Loaded image %s", _pathToImage);
 
