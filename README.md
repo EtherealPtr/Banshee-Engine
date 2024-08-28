@@ -70,4 +70,7 @@ Built on top of the Foundation layer, the Graphics layer manages all graphics-re
 </ul>
 
 <h2>Application Layer</h2>
-The Application layer integrates components from the Foundation and Graphics layers. It includes the main entry point of the program, orchestrating the initialization and execution of the engine.
+<p>The Application layer integrates components from the Foundation and Graphics layers. It includes the main entry point of the program, orchestrating the initialization and execution of the engine.</p>
+
+
+<p>Copyright (c) 2023-2024 Rony Hanna. All rights reserved.</p>
