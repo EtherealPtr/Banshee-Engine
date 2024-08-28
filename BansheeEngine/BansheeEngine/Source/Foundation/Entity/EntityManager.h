@@ -8,7 +8,7 @@ namespace Banshee
 	{
     public:
         BANSHEE_ENGINE static std::shared_ptr<Entity> CreateEntity();
-        BANSHEE_ENGINE static const std::vector<std::shared_ptr<Entity>>& GetAllEntities() noexcept;
+        BANSHEE_ENGINE static const std::vector<std::shared_ptr<Entity>>& GetAllEntities() noexcept { return s_Entities; }
 
     private:
         static uint32 s_TotalEntities;
