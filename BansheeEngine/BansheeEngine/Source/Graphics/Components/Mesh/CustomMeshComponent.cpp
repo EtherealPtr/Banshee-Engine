@@ -15,6 +15,7 @@ namespace Banshee
 	{
 		_data.SetVertexBufferId(GetVertexBufferId());
 		_data.SetEntityId(GetOwner()->GetUniqueId());
+		_data.SetShaderType(GetShaderType());
 		m_Data.emplace_back(_data);
 	}
 

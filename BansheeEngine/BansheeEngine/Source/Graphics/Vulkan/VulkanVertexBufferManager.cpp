@@ -62,6 +62,7 @@ namespace Banshee
 				{
 					MeshData copiedSubMesh{ _subMesh };
 					copiedSubMesh.SetEntityId(_meshComponent.GetOwner()->GetUniqueId());
+					copiedSubMesh.SetShaderType(_meshComponent.GetShaderType());
 					return copiedSubMesh;
 				});
 
