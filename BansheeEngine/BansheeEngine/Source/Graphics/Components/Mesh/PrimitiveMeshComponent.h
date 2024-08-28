@@ -6,10 +6,10 @@
 
 namespace Banshee
 {
-	class SimpleMeshComponent : public MeshComponent
+	class PrimitiveMeshComponent : public MeshComponent
 	{
 	public:
-		BANSHEE_ENGINE SimpleMeshComponent(const PrimitiveShape _basicShape, const ShaderType _shaderType = ShaderType::Standard, const glm::vec3& _col = glm::vec3(1.0f)) noexcept;
+		BANSHEE_ENGINE PrimitiveMeshComponent(const PrimitiveShape _basicShape, const ShaderType _shaderType = ShaderType::Standard, const glm::vec3& _col = glm::vec3(1.0f)) noexcept;
 
 		virtual void OnComponentInitialized() noexcept override;
 		BANSHEE_ENGINE void SetTexture(const std::string_view _texturePath);

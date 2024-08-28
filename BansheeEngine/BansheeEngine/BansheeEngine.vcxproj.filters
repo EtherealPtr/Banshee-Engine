@@ -159,7 +159,7 @@
     <ClCompile Include="Source\Graphics\Shapes\Pyramid.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Graphics\Components\Mesh\SimpleMeshComponent.cpp">
+    <ClCompile Include="Source\Graphics\Components\Mesh\PrimitiveMeshComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\Graphics\Components\Mesh\CustomMeshComponent.cpp">
@@ -389,7 +389,7 @@
     <ClInclude Include="Source\Graphics\Shapes\Pyramid.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Graphics\Components\Mesh\SimpleMeshComponent.h">
+    <ClInclude Include="Source\Graphics\Components\Mesh\PrimitiveMeshComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Graphics\Components\Mesh\CustomMeshComponent.h">

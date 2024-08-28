@@ -3,7 +3,7 @@
 #include "Foundation/Entity/EntityManager.h"
 #include "Graphics/Components/TransformComponent.h"
 #include "Graphics/Components/Light/LightComponent.h"
-#include "Graphics/Components/Mesh/SimpleMeshComponent.h"
+#include "Graphics/Components/Mesh/PrimitiveMeshComponent.h"
 #include "Graphics/Components/Mesh/CustomMeshComponent.h"
 #include "Graphics/MeshData.h"
 #include "Graphics/Window.h"
@@ -74,7 +74,7 @@ namespace Banshee
 	{
 		for (const auto& entity : EntityManager::GetAllEntities())
 		{
-			if (const auto& singleMesh = entity->GetComponent<SimpleMeshComponent>())
+			if (const auto& singleMesh = entity->GetComponent<PrimitiveMeshComponent>())
 			{
 				m_VertexBufferManager.CreateBasicShapeVertexBuffer(*singleMesh.get(), m_MeshSystem);
 			}

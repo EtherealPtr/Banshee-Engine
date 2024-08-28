@@ -33,7 +33,7 @@ public:
 		m_Entity{ EntityManager::CreateEntity() },
 		m_Transform{ m_Entity->AddComponent<TransformComponent>() }
 	{
-		auto meshComponent{ m_Entity->AddComponent<SimpleMeshComponent>(PrimitiveShape::CubeShape, ShaderType::Standard) };
+		auto meshComponent{ m_Entity->AddComponent<PrimitiveMeshComponent>(PrimitiveShape::CubeShape, ShaderType::Standard) };
 		meshComponent->SetTexture("Textures/tiles.jpg");
 		m_Transform->SetPosition(glm::vec3(0.0f, 10.0f, 0.0f));
 	}

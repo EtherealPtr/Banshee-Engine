@@ -108,7 +108,7 @@ xcopy /y "$(TargetDir)BansheeEngine.dll" "$(SolutionDir)Binaries\Sandbox-$(Confi
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Source\Graphics\Components\Mesh\CustomMeshComponent.cpp" />
-    <ClCompile Include="Source\Graphics\Components\Mesh\SimpleMeshComponent.cpp" />
+    <ClCompile Include="Source\Graphics\Components\Mesh\PrimitiveMeshComponent.cpp" />
     <ClCompile Include="Source\Graphics\Shapes\Pyramid.cpp" />
     <ClCompile Include="Source\Graphics\Shapes\Cube.cpp" />
     <ClCompile Include="Source\Foundation\Input\KeyboardMouseInput.cpp" />
@@ -160,7 +160,7 @@ xcopy /y "$(TargetDir)BansheeEngine.dll" "$(SolutionDir)Binaries\Sandbox-$(Confi
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Graphics\Components\Mesh\CustomMeshComponent.h" />
-    <ClInclude Include="Source\Graphics\Components\Mesh\SimpleMeshComponent.h" />
+    <ClInclude Include="Source\Graphics\Components\Mesh\PrimitiveMeshComponent.h" />
     <ClInclude Include="Source\Graphics\Shapes\Pyramid.h" />
     <ClInclude Include="Source\Graphics\Shapes\Cube.h" />
     <ClInclude Include="Dependencies\tinygltf\tiny_gltf.h" />

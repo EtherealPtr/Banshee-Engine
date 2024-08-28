@@ -2,7 +2,7 @@
 #include "Foundation/Entity/Entity.h"
 #include "Foundation/Logging/Logger.h"
 #include "Foundation/ResourceManager/ResourceManager.h"
-#include "Graphics/Components/Mesh/SimpleMeshComponent.h"
+#include "Graphics/Components/Mesh/PrimitiveMeshComponent.h"
 #include "Graphics/Components/Mesh/CustomMeshComponent.h"
 #include "Graphics/Shapes/ShapeFactory.h"
 #include "Graphics/Systems/ModelLoadingSystem.h"
@@ -30,7 +30,7 @@ namespace Banshee
 		);
 	}
 
-	void VulkanVertexBufferManager::CreateBasicShapeVertexBuffer(SimpleMeshComponent& _meshComponent, MeshSystem& _meshSystem)
+	void VulkanVertexBufferManager::CreateBasicShapeVertexBuffer(PrimitiveMeshComponent& _meshComponent, MeshSystem& _meshSystem)
 	{
 		const uint32 bufferId{ ++s_NextBufferId };
 		_meshComponent.SetVertexBufferId(bufferId);
@@ -48,6 +48,26 @@ namespace Banshee
 	void VulkanVertexBufferManager::CreateModelVertexBuffer(CustomMeshComponent& _meshComponent, MeshSystem& _meshSystem)
 	{
 		const std::string_view modelName{ _meshComponent.GetModelName() };
+
+		auto modelBufferId = m_ModelNameToBufferId.find(modelName.data());
+		if (modelBufferId != m_ModelNameToBufferId.end())
+		{
+			_meshComponent.SetVertexBufferId(modelBufferId->second);
+
+			std::vector<MeshData> duplicatedMeshes{};
+			const auto& originalSubMeshes{ _meshSystem.GetSubMeshes(modelBufferId->second) };
+			duplicatedMeshes.reserve(originalSubMeshes.size());
+
+			for (const auto& subMesh : originalSubMeshes)
+			{
+				MeshData duplicatedSubMesh{ subMesh };
+				duplicatedSubMesh.SetEntityId(_meshComponent.GetOwner()->GetUniqueId());
+				duplicatedMeshes.emplace_back(duplicatedSubMesh);
+			}
+
+			_meshSystem.AddMeshes(duplicatedMeshes);
+			return;
+		}
 
 		const uint32 bufferId{ ++s_NextBufferId };
 		_meshComponent.SetVertexBufferId(bufferId);
