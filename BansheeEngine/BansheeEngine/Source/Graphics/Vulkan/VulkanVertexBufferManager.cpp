@@ -7,6 +7,7 @@
 #include "Graphics/Shapes/ShapeFactory.h"
 #include "Graphics/Systems/ModelLoadingSystem.h"
 #include "Graphics/Systems/MeshSystem.h"
+#include <algorithm>
 
 namespace Banshee
 {
@@ -54,16 +55,15 @@ namespace Banshee
 		{
 			_meshComponent.SetVertexBufferId(modelBufferId->second);
 
-			std::vector<MeshData> duplicatedMeshes{};
 			const auto& originalSubMeshes{ _meshSystem.GetSubMeshes(modelBufferId->second) };
-			duplicatedMeshes.reserve(originalSubMeshes.size());
+			std::vector<MeshData> duplicatedMeshes(originalSubMeshes.size());
 
-			for (const auto& subMesh : originalSubMeshes)
-			{
-				MeshData duplicatedSubMesh{ subMesh };
-				duplicatedSubMesh.SetEntityId(_meshComponent.GetOwner()->GetUniqueId());
-				duplicatedMeshes.emplace_back(duplicatedSubMesh);
-			}
+			std::transform(originalSubMeshes.begin(), originalSubMeshes.end(), duplicatedMeshes.begin(), [&](const MeshData& _subMesh)
+				{
+					MeshData copiedSubMesh{ _subMesh };
+					copiedSubMesh.SetEntityId(_meshComponent.GetOwner()->GetUniqueId());
+					return copiedSubMesh;
+				});
 
 			_meshSystem.AddMeshes(duplicatedMeshes);
 			return;
