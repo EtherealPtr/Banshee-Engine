@@ -11,6 +11,7 @@ namespace Banshee
 	public:
 		BANSHEE_ENGINE SimpleMeshComponent(const PrimitiveShape _basicShape, const ShaderType _shaderType = ShaderType::Standard, const glm::vec3& _col = glm::vec3(1.0f)) noexcept;
 
+		virtual void OnComponentInitialized() noexcept override;
 		BANSHEE_ENGINE void SetTexture(const std::string_view _texturePath);
 		void SetIndices(const std::vector<uint32>& _indices) noexcept { m_Data.SetIndices(_indices); }
 		PrimitiveShape GetShape() const noexcept { return m_Shape; }

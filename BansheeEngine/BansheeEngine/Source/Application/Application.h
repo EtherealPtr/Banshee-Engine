@@ -15,7 +15,7 @@ namespace Banshee
 		BANSHEE_ENGINE Application();
 		BANSHEE_ENGINE virtual ~Application();
 
-		BANSHEE_ENGINE void InitializeRenderer();
+		BANSHEE_ENGINE void PostClientInitialize();
 		BANSHEE_ENGINE void Run() const;
 
 		Application(const Application&) = delete;

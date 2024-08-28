@@ -16,9 +16,9 @@ namespace Banshee
 			m_Owner{ nullptr },
 			m_Observers{ nullptr }
 		{}
-
 		virtual ~Component() noexcept = default;
 
+		virtual void OnComponentInitialized() noexcept {};
 		void SetDirty(const bool _dirty);
 		bool GetDirty() const noexcept { return m_Dirty; }
 		void SetOwner(const std::shared_ptr<Entity>& _owner) noexcept { m_Owner = _owner; }

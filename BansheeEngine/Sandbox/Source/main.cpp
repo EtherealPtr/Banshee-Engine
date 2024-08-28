@@ -9,7 +9,9 @@ public:
 		m_CustomModel{},
 		m_SimpleModel{},
 		m_Light{}
-	{}
+	{
+		m_CustomModel2.SetPosition(glm::vec3(20.0f, 0.0f, 0.0f));
+	}
 
 	ClientApp(const ClientApp&) = delete;
 	ClientApp& operator=(const ClientApp&) = delete;
@@ -18,6 +20,7 @@ public:
 
 private:
 	ExampleCustomModel m_CustomModel;
+	ExampleCustomModel m_CustomModel2;
 	ExampleSimpleModel m_SimpleModel;
 	Light m_Light;
 };

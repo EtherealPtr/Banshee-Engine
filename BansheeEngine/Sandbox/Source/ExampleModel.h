@@ -14,7 +14,11 @@ public:
 	{
 		auto meshComponent{ m_Entity->AddComponent<CustomMeshComponent>("Models/scene2.glb", ShaderType::Standard) };
 		meshComponent->SetTintColor(glm::vec3(1.0f, 0.0f, 0.0f));
-		m_Transform->SetPosition(glm::vec3(20.0f, 0.0f, 0.0f));
+	}
+
+	void SetPosition(const glm::vec3& _pos)
+	{
+		m_Transform->SetPosition(_pos);
 	}
 
 private:

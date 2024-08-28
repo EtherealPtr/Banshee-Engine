@@ -76,7 +76,6 @@ namespace Banshee
 		{
 			if (const auto& singleMesh = entity->GetComponent<SimpleMeshComponent>())
 			{
-				singleMesh.get()->GetMeshData().SetUniqueId(entity->GetUniqueId());
 				m_VertexBufferManager.CreateBasicShapeVertexBuffer(*singleMesh.get(), m_MeshSystem);
 			}
 			else if (const auto& modelMesh = entity->GetComponent<CustomMeshComponent>())
@@ -280,7 +279,7 @@ namespace Banshee
 		for (const auto& subMesh : m_MeshSystem.GetAllSubMeshes())
 		{
 			glm::mat4 entityModelMatrix{ glm::mat4(1.0f) };
-			if (const auto& transform = m_EntityTransformMap[subMesh.GetUniqueId()])
+			if (const auto& transform = m_EntityTransformMap[subMesh.GetEntityId()])
 			{
 				entityModelMatrix = transform->GetModel();
 			}

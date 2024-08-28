@@ -63,7 +63,6 @@ namespace Banshee
 			for (const auto& primitive : mesh.primitives)
 			{
 				Banshee::MeshData subMesh{};
-				subMesh.SetVertexBufferId(_meshComponent.GetVertexBufferId());
 				subMesh.SetModelMatrix(nodeTransform);
 
 				const uint32 vertexOffset{ static_cast<uint32>(_vertices.size()) };

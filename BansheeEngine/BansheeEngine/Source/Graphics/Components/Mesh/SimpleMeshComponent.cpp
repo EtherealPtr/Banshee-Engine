@@ -12,6 +12,11 @@ namespace Banshee
 		m_Data.SetShaderType(_shaderType);
 	}
 
+	void SimpleMeshComponent::OnComponentInitialized() noexcept
+	{
+		m_Data.SetEntityId(GetOwner()->GetUniqueId());
+	}
+
 	void SimpleMeshComponent::SetTexture(const std::string_view _texturePath)
 	{
 		m_Data.SetTexId(g_ResourceManager.LoadImageResource(_texturePath));

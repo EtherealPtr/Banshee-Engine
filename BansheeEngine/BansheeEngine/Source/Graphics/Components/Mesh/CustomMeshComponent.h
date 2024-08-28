@@ -11,7 +11,7 @@ namespace Banshee
 	public:
 		BANSHEE_ENGINE CustomMeshComponent(const std::string_view _modelPath, const ShaderType _shaderType = ShaderType::Standard);
 
-		void AddMeshData(const MeshData& _data) noexcept;
+		void AddMeshData(MeshData& _data);
 		const std::string_view GetModelName() const noexcept { return m_ModelName; }
 		const std::string GetModelPath() const;
 		const std::vector<MeshData>& GetMeshData() const noexcept { return m_Data; }

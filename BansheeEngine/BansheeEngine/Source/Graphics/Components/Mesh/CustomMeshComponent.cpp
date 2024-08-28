@@ -1,4 +1,5 @@
 #include "CustomMeshComponent.h"
+#include "Foundation/Entity/Entity.h"
 #include "Foundation/ResourceManager/ResourceManager.h"
 #include "Foundation/Paths/PathManager.h"
 
@@ -10,8 +11,10 @@ namespace Banshee
 		m_Data{}
 	{}
 
-	void CustomMeshComponent::AddMeshData(const MeshData& _data) noexcept
+	void CustomMeshComponent::AddMeshData(MeshData& _data)
 	{
+		_data.SetVertexBufferId(GetVertexBufferId());
+		_data.SetEntityId(GetOwner()->GetUniqueId());
 		m_Data.emplace_back(_data);
 	}
 

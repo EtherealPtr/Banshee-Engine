@@ -10,7 +10,7 @@ namespace Banshee
 	{
 	public:
 		MeshData() noexcept :
-			m_Id{ 0 },
+			m_EntityId{ 0 },
 			m_VertexBufferId{ 0 },
 			m_MaterialIndex{ SetNextMaterialIndex() },
 			m_IndexOffset{ 0 },
@@ -21,9 +21,8 @@ namespace Banshee
 		{}
 		~MeshData() = default;
 
-		void SetUniqueId(const uint32 _uniqueId) noexcept { m_Id = _uniqueId; }
+		void SetEntityId(const uint32 _entityId) noexcept { m_EntityId = _entityId; }
 		void SetTexId(const uint16 _texId) noexcept { m_TexId = _texId; }
-		void SetMaterialIndex(const uint32 _materialIndex) noexcept { m_MaterialIndex = _materialIndex; }
 		void SetVertexBufferId(const uint32 _vertexBufferId) noexcept { m_VertexBufferId = _vertexBufferId; }
 		void SetIndexOffset(const uint32 _indexOffset) noexcept { m_IndexOffset = _indexOffset; }
 		void SetIndices(const std::vector<uint32>& _indices) noexcept { m_Indices = _indices; }
@@ -31,7 +30,7 @@ namespace Banshee
 		void SetDiffuseColor(const glm::vec3& _col) noexcept { m_Material.SetDiffuseColor(_col); }
 		void SetShaderType(const ShaderType _shaderType) noexcept { m_Material.SetShaderType(_shaderType); }
 
-		uint32 GetUniqueId() const noexcept { return m_Id; }
+		uint32 GetEntityId() const noexcept { return m_EntityId; }
 		uint32 GetMaterialIndex() const noexcept { return m_MaterialIndex; }
 		uint32 GetVertexBufferId() const noexcept { return m_VertexBufferId; }
 		uint32 GetIndexOffset() const noexcept { return m_IndexOffset; }
@@ -48,7 +47,7 @@ namespace Banshee
 		}
 
 	private:
-		uint32 m_Id;
+		uint32 m_EntityId;
 		uint32 m_VertexBufferId;
 		uint32 m_MaterialIndex;
 		uint32 m_IndexOffset;   // Offset into the index buffer
