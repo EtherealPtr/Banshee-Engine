@@ -7,6 +7,7 @@ class ClientApp : public Banshee::Application
 public:
 	ClientApp() :
 		m_CustomModel{},
+		m_CustomModel2{},
 		m_SimpleModel{},
 		m_Light{}
 	{
@@ -21,7 +22,7 @@ public:
 private:
 	ExampleCustomModel m_CustomModel;
 	ExampleCustomModel m_CustomModel2;
-	ExampleSimpleModel m_SimpleModel;
+	ExamplePrimitiveModel m_SimpleModel;
 	Light m_Light;
 };
 

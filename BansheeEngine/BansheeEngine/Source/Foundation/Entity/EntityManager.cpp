@@ -11,9 +11,4 @@ namespace Banshee
         s_Entities.push_back(entity);
         return entity;
     }
-
-    const std::vector<std::shared_ptr<Entity>>& EntityManager::GetAllEntities() noexcept
-    {
-        return s_Entities;
-    }
 } // End of Banshee namespace

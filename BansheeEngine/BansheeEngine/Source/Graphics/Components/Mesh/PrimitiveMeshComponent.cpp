@@ -4,7 +4,7 @@
 
 namespace Banshee
 {
-	PrimitiveMeshComponent::PrimitiveMeshComponent(const PrimitiveShape _shape, const ShaderType _shaderType, const glm::vec3& _col) noexcept :
+	PrimitiveMeshComponent::PrimitiveMeshComponent(const PrimitiveShape _shape, const ShaderType _shaderType) noexcept :
 		MeshComponent(_shaderType),
 		m_Shape{ _shape },
 		m_Data{}
@@ -15,6 +15,13 @@ namespace Banshee
 	void PrimitiveMeshComponent::OnComponentInitialized() noexcept
 	{
 		m_Data.SetEntityId(GetOwner()->GetUniqueId());
+	}
+
+	void PrimitiveMeshComponent::SetTintColor(const glm::vec3& _tintColor) noexcept
+	{
+		MeshComponent::SetTintColor(_tintColor);
+
+		m_Data.SetDiffuseColor(_tintColor);
 	}
 
 	void PrimitiveMeshComponent::SetTexture(const std::string_view _texturePath)

@@ -41,7 +41,7 @@ namespace Banshee
 	{
 		static const std::vector<MeshData> empty{};
 
-		const auto it = m_VertexBufferIdToSubMeshes.find(_bufferId);
+		const auto it{ m_VertexBufferIdToSubMeshes.find(_bufferId) };
 		if (it != m_VertexBufferIdToSubMeshes.end())
 		{
 			return it->second;
