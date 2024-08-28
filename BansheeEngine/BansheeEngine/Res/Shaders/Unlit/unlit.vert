@@ -6,7 +6,6 @@ layout (location = 2) in vec3 in_vertex_normal;
 
 layout (location = 0) out vec2 out_vertex_texCoord;
 layout (location = 1) out int out_texture_index;
-layout (location = 2) out int out_texture_available;
 
 layout (set = 0, binding = 0) uniform ViewProjBuffer
 {
@@ -18,7 +17,6 @@ layout (push_constant) uniform PushConstants
 {
 	mat4 model;
 	int textureId;
-	int hasCustomTexture;
 } u_PushConstants;
 
 void main()
@@ -27,5 +25,4 @@ void main()
 	
 	out_vertex_texCoord = in_vertex_texCoord;
 	out_texture_index = u_PushConstants.textureId;
-	out_texture_available = u_PushConstants.hasCustomTexture;
 }

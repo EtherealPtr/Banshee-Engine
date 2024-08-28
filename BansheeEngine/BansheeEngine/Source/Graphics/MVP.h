@@ -1,7 +1,7 @@
 #pragma once
 
-#include <glm/glm.hpp>
 #include "Foundation/Platform.h"
+#include <glm/glm.hpp>
 
 namespace Banshee
 {
@@ -19,14 +19,12 @@ namespace Banshee
 
 	struct PushConstant
 	{
-		PushConstant(const glm::mat4& _model, const uint16 _texId, const uint16 _hasCustomTexture) noexcept :
+		PushConstant(const glm::mat4& _model, const uint16 _texId) noexcept :
 			m_Model{ _model },
-			m_TextureIndex{ _texId },
-			m_HasCustomTexture{ _hasCustomTexture }
+			m_TextureIndex{ _texId }
 		{}
 
 		const glm::mat4 m_Model{ glm::mat4(1.0f) };
 		const uint32 m_TextureIndex{ 0 };
-		const uint32 m_HasCustomTexture{ 0 };
 	};
 } // End of Banshee namespace

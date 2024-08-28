@@ -3,7 +3,6 @@
 
 layout (location = 0) in vec2 in_vertex_texCoord;
 layout (location = 1) flat in int in_texture_index;
-layout (location = 2) flat in int in_texture_available;
 
 layout (location = 0) out vec4 out_frag_color;
 
@@ -29,7 +28,7 @@ void main()
 {
  	vec4 baseColor = vec4(u_Material.diffuseColor, 1.0f);
 
-	if (in_texture_available == 1)
+	if (in_texture_index > 0)
 	{
 		vec4 texColor = texture(sampler2D(textures[in_texture_index], texture_sampler), in_vertex_texCoord);
 		baseColor = texColor * vec4(u_Material.diffuseColor, 1.0);

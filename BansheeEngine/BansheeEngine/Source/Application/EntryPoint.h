@@ -7,6 +7,6 @@ extern std::unique_ptr<Banshee::Application> CreateApplication();
 int main()
 {
 	const std::unique_ptr<Banshee::Application>& app = CreateApplication();
-	app->InitializeRenderer();
+	app->PostClientInitialize();
 	app->Run();
 }

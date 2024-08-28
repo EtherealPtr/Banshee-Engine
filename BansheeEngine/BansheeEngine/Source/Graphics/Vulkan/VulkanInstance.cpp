@@ -26,7 +26,7 @@ namespace Banshee
 		appInfo.pApplicationName = "Untitled";
 		appInfo.applicationVersion = VK_MAKE_API_VERSION(1, 1, 0, 1);
 		appInfo.pEngineName = "None";
-		appInfo.engineVersion = VK_MAKE_API_VERSION(1, 1, 0, 1);
+		appInfo.engineVersion = VK_MAKE_API_VERSION(1, 1, 0, 2);
 		appInfo.apiVersion = VK_API_VERSION_1_3;
 
 		VkInstanceCreateInfo instanceCreateInfo{};

@@ -9,9 +9,17 @@
 namespace Banshee
 {
 	class Component;
+	class Entity;
 
 	template<typename T>
 	concept IsComponent = std::is_base_of<Component, T>::value;
+
+	template<typename T>
+	concept HasRequiredComponentMethods = requires(T _component, const std::shared_ptr<Entity>&_entity)
+	{
+		{ _component.SetOwner(_entity) } -> std::same_as<void>;
+		{ _component.OnComponentInitialized() } -> std::same_as<void>;
+	};
 
 	class Entity : public std::enable_shared_from_this<Entity>
 	{
@@ -22,7 +30,7 @@ namespace Banshee
 		BANSHEE_ENGINE const uint32 GetUniqueId() const noexcept { return m_Id; }
 
 		template<typename T, typename... Args>
-			requires IsComponent<T>
+			requires IsComponent<T>&& HasRequiredComponentMethods<T>
 		std::shared_ptr<T> AddComponent(Args&&... _args);
 
 		template<typename T>
@@ -35,11 +43,12 @@ namespace Banshee
 	};
 
 	template<typename T, typename... Args>
-		requires IsComponent<T>
+		requires IsComponent<T>&& HasRequiredComponentMethods<T>
 	std::shared_ptr<T> Entity::AddComponent(Args&&... _args)
 	{
 		auto component = std::make_shared<T>(std::forward<Args>(_args)...);
 		component->SetOwner(shared_from_this());
+		component->OnComponentInitialized();
 		m_Components.emplace_back(component);
 		return component;
 	}

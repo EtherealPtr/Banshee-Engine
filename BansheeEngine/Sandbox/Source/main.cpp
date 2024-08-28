@@ -6,11 +6,12 @@ class ClientApp : public Banshee::Application
 {
 public:
 	ClientApp() :
-		m_ExampleScene{},
-		m_ExampleScene2{},
+		m_CustomModel{},
+		m_CustomModel2{},
+		m_Cube{},
 		m_Light{}
 	{
-		m_ExampleScene2.SetPosition(glm::vec3(20.0f, 0.0f, 0.0f));
+		m_CustomModel2.SetPosition(glm::vec3(20.0f, 0.0f, 0.0f));
 	}
 
 	ClientApp(const ClientApp&) = delete;
@@ -19,8 +20,9 @@ public:
 	ClientApp& operator=(ClientApp&&) = delete;
 
 private:
-	ExampleModel m_ExampleScene;
-	ExampleModel m_ExampleScene2;
+	ExampleCustomModel m_CustomModel;
+	ExampleCustomModel m_CustomModel2;
+	ExamplePrimitiveModel m_Cube;
 	Light m_Light;
 };
 

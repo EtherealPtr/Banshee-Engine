@@ -2,6 +2,7 @@
 
 // -----Graphics Layer Components-----
 #include "Graphics/Components/TransformComponent.h"
-#include "Graphics/Components/MeshComponent.h"
+#include "Graphics/Components/Mesh/CustomMeshComponent.h"
+#include "Graphics/Components/Mesh/PrimitiveMeshComponent.h"
 #include "Graphics/Components/Light/LightComponent.h"
 // -----------------------------------

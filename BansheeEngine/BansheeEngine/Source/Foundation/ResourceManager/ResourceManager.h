@@ -12,7 +12,7 @@ namespace Banshee
 	class ResourceManager
 	{
 	public:
-		ResourceManager() = default;
+		ResourceManager() noexcept = default;
 		~ResourceManager() = default;
 
 		uint16 LoadImageResource(std::string_view _pathToImage) const;
