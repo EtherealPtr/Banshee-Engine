@@ -22,6 +22,7 @@ namespace Banshee
 		MeshComponent::SetTintColor(_tintColor);
 
 		m_Data.SetDiffuseColor(_tintColor);
+		m_Data.SetSpecularColor(_tintColor);
 	}
 
 	void PrimitiveMeshComponent::SetTexture(const std::string_view _texturePath)

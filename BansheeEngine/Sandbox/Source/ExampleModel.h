@@ -12,7 +12,8 @@ public:
 		m_Entity{ EntityManager::CreateEntity() },
 		m_Transform{ m_Entity->AddComponent<TransformComponent>() }
 	{
-		m_Entity->AddComponent<CustomMeshComponent>("Models/scene2.glb", ShaderType::Standard);
+		auto meshComp = m_Entity->AddComponent<CustomMeshComponent>("Models/scene2.glb", ShaderType::Standard);
+		meshComp->SetTintColor(glm::vec3(0.0f, 1.0f, 0.0f));
 	}
 
 	void SetPosition(const glm::vec3& _pos)

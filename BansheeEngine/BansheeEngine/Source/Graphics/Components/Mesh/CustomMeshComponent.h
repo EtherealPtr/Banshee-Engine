@@ -21,4 +21,3 @@ namespace Banshee
 		std::vector<MeshData> m_Data;
 	};
 } // End of Banshee namespace
-

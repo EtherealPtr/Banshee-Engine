@@ -28,6 +28,7 @@ namespace Banshee
 		void SetIndices(const std::vector<uint32>& _indices) noexcept { m_Indices = _indices; }
 		void SetModelMatrix(const glm::mat4& _modelMatrix) noexcept { m_Model = _modelMatrix; }
 		void SetDiffuseColor(const glm::vec3& _col) noexcept { m_Material.SetDiffuseColor(_col); }
+		void SetSpecularColor(const glm::vec3& _col) noexcept { m_Material.SetSpecularColor(_col); }
 		void SetShaderType(const ShaderType _shaderType) noexcept { m_Material.SetShaderType(_shaderType); }
 
 		uint32 GetEntityId() const noexcept { return m_EntityId; }
