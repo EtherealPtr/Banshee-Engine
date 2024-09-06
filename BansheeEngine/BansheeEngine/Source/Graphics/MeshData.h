@@ -3,6 +3,7 @@
 #include "Foundation/Platform.h"
 #include "Material.h"
 #include <vector>
+#include "Foundation/Logging/Logger.h"
 
 namespace Banshee
 {
@@ -12,14 +13,63 @@ namespace Banshee
 		MeshData() noexcept :
 			m_EntityId{ 0 },
 			m_VertexBufferId{ 0 },
-			m_MaterialIndex{ SetNextMaterialIndex() },
 			m_IndexOffset{ 0 },
+			m_MaterialIndex{ SetNextMaterialIndex() },
 			m_TexId{ 0 },
 			m_Indices{},
 			m_Material{},
 			m_Model{ 1.0f }
 		{}
 		~MeshData() = default;
+		MeshData(const MeshData& _other) : 
+			m_EntityId(_other.m_EntityId),                
+			m_VertexBufferId(_other.m_VertexBufferId),    
+			m_MaterialIndex(SetNextMaterialIndex()),      
+			m_IndexOffset(_other.m_IndexOffset),          
+			m_TexId(_other.m_TexId),                      
+			m_Indices(_other.m_Indices),                  
+			m_Material(_other.m_Material),                
+			m_Model(_other.m_Model)
+		{}
+		MeshData& operator=(const MeshData& _other)
+		{
+			m_EntityId = _other.m_EntityId;
+			m_VertexBufferId = _other.m_VertexBufferId;
+			m_MaterialIndex = SetNextMaterialIndex();  
+			m_IndexOffset = _other.m_IndexOffset;
+			m_TexId = _other.m_TexId;
+			m_Indices = _other.m_Indices;
+			m_Material = _other.m_Material;
+			m_Model = _other.m_Model;
+			BE_LOG(LogCategory::Warning, "MeshData copy ctor");
+			return *this;
+		}
+		MeshData(MeshData&& _other) noexcept : 
+			m_EntityId(_other.m_EntityId),
+			m_VertexBufferId(_other.m_VertexBufferId),
+			m_MaterialIndex(SetNextMaterialIndex()), 
+			m_IndexOffset(_other.m_IndexOffset),
+			m_TexId(_other.m_TexId),
+			m_Indices(std::move(_other.m_Indices)), 
+			m_Material(std::move(_other.m_Material)),
+			m_Model(std::move(_other.m_Model))        
+		{
+			BE_LOG(LogCategory::Warning, "MeshData move ctor");
+		}
+		MeshData& operator=(MeshData&& _other) noexcept
+		{
+			m_EntityId = _other.m_EntityId;
+			m_VertexBufferId = _other.m_VertexBufferId;
+			m_MaterialIndex = SetNextMaterialIndex();
+			m_IndexOffset = _other.m_IndexOffset;
+			m_TexId = _other.m_TexId;
+			m_Indices = std::move(_other.m_Indices);
+			m_Material = std::move(_other.m_Material);
+			m_Model = std::move(_other.m_Model);
+			BE_LOG(LogCategory::Warning, "MeshData move assignment ctor");
+
+			return *this;
+		}
 
 		void SetEntityId(const uint32 _entityId) noexcept { m_EntityId = _entityId; }
 		void SetTexId(const uint16 _texId) noexcept { m_TexId = _texId; }

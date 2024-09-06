@@ -1,5 +1,6 @@
 #include "MeshSystem.h"
 #include "Graphics/MeshData.h"
+#include "Foundation/Logging/Logger.h"
 
 namespace Banshee
 {
@@ -14,6 +15,7 @@ namespace Banshee
 		for (const auto& mesh : _meshes)
 		{
 			const uint32 vertexBufferId{ mesh.GetVertexBufferId() };
+			BE_LOG(LogCategory::Warning, "Added mesh with material index %d", mesh.GetMaterialIndex());
 			m_VertexBufferIdToSubMeshes[vertexBufferId].emplace_back(mesh);
 		}
 

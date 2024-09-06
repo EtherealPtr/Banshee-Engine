@@ -63,6 +63,14 @@ namespace Banshee
 					MeshData copiedSubMesh{ _subMesh };
 					copiedSubMesh.SetEntityId(_meshComponent.GetOwner()->GetUniqueId());
 					copiedSubMesh.SetShaderType(_meshComponent.GetShaderType());
+					
+					if (_meshComponent.GetTintColor().has_value())
+					{
+						const glm::vec3& tintColor{ _meshComponent.GetTintColor().value() };
+						copiedSubMesh.SetDiffuseColor(tintColor);
+						copiedSubMesh.SetSpecularColor(tintColor);
+					}
+
 					return copiedSubMesh;
 				});
 

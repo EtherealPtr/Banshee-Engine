@@ -97,7 +97,7 @@ namespace Banshee
 
 	void VulkanRenderer::AllocateDynamicBufferSpace() noexcept
 	{
-		const VkDeviceSize minUniformBufferOffset = m_VkDevice.GetLimits().minUniformBufferOffsetAlignment;
+		const VkDeviceSize minUniformBufferOffset{ m_VkDevice.GetLimits().minUniformBufferOffsetAlignment };
 		m_MaterialDynamicBufferMemAlignment = (sizeof(Material) + minUniformBufferOffset - 1) & ~(m_VkDevice.GetLimits().minUniformBufferOffsetAlignment - 1);
 		m_MaterialDynamicBufferMemBlock.reset(static_cast<Material*>(_aligned_malloc(m_MaterialDynamicBufferMemAlignment * g_MaxEntities, m_MaterialDynamicBufferMemAlignment)));
 	}
@@ -123,11 +123,11 @@ namespace Banshee
 		// Update dynamic buffer with material data
 		for (const auto& subMesh : m_MeshSystem.GetAllSubMeshes())
 		{
-			const Material material = subMesh.GetMaterial();
-			Material* materialData = (Material*)((uint64)m_MaterialDynamicBufferMemBlock.get() + (subMesh.GetMaterialIndex() * m_MaterialDynamicBufferMemAlignment));
-			const glm::vec3 diffuseColor = material.GetDiffuseColor();
-			const glm::vec3 specularColor = material.GetSpecularColor();
-			const float shininess = material.GetShininess();
+			const Material material{ subMesh.GetMaterial() };
+			Material* materialData{ (Material*)((uint64)m_MaterialDynamicBufferMemBlock.get() + (subMesh.GetMaterialIndex() * m_MaterialDynamicBufferMemAlignment)) };
+			const glm::vec3 diffuseColor{ material.GetDiffuseColor() };
+			const glm::vec3 specularColor{ material.GetSpecularColor() };
+			const float shininess{ material.GetShininess() };
 			*materialData = { diffuseColor, specularColor, shininess };
 		}
 
@@ -139,7 +139,7 @@ namespace Banshee
 
 	void VulkanRenderer::UpdateLightData()
 	{
-		const auto& lightComponents = m_LightSystem.GetLightComponents();
+		const auto& lightComponents{ m_LightSystem.GetLightComponents() };
 		for (const auto& lightComponent : lightComponents)
 		{
 			if (const auto& transformComponent = m_EntityTransformMap.find(lightComponent->GetOwner()->GetUniqueId())->second.get())
@@ -275,7 +275,7 @@ namespace Banshee
 		vkCmdSetScissor(cmdBuffer, 0, 1, &scissor);
 
 		UpdateDescriptorSets(_imgIndex);
-
+		
 		for (const auto& subMesh : m_MeshSystem.GetAllSubMeshes())
 		{
 			glm::mat4 entityModelMatrix{ glm::mat4(1.0f) };

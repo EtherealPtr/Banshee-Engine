@@ -19,6 +19,7 @@ namespace Banshee
 		void SetVertexBufferId(const uint32 _vertexBufferId) noexcept { m_VertexBufferId = _vertexBufferId; }
 		uint32 GetVertexBufferId() const noexcept { return m_VertexBufferId; }
 		ShaderType GetShaderType() const noexcept { return m_ShaderType; }
+		const std::optional<glm::vec3>& GetTintColor() const noexcept { return m_TintColor; }
 
 	protected:
 		uint32 m_VertexBufferId;

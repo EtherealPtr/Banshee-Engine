@@ -4,20 +4,20 @@
 <img src="https://github.com/Rony-Hanna/banshee/assets/62596512/896ba616-c9d9-460e-b240-b05d47ba0984" alt="image">
 </p>
 
-Banshee is a robust C++ and Vulkan-based 3D rendering engine designed to easily create interactive applications. The engine is still in an early development stage and much work is yet to be carried out. Currenty, the engine supports the following features:
+<p>Banshee is a robust C++ and Vulkan-based 3D rendering engine designed to easily create interactive applications. The engine is still in an early development stage and much work is yet to be carried out. Currenty, the engine supports the following features:</p>
 
 <ul>
-<li> Custom model loading with the ability to read and load textures and vertex data for each unique sub-mesh within a model </li>
+<li> Custom model loading with the ability to load textures for each sub-mesh within a complex model </li>
 <li> Input handling </li>
-<li> Logging (in console and externally) </li>
+<li> Logging (console and external file) </li>
 <li> Camera system </li>
-<li> High-performance rendering system with the Vulkan API </li>
+<li> Efficient rendering system with the Vulkan API </li>
 <li> Lighting (basic phong shading implementation) </li>
 <li> Functional but currently minimal material system </li>
 </ul>
 
 <h2>Upcoming Features</h2>
-The next update will bring the following enhancements:
+<p>The next update will bring the following features:</p>
 
 <ul>
 <li> An improved lighting system to support for more light casters, including directional lights, point lights, and spotlights </li>
@@ -25,16 +25,17 @@ The next update will bring the following enhancements:
 </ul>
 
 <h1>Getting Started</h1>
-To get started, clone the repository and open the solution file in Microsoft Visual Studio 2022. After that, simply click the Local Windows Debugger button to build and run the project. Please note that a project build system is not yet in place, but one will be coming soon. Additionally, Banshee has only been tested on Windows, so compatibility with other operating systems is not guaranteed.
+<p>To get started, clone the repository and open the solution file in Microsoft Visual Studio 2022. After that, build and run the project. Please note that a project build system is not yet in place, but one will be coming soon. Additionally, Banshee has only been tested on Windows, so compatibility with other operating systems is not guaranteed.</p>
 
 <h1>The Plan</h1>
-Banshee aims to be a user-friendly, plug-and-play engine. It outputs core functionality to a Dynamic-Link Library (DLL) file, enabling users to link their projects with the Banshee library and start rendering shapes or custom models immediately. The engine’s robust input handling system allows easy control of shapes using a mouse and keyboard.
+<p>Banshee aims to be a powerful easy-to-use, plug-and-play rendering engine. It outputs core functionality to a Dynamic-Link Library (DLL) file, enabling users to link their projects with the Banshee library and start rendering.</p>
 
 <h1>Future Features</h1>
-Planned enhancements include:
+<p>Planned features include:</p>
 <ul>
 <li> Normal mapping </li>
 <li> Shadow mapping </li>
+<li> Ambient occlusion </li>
 <li> Improved input system to handle joysticks </li>
 <li> Improved lighting system to efficiently handle a huge amount of light sources (deferred rendering) </li>
 <li> Physics integration (e.g., Bullet Physics for collision detection) </li>
@@ -43,10 +44,10 @@ Planned enhancements include:
 </ul>
 
 <h1>Banshee's Architecture</h1>
-Banshee utilizes a layered architecture approach, ensuring modularity and ease of maintenance. There are currently a total of 3 layers that make up the Banshee engine.
+<p>Banshee utilizes a layered architecture approach, this is to ensure modularity and ease of maintenance. Currently, there are 3 layers that make up the engine's architecture.</p>
 
 <h2>Foundation Layer</h2>
-The Foundation layer contains core functionalities essential for the engine, including:
+<p>The Foundation layer contains core functionalities essential for the engine, including:</p>
 
 <ul>
 <li> Logging system </li>
@@ -59,7 +60,7 @@ The Foundation layer contains core functionalities essential for the engine, inc
 </ul>
 
 <h2>Graphics Layer</h2>
-Built on top of the Foundation layer, the Graphics layer manages all graphics-related operations, including:
+<p>Built on top of the Foundation layer, the Graphics layer manages all graphics-related operations, including:</p>
 
 <ul>
 <li> Vulkan renderer </li>
