@@ -25,6 +25,7 @@ namespace Banshee
 	void MeshSystem::AddMesh(const MeshData& _mesh)
 	{
 		const uint32 vertexBufferId{ _mesh.GetVertexBufferId() };
+		BE_LOG(LogCategory::Warning, "Added mesh with material index %d", _mesh.GetMaterialIndex());
 		m_VertexBufferIdToSubMeshes[vertexBufferId].emplace_back(_mesh);
 		m_IsCacheDirty = true;
 	}

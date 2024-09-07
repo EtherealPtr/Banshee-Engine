@@ -50,7 +50,7 @@ namespace Banshee
 	{
 		const std::string_view modelName{ _meshComponent.GetModelName() };
 
-		auto modelBufferId = m_ModelNameToBufferId.find(modelName.data());
+		auto modelBufferId{ m_ModelNameToBufferId.find(modelName.data()) };
 		if (modelBufferId != m_ModelNameToBufferId.end())
 		{
 			_meshComponent.SetVertexBufferId(modelBufferId->second);
@@ -63,7 +63,7 @@ namespace Banshee
 					MeshData copiedSubMesh{ _subMesh };
 					copiedSubMesh.SetEntityId(_meshComponent.GetOwner()->GetUniqueId());
 					copiedSubMesh.SetShaderType(_meshComponent.GetShaderType());
-					
+
 					if (_meshComponent.GetTintColor().has_value())
 					{
 						const glm::vec3& tintColor{ _meshComponent.GetTintColor().value() };

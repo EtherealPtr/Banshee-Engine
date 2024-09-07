@@ -19,7 +19,9 @@ namespace Banshee
 			m_Indices{},
 			m_Material{},
 			m_Model{ 1.0f }
-		{}
+		{
+			BE_LOG(LogCategory::Warning, "MeshData ctor");
+		}
 		~MeshData() = default;
 		MeshData(const MeshData& _other) : 
 			m_EntityId(_other.m_EntityId),                
@@ -30,7 +32,9 @@ namespace Banshee
 			m_Indices(_other.m_Indices),                  
 			m_Material(_other.m_Material),                
 			m_Model(_other.m_Model)
-		{}
+		{
+			BE_LOG(LogCategory::Warning, "MeshData copy ctor");
+		}
 		MeshData& operator=(const MeshData& _other)
 		{
 			m_EntityId = _other.m_EntityId;
@@ -41,7 +45,7 @@ namespace Banshee
 			m_Indices = _other.m_Indices;
 			m_Material = _other.m_Material;
 			m_Model = _other.m_Model;
-			BE_LOG(LogCategory::Warning, "MeshData copy ctor");
+			BE_LOG(LogCategory::Warning, "MeshData copy assignment ctor");
 			return *this;
 		}
 		MeshData(MeshData&& _other) noexcept : 
