@@ -55,6 +55,7 @@ namespace Banshee
 		void RecordRenderCommands(const uint8 _imgIndex);
 
 	private:
+		const Window& m_Window;
 		VulkanInstance m_VkInstance;
 		VulkanSurface m_VkSurface;
 		VulkanDevice m_VkDevice;

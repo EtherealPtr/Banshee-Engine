@@ -17,6 +17,7 @@ namespace Banshee
 		VulkanDepthBuffer(const VkDevice& _logicalDevice, const VkPhysicalDevice& _gpu, const uint32 _w, const uint32 _h);
 		~VulkanDepthBuffer();
 
+		void RecreateDepthBuffer(const uint32 _w, const uint32 _h);
 		VkFormat GetFormat() const noexcept { return m_DepthFormat; }
 		VkImageView GetImageView() const noexcept { return m_DepthImageView; }
 
@@ -26,7 +27,12 @@ namespace Banshee
 		VulkanDepthBuffer& operator=(VulkanDepthBuffer&&) = delete;
 
 	private:
-		VkDevice m_LogicalDevice;
+		void CreateDepthBuffer(const uint32 _w, const uint32 _h);
+		void CleanUp() const;
+
+	private:
+		VkDevice m_Device;
+		VkPhysicalDevice m_GPU;
 		VkImage m_DepthImage;
 		VkImageView m_DepthImageView;
 		VkDeviceMemory m_DepthImageMemory;

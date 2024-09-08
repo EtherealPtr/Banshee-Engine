@@ -16,6 +16,7 @@ namespace Banshee
 	constexpr static uint64 g_MaxEntities{ 512 };
 
 	VulkanRenderer::VulkanRenderer(const Window& _window) :
+		m_Window(_window),
 		m_VkInstance{},
 		m_VkSurface{ _window.GetWindow(), m_VkInstance.Get() },
 		m_VkDevice{ m_VkInstance.Get(), m_VkSurface.Get() },
@@ -33,7 +34,7 @@ namespace Banshee
 		m_VkDescriptorSetLayout{ m_VkDevice.GetLogicalDevice() },
 		m_VkDescriptorPool{ m_VkDevice.GetLogicalDevice(), static_cast<uint16>(m_VkSwapchain.GetImageViews().size()) },
 		m_VkGraphicsPipelineManager{ m_VkDevice.GetLogicalDevice(), m_VkRenderPass.Get(), m_VkDescriptorSetLayout.Get(), m_VkSwapchain.GetWidth(), m_VkSwapchain.GetHeight() },
-		m_Camera{ 45.0f, static_cast<float>(_window.GetWidth()) / _window.GetHeight(), 0.1f, 100.0f, _window.GetWindow() },
+		m_Camera{ 80.0f, static_cast<float>(_window.GetWidth()) / _window.GetHeight(), 0.1f, 100.0f, _window.GetWindow() },
 		m_MeshSystem{},
 		m_LightSystem{},
 		m_CurrentFrameIndex{ 0 },
@@ -183,9 +184,8 @@ namespace Banshee
 		uint32 imgIndex{ 0 };
 
 		m_VkInFlightFences.Wait(m_CurrentFrameIndex);
-		m_VkInFlightFences.Reset(m_CurrentFrameIndex);
 
-		vkAcquireNextImageKHR
+		const VkResult result{ vkAcquireNextImageKHR
 		(
 			m_VkDevice.GetLogicalDevice(),
 			m_VkSwapchain.Get(),
@@ -193,7 +193,28 @@ namespace Banshee
 			m_VkSemaphores.Get()[m_CurrentFrameIndex].first,
 			VK_NULL_HANDLE,
 			&imgIndex
-		);
+		) };
+
+		if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR)
+		{
+			vkDeviceWaitIdle(m_VkDevice.GetLogicalDevice());
+
+			const uint32 newWidth{ m_Window.GetWidth() };
+			const uint32 newHeight{ m_Window.GetHeight() };
+
+			if (newWidth == 0 || newHeight == 0)
+			{
+				return;
+			}
+
+			m_VkSwapchain.RecreateSwapchain(newWidth, newHeight);
+			m_DepthBuffer.RecreateDepthBuffer(newWidth, newHeight);
+			m_VkFramebuffers.RecreateFramebuffers(newWidth, newHeight, m_VkSwapchain.GetImageViews(), m_DepthBuffer.GetImageView());
+			vkResetCommandPool(m_VkDevice.GetLogicalDevice(), m_VkCommandPool.Get(), 0);
+			return;
+		}
+
+		m_VkInFlightFences.Reset(m_CurrentFrameIndex);
 
 		// Update the camera's position and rotation
 		m_Camera.ProcessInput(_deltaTime);
@@ -275,7 +296,7 @@ namespace Banshee
 		vkCmdSetScissor(cmdBuffer, 0, 1, &scissor);
 
 		UpdateDescriptorSets(_imgIndex);
-		
+
 		for (const auto& subMesh : m_MeshSystem.GetAllSubMeshes())
 		{
 			glm::mat4 entityModelMatrix{ glm::mat4(1.0f) };

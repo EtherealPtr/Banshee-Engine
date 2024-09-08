@@ -20,9 +20,10 @@ namespace Banshee
 
 		VkSwapchainKHR Get() const noexcept { return m_Swapchain; }
 		const std::vector<VkImageView>& GetImageViews() const noexcept { return m_SwapchainImageViews; }
-		uint32 GetFormat() const noexcept { return m_Format; }
 		uint32 GetWidth() const noexcept { return m_Width; }
 		uint32 GetHeight() const noexcept { return m_Height; }
+		uint32 GetFormat() const noexcept { return m_Format; }
+		void RecreateSwapchain(const uint32 _w, const uint32 _h);
 
 		VulkanSwapchain(const VulkanSwapchain&) = delete;
 		VulkanSwapchain& operator=(const VulkanSwapchain&) = delete;
@@ -30,8 +31,13 @@ namespace Banshee
 		VulkanSwapchain& operator=(VulkanSwapchain&&) = delete;
 
 	private:
+		void CreateSwapchain(const uint32 _w, const uint32 _h);
+
+	private:
 		VkSwapchainKHR m_Swapchain;
 		VkDevice m_Device;
+		VkPhysicalDevice m_GPU;
+		VkSurfaceKHR m_Surface;
 		std::vector<VkImage> m_SwapchainImages;
 		std::vector<VkImageView> m_SwapchainImageViews;
 		uint32 m_Format;

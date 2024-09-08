@@ -86,70 +86,13 @@ namespace Banshee
 	VulkanSwapchain::VulkanSwapchain(const VkDevice& _logicalDevice, const VkPhysicalDevice& _gpu, const VkSurfaceKHR& _surface, const uint32 _w, const uint32 _h) :
 		m_Swapchain{ VK_NULL_HANDLE },
 		m_Device{ _logicalDevice },
+		m_GPU{ _gpu },
+		m_Surface{ _surface },
 		m_SwapchainImages{},
 		m_SwapchainImageViews{},
-		m_Format{ 0 },
-		m_Width{ 0 },
-		m_Height{ 0 }
+		m_Format{ 0 }
 	{
-		BE_LOG(LogCategory::Trace, "[SWAPCHAIN]: Creating Vulkan Swapchain");
-
-		// Query surface capabilities
-		VkSurfaceCapabilitiesKHR surfaceCapabilities;
-		vkGetPhysicalDeviceSurfaceCapabilitiesKHR(_gpu, _surface, &surfaceCapabilities);
-
-		// Pick swapchain surface format and color space
-		const VkSurfaceFormatKHR surfaceFormat = PickSurfaceFormat(_gpu, _surface);
-		m_Format = static_cast<unsigned int>(surfaceFormat.format);
-
-		// Pick swapchain present mode
-		const VkPresentModeKHR presentMode = PickPresentMode(_gpu, _surface);
-
-		// Pick swapchain extent
-		const VkExtent2D extent = PickExtent(surfaceCapabilities, _w, _h);
-		m_Width = extent.width;
-		m_Height = extent.height;
-
-		// Determine number of images in the swapchain
-		uint32 imageCount = PickImageCount(surfaceCapabilities);
-
-		// Create swapchain
-		VkSwapchainCreateInfoKHR swapchainCreateInfo{};
-		swapchainCreateInfo.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
-		swapchainCreateInfo.surface = _surface;
-		swapchainCreateInfo.minImageCount = imageCount;
-		swapchainCreateInfo.imageFormat = surfaceFormat.format;
-		swapchainCreateInfo.imageColorSpace = surfaceFormat.colorSpace;
-		swapchainCreateInfo.imageExtent = extent;
-		swapchainCreateInfo.imageArrayLayers = 1;
-		swapchainCreateInfo.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
-		swapchainCreateInfo.preTransform = surfaceCapabilities.currentTransform;
-		swapchainCreateInfo.compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
-		swapchainCreateInfo.presentMode = presentMode;
-		swapchainCreateInfo.clipped = VK_TRUE;
-
-		if (vkCreateSwapchainKHR(_logicalDevice, &swapchainCreateInfo, nullptr, &m_Swapchain) != VK_SUCCESS)
-		{
-			throw std::runtime_error("ERROR: Failed to create Vulkan swapchain\n");
-		}
-
-		// Retrieve swapchain images
-		vkGetSwapchainImagesKHR(_logicalDevice, m_Swapchain, &imageCount, nullptr);
-		m_SwapchainImages.resize(imageCount);
-		vkGetSwapchainImagesKHR(_logicalDevice, m_Swapchain, &imageCount, m_SwapchainImages.data());
-		assert(m_SwapchainImages.size() > 0);
-
-		// Create image views for the swapchain images
-		m_SwapchainImageViews.resize(imageCount);
-
-		for (uint32 i = 0; i < imageCount; ++i)
-		{
-			VulkanUtils::CreateImageView(_logicalDevice, m_SwapchainImages[i], surfaceFormat.format, VK_IMAGE_ASPECT_COLOR_BIT, m_SwapchainImageViews[i]);
-		}
-
-		assert(m_SwapchainImageViews.size() > 0);
-
-		BE_LOG(LogCategory::Info, "[SWAPCHAIN]: Created Vulkan Swapchain");
+		CreateSwapchain(_w, _h);
 	}
 
 	VulkanSwapchain::~VulkanSwapchain()
@@ -161,5 +104,80 @@ namespace Banshee
 
 		vkDestroySwapchainKHR(m_Device, m_Swapchain, nullptr);
 		m_Swapchain = VK_NULL_HANDLE;
+	}
+
+	void VulkanSwapchain::RecreateSwapchain(const uint32 _w, const uint32 _h)
+	{
+		for (const auto& imageView : m_SwapchainImageViews)
+		{
+			vkDestroyImageView(m_Device, imageView, nullptr);
+		}
+
+		vkDestroySwapchainKHR(m_Device, m_Swapchain, nullptr);
+		m_Swapchain = VK_NULL_HANDLE;
+
+		CreateSwapchain(_w, _h);
+	}
+
+	void VulkanSwapchain::CreateSwapchain(const uint32 _w, const uint32 _h)
+	{
+		BE_LOG(LogCategory::Trace, "[SWAPCHAIN]: Creating Vulkan Swapchain");
+
+		// Query surface capabilities
+		VkSurfaceCapabilitiesKHR surfaceCapabilities;
+		vkGetPhysicalDeviceSurfaceCapabilitiesKHR(m_GPU, m_Surface, &surfaceCapabilities);
+
+		// Pick swapchain surface format and color space
+		const VkSurfaceFormatKHR surfaceFormat{ PickSurfaceFormat(m_GPU, m_Surface) };
+		m_Format = static_cast<unsigned int>(surfaceFormat.format);
+
+		// Pick swapchain present mode
+		const VkPresentModeKHR presentMode{ PickPresentMode(m_GPU, m_Surface) };
+
+		// Pick swapchain extent
+		const VkExtent2D extent{ PickExtent(surfaceCapabilities, _w, _h) };
+		m_Width = extent.width;
+		m_Height = extent.height;
+
+		// Determine number of images in the swapchain
+		uint32 imageCount{ PickImageCount(surfaceCapabilities) };
+
+		// Create swapchain
+		VkSwapchainCreateInfoKHR swapchainCreateInfo{};
+		swapchainCreateInfo.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
+		swapchainCreateInfo.surface = m_Surface;
+		swapchainCreateInfo.minImageCount = imageCount;
+		swapchainCreateInfo.imageFormat = surfaceFormat.format;
+		swapchainCreateInfo.imageColorSpace = surfaceFormat.colorSpace;
+		swapchainCreateInfo.imageExtent = extent;
+		swapchainCreateInfo.imageArrayLayers = 1;
+		swapchainCreateInfo.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
+		swapchainCreateInfo.preTransform = surfaceCapabilities.currentTransform;
+		swapchainCreateInfo.compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
+		swapchainCreateInfo.presentMode = presentMode;
+		swapchainCreateInfo.clipped = VK_TRUE;
+
+		if (vkCreateSwapchainKHR(m_Device, &swapchainCreateInfo, nullptr, &m_Swapchain) != VK_SUCCESS)
+		{
+			throw std::runtime_error("ERROR: Failed to create Vulkan swapchain\n");
+		}
+
+		// Retrieve swapchain images
+		vkGetSwapchainImagesKHR(m_Device, m_Swapchain, &imageCount, nullptr);
+		m_SwapchainImages.resize(imageCount);
+		vkGetSwapchainImagesKHR(m_Device, m_Swapchain, &imageCount, m_SwapchainImages.data());
+		assert(m_SwapchainImages.size() > 0);
+
+		// Create image views for the swapchain images
+		m_SwapchainImageViews.resize(imageCount);
+
+		for (uint32 i = 0; i < imageCount; ++i)
+		{
+			VulkanUtils::CreateImageView(m_Device, m_SwapchainImages[i], surfaceFormat.format, VK_IMAGE_ASPECT_COLOR_BIT, m_SwapchainImageViews[i]);
+		}
+
+		assert(m_SwapchainImageViews.size() > 0);
+
+		BE_LOG(LogCategory::Info, "[SWAPCHAIN]: Created Vulkan Swapchain");
 	}
 } // End of Banshee namespace

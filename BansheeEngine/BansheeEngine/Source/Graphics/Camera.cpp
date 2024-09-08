@@ -33,7 +33,7 @@ namespace Banshee
 	void Camera::ProcessKeyboardInput(const double _deltaTime)
 	{
 		constexpr float baseSpeed{ 15.0f };
-		const float speed = baseSpeed * static_cast<float>(_deltaTime);
+		const float speed{ baseSpeed * static_cast<float>(_deltaTime) };
 
 		if (m_InputDevice.IsKeyPressed(BE_KEY_W))
 		{
@@ -61,7 +61,7 @@ namespace Banshee
 		double yoffset{ m_InputDevice.GetYChange() };
 
 		constexpr double baseSensitivity{ 25.0 };
-		const double sensitivity = baseSensitivity * _deltaTime;
+		const double sensitivity{ baseSensitivity * _deltaTime };
 		xoffset *= sensitivity;
 		yoffset *= sensitivity;
 
