@@ -6,23 +6,24 @@ namespace Banshee
 	MeshSystem::MeshSystem() noexcept :
 		m_VertexBufferIdToSubMeshes{},
 		m_CachedSubMeshes{},
-		m_IsCacheDirty{ true }
+		m_IsCacheDirty{ true },
+		m_TotalMeshCount{ 0 }
 	{}
 
-	void MeshSystem::AddMeshes(const std::vector<MeshData>& _meshes)
+	void MeshSystem::AddMeshes(std::vector<MeshData>& _meshes)
 	{
-		for (const auto& mesh : _meshes)
+		for (auto& mesh : _meshes)
 		{
-			const uint32 vertexBufferId{ mesh.GetVertexBufferId() };
-			m_VertexBufferIdToSubMeshes[vertexBufferId].emplace_back(mesh);
+			AddMesh(mesh);
 		}
 
 		m_IsCacheDirty = true;
 	}
 
-	void MeshSystem::AddMesh(const MeshData& _mesh)
+	void MeshSystem::AddMesh(MeshData& _mesh)
 	{
 		const uint32 vertexBufferId{ _mesh.GetVertexBufferId() };
+		_mesh.SetMeshId(m_TotalMeshCount++);
 		m_VertexBufferIdToSubMeshes[vertexBufferId].emplace_back(_mesh);
 		m_IsCacheDirty = true;
 	}
@@ -56,7 +57,7 @@ namespace Banshee
 
 		for (const auto& mesh : m_VertexBufferIdToSubMeshes)
 		{
-			const auto& subMeshes = mesh.second;
+			const auto& subMeshes{ mesh.second };
 			m_CachedSubMeshes.insert(m_CachedSubMeshes.end(), subMeshes.begin(), subMeshes.end());
 		}
 

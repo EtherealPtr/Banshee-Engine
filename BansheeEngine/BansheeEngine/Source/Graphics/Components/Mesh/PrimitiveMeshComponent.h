@@ -14,7 +14,7 @@ namespace Banshee
 		virtual void OnComponentInitialized() noexcept override;
 		virtual void SetTintColor(const glm::vec3& _tintColor) noexcept override;
 		BANSHEE_ENGINE void SetTexture(const std::string_view _texturePath);
-		void SetIndices(const std::vector<uint32>& _indices) noexcept { m_Data.SetIndices(_indices); }
+		void SetIndices(const uint32 _indices) noexcept { m_Data.SetIndexCount(_indices); }
 		PrimitiveShape GetShape() const noexcept { return m_Shape; }
 		MeshData& GetMeshData() noexcept { return m_Data; }
 

@@ -16,6 +16,13 @@ namespace Banshee
 		_data.SetVertexBufferId(GetVertexBufferId());
 		_data.SetEntityId(GetOwner()->GetUniqueId());
 		_data.SetShaderType(GetShaderType());
+
+		if (m_TintColor.has_value())
+		{
+			_data.SetDiffuseColor(m_TintColor.value());
+			_data.SetSpecularColor(m_TintColor.value());
+		}
+
 		m_Data.emplace_back(_data);
 	}
 

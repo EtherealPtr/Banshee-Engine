@@ -5,6 +5,7 @@
 #include "Graphics/ShaderType.h"
 #include <glm/glm.hpp>
 #include <string>
+#include <optional>
 
 namespace Banshee
 {
@@ -18,11 +19,11 @@ namespace Banshee
 		void SetVertexBufferId(const uint32 _vertexBufferId) noexcept { m_VertexBufferId = _vertexBufferId; }
 		uint32 GetVertexBufferId() const noexcept { return m_VertexBufferId; }
 		ShaderType GetShaderType() const noexcept { return m_ShaderType; }
-		const glm::vec3& GetTintColor() const noexcept { return m_TintColor; }
+		const std::optional<glm::vec3>& GetTintColor() const noexcept { return m_TintColor; }
 
 	protected:
 		uint32 m_VertexBufferId;
 		ShaderType m_ShaderType;
-		glm::vec3 m_TintColor;
+		std::optional<glm::vec3> m_TintColor;
 	};
 } // End of Banshee namespace

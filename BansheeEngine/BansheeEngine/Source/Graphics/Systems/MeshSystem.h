@@ -15,8 +15,8 @@ namespace Banshee
 		MeshSystem() noexcept;
 		~MeshSystem() noexcept = default;
 
-		void AddMeshes(const std::vector<MeshData>& _meshes);
-		void AddMesh(const MeshData& _mesh);
+		void AddMeshes(std::vector<MeshData>& _meshes);
+		void AddMesh(MeshData& _mesh);
 		const std::vector<MeshData>& GetAllSubMeshes();
 		const std::vector<MeshData>& GetSubMeshes(const uint32 _bufferId) const;
 
@@ -32,5 +32,6 @@ namespace Banshee
 		std::vector<MeshData> m_CachedSubMeshes;
 		std::unordered_map<uint32, std::vector<MeshData>> m_VertexBufferIdToSubMeshes;
 		bool m_IsCacheDirty;
+		uint32 m_TotalMeshCount;
 	};
 } // End of Banshee namespace

@@ -8,34 +8,35 @@ using namespace Banshee;
 class ExampleCustomModel
 {
 public:
-	ExampleCustomModel() :
+	ExampleCustomModel(const glm::vec3& _pos = glm::vec3(0.0f)) :
 		m_Entity{ EntityManager::CreateEntity() },
 		m_Transform{ m_Entity->AddComponent<TransformComponent>() }
 	{
-		m_Entity->AddComponent<CustomMeshComponent>("Models/scene2.glb", ShaderType::Standard);
+		m_MeshComp = m_Entity->AddComponent<CustomMeshComponent>("Models/scene2.glb", ShaderType::Standard);
+		m_Transform->SetPosition(_pos);
 	}
 
-	void SetPosition(const glm::vec3& _pos)
+	void SetTintColor(const glm::vec3& _col)
 	{
-		m_Transform->SetPosition(_pos);
+		m_MeshComp->SetTintColor(_col);
 	}
 
 private:
 	std::shared_ptr<Entity> m_Entity;
 	std::shared_ptr<TransformComponent> m_Transform;
+	std::shared_ptr<CustomMeshComponent> m_MeshComp;
 };
 
 class ExamplePrimitiveModel
 {
 public:
-	ExamplePrimitiveModel() :
+	ExamplePrimitiveModel(const glm::vec3& _pos = glm::vec3(0.0f)) :
 		m_Entity{ EntityManager::CreateEntity() },
 		m_Transform{ m_Entity->AddComponent<TransformComponent>() }
 	{
 		auto meshComponent{ m_Entity->AddComponent<PrimitiveMeshComponent>(PrimitiveShape::CubeShape, ShaderType::Standard) };
-		meshComponent->SetTintColor(glm::vec3(1.0f, 0.0f, 0.0f));
 		meshComponent->SetTexture("Textures/tiles.jpg");
-		m_Transform->SetPosition(glm::vec3(0.0f, 10.0f, 0.0f));
+		m_Transform->SetPosition(_pos);
 	}
 
 private:

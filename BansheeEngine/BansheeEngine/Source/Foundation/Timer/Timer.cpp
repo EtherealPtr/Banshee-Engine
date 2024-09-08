@@ -52,7 +52,7 @@ namespace Banshee
 		}
 
         const auto elapsedTime{ std::chrono::duration_cast<std::chrono::milliseconds>(clock_t::now() - m_StartTime).count() };
-        BE_LOG(LogCategory::Trace, "Elapsed time: %d", elapsedTime);
+        BE_LOG(LogCategory::Trace, "[Elapsed time]: %d", elapsedTime);
         m_TimerRunning = false;
     }
 } // End of Banshee namespace

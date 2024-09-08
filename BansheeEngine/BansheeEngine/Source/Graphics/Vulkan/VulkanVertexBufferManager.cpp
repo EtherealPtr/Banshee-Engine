@@ -39,7 +39,7 @@ namespace Banshee
 		std::vector<Vertex> vertices{};
 		std::vector<uint32> indices{};
 		ShapeFactory::GetShapeData(_meshComponent.GetShape(), vertices, indices);
-		_meshComponent.SetIndices(indices);
+		_meshComponent.SetIndices(static_cast<uint32>(indices.size()));
 
 		GenerateBuffers(bufferId, vertices.data(), sizeof(Vertex) * vertices.size(), indices.data(), sizeof(uint32) * indices.size());
 		_meshComponent.GetMeshData().SetVertexBufferId(_meshComponent.GetVertexBufferId());
@@ -50,7 +50,7 @@ namespace Banshee
 	{
 		const std::string_view modelName{ _meshComponent.GetModelName() };
 
-		auto modelBufferId = m_ModelNameToBufferId.find(modelName.data());
+		auto modelBufferId{ m_ModelNameToBufferId.find(modelName.data()) };
 		if (modelBufferId != m_ModelNameToBufferId.end())
 		{
 			_meshComponent.SetVertexBufferId(modelBufferId->second);
@@ -63,6 +63,14 @@ namespace Banshee
 					MeshData copiedSubMesh{ _subMesh };
 					copiedSubMesh.SetEntityId(_meshComponent.GetOwner()->GetUniqueId());
 					copiedSubMesh.SetShaderType(_meshComponent.GetShaderType());
+
+					if (_meshComponent.GetTintColor().has_value())
+					{
+						const glm::vec3& tintColor{ _meshComponent.GetTintColor().value() };
+						copiedSubMesh.SetDiffuseColor(tintColor);
+						copiedSubMesh.SetSpecularColor(tintColor);
+					}
+
 					return copiedSubMesh;
 				});
 
