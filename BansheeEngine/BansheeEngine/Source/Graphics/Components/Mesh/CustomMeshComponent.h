@@ -14,7 +14,7 @@ namespace Banshee
 		void AddMeshData(MeshData& _data);
 		const std::string_view GetModelName() const noexcept { return m_ModelName; }
 		const std::string GetModelPath() const;
-		const std::vector<MeshData>& GetMeshData() const noexcept { return m_Data; }
+		std::vector<MeshData>& GetMeshData() noexcept { return m_Data; }
 
 	private:
 		std::string m_ModelName;

@@ -39,7 +39,7 @@ namespace Banshee
 		std::vector<Vertex> vertices{};
 		std::vector<uint32> indices{};
 		ShapeFactory::GetShapeData(_meshComponent.GetShape(), vertices, indices);
-		_meshComponent.SetIndices(indices);
+		_meshComponent.SetIndices(static_cast<uint32>(indices.size()));
 
 		GenerateBuffers(bufferId, vertices.data(), sizeof(Vertex) * vertices.size(), indices.data(), sizeof(uint32) * indices.size());
 		_meshComponent.GetMeshData().SetVertexBufferId(_meshComponent.GetVertexBufferId());

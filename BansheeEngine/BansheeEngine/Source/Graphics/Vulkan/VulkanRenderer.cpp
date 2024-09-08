@@ -124,7 +124,7 @@ namespace Banshee
 		for (const auto& subMesh : m_MeshSystem.GetAllSubMeshes())
 		{
 			const Material material{ subMesh.GetMaterial() };
-			Material* materialData{ (Material*)((uint64)m_MaterialDynamicBufferMemBlock.get() + (subMesh.GetMaterialIndex() * m_MaterialDynamicBufferMemAlignment)) };
+			Material* materialData{ (Material*)((uint64)m_MaterialDynamicBufferMemBlock.get() + (subMesh.GetMeshId() * m_MaterialDynamicBufferMemAlignment)) };
 			const glm::vec3 diffuseColor{ material.GetDiffuseColor() };
 			const glm::vec3 specularColor{ material.GetSpecularColor() };
 			const float shininess{ material.GetShininess() };
@@ -294,7 +294,7 @@ namespace Banshee
 			vertexBuffer->Bind(cmdBuffer, indexOffset);
 
 			// Bind descriptor set
-			const uint32 dynamicOffset{ static_cast<uint32>(m_MaterialDynamicBufferMemAlignment) * subMesh.GetMaterialIndex() };
+			const uint32 dynamicOffset{ static_cast<uint32>(m_MaterialDynamicBufferMemAlignment) * subMesh.GetMeshId() };
 			auto currentDescriptorSet{ m_DescriptorSets[_imgIndex].Get() };
 			vkCmdBindDescriptorSets(cmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline->GetLayout(), 0, 1, &currentDescriptorSet, 1, &dynamicOffset);
 
@@ -303,7 +303,7 @@ namespace Banshee
 			const PushConstant pc{ modelMatrix, subMesh.GetTexId() };
 			vkCmdPushConstants(cmdBuffer, graphicsPipeline->GetLayout(), VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(PushConstant), &pc);
 
-			vkCmdDrawIndexed(cmdBuffer, static_cast<uint32>(subMesh.GetIndices().size()), 1, 0, 0, 0);
+			vkCmdDrawIndexed(cmdBuffer, subMesh.GetIndexCount(), 1, 0, 0, 0);
 		}
 
 		vkCmdEndRenderPass(cmdBuffer);

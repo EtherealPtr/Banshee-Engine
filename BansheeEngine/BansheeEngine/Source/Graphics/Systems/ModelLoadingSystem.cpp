@@ -119,7 +119,7 @@ namespace Banshee
 
 				_indices.insert(_indices.end(), subMeshIndices.begin(), subMeshIndices.end());
 
-				subMesh.SetIndices(subMeshIndices);
+				subMesh.SetIndexCount(static_cast<uint32>(subMeshIndices.size()));
 				LoadMaterial(_model, primitive, &subMesh);
 
 				_meshComponent.AddMeshData(subMesh);
