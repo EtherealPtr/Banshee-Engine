@@ -1,8 +1,8 @@
 #pragma once
 
 #include "Foundation/Entity/EntityManager.h"
-#include "Components.h"
 #include "Graphics/PrimitiveShape.h"
+#include "Components.h"
 
 using namespace Banshee;
 
@@ -15,7 +15,7 @@ public:
 	{
 		m_Entity->AddComponent<PrimitiveMeshComponent>(PrimitiveShape::CubeShape, ShaderType::Unlit);
 		m_Entity->AddComponent<LightComponent>();
-		m_Transform->SetPosition(glm::vec3(0.0f, 5.0f, 10.0f));
+		m_Transform->SetPosition(glm::vec3(-1.0f, 1.0f, 0.0f));
 	}
 
 private:

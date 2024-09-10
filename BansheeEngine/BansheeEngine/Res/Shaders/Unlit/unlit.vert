@@ -16,7 +16,8 @@ layout (set = 0, binding = 0) uniform ViewProjBuffer
 layout (push_constant) uniform PushConstants
 {
 	mat4 model;
-	int textureId;
+	vec3 camera_position;
+	int textureId; 
 } u_PushConstants;
 
 void main()

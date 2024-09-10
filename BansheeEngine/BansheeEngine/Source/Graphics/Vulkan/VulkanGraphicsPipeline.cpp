@@ -117,7 +117,7 @@ namespace Banshee
 		rasterizerStateCreateInfo.rasterizerDiscardEnable = VK_FALSE;
 		rasterizerStateCreateInfo.polygonMode = VK_POLYGON_MODE_FILL;
 		rasterizerStateCreateInfo.lineWidth = 1.0f;
-		rasterizerStateCreateInfo.cullMode = VK_CULL_MODE_BACK_BIT;
+		rasterizerStateCreateInfo.cullMode = VK_CULL_MODE_NONE;//VK_CULL_MODE_BACK_BIT;
 		rasterizerStateCreateInfo.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE;
 		rasterizerStateCreateInfo.depthBiasEnable = VK_FALSE;
 		rasterizerStateCreateInfo.depthBiasConstantFactor = 0.0f;

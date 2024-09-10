@@ -4,8 +4,8 @@
 layout (location = 0) in vec2 in_vertex_texCoord;
 layout (location = 1) in vec3 in_vertex_normal;
 layout (location = 2) flat in int in_texture_index;
+layout (location = 3) in vec3 in_camera_position;
 layout (location = 4) in vec3 in_fragment_position;
-layout (location = 5) in vec3 in_fragment_normal;
 
 layout (location = 0) out vec4 out_frag_color;
 
@@ -39,25 +39,26 @@ void main()
 
 	// Ambient 
 	const float ambientStrength = 0.1f;
-	const vec3 minimumAmbient = vec3(0.1f, 0.1f, 0.1f);
-	const vec3 lightColor = u_Light.color + minimumAmbient;
-    const vec3 ambient = ambientStrength * u_Light.color;
+    const vec3 ambientImpact = ambientStrength * u_Light.color;
+    const vec3 ambient = ambientImpact * u_Material.diffuseColor;
 
 	// Diffuse
-	const vec3 norm = normalize(in_fragment_normal);
-	const vec3 lightDir = normalize(u_Light.position - in_fragment_position);
+	const vec3 norm = normalize(in_vertex_normal);
+	out_frag_color = vec4(norm.xyz, 1.0);
+	return;
+	const vec3 lightDir = normalize(-vec3(0.0, 0.0, 1.0)); // Hardcoded directional light
 	const float diffuseImpact = max(dot(norm, lightDir), 0.0);
-	const vec3 diffuse = diffuseImpact * lightColor;
+	const vec3 diffuse = diffuseImpact * u_Light.color;
 
 	// Specular
-    const float specularStrength = 0.5f;
-    const vec3 viewDir = normalize(-in_fragment_position);
-    const vec3 reflectDir = reflect(-lightDir, norm);
-    const float spec = pow(max(dot(viewDir, reflectDir), 0.0), u_Material.shininess);
-    const vec3 specular = specularStrength * spec * lightColor; 
+	const float specularStrength = 0.5f;
+	const vec3 viewDir = normalize(in_camera_position - in_fragment_position);
+	const vec3 reflectDir = reflect(-lightDir, norm);
+	const float spec = pow(max(dot(viewDir, reflectDir), 0.0), u_Material.shininess);
+	const vec3 specular = specularStrength * spec * u_Light.color; 
 
 	// Combine lighting effect
-	const vec3 lighting = ambient + diffuse + specular;
+	const vec3 lighting = ambient + diffuse;
 
 	out_frag_color = baseColor * vec4(lighting, 1.0f);
 }

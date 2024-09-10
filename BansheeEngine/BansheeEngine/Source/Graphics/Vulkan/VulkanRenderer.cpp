@@ -145,8 +145,7 @@ namespace Banshee
 		{
 			if (const auto& transformComponent = m_EntityTransformMap.find(lightComponent->GetOwner()->GetUniqueId())->second.get())
 			{
-				// TODO: Enable support for multiple light sources
-				const glm::vec3 lightPos = glm::vec3(m_Camera.GetViewMatrix() * glm::vec4(transformComponent->GetPosition(), 1.0f));
+				const glm::vec3 lightPos{ transformComponent->GetPosition() };
 				LightData lightData(lightPos, lightComponent->GetColor());
 				m_LightUniformBuffers[m_CurrentFrameIndex].CopyData(&lightData);
 			}
@@ -321,7 +320,7 @@ namespace Banshee
 
 			// Push constants
 			const glm::mat4& modelMatrix{ entityModelMatrix * subMesh.GetModelMatrix() };
-			const PushConstant pc{ modelMatrix, subMesh.GetTexId() };
+			const PushConstant pc{ modelMatrix, m_Camera.GetPosition(), subMesh.GetTexId() };
 			vkCmdPushConstants(cmdBuffer, graphicsPipeline->GetLayout(), VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(PushConstant), &pc);
 
 			vkCmdDrawIndexed(cmdBuffer, subMesh.GetIndexCount(), 1, 0, 0, 0);

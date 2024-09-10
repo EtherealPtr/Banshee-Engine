@@ -12,7 +12,7 @@
 #define TINYGLTF_NO_STB_IMAGE_WRITE
 #define TINYGLTF_IMPLEMENTATION
 #include <tiny_gltf.h>
-
+#include <iostream>
 namespace Banshee
 {
 	static bool LoadImageDataCallback(tinygltf::Image* _image, const int _image_idx, std::string* _err, std::string* _warn, int _req_width, int _req_height, const unsigned char* _bytes, int _size, void* _user_data)
@@ -85,6 +85,11 @@ namespace Banshee
 				std::vector<Vertex> subMeshVertices(positionsAccessor.count);
 				for (size_t j = 0; j < positionsAccessor.count; ++j)
 				{
+					std::cout << "Normal[" << j << "]: ("
+						<< normals[j * 3 + 0] << ", "
+						<< normals[j * 3 + 1] << ", "
+						<< normals[j * 3 + 2] << ")" << std::endl;
+
 					subMeshVertices[j].m_Position = glm::vec3
 					(
 						positions[j * 3 + 0],

@@ -68,7 +68,7 @@ namespace Banshee
 		void SetVertexBufferId(const uint32 _vertexBufferId) noexcept { m_VertexBufferId = _vertexBufferId; }
 		void SetIndexOffset(const uint32 _indexOffset) noexcept { m_IndexOffset = _indexOffset; }
 		void SetIndexCount(const uint32 _indices) noexcept { m_IndexCount = _indices; }
-		void SetTexId(const uint16 _texId) noexcept { m_TexId = _texId; }
+		void SetTexId(const uint32 _texId) noexcept { m_TexId = _texId; }
 		void SetModelMatrix(const glm::mat4& _modelMatrix) noexcept { m_Model = _modelMatrix; }
 		void SetDiffuseColor(const glm::vec3& _col) noexcept { m_Material.SetDiffuseColor(_col); }
 		void SetSpecularColor(const glm::vec3& _col) noexcept { m_Material.SetSpecularColor(_col); }
@@ -79,7 +79,7 @@ namespace Banshee
 		uint32 GetVertexBufferId() const noexcept { return m_VertexBufferId; }
 		uint32 GetIndexOffset() const noexcept { return m_IndexOffset; }
 		uint32 GetIndexCount() const noexcept { return m_IndexCount; }
-		uint16 GetTexId() const noexcept { return m_TexId; }
+		uint32 GetTexId() const noexcept { return m_TexId; }
 		const Material& GetMaterial() const noexcept { return m_Material; }
 		const glm::mat4& GetModelMatrix() const noexcept { return m_Model; }
 
@@ -89,7 +89,7 @@ namespace Banshee
 		uint32 m_VertexBufferId;
 		uint32 m_IndexOffset;   // Offset into the index buffer
 		uint32 m_IndexCount;
-		uint16 m_TexId;
+		uint32 m_TexId;
 		Material m_Material;
 		glm::mat4 m_Model;
 	};

@@ -6,15 +6,9 @@ class ClientApp : public Banshee::Application
 {
 public:
 	ClientApp() :
-		m_CustomModel{},
-		m_CustomModel2{ glm::vec3(20.0f, 0.0f, 0.0f) },
-		m_CustomModel3{ glm::vec3(40.0f, 0.0f, 0.0f) },
-		m_PrimitiveCube{ glm::vec3(0.0f, 10.0f, 0.0f) },
-		m_Light{}
+		m_CustomModel{}
 	{
 		m_CustomModel.SetTintColor(glm::vec3(1.0f, 0.0f, 0.0f));
-		m_CustomModel2.SetTintColor(glm::vec3(0.0f, 1.0f, 0.0f));
-		m_CustomModel3.SetTintColor(glm::vec3(0.0f, 0.0f, 1.0f));
 	}
 
 	ClientApp(const ClientApp&) = delete;
@@ -24,9 +18,6 @@ public:
 
 private:
 	ExampleCustomModel m_CustomModel;
-	ExampleCustomModel m_CustomModel2;
-	ExampleCustomModel m_CustomModel3;
-	ExamplePrimitiveModel m_PrimitiveCube;
 	Light m_Light;
 };
 

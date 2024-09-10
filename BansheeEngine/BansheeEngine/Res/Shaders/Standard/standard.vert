@@ -7,8 +7,8 @@ layout (location = 2) in vec3 in_vertex_normal;
 layout (location = 0) out vec2 out_vertex_texCoord;
 layout (location = 1) out vec3 out_vertex_normal;
 layout (location = 2) out int out_texture_index;
+layout (location = 3) out vec3 out_camera_position;
 layout (location = 4) out vec3 out_fragment_position;
-layout (location = 5) out vec3 out_fragment_normal;
 
 layout (set = 0, binding = 0) uniform ViewProjBuffer
 {
@@ -19,16 +19,18 @@ layout (set = 0, binding = 0) uniform ViewProjBuffer
 layout (push_constant) uniform PushConstants
 {
 	mat4 model;
-	int textureId;
+	vec3 camera_position;
+	int textureId; 
 } u_PushConstants;
 
 void main()
 {
-	gl_Position = u_ViewProj.proj * u_ViewProj.view * u_PushConstants.model * vec4(in_vertex_position, 1.0f);
-	out_fragment_position = vec3(u_ViewProj.view * u_PushConstants.model * vec4(in_vertex_position, 1.0f));
-	out_fragment_normal = mat3(transpose(inverse(u_ViewProj.view * u_PushConstants.model))) * in_vertex_normal;
-	
+	const vec4 world_position = u_PushConstants.model * vec4(in_vertex_position, 1.0f);
+	gl_Position = u_ViewProj.proj * u_ViewProj.view * world_position;
+
+	out_fragment_position = vec3(u_PushConstants.model * vec4(in_vertex_position, 1.0));
+	out_vertex_normal = mat3(transpose(inverse(u_PushConstants.model))) * in_vertex_normal; 
 	out_vertex_texCoord = in_vertex_texCoord;
-	out_vertex_normal = in_vertex_normal;
 	out_texture_index = u_PushConstants.textureId;
+	out_camera_position = u_PushConstants.camera_position;
 }

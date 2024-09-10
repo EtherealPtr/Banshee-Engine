@@ -12,13 +12,13 @@ public:
 		m_Entity{ EntityManager::CreateEntity() },
 		m_Transform{ m_Entity->AddComponent<TransformComponent>() }
 	{
-		m_MeshComp = m_Entity->AddComponent<CustomMeshComponent>("Models/scene2.glb", ShaderType::Standard);
+		m_MeshComp = m_Entity->AddComponent<CustomMeshComponent>("Models/scene0.glb", ShaderType::Standard);
 		m_Transform->SetPosition(_pos);
 	}
 
 	void SetTintColor(const glm::vec3& _col)
 	{
-		m_MeshComp->SetTintColor(_col);
+		//m_MeshComp->SetTintColor(_col);
 	}
 
 private:
