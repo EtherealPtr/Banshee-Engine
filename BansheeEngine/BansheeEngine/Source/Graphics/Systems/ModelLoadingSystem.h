@@ -32,7 +32,7 @@ namespace Banshee
 
 	private:
 		void LoadModel(const tinygltf::Model& _model, CustomMeshComponent& _meshComponent, MeshSystem& _meshSystem, std::vector<Vertex>& _vertices, std::vector<uint32>& _indices);
-		void GetNodeTransform(const tinygltf::Node& _node, glm::mat4& _outTransform) const noexcept;
+		void GetNodeTransform(const tinygltf::Node& _node, glm::mat4& _outTransform) const;
 		void LoadMaterial(const tinygltf::Model& _model, const tinygltf::Primitive& _primitive, MeshData* const _subMesh);
 
 	private:
