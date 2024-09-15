@@ -39,14 +39,11 @@ void main()
 
 	// Ambient 
 	const float ambientStrength = 0.1f;
-    const vec3 ambientImpact = ambientStrength * u_Light.color;
-    const vec3 ambient = ambientImpact * u_Material.diffuseColor;
+    const vec3 ambient = ambientStrength * u_Light.color;
 
 	// Diffuse
 	const vec3 norm = normalize(in_vertex_normal);
-	//out_frag_color = vec4(norm.xyz, 1.0);
-	//return;
-	const vec3 lightDir = normalize(-vec3(0.0, -1.0, 0.0)); // Hardcoded directional light
+	const vec3 lightDir = normalize(-u_Light.position);
 	const float diffuseImpact = max(dot(norm, lightDir), 0.0);
 	const vec3 diffuse = diffuseImpact * u_Light.color;
 

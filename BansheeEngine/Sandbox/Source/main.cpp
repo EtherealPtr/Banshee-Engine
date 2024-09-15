@@ -1,5 +1,5 @@
 #include "ExampleModel.h"
-#include "Light.h"
+#include "DirectionalLight.h"
 #include <Banshee.h>
 
 class ClientApp : public Banshee::Application
@@ -8,7 +8,7 @@ public:
 	ClientApp() :
 		m_CustomModel{}
 	{
-		m_CustomModel.SetTintColor(glm::vec3(1.0f, 0.0f, 0.0f));
+		//m_CustomModel.SetTintColor(glm::vec3(1.0f, 0.0f, 0.0f));
 	}
 
 	ClientApp(const ClientApp&) = delete;
@@ -18,7 +18,8 @@ public:
 
 private:
 	ExampleCustomModel m_CustomModel;
-	Light m_Light;
+	ExampleCustomModel m_CustomModel2;
+	DirectionalLight m_Light;
 };
 
 std::unique_ptr<Banshee::Application> CreateApplication()

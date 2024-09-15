@@ -100,7 +100,7 @@
     <ClCompile Include="Source\main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Source\Light.h" />
+    <ClInclude Include="Source\DirectionalLight.h" />
     <ClInclude Include="Source\ExampleModel.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

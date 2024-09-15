@@ -107,6 +107,7 @@ xcopy /y "$(TargetDir)BansheeEngine.dll" "$(SolutionDir)Binaries\Sandbox-$(Confi
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Graphics\Components\Light\DirectionalLightComponent.cpp" />
     <ClCompile Include="Source\Graphics\Components\Mesh\CustomMeshComponent.cpp" />
     <ClCompile Include="Source\Graphics\Components\Mesh\PrimitiveMeshComponent.cpp" />
     <ClCompile Include="Source\Graphics\Shapes\Pyramid.cpp" />
@@ -118,6 +119,7 @@ xcopy /y "$(TargetDir)BansheeEngine.dll" "$(SolutionDir)Binaries\Sandbox-$(Confi
     <ClCompile Include="Source\Foundation\Timer\Timer.cpp" />
     <ClCompile Include="Source\Graphics\Components\Light\LightComponent.cpp" />
     <ClCompile Include="Source\Graphics\Shapes\Triangle.cpp" />
+    <ClCompile Include="Source\Graphics\Systems\LightSystem.cpp" />
     <ClCompile Include="Source\Graphics\Systems\ModelLoadingSystem.cpp" />
     <ClCompile Include="Source\Foundation\Components\Component.cpp" />
     <ClCompile Include="Source\Graphics\Components\Mesh\MeshComponent.cpp" />
@@ -154,11 +156,13 @@ xcopy /y "$(TargetDir)BansheeEngine.dll" "$(SolutionDir)Binaries\Sandbox-$(Confi
     <ClCompile Include="source\Graphics\Vulkan\VulkanFence.cpp" />
     <ClCompile Include="source\Graphics\Vulkan\VulkanVertexBuffer.cpp" />
     <ClCompile Include="Source\Graphics\Vulkan\VulkanTextureSampler.cpp" />
-    <ClCompile Include="Source\Graphics\Components\TransformComponent.cpp" />
+    <ClCompile Include="Source\Graphics\Components\Transform\TransformComponent.cpp" />
     <ClCompile Include="Source\Graphics\Vulkan\VulkanTextureManager.cpp" />
     <ClCompile Include="Source\Graphics\Shapes\Square.cpp" />
+    <ClCompile Include="Source\Graphics\Systems\TransformationSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Graphics\Components\Light\DirectionalLightComponent.h" />
     <ClInclude Include="Source\Graphics\Components\Mesh\CustomMeshComponent.h" />
     <ClInclude Include="Source\Graphics\Components\Mesh\PrimitiveMeshComponent.h" />
     <ClInclude Include="Source\Graphics\Shapes\Pyramid.h" />
@@ -231,10 +235,11 @@ xcopy /y "$(TargetDir)BansheeEngine.dll" "$(SolutionDir)Binaries\Sandbox-$(Confi
     <ClInclude Include="source\Graphics\Vulkan\VulkanFence.h" />
     <ClInclude Include="source\Graphics\Vulkan\VulkanVertexBuffer.h" />
     <ClInclude Include="Source\Graphics\Vulkan\VulkanTextureSampler.h" />
-    <ClInclude Include="Source\Graphics\Components\TransformComponent.h" />
+    <ClInclude Include="Source\Graphics\Components\Transform\TransformComponent.h" />
     <ClInclude Include="Source\Graphics\Vulkan\VulkanTextureManager.h" />
     <ClInclude Include="Source\Graphics\Vulkan\VulkanGraphicsPipelineManager.h" />
     <ClInclude Include="Source\Graphics\Shapes\Square.h" />
+    <ClInclude Include="Source\Graphics\Systems\TransformationSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Res\config.ini" />

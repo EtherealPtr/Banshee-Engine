@@ -8,7 +8,7 @@ using namespace Banshee;
 class ExampleCustomModel
 {
 public:
-	ExampleCustomModel(const glm::vec3& _pos = glm::vec3(0.0f)) :
+	explicit ExampleCustomModel(const glm::vec3& _pos = glm::vec3(0.0f)) :
 		m_Entity{ EntityManager::CreateEntity() },
 		m_Transform{ m_Entity->AddComponent<TransformComponent>() }
 	{
@@ -18,7 +18,7 @@ public:
 
 	void SetTintColor(const glm::vec3& _col)
 	{
-		//m_MeshComp->SetTintColor(_col);
+		m_MeshComp->SetTintColor(_col);
 	}
 
 private:
@@ -30,7 +30,7 @@ private:
 class ExamplePrimitiveModel
 {
 public:
-	ExamplePrimitiveModel(const glm::vec3& _pos = glm::vec3(0.0f)) :
+	explicit ExamplePrimitiveModel(const glm::vec3& _pos = glm::vec3(0.0f)) :
 		m_Entity{ EntityManager::CreateEntity() },
 		m_Transform{ m_Entity->AddComponent<TransformComponent>() }
 	{

@@ -16,7 +16,7 @@ namespace Banshee
 		BANSHEE_ENGINE ~MeshComponent() = default;
 
 		virtual void SetTintColor(const glm::vec3& _tintColor) noexcept { m_TintColor = _tintColor; }
-		void SetVertexBufferId(const uint32 _vertexBufferId) noexcept { m_VertexBufferId = _vertexBufferId; }
+		virtual void SetVertexBufferId(const uint32 _vertexBufferId) noexcept { m_VertexBufferId = _vertexBufferId; }
 		uint32 GetVertexBufferId() const noexcept { return m_VertexBufferId; }
 		ShaderType GetShaderType() const noexcept { return m_ShaderType; }
 		const std::optional<glm::vec3>& GetTintColor() const noexcept { return m_TintColor; }
