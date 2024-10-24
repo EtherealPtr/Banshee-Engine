@@ -5,7 +5,7 @@
 
 namespace Banshee
 {
-	VulkanUniformBuffer::VulkanUniformBuffer(const VkDevice& _logicalDevice, const VkPhysicalDevice& _gpu, const uint64 _size) :
+	VulkanUniformBuffer::VulkanUniformBuffer(const VkDevice& _logicalDevice, const VkPhysicalDevice& _gpu, const uint64 _size, const uint32 _usage) :
 		m_LogicalDevice{ _logicalDevice },
 		m_Buffer{ VK_NULL_HANDLE },
 		m_BufferMemory{ VK_NULL_HANDLE },
@@ -15,7 +15,7 @@ namespace Banshee
 		VkBufferCreateInfo bufferCreateInfo{};
 		bufferCreateInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
 		bufferCreateInfo.size = _size;
-		bufferCreateInfo.usage = VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT;
+		bufferCreateInfo.usage = _usage;
 		bufferCreateInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
 
 		if (vkCreateBuffer(_logicalDevice, &bufferCreateInfo, nullptr, &m_Buffer) != VK_SUCCESS)

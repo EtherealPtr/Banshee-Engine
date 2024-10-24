@@ -1,14 +1,19 @@
 #include "LightSystem.h"
 #include "Foundation/Entity/Entity.h"
 #include "Graphics/Components/Light/DirectionalLightComponent.h"
+#include "Graphics/Components/Light/PointLightComponent.h"
 
 namespace Banshee
 {
-	void LightSystem::ProcessComponents(const std::shared_ptr<Entity>& _entity)
+	void LightSystem::ProcessComponents(const Entity* const _entity)
 	{
-		if (const auto& lightComponent{ _entity->GetComponent<DirectionalLightComponent>() })
+		if (const auto& directionalLightComponent{ _entity->GetComponent<DirectionalLightComponent>() })
 		{
-			AddLightComponent(lightComponent);
+			AddLightComponent(directionalLightComponent);
+		}
+		else if (const auto& pointLightComponent{ _entity->GetComponent<PointLightComponent>() })
+		{
+			AddLightComponent(pointLightComponent);
 		}
 	}
 } // End of Banshee namespace

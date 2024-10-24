@@ -2,7 +2,7 @@
 
 namespace Banshee
 {
-	void TransformationSystem::ProcessComponents(const std::shared_ptr<Entity>& _entity)
+	void TransformationSystem::ProcessComponents(const Entity* const _entity)
 	{
 		if (const auto& transformComponent{ _entity->GetComponent<TransformComponent>() })
 		{

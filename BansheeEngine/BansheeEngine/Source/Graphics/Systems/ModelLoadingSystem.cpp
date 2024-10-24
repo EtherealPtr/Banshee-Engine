@@ -171,7 +171,7 @@ namespace Banshee
 		if (tinyMaterial.values.find("baseColorFactor") != tinyMaterial.values.end())
 		{
 			const auto& colorFactor{ tinyMaterial.values.at("baseColorFactor").ColorFactor() };
-			_meshData.SetDiffuseColor(glm::vec3(colorFactor[0], colorFactor[1], colorFactor[2]));
+			_meshData.SetDiffuseColor(glm::vec4(colorFactor[0], colorFactor[1], colorFactor[2], 1.0f));
 		}
 
 		if (tinyMaterial.values.find("baseColorTexture") != tinyMaterial.values.end())

@@ -21,7 +21,7 @@ namespace Banshee
 		MeshSystem(const VkDevice& _logicalDevice, const VkPhysicalDevice& _physicalDevice, const VkCommandPool& _commandPool, const VkQueue& _graphicsQueue);
 		~MeshSystem() noexcept = default;
 
-		void ProcessComponents(const std::shared_ptr<Entity>& _entity);
+		void ProcessComponents(const Entity* const _entity);
 		const std::vector<MeshData>& GetAllSubMeshes();
 		const std::vector<MeshData>& GetSubMeshes(const uint32 _bufferId) const;
 		VulkanVertexBuffer* GetVertexBuffer(const uint32 _bufferId);

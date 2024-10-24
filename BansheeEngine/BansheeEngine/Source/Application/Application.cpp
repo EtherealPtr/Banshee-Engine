@@ -35,8 +35,8 @@ namespace Banshee
 		while (!m_Window->ShouldWindowClose())
 		{
 			timer.Update();
-			m_Renderer->DrawFrame(timer.GetDeltaTime());
 			m_Window->PollEvents();
+			m_Renderer->DrawFrame(timer.GetDeltaTime());
 		}
 	}
 } // End of Banshee namespace

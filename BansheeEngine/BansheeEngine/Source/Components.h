@@ -5,4 +5,5 @@
 #include "Graphics/Components/Mesh/CustomMeshComponent.h"
 #include "Graphics/Components/Mesh/PrimitiveMeshComponent.h"
 #include "Graphics/Components/Light/DirectionalLightComponent.h"
+#include "Graphics/Components/Light/PointLightComponent.h"
 // -----------------------------------

@@ -48,13 +48,13 @@ namespace Banshee
 		layoutBindings[3].pImmutableSamplers = nullptr;
 		BE_LOG(LogCategory::Trace, "[DESCRIPTOR SET LAYOUT]: Added descriptor of type VK_DESCRIPTOR_TYPE_SAMPLER at binding 3");
 
-		// Light uniform buffer binding
+		// Light storage buffer binding
 		layoutBindings[4].binding = 4;
-		layoutBindings[4].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+		layoutBindings[4].descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
 		layoutBindings[4].descriptorCount = 1;
 		layoutBindings[4].stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
 		layoutBindings[4].pImmutableSamplers = nullptr;
-		BE_LOG(LogCategory::Trace, "[DESCRIPTOR SET LAYOUT]: Added descriptor of type VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER at binding 4");
+		BE_LOG(LogCategory::Trace, "[DESCRIPTOR SET LAYOUT]: Added descriptor of type VK_DESCRIPTOR_TYPE_STORAGE_BUFFER at binding 4");
 
 		VkDescriptorSetLayoutCreateInfo layoutCreateInfo{};
 		layoutCreateInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;

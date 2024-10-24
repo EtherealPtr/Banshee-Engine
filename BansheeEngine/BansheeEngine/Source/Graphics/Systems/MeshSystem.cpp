@@ -16,7 +16,7 @@ namespace Banshee
 		m_TotalMeshCount{ 0 }
 	{}
 
-	void MeshSystem::ProcessComponents(const std::shared_ptr<Entity>& _entity)
+	void MeshSystem::ProcessComponents(const Entity* const _entity)
 	{
 		if (const auto& primitiveMesh{ _entity->GetComponent<PrimitiveMeshComponent>() })
 		{
@@ -26,7 +26,7 @@ namespace Banshee
 		else if (const auto& modelMesh{ _entity->GetComponent<CustomMeshComponent>() })
 		{
 			m_VertexBufferManager.CreateModelVertexBuffer(*modelMesh.get());
-			const auto& existingSubMeshes = GetSubMeshes(modelMesh.get()->GetVertexBufferId());
+			const auto& existingSubMeshes{ GetSubMeshes(modelMesh.get()->GetVertexBufferId()) };
 
 			if (existingSubMeshes.empty())
 			{
@@ -44,9 +44,8 @@ namespace Banshee
 
 					if (modelMesh.get()->GetTintColor().has_value())
 					{
-						const glm::vec3& tintColor{ modelMesh.get()->GetTintColor().value() };
+						const glm::vec4& tintColor{ modelMesh.get()->GetTintColor().value() };
 						copiedSubMesh.SetDiffuseColor(tintColor);
-						copiedSubMesh.SetSpecularColor(tintColor);
 					}
 
 					return copiedSubMesh;

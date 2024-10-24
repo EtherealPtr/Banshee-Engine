@@ -70,8 +70,8 @@ namespace Banshee
 		void SetIndexCount(const uint32 _indices) noexcept { m_IndexCount = _indices; }
 		void SetTexId(const uint32 _texId) noexcept { m_TexId = _texId; }
 		void SetModelMatrix(const glm::mat4& _modelMatrix) noexcept { m_Model = _modelMatrix; }
-		void SetDiffuseColor(const glm::vec3& _col) noexcept { m_Material.SetDiffuseColor(_col); }
-		void SetSpecularColor(const glm::vec3& _col) noexcept { m_Material.SetSpecularColor(_col); }
+		void SetDiffuseColor(const glm::vec4& _diffuseColor) noexcept { m_Material.SetDiffuseColor(_diffuseColor); }
+		void SetSpecularColor(const glm::vec4& _specularColor) noexcept { m_Material.SetSpecularColor(_specularColor); }
 		void SetShaderType(const ShaderType _shaderType) noexcept { m_Material.SetShaderType(_shaderType); }
 
 		uint32 GetEntityId() const noexcept { return m_EntityId; }

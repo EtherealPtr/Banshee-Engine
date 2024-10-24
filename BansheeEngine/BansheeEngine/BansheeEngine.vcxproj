@@ -107,6 +107,7 @@ xcopy /y "$(TargetDir)BansheeEngine.dll" "$(SolutionDir)Binaries\Sandbox-$(Confi
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Graphics\Components\Light\PointLightComponent.cpp" />
     <ClCompile Include="Source\Graphics\Components\Light\DirectionalLightComponent.cpp" />
     <ClCompile Include="Source\Graphics\Components\Mesh\CustomMeshComponent.cpp" />
     <ClCompile Include="Source\Graphics\Components\Mesh\PrimitiveMeshComponent.cpp" />
@@ -117,7 +118,6 @@ xcopy /y "$(TargetDir)BansheeEngine.dll" "$(SolutionDir)Binaries\Sandbox-$(Confi
     <ClCompile Include="Source\Foundation\Observer\Subject.cpp" />
     <ClCompile Include="Source\Foundation\Paths\PathManager.cpp" />
     <ClCompile Include="Source\Foundation\Timer\Timer.cpp" />
-    <ClCompile Include="Source\Graphics\Components\Light\LightComponent.cpp" />
     <ClCompile Include="Source\Graphics\Shapes\Triangle.cpp" />
     <ClCompile Include="Source\Graphics\Systems\LightSystem.cpp" />
     <ClCompile Include="Source\Graphics\Systems\ModelLoadingSystem.cpp" />
@@ -162,6 +162,7 @@ xcopy /y "$(TargetDir)BansheeEngine.dll" "$(SolutionDir)Binaries\Sandbox-$(Confi
     <ClCompile Include="Source\Graphics\Systems\TransformationSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Graphics\Components\Light\PointLightComponent.h" />
     <ClInclude Include="Source\Graphics\Components\Light\DirectionalLightComponent.h" />
     <ClInclude Include="Source\Graphics\Components\Mesh\CustomMeshComponent.h" />
     <ClInclude Include="Source\Graphics\Components\Mesh\PrimitiveMeshComponent.h" />

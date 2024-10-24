@@ -10,7 +10,7 @@ namespace Banshee
 	class TransformationSystem
 	{
 	public:
-		void ProcessComponents(const std::shared_ptr<Entity>& _entity);
+		void ProcessComponents(const Entity* const _entity);
 		std::shared_ptr<TransformComponent> GetTransformComponent(const uint32 _entityId) const;
 		glm::mat4 GetEntityModelMatrix(const uint32 _entityId) const;
 

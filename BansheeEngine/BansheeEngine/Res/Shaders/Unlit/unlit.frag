@@ -11,27 +11,18 @@ layout (binding = 3) uniform sampler texture_sampler;
 
 layout (set = 0, binding = 1) uniform Material
 {
-	vec3 diffuseColor;
-	vec3 specularColor;
-	float shininess;
+	vec4 diffuseColor;
+	vec4 specularColor;
 } u_Material;
-
-layout (set = 0, binding = 4) uniform LightUBO
-{
-	vec3 position;
-	float padding1;
-	vec3 color;
-	float padding2;
-} u_Light;
 
 void main()
 {
- 	vec4 baseColor = vec4(u_Material.diffuseColor, 1.0f);
+ 	vec4 baseColor = u_Material.diffuseColor;
 
 	if (in_texture_index > 0)
 	{
 		vec4 texColor = texture(sampler2D(textures[in_texture_index], texture_sampler), in_vertex_texCoord);
-		baseColor = texColor * vec4(u_Material.diffuseColor, 1.0);
+		baseColor = texColor * u_Material.diffuseColor;
 	}
 
 	out_frag_color = baseColor;

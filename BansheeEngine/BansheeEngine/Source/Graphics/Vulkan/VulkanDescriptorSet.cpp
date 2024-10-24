@@ -2,7 +2,6 @@
 #include "VulkanDescriptorSetProperties.h"
 #include "Foundation/Logging/Logger.h"
 #include <vulkan/vulkan.h>
-#include <stdexcept>
 
 namespace Banshee
 {
@@ -55,7 +54,7 @@ namespace Banshee
 		for (const auto& writeTexProperties : _descriptorSetWriteTexProperties)
 		{
 			std::vector<VkDescriptorImageInfo> imageInfos{};
-			uint32 descriptorCount = 1;
+			uint32 descriptorCount{ 1 };
 
 			if (writeTexProperties.m_ImageViews.size() > 0)
 			{

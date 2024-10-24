@@ -21,8 +21,8 @@ namespace Banshee
 		virtual void OnComponentInitialized() noexcept {};
 		void SetDirty(const bool _dirty);
 		bool GetDirty() const noexcept { return m_Dirty; }
-		void SetOwner(const std::shared_ptr<Entity>& _owner) noexcept { m_Owner = _owner; }
-		const std::shared_ptr<Entity>& GetOwner() const noexcept { return m_Owner; }
+		void SetOwner(const Entity* _owner) noexcept { m_Owner = _owner; }
+		const Entity* const GetOwner() noexcept { return m_Owner; }
 		void RegisterObserver(const std::shared_ptr<Observer>& _observer) noexcept;
 
 	private:
@@ -30,7 +30,7 @@ namespace Banshee
 
 	protected:
 		bool m_Dirty;
-		std::shared_ptr<Entity> m_Owner;
+		const Entity* m_Owner;
 		std::vector<std::shared_ptr<Observer>> m_Observers;
 	};
 } // End of Banshee namespace

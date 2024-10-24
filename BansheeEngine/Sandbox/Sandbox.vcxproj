@@ -102,6 +102,7 @@
   <ItemGroup>
     <ClInclude Include="Source\DirectionalLight.h" />
     <ClInclude Include="Source\ExampleModel.h" />
+    <ClInclude Include="Source\PointLight.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

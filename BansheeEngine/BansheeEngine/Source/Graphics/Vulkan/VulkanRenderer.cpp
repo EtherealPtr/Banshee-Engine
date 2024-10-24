@@ -3,6 +3,7 @@
 #include "Foundation/Entity/EntityManager.h"
 #include "Graphics/Components/Transform/TransformComponent.h"
 #include "Graphics/Components/Light/DirectionalLightComponent.h"
+#include "Graphics/Components/Light/PointLightComponent.h"
 #include "Graphics/Components/Mesh/PrimitiveMeshComponent.h"
 #include "Graphics/Components/Mesh/CustomMeshComponent.h"
 #include "Graphics/MeshData.h"
@@ -52,9 +53,9 @@ namespace Banshee
 
 		for (size_t i = 0; i < numOfSwapImages; ++i)
 		{
-			m_VPUniformBuffers.emplace_back(m_VkDevice.GetLogicalDevice(), m_VkDevice.GetPhysicalDevice(), sizeof(ViewProjMatrix));
-			m_MaterialUniformBuffers.emplace_back(m_VkDevice.GetLogicalDevice(), m_VkDevice.GetPhysicalDevice(), m_MaterialDynamicBufferMemAlignment * g_MaxEntities);
-			m_LightUniformBuffers.emplace_back(m_VkDevice.GetLogicalDevice(), m_VkDevice.GetPhysicalDevice(), sizeof(LightData));
+			m_VPUniformBuffers.emplace_back(m_VkDevice.GetLogicalDevice(), m_VkDevice.GetPhysicalDevice(), sizeof(ViewProjMatrix), VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT);
+			m_MaterialUniformBuffers.emplace_back(m_VkDevice.GetLogicalDevice(), m_VkDevice.GetPhysicalDevice(), m_MaterialDynamicBufferMemAlignment * g_MaxEntities, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT);
+			m_LightUniformBuffers.emplace_back(m_VkDevice.GetLogicalDevice(), m_VkDevice.GetPhysicalDevice(), sizeof(LightData) * 2, VK_BUFFER_USAGE_STORAGE_BUFFER_BIT);
 			m_DescriptorSets.emplace_back(m_VkDevice.GetLogicalDevice(), m_VkDescriptorPool.Get(), m_VkDescriptorSetLayout.Get());
 		}
 
@@ -97,7 +98,7 @@ namespace Banshee
 
 		m_DescriptorSetWriteBufferProperties[0].Initialize(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER);
 		m_DescriptorSetWriteBufferProperties[1].Initialize(1, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC);
-		m_DescriptorSetWriteBufferProperties[2].Initialize(4, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER);
+		m_DescriptorSetWriteBufferProperties[2].Initialize(4, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER);
 
 		m_DescriptorSetWriteTextureProperties[0].Initialize(2, VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE);
 		m_DescriptorSetWriteTextureProperties[1].Initialize(3, VK_DESCRIPTOR_TYPE_SAMPLER);
@@ -110,10 +111,9 @@ namespace Banshee
 		{
 			const Material material{ subMesh.GetMaterial() };
 			Material* materialData{ (Material*)((uint64)m_MaterialDynamicBufferMemBlock.get() + (subMesh.GetMeshId() * m_MaterialDynamicBufferMemAlignment)) };
-			const glm::vec3 diffuseColor{ material.GetDiffuseColor() };
-			const glm::vec3 specularColor{ material.GetSpecularColor() };
-			const float shininess{ material.GetShininess() };
-			*materialData = { diffuseColor, specularColor, shininess };
+			const glm::vec4 diffuseColor{ material.GetDiffuseColor() };
+			const glm::vec4 specularColor{ material.GetSpecularColor() };
+			*materialData = { diffuseColor, specularColor };
 		}
 
 		for (size_t i = 0; i < m_DescriptorSets.size(); ++i)
@@ -126,19 +126,29 @@ namespace Banshee
 	{
 		const auto& lightComponents{ m_LightSystem.GetLightComponents() };
 
+		constexpr uint8 maxLights{ 100 };
+		std::array<LightData, maxLights> lights;
+		uint8 currentLightCount{ 0 };
+
 		for (const auto& lightComponent : lightComponents)
 		{
-			const auto& transformComponent{ m_TransformationSystem.GetTransformComponent(lightComponent->GetOwner()->GetUniqueId()) };
-			glm::vec3 lightPosOrDirection{ transformComponent->GetPosition() };
-
 			if (const DirectionalLightComponent* const directionalLight{ dynamic_cast<DirectionalLightComponent*>(lightComponent.get()) })
 			{
-				lightPosOrDirection = directionalLight->GetDirection(); 
+				lights[currentLightCount++] = LightData(LightType::Directional, directionalLight->GetColor(), glm::vec3(0.0f), directionalLight->GetDirection());
+			}
+			else if (PointLightComponent* const pointLight{ dynamic_cast<PointLightComponent*>(lightComponent.get()) })
+			{
+				const auto transform{ pointLight->GetOwner()->GetComponent<TransformComponent>() };
+				lights[currentLightCount++] = LightData(LightType::Point, pointLight->GetColor(), transform->GetPosition(), glm::vec3(0.0f), pointLight->GetConstant(), pointLight->GetLinear(), pointLight->GetQuadratic());
 			}
 
-			LightData lightData(lightPosOrDirection, lightComponent->GetColor());
-			m_LightUniformBuffers[m_CurrentFrameIndex].CopyData(&lightData);
+			if (currentLightCount >= maxLights)
+			{
+				break;
+			}
 		}
+
+		m_LightUniformBuffers[m_CurrentFrameIndex].CopyData(lights.data());
 	}
 
 	void VulkanRenderer::UpdateDescriptorSets(const uint8 _descriptorSetIndex)
@@ -149,7 +159,7 @@ namespace Banshee
 		m_DescriptorSets[_descriptorSetIndex].UpdateDescriptorSet(m_DescriptorSetWriteBufferProperties);
 
 		// Update uniform buffer with the ViewProjMatrix
-		ViewProjMatrix viewProjMatrix = m_Camera.GetViewProjMatrix();
+		ViewProjMatrix viewProjMatrix{ m_Camera.GetViewProjMatrix() };
 		viewProjMatrix.m_Proj[1][1] *= -1.0f;
 		m_VPUniformBuffers[m_CurrentFrameIndex].CopyData(&viewProjMatrix);
 

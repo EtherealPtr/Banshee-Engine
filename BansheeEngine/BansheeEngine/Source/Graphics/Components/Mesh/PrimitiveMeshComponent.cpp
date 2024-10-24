@@ -17,12 +17,11 @@ namespace Banshee
 		m_Data.SetEntityId(GetOwner()->GetUniqueId());
 	}
 
-	void PrimitiveMeshComponent::SetTintColor(const glm::vec3& _tintColor) noexcept
+	void PrimitiveMeshComponent::SetTintColor(const glm::vec4& _tintColor) noexcept
 	{
 		MeshComponent::SetTintColor(_tintColor);
 
 		m_Data.SetDiffuseColor(_tintColor);
-		m_Data.SetSpecularColor(_tintColor);
 	}
 
 	void PrimitiveMeshComponent::SetVertexBufferId(const uint32 _vertexBufferId) noexcept

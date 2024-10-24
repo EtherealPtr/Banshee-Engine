@@ -12,50 +12,87 @@ layout (location = 0) out vec4 out_frag_color;
 layout (binding = 2) uniform texture2D textures[];
 layout (binding = 3) uniform sampler texture_sampler;
 
-layout (set = 0, binding = 1) uniform Material
+layout (set = 0, binding = 1) uniform Material 
 {
-	vec3 diffuseColor;
-	vec3 specularColor;
-	float shininess;
+    vec4 diffuseColor;
+    vec4 specularColor; // w component contains shininess
 } u_Material;
 
-layout (set = 0, binding = 4) uniform LightUBO
+struct LightData 
 {
-	vec3 position;
-	float padding1;
-	vec3 color;
-	float padding2;
-} u_Light;
+    vec4 typeAndPosition;  // x: type, yzw: position
+    vec4 direction;        // xyz: direction
+    vec4 color;            // xyz: color
+    vec4 attenuation;      // x: constant, y: linear, z: quadratic
+};
 
-void main()
+layout(set = 0, binding = 4) readonly buffer LightBuffer 
 {
- 	vec4 baseColor = vec4(u_Material.diffuseColor, 1.0f);
+    LightData lights[];
+};
 
-	if (in_texture_index > 0)
-	{
-		vec4 texColor = texture(sampler2D(textures[in_texture_index], texture_sampler), in_vertex_texCoord);
-		baseColor = texColor * vec4(u_Material.diffuseColor, 1.0);
-	}
+vec3 CalculateDirectionalLight(LightData _light, vec3 _normal, vec3 _viewDir) 
+{
+    vec3 lightDir = normalize(-_light.direction.xyz);
+    float diff = max(dot(_normal, lightDir), 0.0f);
+    vec3 diffuse = diff * _light.color.xyz;
 
-	// Ambient 
-	const float ambientStrength = 0.1f;
-    const vec3 ambient = ambientStrength * u_Light.color;
+    vec3 reflectDir = reflect(-lightDir, _normal);
+    float spec = pow(max(dot(_viewDir, reflectDir), 0.0f), u_Material.specularColor.w);
+    vec3 specular = 0.5f * spec * u_Material.specularColor.xyz;
 
-	// Diffuse
-	const vec3 norm = normalize(in_vertex_normal);
-	const vec3 lightDir = normalize(-u_Light.position);
-	const float diffuseImpact = max(dot(norm, lightDir), 0.0);
-	const vec3 diffuse = diffuseImpact * u_Light.color;
+    return diffuse + specular;
+}
 
-	// Specular
-	const float specularStrength = 0.5f;
-	const vec3 viewDir = normalize(in_camera_position - in_fragment_position);
-	const vec3 reflectDir = reflect(-lightDir, norm);
-	const float spec = pow(max(dot(viewDir, reflectDir), 0.0), u_Material.shininess);
-	const vec3 specular = specularStrength * spec * u_Light.color; 
+vec3 CalculatePointLight(LightData _light, vec3 _normal, vec3 _viewDir) 
+{
+    vec3 lightDir = normalize(_light.typeAndPosition.yzw - in_fragment_position);
+    float diff = max(dot(_normal, lightDir), 0.0f);
 
-	// Combine lighting effect
-	const vec3 lighting = ambient + diffuse;
+    float distance = length(_light.typeAndPosition.yzw - in_fragment_position);
+    float attenuation = 1.0f / (_light.attenuation.x + _light.attenuation.y * distance + _light.attenuation.z * (distance * distance));
 
-	out_frag_color = baseColor * vec4(lighting, 1.0f);
+    vec3 diffuse = diff * _light.color.xyz;
+    diffuse *= attenuation;
+
+    vec3 reflectDir = reflect(-lightDir, _normal);
+    float spec = pow(max(dot(_viewDir, reflectDir), 0.0f),  u_Material.specularColor.w);
+    vec3 specular = 0.5f * spec * u_Material.specularColor.xyz;
+
+    return diffuse + specular;
+}
+
+void main() 
+{
+    vec4 baseColor = u_Material.diffuseColor;
+
+    if (in_texture_index > 0) 
+    {
+        vec4 texColor = texture(sampler2D(textures[in_texture_index], texture_sampler), in_vertex_texCoord);
+        baseColor = texColor * u_Material.diffuseColor;
+    }
+
+    vec3 normal = normalize(in_vertex_normal);
+    vec3 viewDir = normalize(in_camera_position - in_fragment_position);
+    vec3 lighting = vec3(0.0f);
+
+    const float ambientStrength = 0.1f;
+    vec3 ambient = ambientStrength * vec3(1.0f);
+
+    for (int i = 0; i < 2; ++i) 
+    {
+        LightData light = lights[i];
+
+        if (light.typeAndPosition.x == 0.0f) // Directional light
+        { 
+            lighting += CalculateDirectionalLight(light, normal, viewDir);
+        } 
+        else if (light.typeAndPosition.x == 1.0f) // Point light
+        { 
+            lighting += CalculatePointLight(light, normal, viewDir);
+        }
+    }
+
+    lighting += ambient;
+    out_frag_color = baseColor * vec4(lighting, 1.0f);
 }

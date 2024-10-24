@@ -14,7 +14,7 @@ namespace Banshee
         LightSystem() noexcept = default;
         ~LightSystem() noexcept = default;
 
-        void ProcessComponents(const std::shared_ptr<Entity>& _entity);
+        void ProcessComponents(const Entity* const _entity);
         const std::vector<std::shared_ptr<LightComponent>>& GetLightComponents() const noexcept { return m_LightComponents; }
 
         LightSystem(const LightSystem&) = delete;
