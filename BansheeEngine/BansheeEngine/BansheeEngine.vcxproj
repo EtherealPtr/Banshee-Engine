@@ -160,6 +160,7 @@ xcopy /y "$(TargetDir)BansheeEngine.dll" "$(SolutionDir)Binaries\Sandbox-$(Confi
     <ClCompile Include="Source\Graphics\Vulkan\VulkanTextureManager.cpp" />
     <ClCompile Include="Source\Graphics\Shapes\Square.cpp" />
     <ClCompile Include="Source\Graphics\Systems\TransformationSystem.cpp" />
+    <ClCompile Include="Source\Graphics\Components\Light\SpotLightComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Graphics\Components\Light\PointLightComponent.h" />
@@ -241,6 +242,7 @@ xcopy /y "$(TargetDir)BansheeEngine.dll" "$(SolutionDir)Binaries\Sandbox-$(Confi
     <ClInclude Include="Source\Graphics\Vulkan\VulkanGraphicsPipelineManager.h" />
     <ClInclude Include="Source\Graphics\Shapes\Square.h" />
     <ClInclude Include="Source\Graphics\Systems\TransformationSystem.h" />
+    <ClInclude Include="Source\Graphics\Components\Light\SpotLightComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Res\config.ini" />

@@ -9,12 +9,13 @@ using namespace Banshee;
 class PointLight : public Entity
 {
 public:
-	PointLight()
+	PointLight(const glm::vec3& _pos = glm::vec3(1.0f), const glm::vec4& _color = glm::vec4(1.0f), const float _radius = 10.0f)
 	{
-		AddComponent<PrimitiveMeshComponent>(PrimitiveShape::CubeShape, ShaderType::Unlit);
-		AddComponent<PointLightComponent>();
+		auto meshComp = AddComponent<PrimitiveMeshComponent>(PrimitiveShape::CubeShape, ShaderType::Unlit);
+		meshComp->SetTintColor(glm::vec4(_color.x, _color.y, _color.z, 1.0f));
+		AddComponent<PointLightComponent>(_color, _radius);
 		m_Transform = AddComponent<TransformComponent>();
-		m_Transform->SetPosition(glm::vec3(0.0f, 2.0f, 0.0f));
+		m_Transform->SetPosition(_pos);
 	}
 
 private:

@@ -29,5 +29,8 @@
     <ClInclude Include="Source\PointLight.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Source\SpotLight.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

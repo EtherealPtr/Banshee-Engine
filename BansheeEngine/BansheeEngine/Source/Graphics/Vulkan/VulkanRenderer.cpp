@@ -4,6 +4,7 @@
 #include "Graphics/Components/Transform/TransformComponent.h"
 #include "Graphics/Components/Light/DirectionalLightComponent.h"
 #include "Graphics/Components/Light/PointLightComponent.h"
+#include "Graphics/Components/Light/SpotLightComponent.h"
 #include "Graphics/Components/Mesh/PrimitiveMeshComponent.h"
 #include "Graphics/Components/Mesh/CustomMeshComponent.h"
 #include "Graphics/MeshData.h"
@@ -55,7 +56,7 @@ namespace Banshee
 		{
 			m_VPUniformBuffers.emplace_back(m_VkDevice.GetLogicalDevice(), m_VkDevice.GetPhysicalDevice(), sizeof(ViewProjMatrix), VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT);
 			m_MaterialUniformBuffers.emplace_back(m_VkDevice.GetLogicalDevice(), m_VkDevice.GetPhysicalDevice(), m_MaterialDynamicBufferMemAlignment * g_MaxEntities, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT);
-			m_LightUniformBuffers.emplace_back(m_VkDevice.GetLogicalDevice(), m_VkDevice.GetPhysicalDevice(), sizeof(LightData) * 2, VK_BUFFER_USAGE_STORAGE_BUFFER_BIT);
+			m_LightUniformBuffers.emplace_back(m_VkDevice.GetLogicalDevice(), m_VkDevice.GetPhysicalDevice(), sizeof(LightBuffer), VK_BUFFER_USAGE_STORAGE_BUFFER_BIT);
 			m_DescriptorSets.emplace_back(m_VkDevice.GetLogicalDevice(), m_VkDescriptorPool.Get(), m_VkDescriptorSetLayout.Get());
 		}
 
@@ -124,31 +125,27 @@ namespace Banshee
 
 	void VulkanRenderer::UpdateLightData()
 	{
-		const auto& lightComponents{ m_LightSystem.GetLightComponents() };
-
-		constexpr uint8 maxLights{ 100 };
-		std::array<LightData, maxLights> lights;
+		constexpr uint8 maxLights{ 50 };
+		std::array<LightData, maxLights> lights{};
 		uint8 currentLightCount{ 0 };
 
-		for (const auto& lightComponent : lightComponents)
+		for (const auto& lightComponent : m_LightSystem.GetLightComponents())
 		{
-			if (const DirectionalLightComponent* const directionalLight{ dynamic_cast<DirectionalLightComponent*>(lightComponent.get()) })
-			{
-				lights[currentLightCount++] = LightData(LightType::Directional, directionalLight->GetColor(), glm::vec3(0.0f), directionalLight->GetDirection());
-			}
-			else if (PointLightComponent* const pointLight{ dynamic_cast<PointLightComponent*>(lightComponent.get()) })
-			{
-				const auto transform{ pointLight->GetOwner()->GetComponent<TransformComponent>() };
-				lights[currentLightCount++] = LightData(LightType::Point, pointLight->GetColor(), transform->GetPosition(), glm::vec3(0.0f), pointLight->GetConstant(), pointLight->GetLinear(), pointLight->GetQuadratic());
-			}
-
 			if (currentLightCount >= maxLights)
 			{
 				break;
 			}
+
+			lightComponent->UpdatePosition();
+			lights[currentLightCount++] = lightComponent->GetLightData();
 		}
 
-		m_LightUniformBuffers[m_CurrentFrameIndex].CopyData(lights.data());
+		LightBuffer lightBuffer{};
+		lightBuffer.m_TotalLights = currentLightCount;
+
+		std::copy(lights.begin(), lights.begin() + currentLightCount, lightBuffer.m_Lights);
+
+		m_LightUniformBuffers[m_CurrentFrameIndex].CopyData(&lightBuffer);
 	}
 
 	void VulkanRenderer::UpdateDescriptorSets(const uint8 _descriptorSetIndex)

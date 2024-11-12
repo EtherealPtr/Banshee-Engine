@@ -6,4 +6,5 @@
 #include "Graphics/Components/Mesh/PrimitiveMeshComponent.h"
 #include "Graphics/Components/Light/DirectionalLightComponent.h"
 #include "Graphics/Components/Light/PointLightComponent.h"
+#include "Graphics/Components/Light/SpotLightComponent.h"
 // -----------------------------------
