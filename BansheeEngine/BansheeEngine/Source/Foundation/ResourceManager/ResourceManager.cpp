@@ -8,8 +8,7 @@ namespace Banshee
 
 	uint16 ResourceManager::LoadImageResource(std::string_view _pathToImage) const
 	{
-		const std::string fullPath = PathManager::GetEngineResDirPath() + _pathToImage.data();
-		return m_ImageManager.LoadImage(fullPath);
+		return m_ImageManager.LoadImage(PathManager::GetEngineResDirPath() + _pathToImage.data());
 	}
 
 	uint16 ResourceManager::LoadImageFromMemory(const unsigned char* _bytes, const int32 _size) const

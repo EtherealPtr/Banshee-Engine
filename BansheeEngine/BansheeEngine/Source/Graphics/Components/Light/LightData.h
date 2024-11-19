@@ -24,12 +24,12 @@ namespace Banshee
 		glm::vec4 m_PositionAndType;	// Last element is type
 		glm::vec4 m_Direction;			// Last element is padding
 		glm::vec4 m_Color;				// Last element is color intensity
-		glm::vec4 m_Attenuation;		// Last element is the outer cutoff angle
+		glm::vec4 m_Attenuation;		// Last 2 elements are inner and outer cutoff angles if spotlight
 	};
 
 	struct LightBuffer
 	{
 		alignas(16) uint32 m_TotalLights{ 0 };
-		alignas(16) LightData m_Lights[50]{};
+		alignas(16) LightData m_Lights[25]{};
 	};
 } // End of Banshee namespace

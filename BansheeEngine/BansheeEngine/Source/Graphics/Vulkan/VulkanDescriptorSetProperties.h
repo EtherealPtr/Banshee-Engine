@@ -12,8 +12,6 @@ namespace Banshee
 {
 	struct DescriptorSetWriteBufferProperties
 	{
-		DescriptorSetWriteBufferProperties() noexcept = default;
-
 		void Initialize(const uint32 _binding, const VkDescriptorType _descType) noexcept
 		{
 			m_Binding = _binding;
@@ -34,8 +32,6 @@ namespace Banshee
 
 	struct DescriptorSetWriteTextureProperties
 	{
-		DescriptorSetWriteTextureProperties() noexcept = default;
-
 		void Initialize(const uint32 _binding, const VkDescriptorType _descType) noexcept
 		{
 			m_Binding = _binding;

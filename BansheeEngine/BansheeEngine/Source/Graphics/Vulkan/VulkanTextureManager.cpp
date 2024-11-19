@@ -4,7 +4,6 @@
 #include "Foundation/ResourceManager/Image/Image.h"
 #include "Foundation/Logging/Logger.h"
 #include <vulkan/vulkan.h>
-#include <stdexcept>
 
 namespace Banshee
 {
@@ -30,7 +29,9 @@ namespace Banshee
 
 	void VulkanTextureManager::UploadTextures()
 	{
-		const std::vector<Image>& images = g_ResourceManager.GetImages();
+		const std::vector<Image>& images{ g_ResourceManager.GetImages() };
+		m_TextureImages.reserve(images.size());
+		m_TextureImageViews.reserve(images.size());
 
 		for (const auto& image : images)
 		{

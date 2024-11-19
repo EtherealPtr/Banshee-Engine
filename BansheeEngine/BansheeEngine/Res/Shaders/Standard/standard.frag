@@ -9,8 +9,8 @@ layout (location = 4) in vec3 in_fragment_position;
 
 layout (location = 0) out vec4 out_frag_color;
 
-layout (binding = 2) uniform texture2D textures[];
-layout (binding = 3) uniform sampler texture_sampler;
+layout (set = 0, binding = 2) uniform texture2D textures[];
+layout (set = 0, binding = 3) uniform sampler texture_sampler;
 
 layout (set = 0, binding = 1) uniform Material 
 {
@@ -23,14 +23,14 @@ struct LightData
     vec4 positionAndType;  // xyz: position, w: type
     vec4 direction;        // xyz: direction
     vec4 color;            // xyz: color, w: color intensity
-    vec4 attenuation;      // x: constant, y: linear, z: quadratic, w: cutoff angle
+    vec4 attenuation;      // x: constant, y: linear, z: quadratic/inner cutoff, w: outer cutoff
 };
 
 layout(set = 0, binding = 4) 
 readonly buffer LightBuffer 
 { 
     int totalLights; 
-    LightData lights[50];
+    LightData lights[25];
 };
 
 vec3 CalculateDirectionalLight(LightData _light, vec3 _normal, vec3 _viewDir) 
@@ -39,11 +39,11 @@ vec3 CalculateDirectionalLight(LightData _light, vec3 _normal, vec3 _viewDir)
 
     vec3 lightDir = normalize(-_light.direction.xyz);
     float diffImpact = max(dot(_normal, lightDir), 0.0f);
-    vec3 diffuse = diffImpact * (_light.color.xyz * lightIntensity);
+    vec3 diffuse = diffImpact * _light.color.xyz * lightIntensity;
 
     vec3 reflectDir = reflect(-lightDir, _normal);
     float spec = pow(max(dot(_viewDir, reflectDir), 0.0f), u_Material.specularColor.w);
-    vec3 specular = 0.1f * spec * (_light.color.xyz * lightIntensity);
+    vec3 specular = 0.1f * spec * _light.color.xyz * lightIntensity;
 
     return diffuse + specular;
 }
@@ -54,11 +54,10 @@ vec3 CalculatePointLight(LightData _light, vec3 _normal, vec3 _viewDir)
 
     vec3 lightDir = normalize(_light.positionAndType.xyz - in_fragment_position);
     float diffuseImpact = max(dot(_normal, lightDir), 0.0f);
+    vec3 diffuse = diffuseImpact * (_light.color.xyz * lightIntensity);
 
     float distance = length(_light.positionAndType.xyz - in_fragment_position);
     float attenuation = 1.0f / (_light.attenuation.x + _light.attenuation.y * distance + _light.attenuation.z * (distance * distance));
-
-    vec3 diffuse = diffuseImpact * (_light.color.xyz * lightIntensity);
     diffuse *= attenuation;
 
     vec3 reflectDir = reflect(-lightDir, _normal);
@@ -71,32 +70,29 @@ vec3 CalculatePointLight(LightData _light, vec3 _normal, vec3 _viewDir)
 vec3 CalculateSpotLight(LightData _light, vec3 _normal, vec3 _viewDir) 
 {
     const float lightIntensity = _light.color.w;
-    const float cutoff = _light.attenuation.w;
+    float innerCutoff = _light.attenuation.z; 
+    float outerCutoff = _light.attenuation.w; 
+
     vec3 lightDir = normalize(_light.positionAndType.xyz - in_fragment_position);
+    float diffuseImpact = max(dot(_normal, lightDir), 0.0f);
+    vec3 diffuse = _light.color.xyz * diffuseImpact * lightIntensity; 
+
+    vec3 reflectDir = reflect(-lightDir, _normal);
+    float spec = pow(max(dot(_viewDir, reflectDir), 0.0f), u_Material.specularColor.w);
+    vec3 specular = 0.1f * spec * _light.color.xyz * lightIntensity; 
 
     float theta = dot(lightDir, normalize(-_light.direction.xyz));
+    float epsilon = innerCutoff - outerCutoff;
+    float intensity = clamp((theta - outerCutoff) / epsilon, 0.0f, 1.0f);
+    diffuse *= intensity;
+    specular *= intensity;
 
-    if (theta > cutoff)
-    {
-        float epsilon = 0.1f;
-        float intensity = clamp((theta - cutoff) / epsilon, 0.0f, 1.0f);
+    float distance = length(_light.positionAndType.xyz - in_fragment_position);
+    float attenuation = 1.0f / (_light.attenuation.x + _light.attenuation.y * distance + _light.attenuation.z * (distance * distance));
+    diffuse *= attenuation;
+    specular *= attenuation;
 
-        // Diffuse shading
-        float diffuseImpact = max(dot(_normal, lightDir), 0.0f);
-        vec3 diffuse = diffuseImpact * (_light.color.xyz * lightIntensity) * intensity;
-
-        float distance = length(_light.positionAndType.xyz - in_fragment_position);
-        float attenuation = 1.0f / (_light.attenuation.x + _light.attenuation.y * distance + _light.attenuation.z * (distance * distance));
-        diffuse *= attenuation;
-
-        vec3 reflectDir = reflect(-lightDir, _normal);
-        float spec = pow(max(dot(_viewDir, reflectDir), 0.0f), u_Material.specularColor.w);
-        vec3 specular = 0.1f * spec * (_light.color.xyz * lightIntensity) * attenuation * intensity;
-
-        return diffuse + specular;
-    }
-
-    return vec3(0.0f);
+    return diffuse + specular;
 }
 
 void main() 
@@ -114,11 +110,11 @@ void main()
     vec3 lighting = vec3(0.0f);
 
     const float ambientStrength = 0.01f;
+    vec3 ambient = ambientStrength * baseColor.xyz;
 
     for (int i = 0; i < totalLights; ++i) 
     {        
         LightData light = lights[i];
-        vec3 ambient = ambientStrength * light.color.xyz;
 
         if (light.positionAndType.w == 0.0f) // Directional light
         { 

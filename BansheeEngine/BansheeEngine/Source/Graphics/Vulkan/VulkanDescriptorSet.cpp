@@ -54,25 +54,22 @@ namespace Banshee
 		for (const auto& writeTexProperties : _descriptorSetWriteTexProperties)
 		{
 			std::vector<VkDescriptorImageInfo> imageInfos{};
-			uint32 descriptorCount{ 1 };
+			imageInfos.reserve(writeTexProperties.m_ImageViews.size());
 
-			if (writeTexProperties.m_ImageViews.size() > 0)
+			VkDescriptorImageInfo imageInfo{};
+			imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+
+			if (!writeTexProperties.m_ImageViews.empty())
 			{
-				descriptorCount = static_cast<uint32>(writeTexProperties.m_ImageViews.size());
-
-				for (uint32 i = 0; i < writeTexProperties.m_ImageViews.size(); ++i)
+				for (const auto& imageView : writeTexProperties.m_ImageViews)
 				{
-					VkDescriptorImageInfo imageInfo{};
-					imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-					imageInfo.imageView = writeTexProperties.m_ImageViews[i];
+					imageInfo.imageView = imageView;
 					imageInfo.sampler = VK_NULL_HANDLE;
 					imageInfos.emplace_back(imageInfo);
 				}
 			}
 			else
 			{
-				VkDescriptorImageInfo imageInfo{};
-				imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
 				imageInfo.imageView = VK_NULL_HANDLE;
 				imageInfo.sampler = writeTexProperties.m_Sampler;
 				imageInfos.emplace_back(imageInfo);
@@ -82,7 +79,7 @@ namespace Banshee
 			descriptorSetWriter.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
 			descriptorSetWriter.dstSet = m_DescriptorSet;
 			descriptorSetWriter.dstBinding = writeTexProperties.m_Binding;
-			descriptorSetWriter.descriptorCount = descriptorCount;
+			descriptorSetWriter.descriptorCount = static_cast<uint32>(imageInfos.size());
 			descriptorSetWriter.descriptorType = writeTexProperties.m_DescriptorType;
 			descriptorSetWriter.pBufferInfo = nullptr;
 			descriptorSetWriter.pImageInfo = imageInfos.data();

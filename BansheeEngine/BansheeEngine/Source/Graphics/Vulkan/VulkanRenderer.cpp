@@ -107,14 +107,11 @@ namespace Banshee
 
 	void VulkanRenderer::UpdateMaterialData()
 	{
-		// Update dynamic buffer with material data
 		for (const auto& subMesh : m_MeshSystem.GetAllSubMeshes())
 		{
 			const Material material{ subMesh.GetMaterial() };
 			Material* materialData{ (Material*)((uint64)m_MaterialDynamicBufferMemBlock.get() + (subMesh.GetMeshId() * m_MaterialDynamicBufferMemAlignment)) };
-			const glm::vec4 diffuseColor{ material.GetDiffuseColor() };
-			const glm::vec4 specularColor{ material.GetSpecularColor() };
-			*materialData = { diffuseColor, specularColor };
+			*materialData = { material.GetDiffuseColor(), material.GetSpecularColor() };
 		}
 
 		for (size_t i = 0; i < m_DescriptorSets.size(); ++i)
@@ -125,7 +122,7 @@ namespace Banshee
 
 	void VulkanRenderer::UpdateLightData()
 	{
-		constexpr uint8 maxLights{ 50 };
+		constexpr uint8 maxLights{ 25 };
 		std::array<LightData, maxLights> lights{};
 		uint8 currentLightCount{ 0 };
 
