@@ -1,31 +1,34 @@
 <h1 align="center">Banshee Engine</h1>
 
 <p align="center">
-<img src="https://github.com/Rony-Hanna/banshee/assets/62596512/896ba616-c9d9-460e-b240-b05d47ba0984" alt="image">
+<img src="https://github.com/user-attachments/assets/f963554b-d83d-4f52-aa55-d3eba2164460" alt="image">
 </p>
 
-<p>Banshee is a robust C++ and Vulkan-based 3D rendering engine designed to easily create interactive applications. The engine is still in an early development stage and much work is yet to be carried out. Currenty, the engine supports the following features:</p>
+<p>Banshee is a robust C++ and Vulkan-based 3D rendering engine designed to create interactive applications easily. The engine is still in early development and much work is yet to be carried out. Currently, the engine supports the following features:</p>
 
 <ul>
-<li> Custom model loading with the ability to load textures for each sub-mesh within a complex model </li>
+<li> Lighting: Directional lights, point lights, spotlights 
+<li> Custom 3D model loading with texture support for each sub-mesh </li>
+<li> Primitive shapes (triangle, square, cube, etc.) with custom textures or per-vertex coloring </li>
 <li> Input handling </li>
-<li> Logging (console and external file) </li>
+<li> Logging (to console and external file) </li>
 <li> Camera system </li>
 <li> Efficient rendering system with the Vulkan API </li>
-<li> Lighting (basic phong shading implementation) </li>
+<li> Lighting (point lights, directional lights, spotlights) </li>
 <li> Functional but currently minimal material system </li>
 </ul>
 
 <h2>Upcoming Features</h2>
-<p>The next update will bring the following features:</p>
+<p>The following features will be added in the next few updates:</p>
 
 <ul>
-<li> An improved lighting system to support for more light casters, including directional lights, point lights, and spotlights </li>
-<li> Support for multiple lights in a scene </li>
+<li> ✅ An improved lighting system to support more light casters, including directional lights, point lights, and spotlights </li>
+<li> ✅ Support for multiple lights in a scene </li>
+<li> ⏳ Add shadows </li>
 </ul>
 
 <h1>Getting Started</h1>
-<p>To get started, clone the repository and open the solution file in Microsoft Visual Studio 2022. After that, build and run the project. Please note that a project build system is not yet in place, but one will be coming soon. Additionally, Banshee has only been tested on Windows, so compatibility with other operating systems is not guaranteed.</p>
+<p>To get started, clone the repository and open the solution file in Microsoft Visual Studio 2022. After that, build and run the project. Please note that a project build system is not yet in place, but one will be coming soon. Additionally, Banshee has only been tested on Windows, so compatibility with other operating systems is not guaranteed. You must have the Vulkan SDK installed. </p>
 
 <h1>The Plan</h1>
 <p>Banshee aims to be a powerful easy-to-use, plug-and-play rendering engine. It outputs core functionality to a Dynamic-Link Library (DLL) file, enabling users to link their projects with the Banshee library and start rendering.</p>
@@ -44,7 +47,7 @@
 </ul>
 
 <h1>Banshee's Architecture</h1>
-<p>Banshee utilizes a layered architecture approach, this is to ensure modularity and ease of maintenance. Currently, there are 3 layers that make up the engine's architecture.</p>
+<p>Banshee utilizes a layered architecture approach to ensure modularity and ease of maintenance. Currently, 3 layers make up the engine's architecture.</p>
 
 <h2>Foundation Layer</h2>
 <p>The Foundation layer contains core functionalities essential for the engine, including:</p>
