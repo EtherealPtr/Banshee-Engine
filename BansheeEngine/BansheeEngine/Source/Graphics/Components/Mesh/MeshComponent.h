@@ -4,7 +4,6 @@
 #include "Foundation/DLLConfig.h"
 #include "Graphics/ShaderType.h"
 #include <glm/glm.hpp>
-#include <string>
 #include <optional>
 
 namespace Banshee

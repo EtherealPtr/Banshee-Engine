@@ -31,7 +31,7 @@ namespace Banshee
 		m_Data.SetVertexBufferId(_vertexBufferId);
 	}
 
-	void PrimitiveMeshComponent::SetTexture(const std::string_view _texturePath)
+	void PrimitiveMeshComponent::SetTexture(std::string_view _texturePath)
 	{
 		m_Data.SetTexId(g_ResourceManager.LoadImageResource(_texturePath));
 	}

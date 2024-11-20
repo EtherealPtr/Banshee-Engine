@@ -7,8 +7,6 @@ namespace Banshee
 	class EntityManager
 	{
     public:
-        EntityManager() noexcept;
-
         BANSHEE_ENGINE static const std::vector<const Entity*>& GetAllEntities() noexcept { return s_Entities; }
         static uint32 RegisterEntity(const Entity* _entity);
 

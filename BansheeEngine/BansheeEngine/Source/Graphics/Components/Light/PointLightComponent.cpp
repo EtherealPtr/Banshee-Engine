@@ -11,7 +11,7 @@ namespace Banshee
 		UpdateAttenuation(_radius);
 	}
 
-	void PointLightComponent::UpdatePosition()
+	void PointLightComponent::UpdatePosition() noexcept
 	{
 		const auto transform{ GetOwner()->GetComponent<TransformComponent>() };
 		SetPosition(transform->GetPosition());

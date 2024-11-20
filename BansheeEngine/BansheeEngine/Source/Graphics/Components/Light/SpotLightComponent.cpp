@@ -12,18 +12,18 @@ namespace Banshee
 		UpdateAttenuation(_radius, _innerCutoffAngle, _outerCutoffAngle);
 	}
 
-	void SpotLightComponent::UpdatePosition()
+	void SpotLightComponent::UpdatePosition() noexcept
 	{
 		const auto transform{ GetOwner()->GetComponent<TransformComponent>() };
 		SetPosition(transform->GetPosition());
 	}
 
-	void SpotLightComponent::SetPosition(const glm::vec3& _pos)
+	void SpotLightComponent::SetPosition(const glm::vec3& _pos) noexcept
 	{
 		m_LightData.m_PositionAndType = glm::vec4(_pos, static_cast<float>(LightType::Spotlight));
 	}
 
-	void SpotLightComponent::UpdateAttenuation(const float _radius, const float _innerCutoffAngle, const float _outerCutoffAngle)
+	void SpotLightComponent::UpdateAttenuation(const float _radius, const float _innerCutoffAngle, const float _outerCutoffAngle) noexcept
 	{
 		constexpr float constant{ 1.0f };
 		const float linear{ 4.5f / _radius };

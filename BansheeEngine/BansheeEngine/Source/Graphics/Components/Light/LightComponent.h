@@ -10,7 +10,7 @@ namespace Banshee
 	{
 	public:
 		const LightData& GetLightData() const noexcept { return m_LightData; }
-		virtual void UpdatePosition() {};
+		virtual void UpdatePosition() noexcept {};
 
 	protected:
 		LightData m_LightData;

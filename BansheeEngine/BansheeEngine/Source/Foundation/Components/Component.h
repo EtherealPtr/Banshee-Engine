@@ -21,7 +21,7 @@ namespace Banshee
 		virtual void OnComponentInitialized() noexcept {};
 		void SetDirty(const bool _dirty);
 		bool GetDirty() const noexcept { return m_Dirty; }
-		void SetOwner(const Entity* _owner) noexcept { m_Owner = _owner; }
+		void SetOwner(const Entity* const _owner) noexcept { m_Owner = _owner; }
 		const Entity* const GetOwner() noexcept { return m_Owner; }
 		void RegisterObserver(const std::shared_ptr<Observer>& _observer) noexcept;
 
