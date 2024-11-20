@@ -1,10 +1,10 @@
 #include "Entity.h"
-#include "Foundation/Components/Component.h"
+#include "Foundation/Entity/EntityManager.h"
 
 namespace Banshee
 {
-	Entity::Entity(const uint32 _id) noexcept :
-		m_Id{ _id },
+	Entity::Entity() :
+		m_Id{ EntityManager::RegisterEntity(this) },
 		m_Components{}
 	{}
 } // End of Banshee namespace

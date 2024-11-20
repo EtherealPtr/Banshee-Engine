@@ -15,39 +15,39 @@ namespace Banshee
 	concept IsComponent = std::is_base_of<Component, T>::value;
 
 	template<typename T>
-	concept HasRequiredComponentMethods = requires(T _component, const std::shared_ptr<Entity>&_entity)
+	concept HasRequiredComponentMethods = requires(T _component, const Entity* const _entity)
 	{
 		{ _component.SetOwner(_entity) } -> std::same_as<void>;
 		{ _component.OnComponentInitialized() } -> std::same_as<void>;
 	};
 
-	class Entity : public std::enable_shared_from_this<Entity>
+	class Entity
 	{
 	public:
-		BANSHEE_ENGINE explicit Entity(const uint32 _id) noexcept;
+		BANSHEE_ENGINE explicit Entity();
 		BANSHEE_ENGINE ~Entity() noexcept = default;
 
 		BANSHEE_ENGINE const uint32 GetUniqueId() const noexcept { return m_Id; }
 
 		template<typename T, typename... Args>
-			requires IsComponent<T>&& HasRequiredComponentMethods<T>
+			requires IsComponent<T> && HasRequiredComponentMethods<T>
 		std::shared_ptr<T> AddComponent(Args&&... _args);
 
 		template<typename T>
 			requires IsComponent<T>
 		std::shared_ptr<T> GetComponent() const noexcept;
 
-	private:
+	protected:
 		uint32 m_Id;
 		std::vector<std::shared_ptr<Component>> m_Components;
 	};
 
 	template<typename T, typename... Args>
-		requires IsComponent<T>&& HasRequiredComponentMethods<T>
+		requires IsComponent<T> && HasRequiredComponentMethods<T>
 	std::shared_ptr<T> Entity::AddComponent(Args&&... _args)
 	{
-		auto component = std::make_shared<T>(std::forward<Args>(_args)...);
-		component->SetOwner(shared_from_this());
+		auto component{ std::make_shared<T>(std::forward<Args>(_args)...) };
+		component->SetOwner(this); 
 		component->OnComponentInitialized();
 		m_Components.emplace_back(component);
 		return component;

@@ -1,5 +1,7 @@
 #include "ExampleModel.h"
-#include "Light.h"
+#include "DirectionalLight.h"
+#include "PointLight.h"
+#include "SpotLight.h"
 #include <Banshee.h>
 
 class ClientApp : public Banshee::Application
@@ -7,15 +9,11 @@ class ClientApp : public Banshee::Application
 public:
 	ClientApp() :
 		m_CustomModel{},
-		m_CustomModel2{ glm::vec3(20.0f, 0.0f, 0.0f) },
-		m_CustomModel3{ glm::vec3(40.0f, 0.0f, 0.0f) },
-		m_PrimitiveCube{ glm::vec3(0.0f, 10.0f, 0.0f) },
-		m_Light{}
-	{
-		m_CustomModel.SetTintColor(glm::vec3(1.0f, 0.0f, 0.0f));
-		m_CustomModel2.SetTintColor(glm::vec3(0.0f, 1.0f, 0.0f));
-		m_CustomModel3.SetTintColor(glm::vec3(0.0f, 0.0f, 1.0f));
-	}
+		m_DirectionalLight{ glm::vec3(0.5f, -0.2f, -1.0f), glm::vec4(1.0f, 1.0f, 1.0f, 0.2f) },
+		m_PointLight{ glm::vec3(5.0f, 1.0f, -5.0f), glm::vec4(0.1f, 0.1f, 1.0f, 5.0f), 5.0f },
+		m_PointLight2{ glm::vec3(-5.0f, 1.0f, -5.0f), glm::vec4(0.1f, 1.0f, 0.1f, 5.0f), 5.0f },
+		m_SpotLight{ glm::vec3(0.0f, 5.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f), glm::vec4(1.0f, 0.1f, 0.1f, 10.0f), 10.0f, 12.5f, 45.0f }
+	{}
 
 	ClientApp(const ClientApp&) = delete;
 	ClientApp& operator=(const ClientApp&) = delete;
@@ -24,10 +22,10 @@ public:
 
 private:
 	ExampleCustomModel m_CustomModel;
-	ExampleCustomModel m_CustomModel2;
-	ExampleCustomModel m_CustomModel3;
-	ExamplePrimitiveModel m_PrimitiveCube;
-	Light m_Light;
+	DirectionalLight m_DirectionalLight;
+	PointLight m_PointLight;
+	PointLight m_PointLight2;
+	SpotLight m_SpotLight;
 };
 
 std::unique_ptr<Banshee::Application> CreateApplication()

@@ -6,7 +6,7 @@
 namespace Banshee
 {
 	Camera::Camera(const float _fov, const float _aspect, const float _near, const float _far, GLFWwindow* _wnd) :
-		m_Position{ glm::vec3(0.0f, 0.0f, 3.0f) },
+		m_Position{ glm::vec3(0.0f, 5.0f, 7.0f) },
 		m_Up{ glm::vec3(0.0f, 1.0f, 0.0f) },
 		m_Right{ glm::vec3(1.0f, 0.0f, 0.0f) },
 		m_Front{ glm::vec3(0.0f, 0.0f, -1.0f) },

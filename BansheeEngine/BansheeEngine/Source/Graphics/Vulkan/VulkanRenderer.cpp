@@ -1,7 +1,7 @@
 #include "VulkanRenderer.h"
 #include "Foundation/Logging/Logger.h"
 #include "Foundation/Entity/EntityManager.h"
-#include "Graphics/Components/TransformComponent.h"
+#include "Graphics/Components/Transform/TransformComponent.h"
 #include "Graphics/Components/Light/LightComponent.h"
 #include "Graphics/Components/Mesh/PrimitiveMeshComponent.h"
 #include "Graphics/Components/Mesh/CustomMeshComponent.h"
@@ -28,14 +28,13 @@ namespace Banshee
 		m_VkFramebuffers{ m_VkDevice.GetLogicalDevice(), m_VkRenderPass.Get(), m_VkSwapchain.GetImageViews(), m_DepthBuffer.GetImageView(), m_VkSwapchain.GetWidth(), m_VkSwapchain.GetHeight() },
 		m_VkSemaphores{ m_VkDevice.GetLogicalDevice(), static_cast<uint16>(m_VkSwapchain.GetImageViews().size()) },
 		m_VkInFlightFences{ m_VkDevice.GetLogicalDevice(), static_cast<uint16>(m_VkSwapchain.GetImageViews().size()) },
-		m_VertexBufferManager{ m_VkDevice.GetLogicalDevice(), m_VkDevice.GetPhysicalDevice(), m_VkCommandPool.Get(), m_VkDevice.GetGraphicsQueue() },
 		m_VkTextureSampler{ m_VkDevice.GetLogicalDevice(), m_VkDevice.GetPhysicalDevice() },
 		m_VkTextureManager{ m_VkDevice.GetLogicalDevice(), m_VkDevice.GetPhysicalDevice(), m_VkDevice.GetGraphicsQueue(), m_VkCommandPool.Get() },
 		m_VkDescriptorSetLayout{ m_VkDevice.GetLogicalDevice() },
 		m_VkDescriptorPool{ m_VkDevice.GetLogicalDevice(), static_cast<uint16>(m_VkSwapchain.GetImageViews().size()) },
 		m_VkGraphicsPipelineManager{ m_VkDevice.GetLogicalDevice(), m_VkRenderPass.Get(), m_VkDescriptorSetLayout.Get(), m_VkSwapchain.GetWidth(), m_VkSwapchain.GetHeight() },
 		m_Camera{ 80.0f, static_cast<float>(_window.GetWidth()) / _window.GetHeight(), 0.1f, 100.0f, _window.GetWindow() },
-		m_MeshSystem{},
+		m_MeshSystem{ m_VkDevice.GetLogicalDevice(), m_VkDevice.GetPhysicalDevice(), m_VkCommandPool.Get(), m_VkDevice.GetGraphicsQueue() },
 		m_LightSystem{},
 		m_CurrentFrameIndex{ 0 },
 		m_MaterialDynamicBufferMemAlignment{ 0 },
@@ -53,9 +52,9 @@ namespace Banshee
 
 		for (size_t i = 0; i < numOfSwapImages; ++i)
 		{
-			m_VPUniformBuffers.emplace_back(m_VkDevice.GetLogicalDevice(), m_VkDevice.GetPhysicalDevice(), sizeof(ViewProjMatrix));
-			m_MaterialUniformBuffers.emplace_back(m_VkDevice.GetLogicalDevice(), m_VkDevice.GetPhysicalDevice(), m_MaterialDynamicBufferMemAlignment * g_MaxEntities);
-			m_LightUniformBuffers.emplace_back(m_VkDevice.GetLogicalDevice(), m_VkDevice.GetPhysicalDevice(), sizeof(LightData));
+			m_VPUniformBuffers.emplace_back(m_VkDevice.GetLogicalDevice(), m_VkDevice.GetPhysicalDevice(), sizeof(ViewProjMatrix), VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT);
+			m_MaterialUniformBuffers.emplace_back(m_VkDevice.GetLogicalDevice(), m_VkDevice.GetPhysicalDevice(), m_MaterialDynamicBufferMemAlignment * g_MaxEntities, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT);
+			m_LightUniformBuffers.emplace_back(m_VkDevice.GetLogicalDevice(), m_VkDevice.GetPhysicalDevice(), sizeof(LightBuffer), VK_BUFFER_USAGE_STORAGE_BUFFER_BIT);
 			m_DescriptorSets.emplace_back(m_VkDevice.GetLogicalDevice(), m_VkDescriptorPool.Get(), m_VkDescriptorSetLayout.Get());
 		}
 
@@ -75,24 +74,9 @@ namespace Banshee
 	{
 		for (const auto& entity : EntityManager::GetAllEntities())
 		{
-			if (const auto& singleMesh = entity->GetComponent<PrimitiveMeshComponent>())
-			{
-				m_VertexBufferManager.CreateBasicShapeVertexBuffer(*singleMesh.get(), m_MeshSystem);
-			}
-			else if (const auto& modelMesh = entity->GetComponent<CustomMeshComponent>())
-			{
-				m_VertexBufferManager.CreateModelVertexBuffer(*modelMesh.get(), m_MeshSystem);
-			}
-
-			if (const auto& lightComponent = entity->GetComponent<LightComponent>())
-			{
-				m_LightSystem.AddLightComponent(lightComponent);
-			}
-
-			if (const auto& transformComponent = entity->GetComponent<TransformComponent>())
-			{
-				m_EntityTransformMap[entity->GetUniqueId()] = transformComponent;
-			}
+			m_MeshSystem.ProcessComponents(entity);
+			m_LightSystem.ProcessComponents(entity);
+			m_TransformationSystem.ProcessComponents(entity);
 		}
 	}
 
@@ -113,7 +97,7 @@ namespace Banshee
 
 		m_DescriptorSetWriteBufferProperties[0].Initialize(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER);
 		m_DescriptorSetWriteBufferProperties[1].Initialize(1, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC);
-		m_DescriptorSetWriteBufferProperties[2].Initialize(4, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER);
+		m_DescriptorSetWriteBufferProperties[2].Initialize(4, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER);
 
 		m_DescriptorSetWriteTextureProperties[0].Initialize(2, VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE);
 		m_DescriptorSetWriteTextureProperties[1].Initialize(3, VK_DESCRIPTOR_TYPE_SAMPLER);
@@ -121,15 +105,11 @@ namespace Banshee
 
 	void VulkanRenderer::UpdateMaterialData()
 	{
-		// Update dynamic buffer with material data
 		for (const auto& subMesh : m_MeshSystem.GetAllSubMeshes())
 		{
 			const Material material{ subMesh.GetMaterial() };
 			Material* materialData{ (Material*)((uint64)m_MaterialDynamicBufferMemBlock.get() + (subMesh.GetMeshId() * m_MaterialDynamicBufferMemAlignment)) };
-			const glm::vec3 diffuseColor{ material.GetDiffuseColor() };
-			const glm::vec3 specularColor{ material.GetSpecularColor() };
-			const float shininess{ material.GetShininess() };
-			*materialData = { diffuseColor, specularColor, shininess };
+			*materialData = { material.GetDiffuseColor(), material.GetSpecularColor() };
 		}
 
 		for (size_t i = 0; i < m_DescriptorSets.size(); ++i)
@@ -140,17 +120,27 @@ namespace Banshee
 
 	void VulkanRenderer::UpdateLightData()
 	{
-		const auto& lightComponents{ m_LightSystem.GetLightComponents() };
-		for (const auto& lightComponent : lightComponents)
+		constexpr uint8 maxLights{ 25 };
+		std::array<LightData, maxLights> lights{};
+		uint8 currentLightCount{ 0 };
+
+		for (const auto& lightComponent : m_LightSystem.GetLightComponents())
 		{
-			if (const auto& transformComponent = m_EntityTransformMap.find(lightComponent->GetOwner()->GetUniqueId())->second.get())
+			if (currentLightCount >= maxLights)
 			{
-				// TODO: Enable support for multiple light sources
-				const glm::vec3 lightPos = glm::vec3(m_Camera.GetViewMatrix() * glm::vec4(transformComponent->GetPosition(), 1.0f));
-				LightData lightData(lightPos, lightComponent->GetColor());
-				m_LightUniformBuffers[m_CurrentFrameIndex].CopyData(&lightData);
+				break;
 			}
+
+			lightComponent->UpdatePosition();
+			lights[currentLightCount++] = lightComponent->GetLightData();
 		}
+
+		LightBuffer lightBuffer{};
+		lightBuffer.m_TotalLights = currentLightCount;
+
+		std::copy(lights.begin(), lights.begin() + currentLightCount, lightBuffer.m_Lights);
+
+		m_LightUniformBuffers[m_CurrentFrameIndex].CopyData(&lightBuffer);
 	}
 
 	void VulkanRenderer::UpdateDescriptorSets(const uint8 _descriptorSetIndex)
@@ -161,7 +151,7 @@ namespace Banshee
 		m_DescriptorSets[_descriptorSetIndex].UpdateDescriptorSet(m_DescriptorSetWriteBufferProperties);
 
 		// Update uniform buffer with the ViewProjMatrix
-		ViewProjMatrix viewProjMatrix = m_Camera.GetViewProjMatrix();
+		ViewProjMatrix viewProjMatrix{ m_Camera.GetViewProjMatrix() };
 		viewProjMatrix.m_Proj[1][1] *= -1.0f;
 		m_VPUniformBuffers[m_CurrentFrameIndex].CopyData(&viewProjMatrix);
 
@@ -299,20 +289,16 @@ namespace Banshee
 
 		for (const auto& subMesh : m_MeshSystem.GetAllSubMeshes())
 		{
-			glm::mat4 entityModelMatrix{ glm::mat4(1.0f) };
-			if (const auto& transform = m_EntityTransformMap[subMesh.GetEntityId()])
-			{
-				entityModelMatrix = transform->GetModel();
-			}
-
-			const VulkanVertexBuffer* const vertexBuffer{ m_VertexBufferManager.GetVertexBuffer(subMesh.GetVertexBufferId()) };
-
-			const auto& graphicsPipeline{ m_VkGraphicsPipelineManager.GetPipeline(subMesh.GetMaterial().GetShaderType()) };
-			vkCmdBindPipeline(cmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline->Get());
+			const glm::mat4 entityModelMatrix{ m_TransformationSystem.GetEntityModelMatrix(subMesh.GetEntityId()) };
 
 			// Bind vertex & index buffers
+			const VulkanVertexBuffer* const vertexBuffer{ m_MeshSystem.GetVertexBuffer(subMesh.GetVertexBufferId()) };
 			const VkDeviceSize indexOffset{ subMesh.GetIndexOffset() * sizeof(uint32) };
 			vertexBuffer->Bind(cmdBuffer, indexOffset);
+
+			// Bind graphics pipeline
+			const auto& graphicsPipeline{ m_VkGraphicsPipelineManager.GetPipeline(subMesh.GetMaterial().GetShaderType()) };
+			vkCmdBindPipeline(cmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline->Get());
 
 			// Bind descriptor set
 			const uint32 dynamicOffset{ static_cast<uint32>(m_MaterialDynamicBufferMemAlignment) * subMesh.GetMeshId() };
@@ -321,7 +307,7 @@ namespace Banshee
 
 			// Push constants
 			const glm::mat4& modelMatrix{ entityModelMatrix * subMesh.GetModelMatrix() };
-			const PushConstant pc{ modelMatrix, subMesh.GetTexId() };
+			const PushConstant pc{ modelMatrix, m_Camera.GetPosition(), subMesh.GetTexId() };
 			vkCmdPushConstants(cmdBuffer, graphicsPipeline->GetLayout(), VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(PushConstant), &pc);
 
 			vkCmdDrawIndexed(cmdBuffer, subMesh.GetIndexCount(), 1, 0, 0, 0);

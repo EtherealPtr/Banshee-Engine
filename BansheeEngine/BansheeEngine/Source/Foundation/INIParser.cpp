@@ -4,12 +4,14 @@
 
 namespace Banshee
 {
-	const EngineConfig& INIParser::ParseConfigSettings(std::string_view _filePath)
+	EngineConfig INIParser::ParseConfigSettings(std::string_view _filePath)
 	{
+		EngineConfig engineConfig{};
+
 		std::ifstream file{ g_ResourceManager.ReadFile(_filePath.data()) };
 		if (!file.is_open())
 		{
-			return m_Config;
+			return engineConfig;
 		}
 
 		std::string line{ "" };
@@ -33,19 +35,19 @@ namespace Banshee
 
 			if (key == "WindowTitle")
 			{
-				m_Config.m_WindowTitle = value;
+				engineConfig.m_WindowTitle = value;
 			}
 			else if (key == "WindowWidth")
 			{
-				m_Config.m_WindowWidth = std::stoul(std::string(value));
+				engineConfig.m_WindowWidth = std::stoul(std::string(value));
 			}
 			else if (key == "WindowHeight")
 			{
-				m_Config.m_WindowHeight = std::stoul(std::string(value));
+				engineConfig.m_WindowHeight = std::stoul(std::string(value));
 			}
 		}
 
 		BE_LOG(LogCategory::Info, "[CONFIG]: Loaded config.ini");
-		return m_Config;
+		return engineConfig;
 	}
 } // End of Banshee namespace

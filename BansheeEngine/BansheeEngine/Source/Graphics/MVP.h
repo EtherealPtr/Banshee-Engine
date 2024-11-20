@@ -19,12 +19,14 @@ namespace Banshee
 
 	struct PushConstant
 	{
-		PushConstant(const glm::mat4& _model, const uint16 _texId) noexcept :
+		PushConstant(const glm::mat4& _model, const glm::vec3& _camPos, const uint32 _texId) noexcept :
 			m_Model{ _model },
+			m_CameraPos{ _camPos },
 			m_TextureIndex{ _texId }
 		{}
 
 		const glm::mat4 m_Model{ glm::mat4(1.0f) };
+		const glm::vec3 m_CameraPos{ glm::vec3(0.0f) };
 		const uint32 m_TextureIndex{ 0 };
 	};
 } // End of Banshee namespace

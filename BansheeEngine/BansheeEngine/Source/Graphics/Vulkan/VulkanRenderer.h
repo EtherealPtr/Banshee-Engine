@@ -20,16 +20,15 @@
 #include "VulkanDescriptorSetProperties.h"
 #include "VulkanTextureManager.h"
 #include "VulkanTextureSampler.h"
-#include "VulkanVertexBufferManager.h"
 #include "Graphics/Systems/MeshSystem.h"
 #include "Graphics/Systems/LightSystem.h"
+#include "Graphics/Systems/TransformationSystem.h"
 #include "Graphics/Camera.h"
 
 namespace Banshee
 {
 	class Window;
 	class Material;
-	class TransformComponent;
 
 	class VulkanRenderer
 	{
@@ -67,7 +66,6 @@ namespace Banshee
 		VulkanFramebuffer m_VkFramebuffers;
 		VulkanSemaphore m_VkSemaphores;
 		VulkanFence m_VkInFlightFences;
-		VulkanVertexBufferManager m_VertexBufferManager;
 		VulkanTextureSampler m_VkTextureSampler;
 		VulkanTextureManager m_VkTextureManager;
 		VulkanDescriptorSetLayout m_VkDescriptorSetLayout;
@@ -80,11 +78,11 @@ namespace Banshee
 		Camera m_Camera;
 		MeshSystem m_MeshSystem;
 		LightSystem m_LightSystem;
+		TransformationSystem m_TransformationSystem;
 		uint8 m_CurrentFrameIndex;
 		uint64 m_MaterialDynamicBufferMemAlignment;
 		std::unique_ptr<Material, void(*)(Material*) noexcept> m_MaterialDynamicBufferMemBlock;
 		std::vector<DescriptorSetWriteBufferProperties> m_DescriptorSetWriteBufferProperties;
 		std::vector<DescriptorSetWriteTextureProperties> m_DescriptorSetWriteTextureProperties;
-		std::unordered_map<uint32, std::shared_ptr<TransformComponent>> m_EntityTransformMap;
 	};
 } // End of Banshee namespace

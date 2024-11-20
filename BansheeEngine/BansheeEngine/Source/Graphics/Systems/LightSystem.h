@@ -5,6 +5,7 @@
 
 namespace Banshee
 {
+    class Entity;
     class LightComponent;
 
     class LightSystem
@@ -13,13 +14,16 @@ namespace Banshee
         LightSystem() noexcept = default;
         ~LightSystem() noexcept = default;
 
-        void AddLightComponent(const std::shared_ptr<LightComponent>& lightComponent) { m_LightComponents.emplace_back(lightComponent); }
+        void ProcessComponents(const Entity* const _entity);
         const std::vector<std::shared_ptr<LightComponent>>& GetLightComponents() const noexcept { return m_LightComponents; }
 
         LightSystem(const LightSystem&) = delete;
-        LightSystem(LightSystem&&) = delete;
         LightSystem& operator=(const LightSystem&) = delete;
+        LightSystem(LightSystem&&) = delete;
         LightSystem& operator=(LightSystem&&) = delete;
+
+    private:
+        void AddLightComponent(const std::shared_ptr<LightComponent>& _lightComponent) { m_LightComponents.emplace_back(_lightComponent); }
 
     private:
         std::vector<std::shared_ptr<LightComponent>> m_LightComponents;

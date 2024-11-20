@@ -7,11 +7,11 @@ namespace Banshee
 	class EntityManager
 	{
     public:
-        BANSHEE_ENGINE static std::shared_ptr<Entity> CreateEntity();
-        BANSHEE_ENGINE static const std::vector<std::shared_ptr<Entity>>& GetAllEntities() noexcept { return s_Entities; }
+        BANSHEE_ENGINE static const std::vector<const Entity*>& GetAllEntities() noexcept { return s_Entities; }
+        static uint32 RegisterEntity(const Entity* _entity);
 
     private:
         static uint32 s_TotalEntities;
-        static std::vector<std::shared_ptr<Entity>> s_Entities;
+        static std::vector<const Entity*> s_Entities;
 	};
 } // End of Banshee namespace

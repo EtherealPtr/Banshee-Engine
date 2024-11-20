@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Foundation/DLLConfig.h"
-#include "Foundation/INIParser.h"
 #include <memory>
 
 namespace Banshee
@@ -24,7 +23,6 @@ namespace Banshee
 		Application& operator=(Application&&) = delete;
 
 	private:
-		INIParser m_INIParser;
 		std::unique_ptr<Window> m_Window;
 		std::unique_ptr<VulkanRenderer> m_Renderer;
 	};

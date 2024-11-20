@@ -5,7 +5,7 @@
 
 namespace Banshee
 {
-	CustomMeshComponent::CustomMeshComponent(const std::string_view _modelPath, const ShaderType _shaderType) : 
+	CustomMeshComponent::CustomMeshComponent(std::string_view _modelPath, const ShaderType _shaderType) : 
 		MeshComponent(_shaderType),
 		m_ModelName{ g_ResourceManager.GetAssetName(_modelPath) },
 		m_Data{}
@@ -20,7 +20,6 @@ namespace Banshee
 		if (m_TintColor.has_value())
 		{
 			_data.SetDiffuseColor(m_TintColor.value());
-			_data.SetSpecularColor(m_TintColor.value());
 		}
 
 		m_Data.emplace_back(_data);

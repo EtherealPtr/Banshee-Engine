@@ -28,7 +28,7 @@ namespace Banshee
 		return true;
 	}
 
-	ModelLoadingSystem::ModelLoadingSystem(CustomMeshComponent& _meshComponent, MeshSystem& _meshSystem, std::vector<Vertex>& _vertices, std::vector<uint32>& _indices)
+	ModelLoadingSystem::ModelLoadingSystem(CustomMeshComponent& _meshComponent, std::vector<Vertex>& _vertices, std::vector<uint32>& _indices)
 	{
 		tinygltf::Model model{};
 		tinygltf::TinyGLTF loader{};
@@ -43,10 +43,10 @@ namespace Banshee
 			throw std::runtime_error("Failed to load model");
 		}
 
-		LoadModel(model, _meshComponent, _meshSystem, _vertices, _indices);
+		LoadModel(model, _meshComponent, _vertices, _indices);
 	}
 
-	void ModelLoadingSystem::LoadModel(const tinygltf::Model& _model, CustomMeshComponent& _meshComponent, MeshSystem& _meshSystem, std::vector<Vertex>& _vertices, std::vector<uint32>& _indices)
+	void ModelLoadingSystem::LoadModel(const tinygltf::Model& _model, CustomMeshComponent& _meshComponent, std::vector<Vertex>& _vertices, std::vector<uint32>& _indices)
 	{
 		for (size_t i = 0; i < _model.nodes.size(); ++i)
 		{
@@ -62,11 +62,11 @@ namespace Banshee
 			const tinygltf::Mesh& mesh{ _model.meshes[node.mesh] };
 			for (const auto& primitive : mesh.primitives)
 			{
-				Banshee::MeshData subMesh{};
-				subMesh.SetModelMatrix(nodeTransform);
+				Banshee::MeshData meshData{};
+				meshData.SetModelMatrix(nodeTransform);
 
 				const uint32 vertexOffset{ static_cast<uint32>(_vertices.size()) };
-				subMesh.SetIndexOffset(static_cast<uint32>(_indices.size()));
+				meshData.SetIndexOffset(static_cast<uint32>(_indices.size()));
 
 				// Load vertex data
 				const auto& positionsAccessor{ _model.accessors[primitive.attributes.find("POSITION")->second] };
@@ -119,17 +119,15 @@ namespace Banshee
 
 				_indices.insert(_indices.end(), subMeshIndices.begin(), subMeshIndices.end());
 
-				subMesh.SetIndexCount(static_cast<uint32>(subMeshIndices.size()));
-				LoadMaterial(_model, primitive, &subMesh);
+				meshData.SetIndexCount(static_cast<uint32>(subMeshIndices.size()));
+				LoadMaterial(_model, primitive, meshData);
 
-				_meshComponent.AddMeshData(subMesh);
+				_meshComponent.AddMeshData(meshData);
 			}
 		}
-
-		_meshSystem.AddMeshes(_meshComponent.GetMeshData());
 	}
 
-	void ModelLoadingSystem::GetNodeTransform(const tinygltf::Node& _node, glm::mat4& _outTransform) const noexcept
+	void ModelLoadingSystem::GetNodeTransform(const tinygltf::Node& _node, glm::mat4& _outTransform) const
 	{
 		constexpr uint16 MATRIX_SIZE{ 16 };
 		constexpr uint16 TRANSLATION_SIZE{ 3 };
@@ -151,7 +149,7 @@ namespace Banshee
 
 			if (_node.rotation.size() == ROTATION_SIZE)
 			{
-				glm::quat rotation = glm::make_quat(_node.rotation.data());
+				const glm::quat rotation{ glm::make_quat(_node.rotation.data()) };
 				_outTransform *= glm::mat4_cast(rotation);
 			}
 
@@ -162,7 +160,7 @@ namespace Banshee
 		}
 	}
 
-	void ModelLoadingSystem::LoadMaterial(const tinygltf::Model& _model, const tinygltf::Primitive& _primitive, MeshData* const _subMesh)
+	void ModelLoadingSystem::LoadMaterial(const tinygltf::Model& _model, const tinygltf::Primitive& _primitive, MeshData& _meshData)
 	{
 		if (_primitive.material < 0)
 		{
@@ -173,14 +171,14 @@ namespace Banshee
 		if (tinyMaterial.values.find("baseColorFactor") != tinyMaterial.values.end())
 		{
 			const auto& colorFactor{ tinyMaterial.values.at("baseColorFactor").ColorFactor() };
-			_subMesh->SetDiffuseColor(glm::vec3(colorFactor[0], colorFactor[1], colorFactor[2]));
+			_meshData.SetDiffuseColor(glm::vec4(colorFactor[0], colorFactor[1], colorFactor[2], 1.0f));
 		}
 
 		if (tinyMaterial.values.find("baseColorTexture") != tinyMaterial.values.end())
 		{
 			const int tinyTextureIndex{ tinyMaterial.values.at("baseColorTexture").TextureIndex() };
 			const uint16 textureId{ m_TextureIdMap[tinyTextureIndex] };
-			_subMesh->SetTexId(textureId);
+			_meshData.SetTexId(textureId);
 		}
 	}
 } // End of Banshee namespace

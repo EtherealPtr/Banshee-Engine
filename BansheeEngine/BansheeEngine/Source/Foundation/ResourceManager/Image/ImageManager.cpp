@@ -1,7 +1,6 @@
 #include "ImageManager.h"
 #include "Foundation/Logging/Logger.h"
 #include "Foundation/Platform.h"
-#include <stdexcept>
 
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
@@ -56,7 +55,7 @@ namespace Banshee
 			throw std::runtime_error("ERROR: Failed to load texture image");
 		}
 
-		image.m_ImageIndex = static_cast<uint32>(m_Images.size()) + 1;
+		image.m_ImageIndex = static_cast<uint32>(m_Images.size());
 		m_OnImageLoaded(image);
 		BE_LOG(LogCategory::Trace, "[RESOURCE]: Loaded image %s", _pathToImage.data());
 

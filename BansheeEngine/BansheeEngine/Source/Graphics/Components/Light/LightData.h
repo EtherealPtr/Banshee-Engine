@@ -1,17 +1,35 @@
 #pragma once
 
+#include "Foundation/Platform.h"
 #include <glm/glm.hpp>
 
 namespace Banshee
 {
+	enum class LightType : uint8
+	{
+		Directional,
+		Point,
+		Spotlight
+	};
+
 	struct LightData
 	{
-		LightData(const glm::vec3& _position = glm::vec3(0.0f), const glm::vec3& _color = glm::vec3(1.0f)) noexcept :
-			m_Position{ _position },
-			m_Color{ _color }
+		LightData() noexcept :
+			m_PositionAndType{ glm::vec4(0.0f) },
+			m_Direction{ glm::vec4(0.0f) },
+			m_Color{ glm::vec4(0.0f) },
+			m_Attenuation{ glm::vec4(0.0f) }
 		{}
 
-		alignas(16) glm::vec3 m_Position;
-		alignas(16) glm::vec3 m_Color;
+		glm::vec4 m_PositionAndType;	// Last element is type
+		glm::vec4 m_Direction;			// Last element is padding
+		glm::vec4 m_Color;				// Last element is color intensity
+		glm::vec4 m_Attenuation;		// Last 2 elements are inner and outer cutoff angles if spotlight
+	};
+
+	struct LightBuffer
+	{
+		alignas(16) uint32 m_TotalLights{ 0 };
+		alignas(16) LightData m_Lights[25]{};
 	};
 } // End of Banshee namespace

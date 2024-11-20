@@ -12,7 +12,7 @@ namespace Banshee
 	class VulkanUniformBuffer
 	{
 	public:
-		VulkanUniformBuffer(const VkDevice& _logicalDevice, const VkPhysicalDevice& _gpu, const uint64 _size);
+		VulkanUniformBuffer(const VkDevice& _logicalDevice, const VkPhysicalDevice& _gpu, const uint64 _size, const uint32 _usage);
 		~VulkanUniformBuffer();
 
 		void CopyData(void* _pData) const noexcept;

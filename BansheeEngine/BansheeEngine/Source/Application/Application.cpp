@@ -1,5 +1,6 @@
 #include "Application.h"
 #include "Foundation/Logging/Logger.h"
+#include "Foundation/INIParser.h"
 #include "Foundation/Timer/Timer.h"
 #include "Graphics/Window.h"
 #include "Graphics/Vulkan/VulkanRenderer.h"
@@ -7,24 +8,30 @@
 namespace Banshee
 {
 	Application::Application() :
-		m_INIParser{},
 		m_Window{ nullptr },
 		m_Renderer{ nullptr }
 	{
 		BE_LOG(LogCategory::Trace, "[APPLICATION]: Banshee initializing");
-		const EngineConfig configSettings{ m_INIParser.ParseConfigSettings("config.ini") };
+		const EngineConfig configSettings{ INIParser::ParseConfigSettings("config.ini") };
 		m_Window = std::make_unique<Window>(configSettings.m_WindowWidth, configSettings.m_WindowHeight, configSettings.m_WindowTitle);
 	}
 
 	Application::~Application()
 	{
-		BE_LOG(LogCategory::Trace, "[APPLICATION]: Banshee shutting down");
+		BE_LOG(LogCategory::Trace, "[APPLICATION]: Banshee terminating");
 	}
 
 	void Application::PostClientInitialize()
 	{
-		BE_LOG(LogCategory::Trace, "[APPLICATION]: Beginning post-client initialization step");
-		m_Renderer = std::make_unique<VulkanRenderer>(*m_Window.get());
+		try 
+		{ 
+			m_Renderer = std::make_unique<VulkanRenderer>(*m_Window.get()); 
+			BE_LOG(LogCategory::Info, "[APPLICATION]: VulkanRenderer initialized successfully"); 
+		}
+		catch (const std::exception& _problem)
+		{
+			BE_LOG(LogCategory::Error, "[APPLICATION]: Failed to initialize VulkanRenderer: %s", _problem.what());
+		}
 	}
 
 	void Application::Run() const
@@ -35,8 +42,8 @@ namespace Banshee
 		while (!m_Window->ShouldWindowClose())
 		{
 			timer.Update();
-			m_Renderer->DrawFrame(timer.GetDeltaTime());
 			m_Window->PollEvents();
+			m_Renderer->DrawFrame(timer.GetDeltaTime());
 		}
 	}
 } // End of Banshee namespace

@@ -3,7 +3,6 @@
 #include "Foundation/ResourceManager/ResourceManager.h"
 #include "Foundation/ResourceManager/Image/ImageManager.h"
 #include <vulkan/vulkan.h>
-#include <stdexcept>
 #include <array>
 
 namespace Banshee
@@ -32,10 +31,10 @@ namespace Banshee
 		BE_LOG(LogCategory::Trace, "[DESCRIPTOR SET LAYOUT]: Added descriptor of type VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC at binding 1");
 
 		// Textures
-		constexpr uint32 MAX_TEXTURES{ 16 };
+		constexpr uint32 maxTextures{ 16 };
 		layoutBindings[2].binding = 2;
 		layoutBindings[2].descriptorType = VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE;
-		layoutBindings[2].descriptorCount = MAX_TEXTURES;
+		layoutBindings[2].descriptorCount = maxTextures;
 		layoutBindings[2].stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
 		layoutBindings[2].pImmutableSamplers = nullptr;
 		BE_LOG(LogCategory::Trace, "[DESCRIPTOR SET LAYOUT]: Added descriptor of type VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE at binding 2");
@@ -48,13 +47,13 @@ namespace Banshee
 		layoutBindings[3].pImmutableSamplers = nullptr;
 		BE_LOG(LogCategory::Trace, "[DESCRIPTOR SET LAYOUT]: Added descriptor of type VK_DESCRIPTOR_TYPE_SAMPLER at binding 3");
 
-		// Light uniform buffer binding
+		// Light storage buffer binding
 		layoutBindings[4].binding = 4;
-		layoutBindings[4].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+		layoutBindings[4].descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
 		layoutBindings[4].descriptorCount = 1;
 		layoutBindings[4].stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
 		layoutBindings[4].pImmutableSamplers = nullptr;
-		BE_LOG(LogCategory::Trace, "[DESCRIPTOR SET LAYOUT]: Added descriptor of type VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER at binding 4");
+		BE_LOG(LogCategory::Trace, "[DESCRIPTOR SET LAYOUT]: Added descriptor of type VK_DESCRIPTOR_TYPE_STORAGE_BUFFER at binding 4");
 
 		VkDescriptorSetLayoutCreateInfo layoutCreateInfo{};
 		layoutCreateInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
