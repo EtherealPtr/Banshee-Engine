@@ -14,7 +14,6 @@
 <li> Logging (to console and external file) </li>
 <li> Camera system </li>
 <li> Efficient rendering system with the Vulkan API </li>
-<li> Lighting (point lights, directional lights, spotlights) </li>
 <li> Functional but currently minimal material system </li>
 </ul>
 
