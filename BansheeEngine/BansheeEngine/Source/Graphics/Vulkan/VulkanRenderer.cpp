@@ -1,14 +1,10 @@
 #include "VulkanRenderer.h"
 #include "Foundation/Logging/Logger.h"
 #include "Foundation/Entity/EntityManager.h"
-#include "Graphics/Components/Transform/TransformComponent.h"
 #include "Graphics/Components/Light/LightComponent.h"
-#include "Graphics/Components/Mesh/PrimitiveMeshComponent.h"
-#include "Graphics/Components/Mesh/CustomMeshComponent.h"
 #include "Graphics/MeshData.h"
 #include "Graphics/Window.h"
 #include <array>
-#include <algorithm>
 #include <vulkan/vulkan.h>
 
 namespace Banshee
