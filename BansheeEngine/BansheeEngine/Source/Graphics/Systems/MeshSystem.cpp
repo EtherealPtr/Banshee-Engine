@@ -1,9 +1,7 @@
 #include "MeshSystem.h"
 #include "Foundation/Entity/Entity.h"
-#include "Graphics/MeshData.h"
 #include "Graphics/Components/Mesh/PrimitiveMeshComponent.h"
 #include "Graphics/Components/Mesh/CustomMeshComponent.h"
-#include "Graphics/Vulkan/VulkanVertexBufferManager.h"
 #include <algorithm>
 
 namespace Banshee

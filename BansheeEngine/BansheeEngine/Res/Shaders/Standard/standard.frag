@@ -35,6 +35,7 @@ readonly buffer LightBuffer
 
 vec3 CalculateDirectionalLight(LightData _light, vec3 _normal, vec3 _viewDir) 
 {
+    const float specularIntensity = 0.1f;
     const float lightIntensity = _light.color.w;
 
     vec3 lightDir = normalize(-_light.direction.xyz);
@@ -43,13 +44,14 @@ vec3 CalculateDirectionalLight(LightData _light, vec3 _normal, vec3 _viewDir)
 
     vec3 reflectDir = reflect(-lightDir, _normal);
     float spec = pow(max(dot(_viewDir, reflectDir), 0.0f), u_Material.specularColor.w);
-    vec3 specular = 0.1f * spec * _light.color.xyz * lightIntensity;
+    vec3 specular = specularIntensity * spec * u_Material.specularColor.xyz * lightIntensity;
 
     return diffuse + specular;
 }
 
 vec3 CalculatePointLight(LightData _light, vec3 _normal, vec3 _viewDir) 
 {
+    const float specularIntensity = 0.1f;
     const float lightIntensity = _light.color.w;
 
     vec3 lightDir = normalize(_light.positionAndType.xyz - in_fragment_position);
@@ -62,13 +64,14 @@ vec3 CalculatePointLight(LightData _light, vec3 _normal, vec3 _viewDir)
 
     vec3 reflectDir = reflect(-lightDir, _normal);
     float spec = pow(max(dot(_viewDir, reflectDir), 0.0f), u_Material.specularColor.w);
-    vec3 specular = 0.1f * spec * (_light.color.xyz * lightIntensity) * attenuation;
+    vec3 specular = specularIntensity * spec * (u_Material.specularColor.xyz * lightIntensity) * attenuation;
 
     return diffuse + specular;
 }
 
 vec3 CalculateSpotLight(LightData _light, vec3 _normal, vec3 _viewDir) 
 {
+    const float specularIntensity = 0.1f;
     const float lightIntensity = _light.color.w;
     float innerCutoff = _light.attenuation.z; 
     float outerCutoff = _light.attenuation.w; 
@@ -79,7 +82,7 @@ vec3 CalculateSpotLight(LightData _light, vec3 _normal, vec3 _viewDir)
 
     vec3 reflectDir = reflect(-lightDir, _normal);
     float spec = pow(max(dot(_viewDir, reflectDir), 0.0f), u_Material.specularColor.w);
-    vec3 specular = 0.1f * spec * _light.color.xyz * lightIntensity; 
+    vec3 specular = specularIntensity * spec * u_Material.specularColor.xyz * lightIntensity; 
 
     float theta = dot(lightDir, normalize(-_light.direction.xyz));
     float epsilon = innerCutoff - outerCutoff;
