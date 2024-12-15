@@ -13,6 +13,7 @@ namespace Banshee
 		void SetPosition(const glm::vec3& _pos) noexcept;
 
 	private:
-		void UpdateAttenuation(const float _radius, const float _innerCutoffAngle, const float _outerCutoffAngle) noexcept;
+		void UpdateAttenuation(const float _radius) noexcept;
+		void UpdateCutoffAngles(const float _innerCutoffAngle, const float _outerCutoffAngle) noexcept;
 	};
 } // End of Banshee namespace

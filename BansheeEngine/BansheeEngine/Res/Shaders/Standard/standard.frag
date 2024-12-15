@@ -23,7 +23,8 @@ struct LightData
     vec4 positionAndType;  // xyz: position, w: type
     vec4 direction;        // xyz: direction
     vec4 color;            // xyz: color, w: color intensity
-    vec4 attenuation;      // x: constant, y: linear, z: quadratic/inner cutoff, w: outer cutoff
+    vec4 attenuation;      // x: constant, y: linear, z: quadratic
+    vec4 angles;           // x: inner cutoff angle, y: outer cutoff angle (for spotlight)
 };
 
 layout(set = 0, binding = 4) 
@@ -73,8 +74,8 @@ vec3 CalculateSpotLight(LightData _light, vec3 _normal, vec3 _viewDir)
 {
     const float specularIntensity = 0.1f;
     const float lightIntensity = _light.color.w;
-    float innerCutoff = _light.attenuation.z; 
-    float outerCutoff = _light.attenuation.w; 
+    float innerCutoff = _light.angles.x; 
+    float outerCutoff = _light.angles.y; 
 
     vec3 lightDir = normalize(_light.positionAndType.xyz - in_fragment_position);
     float diffuseImpact = max(dot(_normal, lightDir), 0.0f);
