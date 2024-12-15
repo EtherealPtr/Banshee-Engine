@@ -1,7 +1,7 @@
 <h1 align="center">Banshee Engine</h1>
 
 <p align="center">
-<img src="https://github.com/user-attachments/assets/f963554b-d83d-4f52-aa55-d3eba2164460" alt="image">
+  <img src ="https://github.com/user-attachments/assets/cb1d583c-a14c-4bc8-8cce-be8b1932c02f" alt="image">
 </p>
 
 <p>Banshee is a robust C++ and Vulkan-based 3D rendering engine designed to create interactive applications easily. The engine is still in early development and much work is yet to be carried out. Currently, the engine supports the following features:</p>
@@ -57,7 +57,7 @@
 <li> INI file parsing </li>
 <li> Input handling (utilizes the GLFW library) </li>
 <li> Entity-Component System </li>
-<li> Observer pattern to easily notify for when a component is changed </li>
+<li> Observer pattern to easily notify when a component is changed </li>
 <li> Timer and other core utilities </li>
 </ul>
 
