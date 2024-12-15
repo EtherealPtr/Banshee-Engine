@@ -40,11 +40,12 @@ vec3 CalculateDirectionalLight(LightData _light, vec3 _normal, vec3 _viewDir)
     const float lightIntensity = _light.color.w;
 
     vec3 lightDir = normalize(-_light.direction.xyz);
+    vec3 halfwayDir = normalize(lightDir + _viewDir);
     float diffImpact = max(dot(_normal, lightDir), 0.0f);
     vec3 diffuse = diffImpact * _light.color.xyz * lightIntensity;
 
     vec3 reflectDir = reflect(-lightDir, _normal);
-    float spec = pow(max(dot(_viewDir, reflectDir), 0.0f), u_Material.specularColor.w);
+    float spec = pow(max(dot(_normal, halfwayDir), 0.0f), u_Material.specularColor.w);
     vec3 specular = specularIntensity * spec * u_Material.specularColor.xyz * lightIntensity;
 
     return diffuse + specular;
@@ -56,6 +57,7 @@ vec3 CalculatePointLight(LightData _light, vec3 _normal, vec3 _viewDir)
     const float lightIntensity = _light.color.w;
 
     vec3 lightDir = normalize(_light.positionAndType.xyz - in_fragment_position);
+    vec3 halfwayDir = normalize(lightDir + _viewDir);
     float diffuseImpact = max(dot(_normal, lightDir), 0.0f);
     vec3 diffuse = diffuseImpact * (_light.color.xyz * lightIntensity);
 
@@ -64,7 +66,7 @@ vec3 CalculatePointLight(LightData _light, vec3 _normal, vec3 _viewDir)
     diffuse *= attenuation;
 
     vec3 reflectDir = reflect(-lightDir, _normal);
-    float spec = pow(max(dot(_viewDir, reflectDir), 0.0f), u_Material.specularColor.w);
+    float spec = pow(max(dot(_normal, halfwayDir), 0.0f), u_Material.specularColor.w);
     vec3 specular = specularIntensity * spec * (u_Material.specularColor.xyz * lightIntensity) * attenuation;
 
     return diffuse + specular;
@@ -78,11 +80,12 @@ vec3 CalculateSpotLight(LightData _light, vec3 _normal, vec3 _viewDir)
     float outerCutoff = _light.angles.y; 
 
     vec3 lightDir = normalize(_light.positionAndType.xyz - in_fragment_position);
+    vec3 halfwayDir = normalize(lightDir + _viewDir);
     float diffuseImpact = max(dot(_normal, lightDir), 0.0f);
     vec3 diffuse = _light.color.xyz * diffuseImpact * lightIntensity; 
 
     vec3 reflectDir = reflect(-lightDir, _normal);
-    float spec = pow(max(dot(_viewDir, reflectDir), 0.0f), u_Material.specularColor.w);
+    float spec = pow(max(dot(_normal, halfwayDir), 0.0f), u_Material.specularColor.w);
     vec3 specular = specularIntensity * spec * u_Material.specularColor.xyz * lightIntensity; 
 
     float theta = dot(lightDir, normalize(-_light.direction.xyz));
