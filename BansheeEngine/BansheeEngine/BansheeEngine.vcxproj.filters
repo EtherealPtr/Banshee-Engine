@@ -129,9 +129,6 @@
     <ClCompile Include="Source\Foundation\Timer\Timer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Graphics\Vulkan\VulkanGraphicsPipelineManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Foundation\Observer\Subject.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -269,9 +266,6 @@
     <ClInclude Include="source\foundation\Logging\LogCategories.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Graphics\MVP.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Graphics\Shapes\ShapeFactory.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -365,9 +359,6 @@
     <ClInclude Include="Source\Graphics\Components\Light\LightData.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Graphics\Vulkan\VulkanGraphicsPipelineManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Graphics\ShaderType.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -417,6 +408,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Graphics\Components\Light\SpotLightComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Graphics\UniformBuffers.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Graphics\DataStructs.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

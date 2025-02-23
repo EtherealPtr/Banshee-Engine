@@ -11,6 +11,7 @@ namespace Banshee
 	{
 	public:
 		VulkanRenderPass(const VkDevice& _device, const uint32 _colorFormat, const uint32 _depthFormat);
+		VulkanRenderPass(const VkDevice& _device, const uint32 _depthFormat);
 		~VulkanRenderPass();
 
 		const VkRenderPass& Get() const noexcept { return m_RenderPass; }

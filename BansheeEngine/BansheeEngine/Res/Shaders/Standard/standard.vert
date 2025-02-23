@@ -9,6 +9,7 @@ layout (location = 1) out vec3 out_vertex_normal;
 layout (location = 2) out int out_texture_index;
 layout (location = 3) out vec3 out_camera_position;
 layout (location = 4) out vec3 out_fragment_position;
+layout (location = 5) out vec4 out_fragment_light_space_position;
 
 layout (set = 0, binding = 0) uniform ViewProjBuffer
 {
@@ -23,6 +24,11 @@ layout (push_constant) uniform PushConstants
 	int textureId; 
 } u_PushConstants;
 
+layout (set = 0, binding = 5) uniform ShadowMapBuffer
+{
+	mat4 lightSpaceMatrix;
+} u_ShadowMapData;
+
 void main()
 {
 	const vec4 world_position = u_PushConstants.model * vec4(in_vertex_position, 1.0f);
@@ -33,4 +39,5 @@ void main()
 	out_vertex_texCoord = in_vertex_texCoord;
 	out_texture_index = u_PushConstants.textureId;
 	out_camera_position = u_PushConstants.camera_position;
+	out_fragment_light_space_position = u_ShadowMapData.lightSpaceMatrix * vec4(out_fragment_position, 1.0);
 }

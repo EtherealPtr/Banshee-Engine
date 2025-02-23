@@ -40,7 +40,7 @@ namespace Banshee
 		VulkanUtils::CreateImageView(m_Device, m_DepthImage, m_DepthFormat, VK_IMAGE_ASPECT_DEPTH_BIT, m_DepthImageView);
 	}
 
-	void VulkanDepthBuffer::CleanUp() const
+	void VulkanDepthBuffer::CleanUp() const noexcept
 	{
 		vkDestroyImageView(m_Device, m_DepthImageView, nullptr);
 		vkDestroyImage(m_Device, m_DepthImage, nullptr);

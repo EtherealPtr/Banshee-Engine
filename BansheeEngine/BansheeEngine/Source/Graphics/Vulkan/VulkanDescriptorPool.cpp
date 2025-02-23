@@ -13,7 +13,7 @@ namespace Banshee
 
 		std::array<VkDescriptorPoolSize, 5> poolSizes =
 		{
-			VkDescriptorPoolSize{ VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1 },
+			VkDescriptorPoolSize{ VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 2 },
 			VkDescriptorPoolSize{ VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC, 1 },
 			VkDescriptorPoolSize{ VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE, 1 },
 			VkDescriptorPoolSize{ VK_DESCRIPTOR_TYPE_SAMPLER, 1 },

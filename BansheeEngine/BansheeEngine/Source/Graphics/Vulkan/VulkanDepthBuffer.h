@@ -28,7 +28,7 @@ namespace Banshee
 
 	private:
 		void CreateDepthBuffer(const uint32 _w, const uint32 _h);
-		void CleanUp() const;
+		void CleanUp() const noexcept;
 
 	private:
 		VkDevice m_Device;

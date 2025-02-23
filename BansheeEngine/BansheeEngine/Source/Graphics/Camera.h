@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Foundation/Input/KeyboardMouseInput.h"
-#include "MVP.h"
+#include "DataStructs.h"
 #include <memory>
 
 struct GLFWwindow;

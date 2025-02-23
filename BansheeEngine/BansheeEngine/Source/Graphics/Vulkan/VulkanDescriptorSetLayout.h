@@ -7,13 +7,19 @@ typedef struct VkDescriptorSetLayout_T* VkDescriptorSetLayout;
 
 namespace Banshee
 {
+	enum class DescriptorSetLayoutType : uint8
+	{
+		Standard,
+		DepthOnly
+	};
+
 	class VulkanDescriptorSetLayout
 	{
 	public:
-		VulkanDescriptorSetLayout(const VkDevice& _logicalDevice);
+		VulkanDescriptorSetLayout(const VkDevice& _logicalDevice, const DescriptorSetLayoutType _descriptorSetLayoutType);
 		~VulkanDescriptorSetLayout();
 
-		VkDescriptorSetLayout Get() const noexcept { return m_DescriptorSetLayout; }
+		const VkDescriptorSetLayout& Get() noexcept { return m_DescriptorSetLayout; }
 
 		VulkanDescriptorSetLayout(const VulkanDescriptorSetLayout&) = delete;
 		VulkanDescriptorSetLayout& operator=(const VulkanDescriptorSetLayout&) = delete;

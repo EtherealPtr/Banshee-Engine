@@ -10,7 +10,6 @@
 #include "VulkanDescriptorPool.h"
 #include "VulkanDescriptorSet.h"
 #include "VulkanGraphicsPipeline.h"
-#include "VulkanGraphicsPipelineManager.h"
 #include "VulkanCommandPool.h"
 #include "VulkanCommandBuffer.h"
 #include "VulkanFramebuffer.h"
@@ -49,9 +48,12 @@ namespace Banshee
 		void CreateDescriptorSetWriteBufferProperties();
 		void UpdateMaterialData();
 		void UpdateLightData();
-		void UpdateDescriptorSets(const uint8 _descriptorSetIndex);
+		void UpdateShadowSceneDescriptorSets();
+		void UpdateSceneDescriptorSets(const uint8 _descriptorSetIndex);
 		void StaticUpdateDescriptorSets() noexcept;
 		void RecordRenderCommands(const uint8 _imgIndex);
+		void RenderShadowMap(const VkCommandBuffer& _cmdBuffer);
+		void RenderScene(const VkCommandBuffer& _cmdBuffer, const uint8 _imgIndex);
 
 	private:
 		const Window& m_Window;
@@ -59,22 +61,28 @@ namespace Banshee
 		VulkanSurface m_VkSurface;
 		VulkanDevice m_VkDevice;
 		VulkanSwapchain m_VkSwapchain;
-		VulkanDepthBuffer m_DepthBuffer;
+		VulkanDepthBuffer m_VkSceneDepthBuffer;
+		VulkanDepthBuffer m_VkShadowDepthBuffer;
 		VulkanRenderPass m_VkRenderPass;
+		VulkanRenderPass m_VkShadowRenderPass;
 		VulkanCommandPool m_VkCommandPool;
 		VulkanCommandBuffer m_VkCommandBuffers;
 		VulkanFramebuffer m_VkFramebuffers;
+		VulkanFramebuffer m_VkShadowFramebuffer;
 		VulkanSemaphore m_VkSemaphores;
 		VulkanFence m_VkInFlightFences;
 		VulkanTextureSampler m_VkTextureSampler;
 		VulkanTextureManager m_VkTextureManager;
-		VulkanDescriptorSetLayout m_VkDescriptorSetLayout;
+		VulkanDescriptorSetLayout m_VkSceneDescriptorSetLayout;
+		VulkanDescriptorSetLayout m_VkShadowDescriptorSetLayout;
 		VulkanDescriptorPool m_VkDescriptorPool;
-		VulkanGraphicsPipelineManager m_VkGraphicsPipelineManager;
+		VulkanGraphicsPipeline m_VkStandardGraphicsPipeline;
+		VulkanGraphicsPipeline m_VkShadowPipeline;
 		std::vector<VulkanUniformBuffer> m_VPUniformBuffers;
 		std::vector<VulkanUniformBuffer> m_MaterialUniformBuffers;
 		std::vector<VulkanUniformBuffer> m_LightUniformBuffers;
 		std::vector<VulkanDescriptorSet> m_DescriptorSets;
+		VulkanDescriptorSet m_VkShadowDescriptorSet;
 		Camera m_Camera;
 		MeshSystem m_MeshSystem;
 		LightSystem m_LightSystem;
@@ -84,5 +92,8 @@ namespace Banshee
 		std::unique_ptr<Material, void(*)(Material*) noexcept> m_MaterialDynamicBufferMemBlock;
 		std::vector<DescriptorSetWriteBufferProperties> m_DescriptorSetWriteBufferProperties;
 		std::vector<DescriptorSetWriteTextureProperties> m_DescriptorSetWriteTextureProperties;
+		VulkanUniformBuffer m_ShadowUniformBuffer;
+		DescriptorSetWriteBufferProperties m_ShadowDescriptorSetWriteBufferProperties;
+		glm::mat4 m_LightSpaceMatrix;
 	};
 } // End of Banshee namespace

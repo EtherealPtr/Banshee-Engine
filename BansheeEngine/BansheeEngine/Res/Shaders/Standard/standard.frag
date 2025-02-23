@@ -6,6 +6,7 @@ layout (location = 1) in vec3 in_vertex_normal;
 layout (location = 2) flat in int in_texture_index;
 layout (location = 3) in vec3 in_camera_position;
 layout (location = 4) in vec3 in_fragment_position;
+layout (location = 5) in vec4 in_fragment_light_space_position;
 
 layout (location = 0) out vec4 out_frag_color;
 
