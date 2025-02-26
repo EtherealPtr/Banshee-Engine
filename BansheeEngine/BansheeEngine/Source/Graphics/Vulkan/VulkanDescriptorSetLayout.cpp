@@ -16,7 +16,7 @@ namespace Banshee
 
 		if (_descriptorSetLayoutType == DescriptorSetLayoutType::Standard)
 		{
-			layoutBindings.resize(6);
+			layoutBindings.resize(7);
 
 			// View-projection binding
 			layoutBindings[0].binding = 0;
@@ -66,6 +66,14 @@ namespace Banshee
 			layoutBindings[5].stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
 			layoutBindings[5].pImmutableSamplers = nullptr;
 			BE_LOG(LogCategory::Trace, "[DESCRIPTOR SET LAYOUT]: Added VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER at binding 5");
+
+			// Binding 6: Shadow map (combined image sampler)
+			layoutBindings[6].binding = 6;
+			layoutBindings[6].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+			layoutBindings[6].descriptorCount = 1;
+			layoutBindings[6].stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
+			layoutBindings[6].pImmutableSamplers = nullptr;
+			BE_LOG(LogCategory::Trace, "[DESCRIPTOR SET LAYOUT]: Added VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER at binding 6");
 		}
 		else if (_descriptorSetLayoutType == DescriptorSetLayoutType::DepthOnly)
 		{

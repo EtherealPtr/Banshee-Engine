@@ -11,13 +11,14 @@ namespace Banshee
 	{
 		BE_LOG(LogCategory::Trace, "[DESCRIPTOR POOL]: Creating descriptor pool");
 
-		std::array<VkDescriptorPoolSize, 5> poolSizes =
+		std::array<VkDescriptorPoolSize, 6> poolSizes =
 		{
 			VkDescriptorPoolSize{ VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 2 },
 			VkDescriptorPoolSize{ VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC, 1 },
 			VkDescriptorPoolSize{ VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE, 1 },
 			VkDescriptorPoolSize{ VK_DESCRIPTOR_TYPE_SAMPLER, 1 },
-			VkDescriptorPoolSize{ VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1 }
+			VkDescriptorPoolSize{ VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1 },
+			VkDescriptorPoolSize{ VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1 }
 		};
 
 		VkDescriptorPoolCreateInfo descriptorPoolCreateInfo{};

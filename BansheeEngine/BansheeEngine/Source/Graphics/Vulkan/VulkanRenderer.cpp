@@ -18,14 +18,14 @@ namespace Banshee
 		m_VkSurface{ _window.GetWindow(), m_VkInstance.Get() },
 		m_VkDevice{ m_VkInstance.Get(), m_VkSurface.Get() },
 		m_VkSwapchain{ m_VkDevice.GetLogicalDevice(), m_VkDevice.GetPhysicalDevice(), m_VkSurface.Get(), _window.GetWidth(), _window.GetHeight() },
-		m_VkSceneDepthBuffer{ m_VkDevice.GetLogicalDevice(), m_VkDevice.GetPhysicalDevice(), m_VkSwapchain.GetWidth(), m_VkSwapchain.GetHeight() },
-		m_VkShadowDepthBuffer{ m_VkDevice.GetLogicalDevice(), m_VkDevice.GetPhysicalDevice(), m_VkSwapchain.GetWidth(), m_VkSwapchain.GetHeight() },
+		m_VkSceneDepthBuffer{ m_VkDevice.GetLogicalDevice(), m_VkDevice.GetPhysicalDevice(), m_VkSwapchain.GetWidth(), m_VkSwapchain.GetHeight(), 0 },
+		m_VkShadowDepthBuffer{ m_VkDevice.GetLogicalDevice(), m_VkDevice.GetPhysicalDevice(), 1024, 1024, VK_IMAGE_USAGE_SAMPLED_BIT },
 		m_VkRenderPass{ m_VkDevice.GetLogicalDevice(), m_VkSwapchain.GetFormat(), static_cast<uint32>(m_VkSceneDepthBuffer.GetFormat()) },
 		m_VkShadowRenderPass{ m_VkDevice.GetLogicalDevice(), static_cast<uint32>(m_VkShadowDepthBuffer.GetFormat()) },
 		m_VkCommandPool{ m_VkDevice.GetLogicalDevice(), m_VkDevice.GetQueueIndices().m_GraphicsQueueFamilyIndex },
 		m_VkCommandBuffers{ m_VkDevice.GetLogicalDevice(), m_VkCommandPool.Get(), static_cast<uint16>(m_VkSwapchain.GetImageViews().size()) },
 		m_VkFramebuffers{ m_VkDevice.GetLogicalDevice(), m_VkRenderPass.Get(), m_VkSwapchain.GetImageViews(), m_VkSceneDepthBuffer.GetImageView(), m_VkSwapchain.GetWidth(), m_VkSwapchain.GetHeight() },
-		m_VkShadowFramebuffer{ m_VkDevice.GetLogicalDevice(), m_VkShadowRenderPass.Get(), m_VkShadowDepthBuffer.GetImageView(), m_VkSwapchain.GetWidth(), m_VkSwapchain.GetHeight() },
+		m_VkShadowFramebuffer{ m_VkDevice.GetLogicalDevice(), m_VkShadowRenderPass.Get(), m_VkShadowDepthBuffer.GetImageView(), 1024, 1024 },
 		m_VkSemaphores{ m_VkDevice.GetLogicalDevice(), static_cast<uint16>(m_VkSwapchain.GetImageViews().size()) },
 		m_VkInFlightFences{ m_VkDevice.GetLogicalDevice(), static_cast<uint16>(m_VkSwapchain.GetImageViews().size()) },
 		m_VkTextureSampler{ m_VkDevice.GetLogicalDevice(), m_VkDevice.GetPhysicalDevice() },
@@ -34,7 +34,7 @@ namespace Banshee
 		m_VkShadowDescriptorSetLayout{ m_VkDevice.GetLogicalDevice(), DescriptorSetLayoutType::DepthOnly },
 		m_VkDescriptorPool{ m_VkDevice.GetLogicalDevice(), static_cast<uint16>(m_VkSwapchain.GetImageViews().size() * 2) },
 		m_VkStandardGraphicsPipeline{ m_VkDevice.GetLogicalDevice(), m_VkRenderPass.Get(), m_VkSceneDescriptorSetLayout.Get(), m_VkSwapchain.GetWidth(), m_VkSwapchain.GetHeight(), "Shaders/Standard/standard_vert.spv", "Shaders/Standard/standard_frag.spv"},
-		m_VkShadowPipeline{ m_VkDevice.GetLogicalDevice(), m_VkShadowRenderPass.Get(), m_VkShadowDescriptorSetLayout.Get(), m_VkSwapchain.GetWidth(), m_VkSwapchain.GetHeight(), "Shaders/Depth/depth.spv" },
+		m_VkShadowPipeline{ m_VkDevice.GetLogicalDevice(), m_VkShadowRenderPass.Get(), m_VkShadowDescriptorSetLayout.Get(), 1024, 1024, "Shaders/Depth/depth.spv" },
 		m_VkShadowDescriptorSet{ m_VkDevice.GetLogicalDevice(), m_VkDescriptorPool.Get(), m_VkShadowDescriptorSetLayout.Get() },
 		m_Camera{ 80.0f, static_cast<float>(_window.GetWidth()) / _window.GetHeight(), 0.1f, 100.0f, _window.GetWindow() },
 		m_MeshSystem{ m_VkDevice.GetLogicalDevice(), m_VkDevice.GetPhysicalDevice(), m_VkCommandPool.Get(), m_VkDevice.GetGraphicsQueue() },
@@ -95,7 +95,7 @@ namespace Banshee
 	void VulkanRenderer::CreateDescriptorSetWriteBufferProperties()
 	{
 		constexpr uint32 descriptorWriteBufferCount{ 4 };
-		constexpr uint32 descriptorWriteTextureCount{ 2 };
+		constexpr uint32 descriptorWriteTextureCount{ 3 };
 
 		m_DescriptorSetWriteBufferProperties.resize(descriptorWriteBufferCount);
 		m_DescriptorSetWriteTextureProperties.resize(descriptorWriteTextureCount);
@@ -107,6 +107,7 @@ namespace Banshee
 
 		m_DescriptorSetWriteTextureProperties[0].Initialize(2, VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE);
 		m_DescriptorSetWriteTextureProperties[1].Initialize(3, VK_DESCRIPTOR_TYPE_SAMPLER);
+		m_DescriptorSetWriteTextureProperties[2].Initialize(6, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER);
 
 		m_ShadowDescriptorSetWriteBufferProperties.Initialize(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER);
 	}
@@ -163,16 +164,15 @@ namespace Banshee
 			}
 		}
 
-		const glm::vec3 lightDir{ directionalLightComponent->GetLightData().m_Direction };
-		const glm::vec3 lightPos{ -lightDir * 10.0f };
-		const glm::mat4 lightViewMatrix{ glm::lookAt(lightPos, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f)) };
-		const glm::mat4 lightProjMatrix{ glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, 0.1f, 100.0f) };
+		const glm::vec3 lightDir = glm::normalize(directionalLightComponent->GetLightData().m_Direction);
+		const glm::vec3 lightPos = -lightDir * 10.0f;
+		const glm::mat4 lightViewMatrix = glm::lookAt(lightPos, glm::vec3(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		const glm::mat4 lightProjMatrix = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, 0.1f, 50.0f);
 		m_LightSpaceMatrix = lightProjMatrix * lightViewMatrix;
 
+		m_ShadowUniformBuffer.CopyData(&m_LightSpaceMatrix);
 		m_ShadowDescriptorSetWriteBufferProperties.SetBuffer(m_ShadowUniformBuffer.GetBuffer(), m_ShadowUniformBuffer.GetBufferSize());
 		m_VkShadowDescriptorSet.UpdateDescriptorSet({ m_ShadowDescriptorSetWriteBufferProperties });
-		
-		m_ShadowUniformBuffer.CopyData(&m_LightSpaceMatrix);
 	}
 
 	void VulkanRenderer::UpdateSceneDescriptorSets(const uint8 _descriptorSetIndex)
@@ -195,6 +195,8 @@ namespace Banshee
 	{
 		m_DescriptorSetWriteTextureProperties[0].SetImageView(m_VkTextureManager.GetTextureImageViews());
 		m_DescriptorSetWriteTextureProperties[1].SetSampler(m_VkTextureSampler.Get());
+		m_DescriptorSetWriteTextureProperties[2].SetImageView({ m_VkShadowDepthBuffer.GetImageView() });
+		m_DescriptorSetWriteTextureProperties[2].SetSampler(m_VkTextureSampler.Get());
 
 		for (size_t i = 0; i < m_DescriptorSets.size(); ++i)
 		{
@@ -231,8 +233,8 @@ namespace Banshee
 			}
 
 			m_VkSwapchain.RecreateSwapchain(newWidth, newHeight);
-			m_VkSceneDepthBuffer.RecreateDepthBuffer(newWidth, newHeight);
-			m_VkShadowDepthBuffer.RecreateDepthBuffer(newWidth, newHeight);
+			m_VkSceneDepthBuffer.RecreateDepthBuffer(newWidth, newHeight, 0);
+			m_VkShadowDepthBuffer.RecreateDepthBuffer(1024, 1024, VK_IMAGE_USAGE_SAMPLED_BIT);
 			m_VkFramebuffers.RecreateFramebuffers(newWidth, newHeight, m_VkSwapchain.GetImageViews(), m_VkSceneDepthBuffer.GetImageView());
 			m_VkShadowFramebuffer.RecreateFramebuffers(newWidth, newHeight, {}, m_VkShadowDepthBuffer.GetImageView());
 			vkResetCommandPool(m_VkDevice.GetLogicalDevice(), m_VkCommandPool.Get(), 0);
@@ -302,7 +304,7 @@ namespace Banshee
 		renderPassInfo.renderPass = m_VkShadowRenderPass.Get();
 		renderPassInfo.framebuffer = m_VkShadowFramebuffer.GetDepthFramebuffer();
 		renderPassInfo.renderArea.offset = { 0, 0 };
-		renderPassInfo.renderArea.extent = VkExtent2D({ m_VkSwapchain.GetWidth(), m_VkSwapchain.GetHeight() });
+		renderPassInfo.renderArea.extent = VkExtent2D({ 1024, 1024 });
 
 		constexpr VkClearDepthStencilValue clearDepthStencil{ 1.0f, 0 };
 
@@ -316,15 +318,15 @@ namespace Banshee
 		VkViewport viewport{};
 		viewport.x = 0.0f;
 		viewport.y = 0.0f;
-		viewport.width = static_cast<float>(m_VkSwapchain.GetWidth());
-		viewport.height = static_cast<float>(m_VkSwapchain.GetHeight());
+		viewport.width = static_cast<float>(1024);
+		viewport.height = static_cast<float>(1024);
 		viewport.minDepth = 0.0f;
 		viewport.maxDepth = 1.0f;
 		vkCmdSetViewport(_cmdBuffer, 0, 1, &viewport);
 
 		VkRect2D scissor{};
 		scissor.offset = { 0, 0 };
-		scissor.extent = VkExtent2D({ m_VkSwapchain.GetWidth(), m_VkSwapchain.GetHeight() });
+		scissor.extent = VkExtent2D({ 1024, 1024 });
 		vkCmdSetScissor(_cmdBuffer, 0, 1, &scissor);
 
 		for (const auto& subMesh : m_MeshSystem.GetAllSubMeshes())
