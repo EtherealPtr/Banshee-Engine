@@ -8,11 +8,7 @@
 #include "VulkanDescriptorSet.h"
 #include "VulkanPipelineManager.h"
 #include "VulkanCommandPool.h"
-#include "VulkanCommandBuffer.h"
-#include "VulkanFramebuffer.h"
 #include "VulkanFrameResources.h"
-#include "VulkanSemaphore.h"
-#include "VulkanFence.h"
 #include "VulkanUniformBuffer.h"
 #include "VulkanDescriptorSetProperties.h"
 #include "VulkanTextureManager.h"
@@ -25,7 +21,6 @@
 namespace Banshee
 {
 	class Window;
-	class Material;
 
 	class VulkanRenderer
 	{
@@ -56,32 +51,29 @@ namespace Banshee
 	private:
 		const Window& m_Window;
 		VulkanRenderContext m_RenderContext;
-		VulkanDepthBuffer m_VkSceneDepthBuffer;
-		VulkanDepthBuffer m_VkShadowDepthBuffer;
+		VulkanDepthBuffer m_DepthBufferScene;
+		VulkanDepthBuffer m_DepthBufferShadow;
 		VulkanRenderPassManager m_RenderPassManager;
-		VulkanCommandPool m_VkCommandPool;
-		VulkanCommandBuffer m_VkCommandBuffers;
+		VulkanCommandPool m_CommandPool;
 		VulkanFrameResources m_FrameResources;
-		VulkanSemaphore m_VkSemaphores;
-		VulkanFence m_VkInFlightFences;
-		VulkanTextureSampler m_VkTextureSampler;
-		VulkanTextureManager m_VkTextureManager;
-		VulkanDescriptorSetLayout m_VkSceneDescriptorSetLayout;
-		VulkanDescriptorSetLayout m_VkShadowDescriptorSetLayout;
-		VulkanDescriptorPool m_VkDescriptorPool;
+		VulkanTextureSampler m_TextureSampler;
+		VulkanTextureManager m_TextureManager;
+		VulkanDescriptorSetLayout m_DescriptorSetLayoutScene;
+		VulkanDescriptorSetLayout m_DescriptorSetLayoutShadow;
+		VulkanDescriptorPool m_DescriptorPool;
 		VulkanPipelineManager m_PipelineManager;
 		std::vector<VulkanUniformBuffer> m_VPUniformBuffers;
 		std::vector<VulkanUniformBuffer> m_MaterialUniformBuffers;
 		std::vector<VulkanUniformBuffer> m_LightUniformBuffers;
 		std::vector<VulkanDescriptorSet> m_DescriptorSets;
-		VulkanDescriptorSet m_VkShadowDescriptorSet;
+		VulkanDescriptorSet m_DescriptorSetShadow;
 		Camera m_Camera;
 		MeshSystem m_MeshSystem;
 		LightSystem m_LightSystem;
 		TransformationSystem m_TransformationSystem;
 		uint8 m_CurrentFrameIndex;
 		uint64 m_MaterialDynamicBufferMemAlignment;
-		std::unique_ptr<Material, void(*)(Material*) noexcept> m_MaterialDynamicBufferMemBlock;
+		std::unique_ptr<class Material, void(*)(Material*) noexcept> m_MaterialDynamicBufferMemBlock;
 		std::vector<DescriptorSetWriteBufferProperties> m_DescriptorSetWriteBufferProperties;
 		std::vector<DescriptorSetWriteTextureProperties> m_DescriptorSetWriteTextureProperties;
 		VulkanUniformBuffer m_ShadowUniformBuffer;

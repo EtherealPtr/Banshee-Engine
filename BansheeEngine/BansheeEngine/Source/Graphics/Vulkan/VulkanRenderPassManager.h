@@ -20,7 +20,7 @@ namespace Banshee
 
     private:
         VulkanRenderPass m_RenderPass;
-        VulkanRenderPass m_ShadowRenderPass;
+        VulkanRenderPass m_RenderPassShadow;
         std::unordered_map<RenderPassType, const VulkanRenderPass*> m_RenderPasses;
     };
 } // End of namespace
