@@ -6,7 +6,6 @@
 #include "Graphics/Window.h"
 #include <array>
 #include <vulkan/vulkan.h>
-#include <Graphics/Components/Light/DirectionalLightComponent.h>
 
 namespace Banshee
 {
@@ -31,7 +30,6 @@ namespace Banshee
 		m_DescriptorSetShadow{ m_RenderContext.GetDevice().GetLogicalDevice(), m_DescriptorPool.Get(), m_DescriptorSetLayoutShadow.Get() },
 		m_Camera{ 80.0f, static_cast<float>(_window.GetWidth()) / _window.GetHeight(), 0.1f, 100.0f, _window.GetWindow() },
 		m_MeshSystem{ m_RenderContext.GetDevice().GetLogicalDevice(), m_RenderContext.GetDevice().GetPhysicalDevice(), m_CommandPool.Get(), m_RenderContext.GetDevice().GetGraphicsQueue() },
-		m_LightSystem{},
 		m_CurrentFrameIndex{ 0 },
 		m_MaterialDynamicBufferMemAlignment{ 0 },
 		m_MaterialDynamicBufferMemBlock{ nullptr, [](Material* _ptr) noexcept { _aligned_free(_ptr); } },
@@ -126,15 +124,15 @@ namespace Banshee
 		std::array<LightData, maxLights> lights{};
 		uint8 currentLightCount{ 0 };
 
-		for (const auto& lightComponent : m_LightSystem.GetLightComponents())
+		for (auto& lightComponent : m_LightSystem.GetLightComponents())
 		{
 			if (currentLightCount >= maxLights)
 			{
 				break;
 			}
 
-			lightComponent->UpdatePosition();
-			lights[currentLightCount++] = lightComponent->GetLightData();
+			lightComponent.UpdatePosition();
+			lights[currentLightCount++] = lightComponent.GetLightData();
 		}
 
 		LightBuffer lightBuffer{};
@@ -147,14 +145,10 @@ namespace Banshee
 
 	void VulkanRenderer::UpdateShadowSceneDescriptorSets()
 	{
-		std::shared_ptr<DirectionalLightComponent> directionalLightComponent = nullptr;
-		for (const auto& lightComponent : m_LightSystem.GetLightComponents())
+		auto directionalLightComponent{ m_LightSystem.GetDirectionalLight() };
+		if (!directionalLightComponent.has_value())
 		{
-			if (auto dirLight = std::dynamic_pointer_cast<DirectionalLightComponent>(lightComponent))
-			{
-				directionalLightComponent = dirLight;
-				break;
-			}
+			return; 
 		}
 
 		const glm::vec3 lightDir = glm::normalize(directionalLightComponent->GetLightData().m_Direction);
@@ -168,7 +162,7 @@ namespace Banshee
 		m_DescriptorSetShadow.UpdateDescriptorSet({ m_ShadowDescriptorSetWriteBufferProperties });
 	}
 
-	void VulkanRenderer::UpdateSceneDescriptorSets(const uint8 _descriptorSetIndex)
+	void VulkanRenderer::UpdateSceneDescriptorSets(const uint32 _descriptorSetIndex)
 	{
 		m_DescriptorSetWriteBufferProperties[0].SetBuffer(m_VPUniformBuffers[_descriptorSetIndex].GetBuffer(), m_VPUniformBuffers[_descriptorSetIndex].GetBufferSize());
 		m_DescriptorSetWriteBufferProperties[1].SetBuffer(m_MaterialUniformBuffers[_descriptorSetIndex].GetBuffer(), m_MaterialDynamicBufferMemAlignment);
@@ -273,7 +267,7 @@ namespace Banshee
 		m_CurrentFrameIndex = (m_CurrentFrameIndex + 1) % m_RenderContext.GetSwapchain().GetImageViews().size();
 	}
 
-	void VulkanRenderer::RecordRenderCommands(const uint8 _imgIndex)
+	void VulkanRenderer::RecordRenderCommands(const uint32 _imgIndex)
 	{
 		const VkCommandBuffer cmdBuffer{ m_FrameResources.GetCommandBuffers().Get()[_imgIndex] };
 		m_FrameResources.GetCommandBuffers().Begin(_imgIndex);
@@ -345,7 +339,7 @@ namespace Banshee
 		vkCmdEndRenderPass(_cmdBuffer);
 	}
 
-	void VulkanRenderer::RenderScene(const VkCommandBuffer& _cmdBuffer, const uint8 _imgIndex)
+	void VulkanRenderer::RenderScene(const VkCommandBuffer& _cmdBuffer, const uint32 _imgIndex)
 	{
 		VkRenderPassBeginInfo renderPassInfo{};
 		renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;

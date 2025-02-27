@@ -18,7 +18,7 @@ namespace Banshee
 		~VulkanDepthBuffer();
 
 		void RecreateDepthBuffer(const uint32 _w, const uint32 _h, const uint32 _flags);
-		const VkFormat GetFormat() const noexcept { return m_DepthFormat; }
+		VkFormat GetFormat() const noexcept { return m_DepthFormat; }
 		const VkImageView& GetImageView() const noexcept { return m_DepthImageView; }
 
 		VulkanDepthBuffer(const VulkanDepthBuffer&) = delete;

@@ -42,11 +42,11 @@ namespace Banshee
 		void UpdateMaterialData();
 		void UpdateLightData();
 		void UpdateShadowSceneDescriptorSets();
-		void UpdateSceneDescriptorSets(const uint8 _descriptorSetIndex);
+		void UpdateSceneDescriptorSets(const uint32 _descriptorSetIndex);
 		void StaticUpdateDescriptorSets() noexcept;
-		void RecordRenderCommands(const uint8 _imgIndex);
+		void RecordRenderCommands(const uint32 _imgIndex);
 		void RenderShadowMap(const VkCommandBuffer& _cmdBuffer);
-		void RenderScene(const VkCommandBuffer& _cmdBuffer, const uint8 _imgIndex);
+		void RenderScene(const VkCommandBuffer& _cmdBuffer, const uint32 _imgIndex);
 
 	private:
 		const Window& m_Window;
@@ -71,7 +71,7 @@ namespace Banshee
 		MeshSystem m_MeshSystem;
 		LightSystem m_LightSystem;
 		TransformationSystem m_TransformationSystem;
-		uint8 m_CurrentFrameIndex;
+		uint32 m_CurrentFrameIndex;
 		uint64 m_MaterialDynamicBufferMemAlignment;
 		std::unique_ptr<class Material, void(*)(Material*) noexcept> m_MaterialDynamicBufferMemBlock;
 		std::vector<DescriptorSetWriteBufferProperties> m_DescriptorSetWriteBufferProperties;

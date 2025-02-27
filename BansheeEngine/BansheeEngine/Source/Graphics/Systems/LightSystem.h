@@ -1,12 +1,13 @@
 #pragma once
 
-#include <memory>
 #include <vector>
+#include <optional>
+#include "Graphics/Components/Light/LightComponent.h"
+#include "Graphics/Components/Light/DirectionalLightComponent.h"
 
 namespace Banshee
 {
     class Entity;
-    class LightComponent;
 
     class LightSystem
     {
@@ -15,7 +16,8 @@ namespace Banshee
         ~LightSystem() noexcept = default;
 
         void ProcessComponents(const Entity* const _entity);
-        const std::vector<std::shared_ptr<LightComponent>>& GetLightComponents() const noexcept { return m_LightComponents; }
+        std::vector<LightComponent>& GetLightComponents() noexcept { return m_LightComponents; }
+        const std::optional<DirectionalLightComponent>& GetDirectionalLight() const noexcept { return m_DirectionalLight; }
 
         LightSystem(const LightSystem&) = delete;
         LightSystem& operator=(const LightSystem&) = delete;
@@ -23,9 +25,10 @@ namespace Banshee
         LightSystem& operator=(LightSystem&&) = delete;
 
     private:
-        void AddLightComponent(const std::shared_ptr<LightComponent>& _lightComponent) { m_LightComponents.emplace_back(_lightComponent); }
+        void AddLightComponent(const LightComponent& _lightComponent);
 
     private:
-        std::vector<std::shared_ptr<LightComponent>> m_LightComponents;
+        std::vector<LightComponent> m_LightComponents;
+        std::optional<DirectionalLightComponent> m_DirectionalLight;
     };
 } // End of namespace
