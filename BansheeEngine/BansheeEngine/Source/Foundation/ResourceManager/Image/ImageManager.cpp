@@ -95,4 +95,4 @@ namespace Banshee
 
 		BE_LOG(LogCategory::Trace, "[RESOURCE]: Unloaded all image resources");
 	}
-} // End of Banshee namespace
+} // End of namespace

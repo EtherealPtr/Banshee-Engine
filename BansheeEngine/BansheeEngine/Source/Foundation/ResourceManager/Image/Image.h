@@ -12,4 +12,4 @@ namespace Banshee
 		uint32 m_ImageIndex;
 		uint64 m_ImageSize;
 	};
-} // End of Banshee namespace
+} // End of namespace

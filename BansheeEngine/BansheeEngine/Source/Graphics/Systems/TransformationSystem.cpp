@@ -31,4 +31,4 @@ namespace Banshee
 
 		return glm::mat4(1.0f);
 	}
-} // End of Banshee namespace
+} // End of namespace

@@ -21,4 +21,4 @@ namespace Banshee
 		std::string m_ModelName;
 		std::vector<MeshData> m_Data;
 	};
-} // End of Banshee namespace
+} // End of namespace

@@ -55,4 +55,4 @@ namespace Banshee
 		std::vector<VulkanImage> m_TextureImages;
 		std::vector<VkImageView> m_TextureImageViews;
 	};
-} // End of Banshee namespace
+} // End of namespace

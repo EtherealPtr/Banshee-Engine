@@ -7,4 +7,4 @@ namespace Banshee
 		m_Id{ EntityManager::RegisterEntity(this) },
 		m_Components{}
 	{}
-} // End of Banshee namespace
+} // End of namespace

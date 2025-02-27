@@ -11,4 +11,4 @@ namespace Banshee
             AddLightComponent(lightComponent);
         }
 	}
-} // End of Banshee namespace
+} // End of namespace

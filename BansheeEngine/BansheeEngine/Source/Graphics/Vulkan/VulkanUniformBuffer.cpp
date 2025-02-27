@@ -56,4 +56,4 @@ namespace Banshee
 		// Unmap the memory
 		vkUnmapMemory(m_LogicalDevice, m_BufferMemory);
 	}
-} // End of Banshee namespace
+} // End of namespace

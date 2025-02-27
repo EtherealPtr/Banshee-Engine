@@ -87,4 +87,4 @@ namespace Banshee
 	{
 		m_ViewProjMatrix.m_Proj = glm::perspective(glm::radians(m_Fov), m_Aspect, m_Near, m_Far);
 	}
-} // End of Banshee namespace
+} // End of namespace

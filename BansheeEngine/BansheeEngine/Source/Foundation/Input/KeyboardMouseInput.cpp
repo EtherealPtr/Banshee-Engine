@@ -62,4 +62,4 @@ namespace Banshee
 	{
 		glfwSetInputMode(m_Window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	}
-} // End of Banshee namespace
+} // End of namespace

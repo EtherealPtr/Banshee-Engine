@@ -62,4 +62,4 @@ namespace Banshee
 			throw std::runtime_error("ERROR: Failed to submit command buffer to queue");
 		}
 	}
-} // End of Banshee namespace
+} // End of namespace

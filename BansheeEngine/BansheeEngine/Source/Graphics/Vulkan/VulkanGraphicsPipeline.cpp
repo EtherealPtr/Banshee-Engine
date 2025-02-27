@@ -395,4 +395,4 @@ namespace Banshee
 		vkDestroyPipelineLayout(m_LogicalDevice, m_PipelineLayout, nullptr);
 		m_PipelineLayout = VK_NULL_HANDLE;
 	}
-} // End of Banshee namespace
+} // End of namespace

@@ -24,4 +24,4 @@ namespace Banshee
 		VkDevice m_LogicalDevice;
 		VkDescriptorPool m_DescriptorPool;
 	};
-} // End of Banshee namespace
+} // End of namespace

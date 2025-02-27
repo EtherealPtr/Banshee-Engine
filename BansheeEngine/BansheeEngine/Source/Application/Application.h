@@ -26,4 +26,4 @@ namespace Banshee
 		std::unique_ptr<Window> m_Window;
 		std::unique_ptr<VulkanRenderer> m_Renderer;
 	};
-} // End of Banshee namespace
+} // End of namespace

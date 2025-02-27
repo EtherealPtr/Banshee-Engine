@@ -30,4 +30,4 @@ namespace Banshee
 
 		m_LightData.m_Attenuation = glm::vec4(constant, linear, quadratic, 0.0f);
 	}
-} // End of Banshee namespace
+} // End of namespace

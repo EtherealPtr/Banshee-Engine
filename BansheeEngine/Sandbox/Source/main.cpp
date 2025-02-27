@@ -8,13 +8,14 @@ class ClientApp : public Banshee::Application
 public:
 	ClientApp() :
 		m_DirectionalLight{ glm::vec3(0.5f, -0.2f, -1.0f), glm::vec4(1.0f, 1.0f, 1.0f, 1.0f) },
-		m_Ground{ glm::vec3(0.0f) }
+		m_Ground{},
+		m_CustomModel(glm::vec3(0.0f, 1.0f, 0.0f))
 	{
 		const std::array<glm::vec3, 3> cubePositions
 		{
-			glm::vec3(-2.0f, 0.5f, 0.0f),
-			glm::vec3(0.0f, 1.0f, 0.0f),
-			glm::vec3(2.0f, 0.5f, -1.0f)
+			glm::vec3(-4.0f, 0.5f, -1.0f),
+			glm::vec3(5.0f, 1.0f, 1.0f),
+			glm::vec3(2.0f, 0.5f, 5.0f)
 		};
 
 		for (size_t i = 0; i < m_Cubes.size(); ++i)
@@ -31,6 +32,7 @@ public:
 private:
 	DirectionalLight m_DirectionalLight;
 	ExampleQuad m_Ground;
+	ExampleCustomModel m_CustomModel;
 	std::array<ExampleCube, 3> m_Cubes;
 };
 

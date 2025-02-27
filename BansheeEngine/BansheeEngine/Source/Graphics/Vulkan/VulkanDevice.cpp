@@ -239,4 +239,4 @@ namespace Banshee
 		vkGetPhysicalDeviceProperties(m_PhysicalDevice, &gpuProperties);
 		return gpuProperties.limits;
 	}
-} // End of Banshee namespace
+} // End of namespace

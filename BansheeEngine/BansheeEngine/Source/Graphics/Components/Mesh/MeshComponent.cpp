@@ -6,4 +6,4 @@ namespace Banshee
 		m_VertexBufferId{ 0 },
 		m_ShaderType{ _shaderType }
 	{}
-} // End of Banshee namespace
+} // End of namespace

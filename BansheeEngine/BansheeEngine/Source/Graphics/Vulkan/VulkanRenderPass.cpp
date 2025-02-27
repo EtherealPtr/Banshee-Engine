@@ -6,7 +6,7 @@
 
 namespace Banshee
 {
-	VulkanRenderPass::VulkanRenderPass(const VkDevice& _device, const uint32 _colorFormat, const uint32 _depthFormat) :
+	VulkanRenderPass::VulkanRenderPass(const VkDevice& _device, const VkFormat _colorFormat, const VkFormat _depthFormat) :
 		m_Device{ _device },
 		m_RenderPass{ VK_NULL_HANDLE }
 	{
@@ -77,7 +77,7 @@ namespace Banshee
 		BE_LOG(LogCategory::Info, "[RENDER PASS]: Created render pass");
 	}
 
-	VulkanRenderPass::VulkanRenderPass(const VkDevice& _device, const uint32 _depthFormat) :
+	VulkanRenderPass::VulkanRenderPass(const VkDevice& _device, const VkFormat _depthFormat) :
 		m_Device{ _device },
 		m_RenderPass{ VK_NULL_HANDLE }
 	{
@@ -142,4 +142,4 @@ namespace Banshee
 		vkDestroyRenderPass(m_Device, m_RenderPass, nullptr);
 		m_RenderPass = VK_NULL_HANDLE;
 	}
-} // End of Banshee namespace
+} // End of namespace

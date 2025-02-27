@@ -35,4 +35,4 @@ namespace Banshee
 		std::unordered_map<std::string, uint32> m_ModelNameToBufferId;
 		static uint32 s_NextBufferId;
 	};
-} // End of Banshee namespace
+} // End of namespace

@@ -78,4 +78,4 @@ namespace Banshee
 #else
 #define BE_LOG(category, format, ...) g_Logger.PrintLog(category, format, __VA_ARGS__)
 #endif
-} // End of Banshee namespace
+} // End of namespace

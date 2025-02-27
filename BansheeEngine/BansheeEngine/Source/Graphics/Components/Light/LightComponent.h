@@ -15,4 +15,4 @@ namespace Banshee
 	protected:
 		LightData m_LightData;
 	};
-} // End of Banshee namespace
+} // End of namespace

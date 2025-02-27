@@ -52,4 +52,4 @@ namespace Banshee
 		std::filesystem::path path(_assetPath);
 		return path.filename().string();
 	}
-} // End of Banshee namespace
+} // End of namespace

@@ -68,4 +68,4 @@ namespace Banshee
 		std::vector<VkImageView> m_ImageViews;
 		VkSampler m_Sampler;
 	};
-} // End of Banshee namespace
+} // End of namespace

@@ -34,4 +34,4 @@ namespace Banshee
 		alignas(16) uint32 m_TotalLights{ 0 };
 		alignas(16) LightData m_Lights[25]{};
 	};
-} // End of Banshee namespace
+} // End of namespace

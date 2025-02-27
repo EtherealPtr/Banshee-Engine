@@ -76,4 +76,4 @@ namespace Banshee
 		BE_LOG(LogCategory::Error, "[VERTEX MANAGER]: Failed to find vertex buffer with id: %d", _bufferId);
 		return nullptr;
 	}
-} // End of Banshee namespace
+} // End of namespace

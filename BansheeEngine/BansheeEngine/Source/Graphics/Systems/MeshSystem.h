@@ -43,4 +43,4 @@ namespace Banshee
 		bool m_IsCacheDirty;
 		uint32 m_TotalMeshCount;
 	};
-} // End of Banshee namespace
+} // End of namespace

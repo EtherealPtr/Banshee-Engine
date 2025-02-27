@@ -9,4 +9,4 @@ namespace Banshee
         Standard,   // Phong lighting
         Unlit       // No lighting, just texture and color
     };
-} // End of Banshee namespace
+} // End of namespace

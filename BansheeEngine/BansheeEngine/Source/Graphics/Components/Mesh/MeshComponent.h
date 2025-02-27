@@ -25,4 +25,4 @@ namespace Banshee
 		ShaderType m_ShaderType;
 		std::optional<glm::vec4> m_TintColor;
 	};
-} // End of Banshee namespace
+} // End of namespace

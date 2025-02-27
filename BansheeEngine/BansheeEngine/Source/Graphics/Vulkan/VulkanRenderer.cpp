@@ -14,41 +14,35 @@ namespace Banshee
 
 	VulkanRenderer::VulkanRenderer(const Window& _window) :
 		m_Window(_window),
-		m_VkInstance{},
-		m_VkSurface{ _window.GetWindow(), m_VkInstance.Get() },
-		m_VkDevice{ m_VkInstance.Get(), m_VkSurface.Get() },
-		m_VkSwapchain{ m_VkDevice.GetLogicalDevice(), m_VkDevice.GetPhysicalDevice(), m_VkSurface.Get(), _window.GetWidth(), _window.GetHeight() },
-		m_VkSceneDepthBuffer{ m_VkDevice.GetLogicalDevice(), m_VkDevice.GetPhysicalDevice(), m_VkSwapchain.GetWidth(), m_VkSwapchain.GetHeight(), 0 },
-		m_VkShadowDepthBuffer{ m_VkDevice.GetLogicalDevice(), m_VkDevice.GetPhysicalDevice(), 1024, 1024, VK_IMAGE_USAGE_SAMPLED_BIT },
-		m_VkRenderPass{ m_VkDevice.GetLogicalDevice(), m_VkSwapchain.GetFormat(), static_cast<uint32>(m_VkSceneDepthBuffer.GetFormat()) },
-		m_VkShadowRenderPass{ m_VkDevice.GetLogicalDevice(), static_cast<uint32>(m_VkShadowDepthBuffer.GetFormat()) },
-		m_VkCommandPool{ m_VkDevice.GetLogicalDevice(), m_VkDevice.GetQueueIndices().m_GraphicsQueueFamilyIndex },
-		m_VkCommandBuffers{ m_VkDevice.GetLogicalDevice(), m_VkCommandPool.Get(), static_cast<uint16>(m_VkSwapchain.GetImageViews().size()) },
-		m_VkFramebuffers{ m_VkDevice.GetLogicalDevice(), m_VkRenderPass.Get(), m_VkSwapchain.GetImageViews(), m_VkSceneDepthBuffer.GetImageView(), m_VkSwapchain.GetWidth(), m_VkSwapchain.GetHeight() },
-		m_VkShadowFramebuffer{ m_VkDevice.GetLogicalDevice(), m_VkShadowRenderPass.Get(), m_VkShadowDepthBuffer.GetImageView(), 1024, 1024 },
-		m_VkSemaphores{ m_VkDevice.GetLogicalDevice(), static_cast<uint16>(m_VkSwapchain.GetImageViews().size()) },
-		m_VkInFlightFences{ m_VkDevice.GetLogicalDevice(), static_cast<uint16>(m_VkSwapchain.GetImageViews().size()) },
-		m_VkTextureSampler{ m_VkDevice.GetLogicalDevice(), m_VkDevice.GetPhysicalDevice() },
-		m_VkTextureManager{ m_VkDevice.GetLogicalDevice(), m_VkDevice.GetPhysicalDevice(), m_VkDevice.GetGraphicsQueue(), m_VkCommandPool.Get() },
-		m_VkSceneDescriptorSetLayout{ m_VkDevice.GetLogicalDevice(), DescriptorSetLayoutType::Standard },
-		m_VkShadowDescriptorSetLayout{ m_VkDevice.GetLogicalDevice(), DescriptorSetLayoutType::DepthOnly },
-		m_VkDescriptorPool{ m_VkDevice.GetLogicalDevice(), static_cast<uint16>(m_VkSwapchain.GetImageViews().size() * 2) },
-		m_VkStandardGraphicsPipeline{ m_VkDevice.GetLogicalDevice(), m_VkRenderPass.Get(), m_VkSceneDescriptorSetLayout.Get(), m_VkSwapchain.GetWidth(), m_VkSwapchain.GetHeight(), "Shaders/Standard/standard_vert.spv", "Shaders/Standard/standard_frag.spv"},
-		m_VkShadowPipeline{ m_VkDevice.GetLogicalDevice(), m_VkShadowRenderPass.Get(), m_VkShadowDescriptorSetLayout.Get(), 1024, 1024, "Shaders/Depth/depth.spv" },
-		m_VkShadowDescriptorSet{ m_VkDevice.GetLogicalDevice(), m_VkDescriptorPool.Get(), m_VkShadowDescriptorSetLayout.Get() },
+		m_RenderContext{ _window },
+		m_VkSceneDepthBuffer{ m_RenderContext.GetDevice().GetLogicalDevice(), m_RenderContext.GetDevice().GetPhysicalDevice(), m_RenderContext.GetSwapchain().GetWidth(), m_RenderContext.GetSwapchain().GetHeight(), 0},
+		m_VkShadowDepthBuffer{ m_RenderContext.GetDevice().GetLogicalDevice(), m_RenderContext.GetDevice().GetPhysicalDevice(), 2048, 2048, VK_IMAGE_USAGE_SAMPLED_BIT },
+		m_RenderPassManager{ m_RenderContext.GetDevice().GetLogicalDevice(), static_cast<VkFormat>(m_RenderContext.GetSwapchain().GetFormat()), m_VkSceneDepthBuffer.GetFormat(), m_VkShadowDepthBuffer.GetFormat() },
+		m_VkCommandPool{ m_RenderContext.GetDevice().GetLogicalDevice(), m_RenderContext.GetDevice().GetQueueIndices().m_GraphicsQueueFamilyIndex },
+		m_VkCommandBuffers{ m_RenderContext.GetDevice().GetLogicalDevice(), m_VkCommandPool.Get(), static_cast<uint16>(m_RenderContext.GetSwapchain().GetImageViews().size()) },
+		m_VkSemaphores{ m_RenderContext.GetDevice().GetLogicalDevice(), static_cast<uint16>(m_RenderContext.GetSwapchain().GetImageViews().size()) },
+		m_VkInFlightFences{ m_RenderContext.GetDevice().GetLogicalDevice(), static_cast<uint16>(m_RenderContext.GetSwapchain().GetImageViews().size()) },
+		m_VkTextureSampler{ m_RenderContext.GetDevice().GetLogicalDevice(), m_RenderContext.GetDevice().GetPhysicalDevice() },
+		m_VkTextureManager{ m_RenderContext.GetDevice().GetLogicalDevice(), m_RenderContext.GetDevice().GetPhysicalDevice(), m_RenderContext.GetDevice().GetGraphicsQueue(), m_VkCommandPool.Get() },
+		m_VkSceneDescriptorSetLayout{ m_RenderContext.GetDevice().GetLogicalDevice(), DescriptorSetLayoutType::Standard },
+		m_VkShadowDescriptorSetLayout{ m_RenderContext.GetDevice().GetLogicalDevice(), DescriptorSetLayoutType::DepthOnly },
+		m_PipelineManager{ m_RenderContext.GetDevice().GetLogicalDevice(), m_RenderPassManager.GetRenderPass(RenderPassType::Scene)->Get(), m_RenderPassManager.GetRenderPass(RenderPassType::DepthOnly)->Get(), m_VkSceneDescriptorSetLayout.Get(), m_VkShadowDescriptorSetLayout.Get(), m_RenderContext.GetSwapchain().GetWidth(), m_RenderContext.GetSwapchain().GetHeight() },
+		m_FrameResources{ m_RenderContext.GetDevice(), m_RenderContext.GetSwapchain(), m_VkCommandPool.Get(), m_RenderPassManager, m_VkSceneDepthBuffer, m_VkShadowDepthBuffer},
+		m_VkDescriptorPool{ m_RenderContext.GetDevice().GetLogicalDevice(), static_cast<uint16>(m_RenderContext.GetSwapchain().GetImageViews().size() * 2) },
+		m_VkShadowDescriptorSet{ m_RenderContext.GetDevice().GetLogicalDevice(), m_VkDescriptorPool.Get(), m_VkShadowDescriptorSetLayout.Get() },
 		m_Camera{ 80.0f, static_cast<float>(_window.GetWidth()) / _window.GetHeight(), 0.1f, 100.0f, _window.GetWindow() },
-		m_MeshSystem{ m_VkDevice.GetLogicalDevice(), m_VkDevice.GetPhysicalDevice(), m_VkCommandPool.Get(), m_VkDevice.GetGraphicsQueue() },
+		m_MeshSystem{ m_RenderContext.GetDevice().GetLogicalDevice(), m_RenderContext.GetDevice().GetPhysicalDevice(), m_VkCommandPool.Get(), m_RenderContext.GetDevice().GetGraphicsQueue() },
 		m_LightSystem{},
 		m_CurrentFrameIndex{ 0 },
 		m_MaterialDynamicBufferMemAlignment{ 0 },
 		m_MaterialDynamicBufferMemBlock{ nullptr, [](Material* _ptr) noexcept { _aligned_free(_ptr); } },
-		m_ShadowUniformBuffer(m_VkDevice.GetLogicalDevice(), m_VkDevice.GetPhysicalDevice(), sizeof(glm::mat4), VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT)
+		m_ShadowUniformBuffer(m_RenderContext.GetDevice().GetLogicalDevice(), m_RenderContext.GetDevice().GetPhysicalDevice(), sizeof(glm::mat4), VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT)
 	{
 		InitializeGraphicsComponents();
 		AllocateDynamicBufferSpace();
 		CreateDescriptorSetWriteBufferProperties();
 
-		const size_t numOfSwapImages{ m_VkSwapchain.GetImageViews().size() };
+		const size_t numOfSwapImages{ m_RenderContext.GetSwapchain().GetImageViews().size() };
 		m_VPUniformBuffers.reserve(numOfSwapImages);
 		m_MaterialUniformBuffers.reserve(numOfSwapImages);
 		m_LightUniformBuffers.reserve(numOfSwapImages);
@@ -56,10 +50,10 @@ namespace Banshee
 
 		for (size_t i = 0; i < numOfSwapImages; ++i)
 		{
-			m_VPUniformBuffers.emplace_back(m_VkDevice.GetLogicalDevice(), m_VkDevice.GetPhysicalDevice(), sizeof(ViewProjMatrix), VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT);
-			m_MaterialUniformBuffers.emplace_back(m_VkDevice.GetLogicalDevice(), m_VkDevice.GetPhysicalDevice(), m_MaterialDynamicBufferMemAlignment * g_MaxEntities, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT);
-			m_LightUniformBuffers.emplace_back(m_VkDevice.GetLogicalDevice(), m_VkDevice.GetPhysicalDevice(), sizeof(LightBuffer), VK_BUFFER_USAGE_STORAGE_BUFFER_BIT);
-			m_DescriptorSets.emplace_back(m_VkDevice.GetLogicalDevice(), m_VkDescriptorPool.Get(), m_VkSceneDescriptorSetLayout.Get());
+			m_VPUniformBuffers.emplace_back(m_RenderContext.GetDevice().GetLogicalDevice(), m_RenderContext.GetDevice().GetPhysicalDevice(), sizeof(ViewProjMatrix), VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT);
+			m_MaterialUniformBuffers.emplace_back(m_RenderContext.GetDevice().GetLogicalDevice(), m_RenderContext.GetDevice().GetPhysicalDevice(), m_MaterialDynamicBufferMemAlignment * g_MaxEntities, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT);
+			m_LightUniformBuffers.emplace_back(m_RenderContext.GetDevice().GetLogicalDevice(), m_RenderContext.GetDevice().GetPhysicalDevice(), sizeof(LightBuffer), VK_BUFFER_USAGE_STORAGE_BUFFER_BIT);
+			m_DescriptorSets.emplace_back(m_RenderContext.GetDevice().GetLogicalDevice(), m_VkDescriptorPool.Get(), m_VkSceneDescriptorSetLayout.Get());
 		}
 
 		UpdateMaterialData();
@@ -71,7 +65,7 @@ namespace Banshee
 
 	VulkanRenderer::~VulkanRenderer()
 	{
-		vkDeviceWaitIdle(m_VkDevice.GetLogicalDevice());
+		vkDeviceWaitIdle(m_RenderContext.GetDevice().GetLogicalDevice());
 		BE_LOG(LogCategory::Trace, "[RENDERER]: Vulkan shutting down");
 	}
 
@@ -87,8 +81,8 @@ namespace Banshee
 
 	void VulkanRenderer::AllocateDynamicBufferSpace() noexcept
 	{
-		const VkDeviceSize minUniformBufferOffset{ m_VkDevice.GetLimits().minUniformBufferOffsetAlignment };
-		m_MaterialDynamicBufferMemAlignment = (sizeof(Material) + minUniformBufferOffset - 1) & ~(m_VkDevice.GetLimits().minUniformBufferOffsetAlignment - 1);
+		const VkDeviceSize minUniformBufferOffset{ m_RenderContext.GetDevice().GetLimits().minUniformBufferOffsetAlignment };
+		m_MaterialDynamicBufferMemAlignment = (sizeof(Material) + minUniformBufferOffset - 1) & ~(m_RenderContext.GetDevice().GetLimits().minUniformBufferOffsetAlignment - 1);
 		m_MaterialDynamicBufferMemBlock.reset(static_cast<Material*>(_aligned_malloc(m_MaterialDynamicBufferMemAlignment * g_MaxEntities, m_MaterialDynamicBufferMemAlignment)));
 	}
 
@@ -167,7 +161,7 @@ namespace Banshee
 		const glm::vec3 lightDir = glm::normalize(directionalLightComponent->GetLightData().m_Direction);
 		const glm::vec3 lightPos = -lightDir * 10.0f;
 		const glm::mat4 lightViewMatrix = glm::lookAt(lightPos, glm::vec3(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-		const glm::mat4 lightProjMatrix = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, 0.1f, 50.0f);
+		const glm::mat4 lightProjMatrix = glm::ortho(-20.0f, 20.0f, -20.0f, 20.0f, 0.1f, 50.0f);
 		m_LightSpaceMatrix = lightProjMatrix * lightViewMatrix;
 
 		m_ShadowUniformBuffer.CopyData(&m_LightSpaceMatrix);
@@ -212,8 +206,8 @@ namespace Banshee
 
 		const VkResult result{ vkAcquireNextImageKHR
 		(
-			m_VkDevice.GetLogicalDevice(),
-			m_VkSwapchain.Get(),
+			m_RenderContext.GetDevice().GetLogicalDevice(),
+			m_RenderContext.GetSwapchain().Get(),
 			UINT64_MAX,
 			m_VkSemaphores.Get()[m_CurrentFrameIndex].first,
 			VK_NULL_HANDLE,
@@ -222,7 +216,7 @@ namespace Banshee
 
 		if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR)
 		{
-			vkDeviceWaitIdle(m_VkDevice.GetLogicalDevice());
+			vkDeviceWaitIdle(m_RenderContext.GetDevice().GetLogicalDevice());
 
 			const uint32 newWidth{ m_Window.GetWidth() };
 			const uint32 newHeight{ m_Window.GetHeight() };
@@ -232,12 +226,12 @@ namespace Banshee
 				return;
 			}
 
-			m_VkSwapchain.RecreateSwapchain(newWidth, newHeight);
+			m_RenderContext.RecreateSwapchain(newWidth, newHeight);
 			m_VkSceneDepthBuffer.RecreateDepthBuffer(newWidth, newHeight, 0);
-			m_VkShadowDepthBuffer.RecreateDepthBuffer(1024, 1024, VK_IMAGE_USAGE_SAMPLED_BIT);
-			m_VkFramebuffers.RecreateFramebuffers(newWidth, newHeight, m_VkSwapchain.GetImageViews(), m_VkSceneDepthBuffer.GetImageView());
-			m_VkShadowFramebuffer.RecreateFramebuffers(newWidth, newHeight, {}, m_VkShadowDepthBuffer.GetImageView());
-			vkResetCommandPool(m_VkDevice.GetLogicalDevice(), m_VkCommandPool.Get(), 0);
+			//m_VkShadowDepthBuffer.RecreateDepthBuffer(2048, 2048, VK_IMAGE_USAGE_SAMPLED_BIT);
+			//m_VkFramebuffers.RecreateFramebuffers(newWidth, newHeight, m_RenderContext.GetSwapchain().GetImageViews(), m_VkSceneDepthBuffer.GetImageView());
+			//m_VkShadowFramebuffer.RecreateFramebuffers(newWidth, newHeight, {}, m_VkShadowDepthBuffer.GetImageView());
+			vkResetCommandPool(m_RenderContext.GetDevice().GetLogicalDevice(), m_VkCommandPool.Get(), 0);
 			return;
 		}
 
@@ -261,7 +255,7 @@ namespace Banshee
 		m_VkCommandBuffers.Submit
 		(
 			imgIndex,
-			m_VkDevice.GetGraphicsQueue(),
+			m_RenderContext.GetDevice().GetGraphicsQueue(),
 			waitSemaphore,
 			signalSemaphore,
 			m_VkInFlightFences.Get()[m_CurrentFrameIndex],
@@ -274,14 +268,14 @@ namespace Banshee
 		presentInfo.waitSemaphoreCount = 1;
 		presentInfo.pWaitSemaphores = &signalSemaphore;
 
-		VkSwapchainKHR swapchains[] = { m_VkSwapchain.Get() };
+		VkSwapchainKHR swapchains[] = { m_RenderContext.GetSwapchain().Get() };
 		presentInfo.swapchainCount = 1;
 		presentInfo.pSwapchains = swapchains;
 		presentInfo.pImageIndices = &imgIndex;
 		presentInfo.pResults = nullptr;
 
-		vkQueuePresentKHR(m_VkDevice.GetPresentationQueue(), &presentInfo);
-		m_CurrentFrameIndex = (m_CurrentFrameIndex + 1) % m_VkSwapchain.GetImageViews().size();
+		vkQueuePresentKHR(m_RenderContext.GetDevice().GetPresentationQueue(), &presentInfo);
+		m_CurrentFrameIndex = (m_CurrentFrameIndex + 1) % m_RenderContext.GetSwapchain().GetImageViews().size();
 	}
 
 	void VulkanRenderer::RecordRenderCommands(const uint8 _imgIndex)
@@ -301,10 +295,10 @@ namespace Banshee
 	{
 		VkRenderPassBeginInfo renderPassInfo{};
 		renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-		renderPassInfo.renderPass = m_VkShadowRenderPass.Get();
-		renderPassInfo.framebuffer = m_VkShadowFramebuffer.GetDepthFramebuffer();
+		renderPassInfo.renderPass = m_RenderPassManager.GetRenderPass(RenderPassType::DepthOnly)->Get();
+		renderPassInfo.framebuffer = m_FrameResources.GetShadowFramebuffer().GetFramebuffer();
 		renderPassInfo.renderArea.offset = { 0, 0 };
-		renderPassInfo.renderArea.extent = VkExtent2D({ 1024, 1024 });
+		renderPassInfo.renderArea.extent = VkExtent2D({ 2048, 2048 });
 
 		constexpr VkClearDepthStencilValue clearDepthStencil{ 1.0f, 0 };
 
@@ -318,15 +312,15 @@ namespace Banshee
 		VkViewport viewport{};
 		viewport.x = 0.0f;
 		viewport.y = 0.0f;
-		viewport.width = static_cast<float>(1024);
-		viewport.height = static_cast<float>(1024);
+		viewport.width = static_cast<float>(2048);
+		viewport.height = static_cast<float>(2048);
 		viewport.minDepth = 0.0f;
 		viewport.maxDepth = 1.0f;
 		vkCmdSetViewport(_cmdBuffer, 0, 1, &viewport);
 
 		VkRect2D scissor{};
 		scissor.offset = { 0, 0 };
-		scissor.extent = VkExtent2D({ 1024, 1024 });
+		scissor.extent = VkExtent2D({ 2048, 2048 });
 		vkCmdSetScissor(_cmdBuffer, 0, 1, &scissor);
 
 		for (const auto& subMesh : m_MeshSystem.GetAllSubMeshes())
@@ -339,15 +333,16 @@ namespace Banshee
 			vertexBuffer->Bind(_cmdBuffer, indexOffset);
 
 			// Bind graphics pipeline
-			vkCmdBindPipeline(_cmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_VkShadowPipeline.Get());
+			auto pipeline{ m_PipelineManager.GetPipeline(PipelineType::DepthOnly) };
+			vkCmdBindPipeline(_cmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline->Get());
 
 			// Bind descriptor set
 			auto currentDescriptorSet{ m_VkShadowDescriptorSet.Get() };
-			vkCmdBindDescriptorSets(_cmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_VkShadowPipeline.GetLayout(), 0, 1, &m_VkShadowDescriptorSet.Get(), 0, nullptr);
+			vkCmdBindDescriptorSets(_cmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline->GetLayout(), 0, 1, &m_VkShadowDescriptorSet.Get(), 0, nullptr);
 
 			// Push constants
 			const glm::mat4& modelMatrix{ entityModelMatrix * subMesh.GetModelMatrix() };
-			vkCmdPushConstants(_cmdBuffer, m_VkShadowPipeline.GetLayout(), VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(glm::mat4), &modelMatrix);
+			vkCmdPushConstants(_cmdBuffer, pipeline->GetLayout(), VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(glm::mat4), &modelMatrix);
 
 			vkCmdDrawIndexed(_cmdBuffer, subMesh.GetIndexCount(), 1, 0, 0, 0);
 		}
@@ -359,10 +354,10 @@ namespace Banshee
 	{
 		VkRenderPassBeginInfo renderPassInfo{};
 		renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-		renderPassInfo.renderPass = m_VkRenderPass.Get();
-		renderPassInfo.framebuffer = m_VkFramebuffers.Get()[_imgIndex];
+		renderPassInfo.renderPass = m_RenderPassManager.GetRenderPass(RenderPassType::Scene)->Get();
+		renderPassInfo.framebuffer = m_FrameResources.GetFramebuffers()[_imgIndex].GetFramebuffer();
 		renderPassInfo.renderArea.offset = { 0, 0 };
-		renderPassInfo.renderArea.extent = VkExtent2D({ m_VkSwapchain.GetWidth(), m_VkSwapchain.GetHeight() });
+		renderPassInfo.renderArea.extent = VkExtent2D({ m_RenderContext.GetSwapchain().GetWidth(), m_RenderContext.GetSwapchain().GetHeight() });
 
 		// Clear attachments
 		constexpr VkClearColorValue clearColor{ 0.1f, 0.1f, 0.1f, 1.0f };
@@ -379,15 +374,15 @@ namespace Banshee
 		VkViewport viewport{};
 		viewport.x = 0.0f;
 		viewport.y = 0.0f;
-		viewport.width = static_cast<float>(m_VkSwapchain.GetWidth());
-		viewport.height = static_cast<float>(m_VkSwapchain.GetHeight());
+		viewport.width = static_cast<float>(m_RenderContext.GetSwapchain().GetWidth());
+		viewport.height = static_cast<float>(m_RenderContext.GetSwapchain().GetHeight());
 		viewport.minDepth = 0.0f;
 		viewport.maxDepth = 1.0f;
 		vkCmdSetViewport(_cmdBuffer, 0, 1, &viewport);
 
 		VkRect2D scissor{};
 		scissor.offset = { 0, 0 };
-		scissor.extent = VkExtent2D({ m_VkSwapchain.GetWidth(), m_VkSwapchain.GetHeight() });
+		scissor.extent = VkExtent2D({ m_RenderContext.GetSwapchain().GetWidth(), m_RenderContext.GetSwapchain().GetHeight() });
 		vkCmdSetScissor(_cmdBuffer, 0, 1, &scissor);
 
 		for (const auto& subMesh : m_MeshSystem.GetAllSubMeshes())
@@ -400,21 +395,22 @@ namespace Banshee
 			vertexBuffer->Bind(_cmdBuffer, indexOffset);
 
 			// Bind graphics pipeline
-			vkCmdBindPipeline(_cmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_VkStandardGraphicsPipeline.Get());
+			auto pipeline{ m_PipelineManager.GetPipeline(PipelineType::Scene) };
+			vkCmdBindPipeline(_cmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline->Get());
 
 			// Bind descriptor set
 			const uint32 dynamicOffset{ static_cast<uint32>(m_MaterialDynamicBufferMemAlignment) * subMesh.GetMeshId() };
 			auto currentDescriptorSet{ m_DescriptorSets[_imgIndex].Get() };
-			vkCmdBindDescriptorSets(_cmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_VkStandardGraphicsPipeline.GetLayout(), 0, 1, &currentDescriptorSet, 1, &dynamicOffset);
+			vkCmdBindDescriptorSets(_cmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline->GetLayout(), 0, 1, &currentDescriptorSet, 1, &dynamicOffset);
 
 			// Push constants
 			const glm::mat4& modelMatrix{ entityModelMatrix * subMesh.GetModelMatrix() };
 			const PushConstant pc{ modelMatrix, m_Camera.GetPosition(), subMesh.GetTexId() };
-			vkCmdPushConstants(_cmdBuffer, m_VkStandardGraphicsPipeline.GetLayout(), VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(PushConstant), &pc);
+			vkCmdPushConstants(_cmdBuffer, pipeline->GetLayout(), VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(PushConstant), &pc);
 
 			vkCmdDrawIndexed(_cmdBuffer, subMesh.GetIndexCount(), 1, 0, 0, 0);
 		}
 
 		vkCmdEndRenderPass(_cmdBuffer);
 	}
-} // End of Banshee namespace
+} // End of namespace

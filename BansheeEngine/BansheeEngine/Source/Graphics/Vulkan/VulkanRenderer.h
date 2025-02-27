@@ -1,18 +1,16 @@
 #pragma once
 
-#include "VulkanInstance.h"
-#include "VulkanSurface.h"
-#include "VulkanDevice.h"
-#include "VulkanSwapchain.h"
+#include "VulkanRenderContext.h"
 #include "VulkanDepthBuffer.h"
-#include "VulkanRenderPass.h"
+#include "VulkanRenderPassManager.h"
 #include "VulkanDescriptorSetLayout.h"
 #include "VulkanDescriptorPool.h"
 #include "VulkanDescriptorSet.h"
-#include "VulkanGraphicsPipeline.h"
+#include "VulkanPipelineManager.h"
 #include "VulkanCommandPool.h"
 #include "VulkanCommandBuffer.h"
 #include "VulkanFramebuffer.h"
+#include "VulkanFrameResources.h"
 #include "VulkanSemaphore.h"
 #include "VulkanFence.h"
 #include "VulkanUniformBuffer.h"
@@ -57,18 +55,13 @@ namespace Banshee
 
 	private:
 		const Window& m_Window;
-		VulkanInstance m_VkInstance;
-		VulkanSurface m_VkSurface;
-		VulkanDevice m_VkDevice;
-		VulkanSwapchain m_VkSwapchain;
+		VulkanRenderContext m_RenderContext;
 		VulkanDepthBuffer m_VkSceneDepthBuffer;
 		VulkanDepthBuffer m_VkShadowDepthBuffer;
-		VulkanRenderPass m_VkRenderPass;
-		VulkanRenderPass m_VkShadowRenderPass;
+		VulkanRenderPassManager m_RenderPassManager;
 		VulkanCommandPool m_VkCommandPool;
 		VulkanCommandBuffer m_VkCommandBuffers;
-		VulkanFramebuffer m_VkFramebuffers;
-		VulkanFramebuffer m_VkShadowFramebuffer;
+		VulkanFrameResources m_FrameResources;
 		VulkanSemaphore m_VkSemaphores;
 		VulkanFence m_VkInFlightFences;
 		VulkanTextureSampler m_VkTextureSampler;
@@ -76,8 +69,7 @@ namespace Banshee
 		VulkanDescriptorSetLayout m_VkSceneDescriptorSetLayout;
 		VulkanDescriptorSetLayout m_VkShadowDescriptorSetLayout;
 		VulkanDescriptorPool m_VkDescriptorPool;
-		VulkanGraphicsPipeline m_VkStandardGraphicsPipeline;
-		VulkanGraphicsPipeline m_VkShadowPipeline;
+		VulkanPipelineManager m_PipelineManager;
 		std::vector<VulkanUniformBuffer> m_VPUniformBuffers;
 		std::vector<VulkanUniformBuffer> m_MaterialUniformBuffers;
 		std::vector<VulkanUniformBuffer> m_LightUniformBuffers;
@@ -96,4 +88,4 @@ namespace Banshee
 		DescriptorSetWriteBufferProperties m_ShadowDescriptorSetWriteBufferProperties;
 		glm::mat4 m_LightSpaceMatrix;
 	};
-} // End of Banshee namespace
+} // End of namespace

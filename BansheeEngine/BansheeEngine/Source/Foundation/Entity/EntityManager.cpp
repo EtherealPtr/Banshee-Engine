@@ -10,4 +10,4 @@ namespace Banshee
         s_Entities.emplace_back(_entity);
         return static_cast<uint32>(s_Entities.size());
     }
-} // End of Banshee namespace
+} // End of namespace

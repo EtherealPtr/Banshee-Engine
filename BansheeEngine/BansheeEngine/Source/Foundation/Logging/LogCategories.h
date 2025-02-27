@@ -11,4 +11,4 @@ namespace Banshee
 		Warning,
 		Error
 	};
-} // End of Banshee namespace 
+} // End of namespace 

@@ -181,4 +181,4 @@ namespace Banshee
 			_meshData.SetTexId(textureId);
 		}
 	}
-} // End of Banshee namespace
+} // End of namespace

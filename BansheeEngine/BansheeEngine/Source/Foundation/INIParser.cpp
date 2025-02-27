@@ -50,4 +50,4 @@ namespace Banshee
 		BE_LOG(LogCategory::Info, "[CONFIG]: Loaded config.ini");
 		return engineConfig;
 	}
-} // End of Banshee namespace
+} // End of namespace

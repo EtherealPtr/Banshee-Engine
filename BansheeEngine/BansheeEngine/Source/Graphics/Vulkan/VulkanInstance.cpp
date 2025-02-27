@@ -107,4 +107,4 @@ namespace Banshee
 			BE_LOG(LogCategory::Warning, "[INSTANCE]: Failed to create vulkan debug messenger");
 		}
 	}
-} // End of Banshee namespace
+} // End of namespace

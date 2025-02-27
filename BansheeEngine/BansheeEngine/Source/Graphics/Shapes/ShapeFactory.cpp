@@ -36,4 +36,4 @@ namespace Banshee
 			}
 		}
 	}
-} // End of Banshee namespace
+} // End of namespace

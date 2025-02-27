@@ -33,4 +33,4 @@ namespace Banshee
 		using OnImageLoaded = std::function<void(const Image&)>;
 		OnImageLoaded m_OnImageLoaded;
 	};
-} // End of Banshee namespace
+} // End of namespace

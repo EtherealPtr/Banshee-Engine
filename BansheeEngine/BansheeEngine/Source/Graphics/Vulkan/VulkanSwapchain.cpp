@@ -180,4 +180,4 @@ namespace Banshee
 
 		BE_LOG(LogCategory::Info, "[SWAPCHAIN]: Created Vulkan Swapchain");
 	}
-} // End of Banshee namespace
+} // End of namespace

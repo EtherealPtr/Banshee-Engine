@@ -20,4 +20,4 @@ namespace Banshee
 		static std::string m_EngineResDirPath;
 		static std::string m_GeneratedDirPath;
 	};
-} // End of Banshee namespace
+} // End of namespace

@@ -35,4 +35,4 @@ namespace Banshee
 	{
 		m_Data.SetTexId(g_ResourceManager.LoadImageResource(_texturePath));
 	}
-} // End of Banshee namespace
+} // End of namespace

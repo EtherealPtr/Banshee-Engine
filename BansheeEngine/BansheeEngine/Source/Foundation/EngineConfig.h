@@ -18,4 +18,4 @@ namespace Banshee
 		uint32 m_WindowHeight;
 		std::string m_WindowTitle;
 	};
-} // End of Banshee namespace
+} // End of namespace

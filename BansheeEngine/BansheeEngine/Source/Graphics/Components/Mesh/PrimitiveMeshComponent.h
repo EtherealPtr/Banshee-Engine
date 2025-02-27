@@ -24,4 +24,4 @@ namespace Banshee
 		PrimitiveShape m_Shape;
 		MeshData m_Data;
 	};
-} // End of Banshee namespace
+} // End of namespace

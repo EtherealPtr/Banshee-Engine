@@ -93,4 +93,4 @@ namespace Banshee
 		Material m_Material;
 		glm::mat4 m_Model;
 	};
-} // End of Banshee namespace
+} // End of namespace

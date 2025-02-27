@@ -54,4 +54,4 @@ namespace Banshee
 	{
 		vkDestroySampler(m_LogicalDevice, m_TextureSampler, nullptr);
 	}
-} // End of Banshee namespace
+} // End of namespace

@@ -55,4 +55,4 @@ namespace Banshee
         BE_LOG(LogCategory::Trace, "[Elapsed time]: %d", elapsedTime);
         m_TimerRunning = false;
     }
-} // End of Banshee namespace
+} // End of namespace

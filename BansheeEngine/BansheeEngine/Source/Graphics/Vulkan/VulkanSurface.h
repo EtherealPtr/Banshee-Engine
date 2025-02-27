@@ -12,7 +12,7 @@ namespace Banshee
 		VulkanSurface(GLFWwindow* _window, const VkInstance& _instance);
 		~VulkanSurface();
 
-		VkSurfaceKHR Get() const noexcept { return m_Surface; }
+		const VkSurfaceKHR& Get() const noexcept { return m_Surface; }
 
 		VulkanSurface(const VulkanSurface&) = delete;
 		VulkanSurface& operator=(const VulkanSurface&) = delete;
@@ -23,4 +23,4 @@ namespace Banshee
 		VkSurfaceKHR m_Surface;
 		VkInstance m_VkInstance;
 	};
-} // End of Banshee namespace
+} // End of namespace

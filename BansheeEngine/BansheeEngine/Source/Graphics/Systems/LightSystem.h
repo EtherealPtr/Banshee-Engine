@@ -28,4 +28,4 @@ namespace Banshee
     private:
         std::vector<std::shared_ptr<LightComponent>> m_LightComponents;
     };
-} // End of Banshee namespace
+} // End of namespace

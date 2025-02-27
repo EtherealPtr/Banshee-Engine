@@ -14,4 +14,4 @@ namespace Banshee
         static uint32 s_TotalEntities;
         static std::vector<const Entity*> s_Entities;
 	};
-} // End of Banshee namespace
+} // End of namespace

@@ -10,7 +10,7 @@ class ExampleCustomModel : public Entity
 public:
 	explicit ExampleCustomModel(const glm::vec3& _pos = glm::vec3(0.0f))
 	{
-		m_MeshComp = AddComponent<CustomMeshComponent>("Models/scene0.glb", ShaderType::Standard);
+		m_MeshComp = AddComponent<CustomMeshComponent>("Models/monkey.glb", ShaderType::Standard);
 		m_Transform = AddComponent<TransformComponent>();
 		m_Transform->SetPosition(_pos);
 	}
@@ -66,11 +66,10 @@ public:
 	explicit ExampleQuad(const glm::vec3& _pos = glm::vec3(0.0f))
 	{
 		auto meshComponent{ AddComponent<PrimitiveMeshComponent>(PrimitiveShape::SquareShape, ShaderType::Standard) };
-		meshComponent->SetTexture("Textures/tiles.jpg");
-		//meshComponent->SetTintColor(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+		meshComponent->SetTintColor(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
 		m_Transform = AddComponent<TransformComponent>();
 		m_Transform->SetPosition(_pos);
-		m_Transform->SetScale(glm::vec3(10.0f, 10.0f, 1.0f));
+		m_Transform->SetScale(glm::vec3(15.0f, 15.0f, 1.0f));
 		m_Transform->SetRotation(glm::quat(glm::vec3(glm::radians(-90.0f), 0.0f, 0.0f)));
 	}
 

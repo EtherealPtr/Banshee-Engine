@@ -34,4 +34,4 @@ namespace Banshee
 		bool m_TimerRunning;
 		bool m_FpsDisplayEnabled;
 	};
-} // End of Banshee namespace
+} // End of namespace

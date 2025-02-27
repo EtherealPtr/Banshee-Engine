@@ -46,4 +46,4 @@ namespace Banshee
 		vkDestroyDescriptorPool(m_LogicalDevice, m_DescriptorPool, nullptr);
 		m_DescriptorPool = VK_NULL_HANDLE;
 	}
-} // End of Banshee namespace
+} // End of namespace

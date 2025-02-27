@@ -27,4 +27,4 @@ namespace Banshee
 		VkDescriptorPool m_DescriptorPool;
 		VkDescriptorSet m_DescriptorSet;
 	};
-} // End of Banshee namespace
+} // End of namespace

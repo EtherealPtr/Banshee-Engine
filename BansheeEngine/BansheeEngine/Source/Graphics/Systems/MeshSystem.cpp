@@ -111,4 +111,4 @@ namespace Banshee
 
 		m_IsCacheDirty = false;
 	}
-} // End of Banshee namespace
+} // End of namespace

@@ -17,8 +17,8 @@ namespace Banshee
 		VulkanGraphicsPipeline(const VkDevice& _logicalDevice, const VkRenderPass& _renderPass, const VkDescriptorSetLayout& _descriptorSetLayout, const uint32 _w, const uint32 _h, const char* _vertShaderPath);
 		~VulkanGraphicsPipeline();
 
-		VkPipeline Get() const noexcept { return m_GraphicsPipeline; }
-		VkPipelineLayout GetLayout() const noexcept { return m_PipelineLayout; }
+		const VkPipeline& Get() const noexcept { return m_GraphicsPipeline; }
+		const VkPipelineLayout& GetLayout() const noexcept { return m_PipelineLayout; }
 
 		VulkanGraphicsPipeline(const VulkanGraphicsPipeline&) = delete;
 		VulkanGraphicsPipeline& operator=(const VulkanGraphicsPipeline&) = delete;
@@ -30,4 +30,4 @@ namespace Banshee
 		VkPipelineLayout m_PipelineLayout;
 		VkPipeline m_GraphicsPipeline;
 	};
-} // End of Banshee namespace
+} // End of namespace

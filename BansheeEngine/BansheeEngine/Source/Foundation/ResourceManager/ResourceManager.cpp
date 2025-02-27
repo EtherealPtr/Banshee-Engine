@@ -35,4 +35,4 @@ namespace Banshee
 	{
 		return m_ImageManager.GetImages();
 	}
-} // End of Banshee namespace
+} // End of namespace

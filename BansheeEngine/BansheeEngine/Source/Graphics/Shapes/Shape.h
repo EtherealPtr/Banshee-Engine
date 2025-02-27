@@ -12,4 +12,4 @@ namespace Banshee
 		virtual ~Shape() = default;
 		virtual void GetShapeData(std::vector<Vertex>& _vertices, std::vector<uint32>& _indices) const = 0;
 	};
-} // End of Banshee namespace
+} // End of namespace

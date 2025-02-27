@@ -46,4 +46,4 @@ namespace Banshee
 			m_Renderer->DrawFrame(timer.GetDeltaTime());
 		}
 	}
-} // End of Banshee namespace
+} // End of namespace

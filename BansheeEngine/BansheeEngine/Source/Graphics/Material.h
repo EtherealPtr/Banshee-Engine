@@ -27,4 +27,4 @@ namespace Banshee
 		glm::vec4 m_SpecularColor;
 		ShaderType m_ShaderType;
 	};
-} // End of Banshee namespace
+} // End of namespace

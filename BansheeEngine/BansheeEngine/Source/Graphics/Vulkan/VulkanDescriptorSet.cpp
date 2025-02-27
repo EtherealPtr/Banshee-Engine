@@ -114,4 +114,4 @@ namespace Banshee
             vkUpdateDescriptorSets(m_LogicalDevice, 1, &descriptorSetWriter, 0, nullptr);
         }
 	}
-} // End of Banshee namespace
+} // End of namespace

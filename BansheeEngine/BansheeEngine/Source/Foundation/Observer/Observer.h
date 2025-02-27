@@ -7,4 +7,4 @@ namespace Banshee
 	public:
 		virtual void OnNotify() = 0;
 	};
-} // End of Banshee namespace
+} // End of namespace

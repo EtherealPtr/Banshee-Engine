@@ -39,4 +39,4 @@ namespace Banshee
 		ViewProjMatrix m_ViewProjMatrix;
 		KeyboardMouseInput m_InputDevice;
 	};
-} // End of Banshee namespace
+} // End of namespace

@@ -30,4 +30,4 @@ namespace Banshee
 		vkDestroySurfaceKHR(m_VkInstance, m_Surface, nullptr);
 		m_Surface = VK_NULL_HANDLE;
 	}
-} // End of Banshee namespace
+} // End of namespace

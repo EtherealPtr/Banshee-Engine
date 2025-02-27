@@ -18,4 +18,4 @@ namespace Banshee
 		glm::vec2 m_TexCoord;
 		glm::vec3 m_Normal;
 	};
-} // End of Banshee namespace
+} // End of namespace

@@ -11,4 +11,4 @@ namespace Banshee
 	public:
 		static void GetShapeData(const PrimitiveShape _shape, std::vector<Vertex>& _vertices, std::vector<uint32>& _indices);
 	};
-} // End of Banshee namespace
+} // End of namespace

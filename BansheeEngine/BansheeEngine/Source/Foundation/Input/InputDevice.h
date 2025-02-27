@@ -13,4 +13,4 @@ namespace Banshee
         virtual double GetXChange() const noexcept = 0;
         virtual double GetYChange() const noexcept = 0;
     };
-} // End of Banshee namespace
+} // End of namespace

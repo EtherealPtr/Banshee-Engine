@@ -18,7 +18,7 @@ namespace Banshee
 		VulkanSwapchain(const VkDevice& _logicalDevice, const VkPhysicalDevice& _gpu, const VkSurfaceKHR& _surface, const uint32 _w, const uint32 _h);
 		~VulkanSwapchain();
 
-		VkSwapchainKHR Get() const noexcept { return m_Swapchain; }
+		const VkSwapchainKHR& Get() const noexcept { return m_Swapchain; }
 		const std::vector<VkImageView>& GetImageViews() const noexcept { return m_SwapchainImageViews; }
 		uint32 GetWidth() const noexcept { return m_Width; }
 		uint32 GetHeight() const noexcept { return m_Height; }
@@ -44,4 +44,4 @@ namespace Banshee
 		uint32 m_Width;
 		uint32 m_Height;
 	};
-} // End of Banshee namespace
+} // End of namespace

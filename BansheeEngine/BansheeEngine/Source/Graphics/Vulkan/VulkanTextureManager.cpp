@@ -134,4 +134,4 @@ namespace Banshee
 		m_TextureImageViews.emplace_back(textureImageView);
 		BE_LOG(LogCategory::Info, "[TEXTURE]: Created texture image object (total textures: %d)", m_TextureImages.size());
 	}
-} // End of Banshee namespace
+} // End of namespace

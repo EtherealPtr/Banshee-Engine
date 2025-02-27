@@ -30,4 +30,4 @@ namespace Banshee
 		VkDevice m_LogicalDevice;
 		VkDescriptorSetLayout m_DescriptorSetLayout;
 	};
-} // End of Banshee namespace
+} // End of namespace

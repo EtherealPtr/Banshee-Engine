@@ -12,4 +12,4 @@ namespace Banshee
 		PyramidShape,
 		CubeShape
 	};
-} // End of Banshee namespace
+} // End of namespace

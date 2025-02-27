@@ -30,4 +30,4 @@ namespace Banshee
 		const std::string_view modelsFolder{ "Models/" };
 		return PathManager::GetEngineResDirPath() + modelsFolder.data() + m_ModelName;
 	}
-} // End of Banshee namespace
+} // End of namespace

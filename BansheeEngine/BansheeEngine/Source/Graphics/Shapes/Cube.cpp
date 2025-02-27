@@ -53,4 +53,4 @@ namespace Banshee
 			20, 21, 22, 22, 23, 20  // Bottom face
 		};
 	}
-} // End of Banshee namespace
+} // End of namespace

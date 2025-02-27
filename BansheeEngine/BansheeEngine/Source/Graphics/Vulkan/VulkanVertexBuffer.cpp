@@ -119,4 +119,4 @@ namespace Banshee
 		m_IndexBufferMemory = VK_NULL_HANDLE;
 		m_IndexBuffer = VK_NULL_HANDLE;
 	}
-} // End of Banshee namespace
+} // End of namespace

@@ -39,4 +39,4 @@ namespace Banshee
 			semaphores.second = VK_NULL_HANDLE;
 		}
 	}
-} // End of Banshee namespace
+} // End of namespace

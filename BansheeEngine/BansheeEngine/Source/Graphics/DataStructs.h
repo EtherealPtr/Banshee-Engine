@@ -29,4 +29,4 @@ namespace Banshee
 		const glm::vec3 m_CameraPos{ glm::vec3(0.0f) };
 		const uint32 m_TextureIndex{ 0 };
 	};
-} // End of Banshee namespace
+} // End of namespace

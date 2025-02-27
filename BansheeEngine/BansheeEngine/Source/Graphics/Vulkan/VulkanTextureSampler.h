@@ -24,4 +24,4 @@ namespace Banshee
 		VkPhysicalDevice m_PhysicalDevice;
 		VkSampler m_TextureSampler;
 	};
-} // End of Banshee namespace
+} // End of namespace

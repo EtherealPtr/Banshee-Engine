@@ -111,4 +111,4 @@ namespace Banshee
 		vkDestroyDescriptorSetLayout(m_LogicalDevice, m_DescriptorSetLayout, nullptr);
 		m_DescriptorSetLayout = VK_NULL_HANDLE;
 	}
-} // End of Banshee namespace
+} // End of namespace

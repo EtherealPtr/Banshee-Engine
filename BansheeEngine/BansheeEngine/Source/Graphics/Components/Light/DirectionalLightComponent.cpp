@@ -8,4 +8,4 @@ namespace Banshee
 		m_LightData.m_Direction = glm::normalize(glm::vec4(_direction, 0.0f));
 		m_LightData.m_Color = _color;
 	}
-} // End of Banshee namespace
+} // End of namespace
