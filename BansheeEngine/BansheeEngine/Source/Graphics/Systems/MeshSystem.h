@@ -4,13 +4,11 @@
 #include "Graphics/Vulkan/VulkanVertexBufferManager.h"
 #include <memory>
 
-typedef struct VkDevice_T* VkDevice;
-typedef struct VkPhysicalDevice_T* VkPhysicalDevice;
 typedef struct VkCommandPool_T* VkCommandPool;
-typedef struct VkQueue_T* VkQueue;
 
 namespace Banshee
 {
+	class VulkanDevice;
 	class VulkanVertexBuffer;
 	class MeshData;
 	class Entity;
@@ -18,7 +16,7 @@ namespace Banshee
 	class MeshSystem
 	{
 	public:
-		MeshSystem(const VkDevice& _logicalDevice, const VkPhysicalDevice& _physicalDevice, const VkCommandPool& _commandPool, const VkQueue& _graphicsQueue);
+		MeshSystem(const VulkanDevice& _device, const VkCommandPool& _commandPool);
 		~MeshSystem() noexcept = default;
 
 		void ProcessComponents(const Entity* const _entity);

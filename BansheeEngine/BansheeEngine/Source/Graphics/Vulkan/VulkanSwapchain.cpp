@@ -4,7 +4,6 @@
 #include <vulkan/vulkan.h>
 #include <algorithm>
 #include <stdexcept>
-#include <cassert>
 
 namespace Banshee
 {
@@ -90,7 +89,7 @@ namespace Banshee
 		m_Surface{ _surface },
 		m_SwapchainImages{},
 		m_SwapchainImageViews{},
-		m_Format{ 0 }
+		m_Format{ VK_FORMAT_UNDEFINED }
 	{
 		CreateSwapchain(_w, _h);
 	}
@@ -129,7 +128,7 @@ namespace Banshee
 
 		// Pick swapchain surface format and color space
 		const VkSurfaceFormatKHR surfaceFormat{ PickSurfaceFormat(m_GPU, m_Surface) };
-		m_Format = static_cast<unsigned int>(surfaceFormat.format);
+		m_Format = surfaceFormat.format;
 
 		// Pick swapchain present mode
 		const VkPresentModeKHR presentMode{ PickPresentMode(m_GPU, m_Surface) };
@@ -166,7 +165,6 @@ namespace Banshee
 		vkGetSwapchainImagesKHR(m_Device, m_Swapchain, &imageCount, nullptr);
 		m_SwapchainImages.resize(imageCount);
 		vkGetSwapchainImagesKHR(m_Device, m_Swapchain, &imageCount, m_SwapchainImages.data());
-		assert(m_SwapchainImages.size() > 0);
 
 		// Create image views for the swapchain images
 		m_SwapchainImageViews.resize(imageCount);
@@ -175,8 +173,6 @@ namespace Banshee
 		{
 			VulkanUtils::CreateImageView(m_Device, m_SwapchainImages[i], surfaceFormat.format, VK_IMAGE_ASPECT_COLOR_BIT, m_SwapchainImageViews[i]);
 		}
-
-		assert(m_SwapchainImageViews.size() > 0);
 
 		BE_LOG(LogCategory::Info, "[SWAPCHAIN]: Created Vulkan Swapchain");
 	}

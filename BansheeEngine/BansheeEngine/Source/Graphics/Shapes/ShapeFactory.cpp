@@ -6,29 +6,29 @@
 
 namespace Banshee
 {
-	void ShapeFactory::GetShapeData(const PrimitiveShape _shape, std::vector<Vertex>& _vertices, std::vector<uint32>& _indices)
+	void ShapeFactory::GetShapeData(const PrimitiveShapeEnum _shape, std::vector<Vertex>& _vertices, std::vector<uint32>& _indices)
 	{
 		switch (_shape)
 		{
-			case PrimitiveShape::TriangleShape:
+			case PrimitiveShapeEnum::TriangleShape:
 			{
 				Triangle triangle{};
 				triangle.GetShapeData(_vertices, _indices);
 				break;
 			}
-			case PrimitiveShape::SquareShape:
+			case PrimitiveShapeEnum::SquareShape:
 			{
 				Square square{};
 				square.GetShapeData(_vertices, _indices);
 				break;
 			}
-			case PrimitiveShape::PyramidShape:
+			case PrimitiveShapeEnum::PyramidShape:
 			{
 				Pyramid pyramid{};
 				pyramid.GetShapeData(_vertices, _indices);
 				break;
 			}
-			case PrimitiveShape::CubeShape:
+			case PrimitiveShapeEnum::CubeShape:
 			{
 				Cube cube{};
 				cube.GetShapeData(_vertices, _indices);

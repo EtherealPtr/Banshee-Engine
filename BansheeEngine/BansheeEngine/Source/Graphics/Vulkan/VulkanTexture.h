@@ -15,6 +15,8 @@ typedef enum VkFormat VkFormat;
 
 namespace Banshee
 {
+	class VulkanDevice;
+
 	struct VulkanImage
 	{
 		VulkanImage(const VkImage& _image, const VkImageView _imageView, const VkDeviceMemory& _imageMemory) noexcept :
@@ -28,19 +30,19 @@ namespace Banshee
 		VkDeviceMemory m_ImageMemory;
 	};
 
-	class VulkanTextureManager
+	class VulkanTexture
 	{
 	public:
-		VulkanTextureManager(const VkDevice& _device, const VkPhysicalDevice& _gpu, const VkQueue& _graphicsQueue, const VkCommandPool& _commandPool) noexcept;
-		~VulkanTextureManager();
+		VulkanTexture(const VulkanDevice& _device, const VkCommandPool& _commandPool) noexcept;
+		~VulkanTexture();
 
 		const std::vector<VkImageView>& GetTextureImageViews() const noexcept;
 		void UploadTextures();
 
-		VulkanTextureManager(const VulkanTextureManager&) = delete;
-		VulkanTextureManager& operator=(const VulkanTextureManager&) = delete;
-		VulkanTextureManager(VulkanTextureManager&&) = delete;
-		VulkanTextureManager& operator=(VulkanTextureManager&&) = delete;
+		VulkanTexture(const VulkanTexture&) = delete;
+		VulkanTexture& operator=(const VulkanTexture&) = delete;
+		VulkanTexture(VulkanTexture&&) = delete;
+		VulkanTexture& operator=(VulkanTexture&&) = delete;
 
 	private:
 		void CreateStagingBuffer(const uint64 _sizeOfBuffer, const unsigned char* _pixels, const uint32 _imgW, const uint32 _imgH);

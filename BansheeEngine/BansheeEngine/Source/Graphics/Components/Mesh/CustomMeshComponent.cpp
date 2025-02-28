@@ -5,7 +5,7 @@
 
 namespace Banshee
 {
-	CustomMeshComponent::CustomMeshComponent(std::string_view _modelPath, const ShaderType _shaderType) : 
+	CustomMeshComponent::CustomMeshComponent(std::string_view _modelPath, const ShaderTypeEnum _shaderType) : 
 		MeshComponent(_shaderType),
 		m_ModelName{ g_ResourceManager.GetAssetName(_modelPath) },
 		m_Data{}

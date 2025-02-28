@@ -17,6 +17,11 @@ namespace Banshee
 
 		const VkRenderPass& Get() const noexcept { return m_RenderPass; }
 
+		VulkanRenderPass(const VulkanRenderPass&) = delete;
+		VulkanRenderPass& operator=(const VulkanRenderPass&) = delete;
+		VulkanRenderPass(VulkanRenderPass&&) = delete;
+		VulkanRenderPass& operator=(VulkanRenderPass&&) = delete;
+
 	private:
 		VkDevice m_Device;
 		VkRenderPass m_RenderPass;

@@ -1,12 +1,13 @@
 #include "VulkanTextureSampler.h"
+#include "VulkanDevice.h"
 #include "Foundation/Logging/Logger.h"
 #include <vulkan/vulkan.h>
 
 namespace Banshee
 {
-	VulkanTextureSampler::VulkanTextureSampler(const VkDevice& _device, const VkPhysicalDevice& _gpu) :
-		m_LogicalDevice{ _device },
-		m_PhysicalDevice{ _gpu },
+	VulkanTextureSampler::VulkanTextureSampler(const VulkanDevice& _device) :
+		m_LogicalDevice{ _device.GetLogicalDevice() },
+		m_PhysicalDevice{ _device.GetPhysicalDevice() },
 		m_TextureSampler{ VK_NULL_HANDLE }
 	{
 		BE_LOG(LogCategory::Trace, "[SAMPLER]: Creating texture sampler");

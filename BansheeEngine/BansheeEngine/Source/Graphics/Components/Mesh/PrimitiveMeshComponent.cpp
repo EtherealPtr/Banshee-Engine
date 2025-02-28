@@ -4,7 +4,7 @@
 
 namespace Banshee
 {
-	PrimitiveMeshComponent::PrimitiveMeshComponent(const PrimitiveShape _shape, const ShaderType _shaderType) noexcept :
+	PrimitiveMeshComponent::PrimitiveMeshComponent(const PrimitiveShapeEnum _shape, const ShaderTypeEnum _shaderType) noexcept :
 		MeshComponent(_shaderType),
 		m_Shape{ _shape },
 		m_Data{}

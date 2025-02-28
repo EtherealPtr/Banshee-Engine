@@ -11,10 +11,12 @@ typedef enum VkFormat VkFormat;
 
 namespace Banshee
 {
+	class VulkanDevice;
+
 	class VulkanDepthBuffer
 	{
 	public:
-		VulkanDepthBuffer(const VkDevice& _logicalDevice, const VkPhysicalDevice& _gpu, const uint32 _w, const uint32 _h, const uint32 _flags);
+		VulkanDepthBuffer(const VulkanDevice& _device, const uint32 _w, const uint32 _h, const uint32 _flags);
 		~VulkanDepthBuffer();
 
 		void RecreateDepthBuffer(const uint32 _w, const uint32 _h, const uint32 _flags);

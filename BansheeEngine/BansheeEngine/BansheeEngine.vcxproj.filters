@@ -111,7 +111,7 @@
     <ClCompile Include="Source\Foundation\ResourceManager\Image\ImageManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Graphics\Vulkan\VulkanTextureManager.cpp">
+    <ClCompile Include="Source\Graphics\Vulkan\VulkanTexture.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\Foundation\Components\Component.cpp">
@@ -260,7 +260,7 @@
     <ClInclude Include="source\graphics\Vertex.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Graphics\PrimitiveShape.h">
+    <ClInclude Include="Source\Graphics\PrimitiveShapeEnum.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="source\foundation\INIParser.h">
@@ -335,7 +335,7 @@
     <ClInclude Include="Source\Foundation\ResourceManager\Image\Image.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Graphics\Vulkan\VulkanTextureManager.h">
+    <ClInclude Include="Source\Graphics\Vulkan\VulkanTexture.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Foundation\Observer\Observer.h">
@@ -371,7 +371,7 @@
     <ClInclude Include="Source\Graphics\Components\Light\LightData.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Graphics\ShaderType.h">
+    <ClInclude Include="Source\Graphics\ShaderTypeEnum.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Graphics\Systems\LightSystem.h">
@@ -438,6 +438,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Graphics\Vulkan\VulkanFrameResources.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Graphics\SceneDataEnum.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

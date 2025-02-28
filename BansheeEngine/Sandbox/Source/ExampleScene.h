@@ -10,7 +10,7 @@ class ExampleCustomModel : public Entity
 public:
 	explicit ExampleCustomModel(const glm::vec3& _pos = glm::vec3(0.0f))
 	{
-		m_MeshComp = AddComponent<CustomMeshComponent>("Models/monkey.glb", ShaderType::Standard);
+		m_MeshComp = AddComponent<CustomMeshComponent>("Models/monkey.glb", ShaderTypeEnum::Standard);
 		m_Transform = AddComponent<TransformComponent>();
 		m_Transform->SetPosition(_pos);
 	}
@@ -30,7 +30,7 @@ class ExamplePrimitiveModel : public Entity
 public:
 	explicit ExamplePrimitiveModel(const glm::vec3& _pos = glm::vec3(0.0f))
 	{
-		auto meshComponent{ AddComponent<PrimitiveMeshComponent>(PrimitiveShape::CubeShape, ShaderType::Standard) };
+		auto meshComponent{ AddComponent<PrimitiveMeshComponent>(PrimitiveShapeEnum::CubeShape, ShaderTypeEnum::Standard) };
 		meshComponent->SetTexture("Textures/tiles.jpg");
 		m_Transform = AddComponent<TransformComponent>();
 		m_Transform->SetPosition(_pos);
@@ -45,7 +45,7 @@ class ExampleCube : public Entity
 public:
 	explicit ExampleCube(const glm::vec3& _pos = glm::vec3(0.0f))
 	{
-		auto meshComponent{ AddComponent<PrimitiveMeshComponent>(PrimitiveShape::CubeShape, ShaderType::Standard) };
+		auto meshComponent{ AddComponent<PrimitiveMeshComponent>(PrimitiveShapeEnum::CubeShape, ShaderTypeEnum::Standard) };
 		meshComponent->SetTexture("Textures/tiles.jpg");
 		m_Transform = AddComponent<TransformComponent>();
 		m_Transform->SetPosition(_pos);
@@ -65,7 +65,7 @@ class ExampleQuad : public Entity
 public:
 	explicit ExampleQuad(const glm::vec3& _pos = glm::vec3(0.0f))
 	{
-		auto meshComponent{ AddComponent<PrimitiveMeshComponent>(PrimitiveShape::SquareShape, ShaderType::Standard) };
+		auto meshComponent{ AddComponent<PrimitiveMeshComponent>(PrimitiveShapeEnum::SquareShape, ShaderTypeEnum::Standard) };
 		meshComponent->SetTintColor(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
 		m_Transform = AddComponent<TransformComponent>();
 		m_Transform->SetPosition(_pos);

@@ -1,12 +1,13 @@
 #include "VulkanDepthBuffer.h"
+#include "VulkanDevice.h"
 #include "VulkanUtils.h"
 #include <vulkan/vulkan.h>
 
 namespace Banshee
 {
-	VulkanDepthBuffer::VulkanDepthBuffer(const VkDevice& _logicalDevice, const VkPhysicalDevice& _gpu, const uint32 _w, const uint32 _h, const uint32 _flags) :
-		m_Device{ _logicalDevice },
-		m_GPU{ _gpu },
+	VulkanDepthBuffer::VulkanDepthBuffer(const VulkanDevice& _device, const uint32 _w, const uint32 _h, const uint32 _flags) :
+		m_Device{ _device.GetLogicalDevice() },
+		m_GPU{ _device.GetPhysicalDevice() },
 		m_DepthImage{ VK_NULL_HANDLE },
 		m_DepthImageView{ VK_NULL_HANDLE },
 		m_DepthImageMemory{ VK_NULL_HANDLE },

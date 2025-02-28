@@ -1,13 +1,14 @@
 #include "MeshSystem.h"
 #include "Foundation/Entity/Entity.h"
+#include "Graphics/Vulkan/VulkanDevice.h"
 #include "Graphics/Components/Mesh/PrimitiveMeshComponent.h"
 #include "Graphics/Components/Mesh/CustomMeshComponent.h"
 #include <algorithm>
 
 namespace Banshee
 {
-	MeshSystem::MeshSystem(const VkDevice& _logicalDevice, const VkPhysicalDevice& _physicalDevice, const VkCommandPool& _commandPool, const VkQueue& _graphicsQueue) :
-		m_VertexBufferManager{ _logicalDevice, _physicalDevice, _commandPool, _graphicsQueue },
+	MeshSystem::MeshSystem(const VulkanDevice& _device, const VkCommandPool& _commandPool) :
+		m_VertexBufferManager{ _device.GetLogicalDevice(), _device.GetPhysicalDevice(), _commandPool, _device.GetGraphicsQueue() },
 		m_CachedSubMeshes{},
 		m_VertexBufferIdToSubMeshes{},
 		m_IsCacheDirty{ true },
@@ -16,12 +17,12 @@ namespace Banshee
 
 	void MeshSystem::ProcessComponents(const Entity* const _entity)
 	{
-		if (const auto& primitiveMesh{ _entity->GetComponent<PrimitiveMeshComponent>() })
+		if (const auto & primitiveMesh{ _entity->GetComponent<PrimitiveMeshComponent>() })
 		{
 			m_VertexBufferManager.CreateBasicShapeVertexBuffer(*primitiveMesh.get());
 			AddMesh(primitiveMesh.get()->GetMeshData());
 		}
-		else if (const auto& modelMesh{ _entity->GetComponent<CustomMeshComponent>() })
+		else if (const auto & modelMesh{ _entity->GetComponent<CustomMeshComponent>() })
 		{
 			m_VertexBufferManager.CreateModelVertexBuffer(*modelMesh.get());
 			const auto& existingSubMeshes{ GetSubMeshes(modelMesh.get()->GetVertexBufferId()) };

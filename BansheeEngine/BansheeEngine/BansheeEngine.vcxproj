@@ -156,7 +156,7 @@ xcopy /y "$(TargetDir)BansheeEngine.dll" "$(SolutionDir)Binaries\Sandbox-$(Confi
     <ClCompile Include="source\Graphics\Vulkan\VulkanVertexBuffer.cpp" />
     <ClCompile Include="Source\Graphics\Vulkan\VulkanTextureSampler.cpp" />
     <ClCompile Include="Source\Graphics\Components\Transform\TransformComponent.cpp" />
-    <ClCompile Include="Source\Graphics\Vulkan\VulkanTextureManager.cpp" />
+    <ClCompile Include="Source\Graphics\Vulkan\VulkanTexture.cpp" />
     <ClCompile Include="Source\Graphics\Shapes\Square.cpp" />
     <ClCompile Include="Source\Graphics\Systems\TransformationSystem.cpp" />
     <ClCompile Include="Source\Graphics\Components\Light\SpotLightComponent.cpp" />
@@ -171,6 +171,7 @@ xcopy /y "$(TargetDir)BansheeEngine.dll" "$(SolutionDir)Binaries\Sandbox-$(Confi
     <ClInclude Include="Source\Graphics\Components\Mesh\CustomMeshComponent.h" />
     <ClInclude Include="Source\Graphics\Components\Mesh\PrimitiveMeshComponent.h" />
     <ClInclude Include="Source\Graphics\DataStructs.h" />
+    <ClInclude Include="Source\Graphics\SceneDataEnum.h" />
     <ClInclude Include="Source\Graphics\Shapes\Pyramid.h" />
     <ClInclude Include="Source\Graphics\Shapes\Cube.h" />
     <ClInclude Include="Dependencies\tinygltf\tiny_gltf.h" />
@@ -182,7 +183,7 @@ xcopy /y "$(TargetDir)BansheeEngine.dll" "$(SolutionDir)Binaries\Sandbox-$(Confi
     <ClInclude Include="Source\Foundation\Timer\Timer.h" />
     <ClInclude Include="Source\Graphics\Components\Light\LightComponent.h" />
     <ClInclude Include="Source\Graphics\Components\Light\LightData.h" />
-    <ClInclude Include="Source\Graphics\ShaderType.h" />
+    <ClInclude Include="Source\Graphics\ShaderTypeEnum.h" />
     <ClInclude Include="Source\Graphics\Shapes\Shape.h" />
     <ClInclude Include="Source\Graphics\Shapes\Triangle.h" />
     <ClInclude Include="Source\Graphics\Systems\LightSystem.h" />
@@ -214,7 +215,7 @@ xcopy /y "$(TargetDir)BansheeEngine.dll" "$(SolutionDir)Binaries\Sandbox-$(Confi
     <ClInclude Include="Source\Foundation\ResourceManager\File\FileManager.h" />
     <ClInclude Include="source\foundation\Logging\Logger.h" />
     <ClInclude Include="source\foundation\Platform.h" />
-    <ClInclude Include="Source\Graphics\PrimitiveShape.h" />
+    <ClInclude Include="Source\Graphics\PrimitiveShapeEnum.h" />
     <ClInclude Include="Source\Graphics\Shapes\ShapeFactory.h" />
     <ClInclude Include="source\Graphics\Vertex.h" />
     <ClInclude Include="Source\Graphics\Vulkan\VulkanDepthBuffer.h" />
@@ -242,7 +243,7 @@ xcopy /y "$(TargetDir)BansheeEngine.dll" "$(SolutionDir)Binaries\Sandbox-$(Confi
     <ClInclude Include="source\Graphics\Vulkan\VulkanVertexBuffer.h" />
     <ClInclude Include="Source\Graphics\Vulkan\VulkanTextureSampler.h" />
     <ClInclude Include="Source\Graphics\Components\Transform\TransformComponent.h" />
-    <ClInclude Include="Source\Graphics\Vulkan\VulkanTextureManager.h" />
+    <ClInclude Include="Source\Graphics\Vulkan\VulkanTexture.h" />
     <ClInclude Include="Source\Graphics\Shapes\Square.h" />
     <ClInclude Include="Source\Graphics\Systems\TransformationSystem.h" />
     <ClInclude Include="Source\Graphics\Components\Light\SpotLightComponent.h" />

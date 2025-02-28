@@ -4,7 +4,7 @@
 
 namespace Banshee
 {
-    enum class ShaderType : uint8
+    enum class ShaderTypeEnum : uint8
     {
         Standard,   // Phong lighting
         Unlit       // No lighting, just texture and color

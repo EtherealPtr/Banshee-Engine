@@ -6,10 +6,12 @@ typedef struct VkSampler_T* VkSampler;
 
 namespace Banshee
 {
+	class VulkanDevice;
+
 	class VulkanTextureSampler
 	{
 	public:
-		VulkanTextureSampler(const VkDevice& _device, const VkPhysicalDevice& _gpu);
+		VulkanTextureSampler(const VulkanDevice& _device);
 		~VulkanTextureSampler();
 
 		const VkSampler& Get() const noexcept { return m_TextureSampler; }

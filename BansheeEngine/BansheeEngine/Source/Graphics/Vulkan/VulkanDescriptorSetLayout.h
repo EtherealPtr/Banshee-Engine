@@ -1,22 +1,17 @@
 #pragma once
 
-#include "Foundation/Platform.h"
+#include "Graphics/SceneDataEnum.h"
 
 typedef struct VkDevice_T* VkDevice;
 typedef struct VkDescriptorSetLayout_T* VkDescriptorSetLayout;
 
 namespace Banshee
 {
-	enum class DescriptorSetLayoutType : uint8
-	{
-		Standard,
-		DepthOnly
-	};
 
 	class VulkanDescriptorSetLayout
 	{
 	public:
-		VulkanDescriptorSetLayout(const VkDevice& _logicalDevice, const DescriptorSetLayoutType _descriptorSetLayoutType);
+		VulkanDescriptorSetLayout(const VkDevice& _logicalDevice, const SceneDataEnum _descriptorSetLayoutType);
 		~VulkanDescriptorSetLayout();
 
 		const VkDescriptorSetLayout& Get() noexcept { return m_DescriptorSetLayout; }

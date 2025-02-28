@@ -7,9 +7,9 @@ class ClientApp : public Banshee::Application
 {
 public:
 	ClientApp() :
-		m_DirectionalLight{ glm::vec3(0.5f, -0.2f, -1.0f), glm::vec4(1.0f, 1.0f, 1.0f, 1.0f) },
+		m_DirectionalLight{ glm::vec3(0.5f, -0.5f, -1.0f), glm::vec4(1.0f, 1.0f, 1.0f, 1.0f) },
 		m_Ground{},
-		m_CustomModel(glm::vec3(0.0f, 1.0f, 0.0f))
+		m_CustomModel{ glm::vec3(0.0f, 1.0f, 0.0f) }
 	{
 		const std::array<glm::vec3, 3> cubePositions
 		{

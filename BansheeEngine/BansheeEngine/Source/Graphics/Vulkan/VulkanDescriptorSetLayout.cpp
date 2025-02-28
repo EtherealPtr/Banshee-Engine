@@ -6,7 +6,7 @@
 
 namespace Banshee
 {
-	VulkanDescriptorSetLayout::VulkanDescriptorSetLayout(const VkDevice& _logicalDevice, const DescriptorSetLayoutType _descriptorSetLayoutType) :
+	VulkanDescriptorSetLayout::VulkanDescriptorSetLayout(const VkDevice& _logicalDevice, const SceneDataEnum _descriptorSetLayoutType) :
 		m_LogicalDevice{ _logicalDevice },
 		m_DescriptorSetLayout{ VK_NULL_HANDLE }
 	{
@@ -14,7 +14,7 @@ namespace Banshee
 
 		std::vector<VkDescriptorSetLayoutBinding> layoutBindings;
 
-		if (_descriptorSetLayoutType == DescriptorSetLayoutType::Standard)
+		if (_descriptorSetLayoutType == SceneDataEnum::Scene)
 		{
 			layoutBindings.resize(7);
 
@@ -75,7 +75,7 @@ namespace Banshee
 			layoutBindings[6].pImmutableSamplers = nullptr;
 			BE_LOG(LogCategory::Trace, "[DESCRIPTOR SET LAYOUT]: Added VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER at binding 6");
 		}
-		else if (_descriptorSetLayoutType == DescriptorSetLayoutType::DepthOnly)
+		else if (_descriptorSetLayoutType == SceneDataEnum::DepthOnly)
 		{
 			layoutBindings.resize(1);
 
