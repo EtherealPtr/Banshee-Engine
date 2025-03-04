@@ -6,9 +6,24 @@ namespace Banshee
 {
 	void LightSystem::ProcessComponents(const Entity* const _entity)
 	{
-        if (auto lightComponent{ _entity->GetComponent<LightComponent>() })
+        if (const auto lightComponent = _entity->GetComponent<LightComponent>())
         {
-            AddLightComponent(lightComponent);
+            AddLightComponent(*lightComponent);
         }
 	}
-} // End of Banshee namespace
+
+    void LightSystem::AddLightComponent(const LightComponent& _lightComponent)
+    {
+        m_LightComponents.emplace_back(_lightComponent);
+
+        if (!_lightComponent.IsDirectionalLight())
+        {
+            return;
+        }
+
+        if (!m_DirectionalLight.has_value())
+        {
+            m_DirectionalLight = static_cast<const DirectionalLightComponent&>(_lightComponent);
+        }
+    }
+} // End of namespace

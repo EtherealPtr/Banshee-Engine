@@ -1,10 +1,8 @@
 #include "VulkanSwapchain.h"
 #include "VulkanUtils.h"
 #include "Foundation/Logging/Logger.h"
-#include <vulkan/vulkan.h>
+#include <vulkan/vulkan_core.h>
 #include <algorithm>
-#include <stdexcept>
-#include <cassert>
 
 namespace Banshee
 {
@@ -27,13 +25,13 @@ namespace Banshee
 		}
 
 		BE_LOG(LogCategory::Info, "[SWAPCHAIN]: Selected default surface format");
-		return surfaceFormats[0];
+		return surfaceFormats.at(0);
 	}
 
 	static VkPresentModeKHR PickPresentMode(const VkPhysicalDevice& _gpu, const VkSurfaceKHR& _surface)
 	{
 		// Query available present modes
-		uint32 presentModeCount = 0;
+		uint32 presentModeCount{ 0 };
 		vkGetPhysicalDeviceSurfacePresentModesKHR(_gpu, _surface, &presentModeCount, nullptr);
 		std::vector<VkPresentModeKHR> presentModes(presentModeCount);
 		vkGetPhysicalDeviceSurfacePresentModesKHR(_gpu, _surface, &presentModeCount, presentModes.data());
@@ -90,7 +88,7 @@ namespace Banshee
 		m_Surface{ _surface },
 		m_SwapchainImages{},
 		m_SwapchainImageViews{},
-		m_Format{ 0 }
+		m_Format{ VK_FORMAT_UNDEFINED }
 	{
 		CreateSwapchain(_w, _h);
 	}
@@ -129,7 +127,7 @@ namespace Banshee
 
 		// Pick swapchain surface format and color space
 		const VkSurfaceFormatKHR surfaceFormat{ PickSurfaceFormat(m_GPU, m_Surface) };
-		m_Format = static_cast<unsigned int>(surfaceFormat.format);
+		m_Format = surfaceFormat.format;
 
 		// Pick swapchain present mode
 		const VkPresentModeKHR presentMode{ PickPresentMode(m_GPU, m_Surface) };
@@ -166,18 +164,15 @@ namespace Banshee
 		vkGetSwapchainImagesKHR(m_Device, m_Swapchain, &imageCount, nullptr);
 		m_SwapchainImages.resize(imageCount);
 		vkGetSwapchainImagesKHR(m_Device, m_Swapchain, &imageCount, m_SwapchainImages.data());
-		assert(m_SwapchainImages.size() > 0);
 
 		// Create image views for the swapchain images
 		m_SwapchainImageViews.resize(imageCount);
 
 		for (uint32 i = 0; i < imageCount; ++i)
 		{
-			VulkanUtils::CreateImageView(m_Device, m_SwapchainImages[i], surfaceFormat.format, VK_IMAGE_ASPECT_COLOR_BIT, m_SwapchainImageViews[i]);
+			VulkanUtils::CreateImageView(m_Device, m_SwapchainImages.at(i), surfaceFormat.format, VK_IMAGE_ASPECT_COLOR_BIT, m_SwapchainImageViews.at(i));
 		}
-
-		assert(m_SwapchainImageViews.size() > 0);
 
 		BE_LOG(LogCategory::Info, "[SWAPCHAIN]: Created Vulkan Swapchain");
 	}
-} // End of Banshee namespace
+} // End of namespace

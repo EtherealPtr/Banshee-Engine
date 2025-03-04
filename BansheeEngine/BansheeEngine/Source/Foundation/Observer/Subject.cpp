@@ -29,4 +29,4 @@ namespace Banshee
 			observer->OnNotify();
 		}
 	}
-} // End of Banshee namespace
+} // End of namespace

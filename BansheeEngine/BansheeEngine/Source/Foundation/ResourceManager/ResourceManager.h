@@ -33,4 +33,4 @@ namespace Banshee
 	};
 
 	extern const ResourceManager g_ResourceManager; // Defined in ResourceManager.cpp
-} // End of Banshee namespace
+} // End of namespace

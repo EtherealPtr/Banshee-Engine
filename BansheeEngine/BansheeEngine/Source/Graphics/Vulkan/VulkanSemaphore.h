@@ -14,7 +14,7 @@ namespace Banshee
 		VulkanSemaphore(const VkDevice& _logicalDevice, const uint16 _count = 1);
 		~VulkanSemaphore();
 
-		std::vector<std::pair<VkSemaphore, VkSemaphore>>& Get() noexcept { return m_Semaphores; }
+		const std::vector<std::pair<VkSemaphore, VkSemaphore>>& Get() noexcept { return m_Semaphores; }
 
 		VulkanSemaphore(const VulkanSemaphore&) = delete;
 		VulkanSemaphore& operator=(const VulkanSemaphore&) = delete;
@@ -25,4 +25,4 @@ namespace Banshee
 		VkDevice m_LogicalDevice;
 		std::vector<std::pair<VkSemaphore, VkSemaphore>> m_Semaphores;
 	};
-} // End of Banshee namespace
+} // End of namespace

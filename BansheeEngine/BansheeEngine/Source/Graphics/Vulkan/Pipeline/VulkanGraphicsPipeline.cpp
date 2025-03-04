@@ -1,32 +1,32 @@
 #include "VulkanGraphicsPipeline.h"
-#include "VulkanUtils.h"
+#include "Graphics/Vulkan/VulkanRenderContext.h"
+#include "Graphics/Vulkan/VulkanUtils.h"
 #include "Foundation/ResourceManager/ResourceManager.h"
 #include "Foundation/Logging/Logger.h"
 #include "Graphics/Vertex.h"
-#include "Graphics/MVP.h"
-#include <vulkan/vulkan.h>
-#include <string>
-#include <stdexcept>
+#include "Graphics/DataStructs.h"
 #include <array>
+#include <vulkan/vulkan_core.h>
 
 namespace Banshee
 {
-	VulkanGraphicsPipeline::VulkanGraphicsPipeline(const VkDevice& _logicalDevice, const VkRenderPass& _renderPass, const VkDescriptorSetLayout& _descriptorSetLayout, const uint32 _w, const uint32 _h, const char* _vertShaderPath, const char* _fragShaderPath) :
-		m_LogicalDevice{ _logicalDevice },
-		m_PipelineLayout{ VK_NULL_HANDLE },
-		m_GraphicsPipeline{ VK_NULL_HANDLE }
+	VulkanGraphicsPipeline::VulkanGraphicsPipeline(const VulkanRenderContext& _renderContext, const VkDescriptorSetLayout& _descriptorSetLayout, const VkRenderPass& _renderPass) :
+		VulkanPipelineBase{ _renderContext, _descriptorSetLayout, _renderPass },
+		m_Width{ _renderContext.GetSwapchain().GetWidth() },
+		m_Height{ _renderContext.GetSwapchain().GetHeight() }
+	{
+		CreatePipeline();
+	}
+
+	void VulkanGraphicsPipeline::CreatePipeline()
 	{
 		BE_LOG(LogCategory::Trace, "[GRAPHICS PIPELINE]: Creating graphics pipeline");
 
-		// Vertex creation stage
-		BE_LOG(LogCategory::Trace, "[GRAPHICS PIPELINE]: Using vertex shader %s", _vertShaderPath);
-		BE_LOG(LogCategory::Trace, "[GRAPHICS PIPELINE]: Using frag shader %s", _fragShaderPath);
+		const auto vertShaderBinary{ g_ResourceManager.ReadBinaryFile("Shaders/Standard/standard_vert.spv") };
+		const auto fragShaderBinary{ g_ResourceManager.ReadBinaryFile("Shaders/Standard/standard_frag.spv") };
 
-		auto vertShaderBinary{ g_ResourceManager.ReadBinaryFile(_vertShaderPath) };
-		auto fragShaderBinary{ g_ResourceManager.ReadBinaryFile(_fragShaderPath) };
-
-		VkShaderModule vertexShaderModule = VulkanUtils::CreateShaderModule(_logicalDevice, vertShaderBinary);
-		VkShaderModule fragmentShaderModule = VulkanUtils::CreateShaderModule(_logicalDevice, fragShaderBinary);
+		VkShaderModule vertexShaderModule{ VulkanUtils::CreateShaderModule(m_Device, vertShaderBinary) };
+		VkShaderModule fragmentShaderModule{ VulkanUtils::CreateShaderModule(m_Device, fragShaderBinary) };
 
 		// Shader creation stage
 		VkPipelineShaderStageCreateInfo vertexShaderCreateInfo{};
@@ -41,7 +41,7 @@ namespace Banshee
 		fragmentShaderCreateInfo.module = fragmentShaderModule;
 		fragmentShaderCreateInfo.pName = "main";
 
-		const VkPipelineShaderStageCreateInfo shaderStageCreateInfos[] = { vertexShaderCreateInfo, fragmentShaderCreateInfo };
+		const VkPipelineShaderStageCreateInfo shaderStageCreateInfos[]{ vertexShaderCreateInfo, fragmentShaderCreateInfo };
 
 		// Vertex input stage
 		VkVertexInputBindingDescription inputBindingDescription{};
@@ -50,20 +50,20 @@ namespace Banshee
 		inputBindingDescription.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
 
 		std::array<VkVertexInputAttributeDescription, 3> inputAttributeDescriptions{};
-		inputAttributeDescriptions[0].binding = 0;
-		inputAttributeDescriptions[0].location = 0;
-		inputAttributeDescriptions[0].format = VK_FORMAT_R32G32B32_SFLOAT;
-		inputAttributeDescriptions[0].offset = 0;
+		inputAttributeDescriptions.at(0).binding = 0;
+		inputAttributeDescriptions.at(0).location = 0;
+		inputAttributeDescriptions.at(0).format = VK_FORMAT_R32G32B32_SFLOAT;
+		inputAttributeDescriptions.at(0).offset = 0;
 
-		inputAttributeDescriptions[1].binding = 0;
-		inputAttributeDescriptions[1].location = 1;
-		inputAttributeDescriptions[1].format = VK_FORMAT_R32G32_SFLOAT;
-		inputAttributeDescriptions[1].offset = offsetof(Vertex, m_TexCoord);
+		inputAttributeDescriptions.at(1).binding = 0;
+		inputAttributeDescriptions.at(1).location = 1;
+		inputAttributeDescriptions.at(1).format = VK_FORMAT_R32G32_SFLOAT;
+		inputAttributeDescriptions.at(1).offset = offsetof(Vertex, m_TexCoord);
 
-		inputAttributeDescriptions[2].binding = 0;
-		inputAttributeDescriptions[2].location = 2;
-		inputAttributeDescriptions[2].format = VK_FORMAT_R32G32B32_SFLOAT;
-		inputAttributeDescriptions[2].offset = offsetof(Vertex, m_Normal);
+		inputAttributeDescriptions.at(2).binding = 0;
+		inputAttributeDescriptions.at(2).location = 2;
+		inputAttributeDescriptions.at(2).format = VK_FORMAT_R32G32B32_SFLOAT;
+		inputAttributeDescriptions.at(2).offset = offsetof(Vertex, m_Normal);
 
 		VkPipelineVertexInputStateCreateInfo vertexInputCreateInfo{};
 		vertexInputCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
@@ -94,14 +94,14 @@ namespace Banshee
 		VkViewport viewport{};
 		viewport.x = 0.0f;
 		viewport.y = 0.0f;
-		viewport.width = static_cast<float>(_w);
-		viewport.height = static_cast<float>(_h);
+		viewport.width = static_cast<float>(m_Width);
+		viewport.height = static_cast<float>(m_Height);
 		viewport.minDepth = 0.0f;
 		viewport.maxDepth = 1.0f;
 
 		VkRect2D scissor{};
 		scissor.offset = { 0, 0 };
-		scissor.extent = VkExtent2D({ _w, _h });
+		scissor.extent = VkExtent2D({ m_Width, m_Height });
 
 		VkPipelineViewportStateCreateInfo viewportStateCreateInfo{};
 		viewportStateCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;
@@ -164,20 +164,21 @@ namespace Banshee
 		depthStencilCreateInfo.front = {};
 		depthStencilCreateInfo.back = {};
 
-		// Pipeline layout stage
+		// Define push constant
 		VkPushConstantRange pushConstantRange{};
 		pushConstantRange.offset = 0;
 		pushConstantRange.size = sizeof(PushConstant);
 		pushConstantRange.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
 
+		// Pipeline layout stage
 		VkPipelineLayoutCreateInfo pipelineLayoutCreateInfo{};
 		pipelineLayoutCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
 		pipelineLayoutCreateInfo.pushConstantRangeCount = 1;
 		pipelineLayoutCreateInfo.pPushConstantRanges = &pushConstantRange;
 		pipelineLayoutCreateInfo.setLayoutCount = 1;
-		pipelineLayoutCreateInfo.pSetLayouts = &_descriptorSetLayout;
+		pipelineLayoutCreateInfo.pSetLayouts = &m_DescriptorSetLayout;
 
-		if (vkCreatePipelineLayout(_logicalDevice, &pipelineLayoutCreateInfo, nullptr, &m_PipelineLayout) != VK_SUCCESS)
+		if (vkCreatePipelineLayout(m_Device, &pipelineLayoutCreateInfo, nullptr, &m_PipelineLayout) != VK_SUCCESS)
 		{
 			throw std::runtime_error("ERROR: Failed to create a pipeline layout");
 		}
@@ -195,28 +196,19 @@ namespace Banshee
 		graphicsPipelineCreateInfo.pColorBlendState = &colorBlendStateCreateInfo;
 		graphicsPipelineCreateInfo.pDynamicState = &dynamicStateCreateInfo;
 		graphicsPipelineCreateInfo.layout = m_PipelineLayout;
-		graphicsPipelineCreateInfo.renderPass = _renderPass;
+		graphicsPipelineCreateInfo.renderPass = m_RenderPass;
 		graphicsPipelineCreateInfo.subpass = 0;
 		graphicsPipelineCreateInfo.basePipelineHandle = VK_NULL_HANDLE;
 		graphicsPipelineCreateInfo.basePipelineIndex = -1;
 
-		if (vkCreateGraphicsPipelines(_logicalDevice, VK_NULL_HANDLE, 1, &graphicsPipelineCreateInfo, nullptr, &m_GraphicsPipeline) != VK_SUCCESS)
+		if (vkCreateGraphicsPipelines(m_Device, VK_NULL_HANDLE, 1, &graphicsPipelineCreateInfo, nullptr, &m_Pipeline) != VK_SUCCESS)
 		{
 			throw std::runtime_error("ERROR: Failed to create a graphics pipeline");
 		}
 
-		vkDestroyShaderModule(_logicalDevice, vertexShaderModule, nullptr);
-		vkDestroyShaderModule(_logicalDevice, fragmentShaderModule, nullptr);
+		vkDestroyShaderModule(m_Device, vertexShaderModule, nullptr);
+		vkDestroyShaderModule(m_Device, fragmentShaderModule, nullptr);
 
 		BE_LOG(LogCategory::Info, "[GRAPHICS PIPELINE]: Created graphics pipeline");
 	}
-
-	VulkanGraphicsPipeline::~VulkanGraphicsPipeline()
-	{
-		vkDestroyPipeline(m_LogicalDevice, m_GraphicsPipeline, nullptr);
-		m_GraphicsPipeline = VK_NULL_HANDLE;
-
-		vkDestroyPipelineLayout(m_LogicalDevice, m_PipelineLayout, nullptr);
-		m_PipelineLayout = VK_NULL_HANDLE;
-	}
-} // End of Banshee namespace
+} // End of namespace

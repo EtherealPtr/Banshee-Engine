@@ -19,4 +19,4 @@ namespace Banshee
 		void operator=(const FileManager&) = delete;
 		void operator=(FileManager&&) = delete;
 	};
-} // End of Banshee namespace
+} // End of namespace

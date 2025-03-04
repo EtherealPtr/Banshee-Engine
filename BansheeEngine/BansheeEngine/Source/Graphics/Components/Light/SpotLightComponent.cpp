@@ -37,4 +37,4 @@ namespace Banshee
 	{
 		m_LightData.m_CutoffAngles = glm::vec4(glm::cos(glm::radians(_innerCutoffAngle)), glm::cos(glm::radians(_outerCutoffAngle)), 0.0f, 0.0f);
 	}
-} // End of Banshee namespace
+} // End of namespace

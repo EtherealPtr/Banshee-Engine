@@ -11,8 +11,9 @@ namespace Banshee
 	public:
 		const LightData& GetLightData() const noexcept { return m_LightData; }
 		virtual void UpdatePosition() noexcept {};
+		virtual bool IsDirectionalLight() const noexcept { return false; }
 
 	protected:
 		LightData m_LightData;
 	};
-} // End of Banshee namespace
+} // End of namespace

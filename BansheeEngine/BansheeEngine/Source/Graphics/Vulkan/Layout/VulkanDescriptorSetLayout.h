@@ -1,7 +1,5 @@
 #pragma once
 
-#include "Foundation/Platform.h"
-
 typedef struct VkDevice_T* VkDevice;
 typedef struct VkDescriptorSetLayout_T* VkDescriptorSetLayout;
 
@@ -10,18 +8,21 @@ namespace Banshee
 	class VulkanDescriptorSetLayout
 	{
 	public:
-		VulkanDescriptorSetLayout(const VkDevice& _logicalDevice);
-		~VulkanDescriptorSetLayout();
-
-		VkDescriptorSetLayout Get() const noexcept { return m_DescriptorSetLayout; }
+		explicit VulkanDescriptorSetLayout(const VkDevice& _device);
+		virtual ~VulkanDescriptorSetLayout();
 
 		VulkanDescriptorSetLayout(const VulkanDescriptorSetLayout&) = delete;
 		VulkanDescriptorSetLayout& operator=(const VulkanDescriptorSetLayout&) = delete;
 		VulkanDescriptorSetLayout(VulkanDescriptorSetLayout&&) = delete;
 		VulkanDescriptorSetLayout& operator=(VulkanDescriptorSetLayout&&) = delete;
 
-	private:
-		VkDevice m_LogicalDevice;
+		const VkDescriptorSetLayout& Get() const noexcept { return m_DescriptorSetLayout; }
+
+	protected:
+		virtual void CreateDescriptorSetLayout() = 0;
+
+	protected:
+		VkDevice m_Device;
 		VkDescriptorSetLayout m_DescriptorSetLayout;
 	};
-} // End of Banshee namespace
+} // End of namespace

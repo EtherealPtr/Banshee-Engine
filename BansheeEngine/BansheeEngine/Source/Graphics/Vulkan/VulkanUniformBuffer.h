@@ -16,9 +16,9 @@ namespace Banshee
 		~VulkanUniformBuffer();
 
 		void CopyData(void* _pData) const noexcept;
-		VkBuffer GetBuffer() const noexcept { return m_Buffer; }
+		const VkBuffer& GetBuffer() const noexcept { return m_Buffer; }
 		uint64 GetBufferSize() const noexcept { return m_BufferSize; }
-		VkDeviceMemory GetBufferMemory() const noexcept { return m_BufferMemory; }
+		const VkDeviceMemory& GetBufferMemory() const noexcept { return m_BufferMemory; }
 
 	private:
 		VkDevice m_LogicalDevice;
@@ -26,4 +26,4 @@ namespace Banshee
 		VkDeviceMemory m_BufferMemory;
 		uint64 m_BufferSize;
 	};
-} // End of Banshee namespace
+} // End of namespace

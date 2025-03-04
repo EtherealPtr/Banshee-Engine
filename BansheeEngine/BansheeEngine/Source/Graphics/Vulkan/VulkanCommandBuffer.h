@@ -33,4 +33,4 @@ namespace Banshee
 		VkCommandPool m_CommandPool;
 		std::vector<VkCommandBuffer> m_CommandBuffers;
 	};
-} // End of Banshee namespace
+} // End of namespace

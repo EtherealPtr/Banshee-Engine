@@ -31,4 +31,4 @@ namespace Banshee
 		glm::vec3 m_Scale;
 		glm::quat m_Rotation;
 	};
-} // End of Banshee namespace
+} // End of namespace

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Foundation/Input/KeyboardMouseInput.h"
-#include "MVP.h"
+#include "DataStructs.h"
 #include <memory>
 
 struct GLFWwindow;
@@ -12,6 +12,11 @@ namespace Banshee
 	{
 	public:
 		Camera(const float _fov, const float _aspect, const float _near, const float _far, GLFWwindow* _wnd = nullptr);
+
+		Camera(const Camera&) = delete;
+		Camera& operator=(const Camera&) = delete;
+		Camera(Camera&&) = delete;
+		Camera& operator=(Camera&&) = delete;
 
 		const ViewProjMatrix& GetViewProjMatrix() const noexcept { return m_ViewProjMatrix; }
 		const glm::mat4& GetViewMatrix() const noexcept { return m_ViewProjMatrix.m_View; }
@@ -39,4 +44,4 @@ namespace Banshee
 		ViewProjMatrix m_ViewProjMatrix;
 		KeyboardMouseInput m_InputDevice;
 	};
-} // End of Banshee namespace
+} // End of namespace

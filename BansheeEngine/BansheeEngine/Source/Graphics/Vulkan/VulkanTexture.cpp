@@ -1,23 +1,24 @@
-#include "VulkanTextureManager.h"
+#include "VulkanTexture.h"
 #include "VulkanUtils.h"
 #include "Foundation/ResourceManager/ResourceManager.h"
 #include "Foundation/ResourceManager/Image/Image.h"
 #include "Foundation/Logging/Logger.h"
-#include <vulkan/vulkan.h>
+#include "VulkanDevice.h"
+#include <vulkan/vulkan_core.h>
 
 namespace Banshee
 {
-	VulkanTextureManager::VulkanTextureManager(const VkDevice& _device, const VkPhysicalDevice& _gpu, const VkQueue& _graphicsQueue, const VkCommandPool& _commandPool) noexcept :
-		m_LogicalDevice{ _device },
-		m_PhysicalDevice{ _gpu },
-		m_GraphicsQueue{ _graphicsQueue },
+	VulkanTexture::VulkanTexture(const VulkanDevice& _device, const VkCommandPool& _commandPool) noexcept :
+		m_LogicalDevice{ _device.GetLogicalDevice() },
+		m_PhysicalDevice{ _device.GetPhysicalDevice() },
+		m_GraphicsQueue{ _device.GetGraphicsQueue() },
 		m_CommandPool{ _commandPool },
 		m_TextureImageFormat{ VK_FORMAT_R8G8B8A8_SRGB },
 		m_TextureImages{},
 		m_TextureImageViews{}
 	{}
 
-	VulkanTextureManager::~VulkanTextureManager()
+	VulkanTexture::~VulkanTexture()
 	{
 		for (const auto& image : m_TextureImages)
 		{
@@ -27,7 +28,7 @@ namespace Banshee
 		}
 	}
 
-	void VulkanTextureManager::UploadTextures()
+	void VulkanTexture::UploadTextures()
 	{
 		const std::vector<Image>& images{ g_ResourceManager.GetImages() };
 		m_TextureImages.reserve(images.size());
@@ -39,12 +40,7 @@ namespace Banshee
 		}
 	}
 
-	const std::vector<VkImageView>& VulkanTextureManager::GetTextureImageViews() const noexcept
-	{
-		return m_TextureImageViews;
-	}
-
-	void VulkanTextureManager::CreateStagingBuffer(const uint64 _sizeOfBuffer, const unsigned char* _pixels, const uint32 _imgW, const uint32 _imgH)
+	void VulkanTexture::CreateStagingBuffer(const uint64 _sizeOfBuffer, const unsigned char* _pixels, const uint32 _imgW, const uint32 _imgH)
 	{
 		VkBuffer stagingBuffer{};
 		VkDeviceMemory stagingBufferMemory{};
@@ -73,7 +69,7 @@ namespace Banshee
 		stagingBuffer = VK_NULL_HANDLE;
 	}
 
-	void VulkanTextureManager::CreateTextureImage(const VkBuffer& _buffer, const uint32 _imgW, const uint32 _imgH)
+	void VulkanTexture::CreateTextureImage(const VkBuffer& _buffer, const uint32 _imgW, const uint32 _imgH)
 	{
 		VkImage textureImage{};
 		VkImageView textureImageView{};
@@ -134,4 +130,4 @@ namespace Banshee
 		m_TextureImageViews.emplace_back(textureImageView);
 		BE_LOG(LogCategory::Info, "[TEXTURE]: Created texture image object (total textures: %d)", m_TextureImages.size());
 	}
-} // End of Banshee namespace
+} // End of namespace

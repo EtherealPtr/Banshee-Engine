@@ -1,5 +1,5 @@
 #include "VulkanUtils.h"
-#include <vulkan/vulkan.h>
+#include <vulkan/vulkan_core.h>
 #include <stdexcept>
 
 namespace Banshee
@@ -362,4 +362,4 @@ namespace Banshee
 
 		vkFreeCommandBuffers(_logicalDevice, _commandPool, 1, &_commandBuffer);
 	}
-} // End of Banshee namespace
+} // End of namespace

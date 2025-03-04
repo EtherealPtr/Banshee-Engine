@@ -11,15 +11,17 @@ typedef enum VkFormat VkFormat;
 
 namespace Banshee
 {
+	class VulkanDevice;
+
 	class VulkanDepthBuffer
 	{
 	public:
-		VulkanDepthBuffer(const VkDevice& _logicalDevice, const VkPhysicalDevice& _gpu, const uint32 _w, const uint32 _h);
+		VulkanDepthBuffer(const VulkanDevice& _device, const uint32 _w, const uint32 _h, const uint32 _flags);
 		~VulkanDepthBuffer();
 
-		void RecreateDepthBuffer(const uint32 _w, const uint32 _h);
+		void RecreateDepthBuffer(const uint32 _w, const uint32 _h, const uint32 _flags);
 		VkFormat GetFormat() const noexcept { return m_DepthFormat; }
-		VkImageView GetImageView() const noexcept { return m_DepthImageView; }
+		const VkImageView& GetImageView() const noexcept { return m_DepthImageView; }
 
 		VulkanDepthBuffer(const VulkanDepthBuffer&) = delete;
 		VulkanDepthBuffer& operator=(const VulkanDepthBuffer&) = delete;
@@ -27,8 +29,8 @@ namespace Banshee
 		VulkanDepthBuffer& operator=(VulkanDepthBuffer&&) = delete;
 
 	private:
-		void CreateDepthBuffer(const uint32 _w, const uint32 _h);
-		void CleanUp() const;
+		void CreateDepthBuffer(const uint32 _w, const uint32 _h, const uint32 _flags);
+		void CleanUp() const noexcept;
 
 	private:
 		VkDevice m_Device;
@@ -38,4 +40,4 @@ namespace Banshee
 		VkDeviceMemory m_DepthImageMemory;
 		VkFormat m_DepthFormat;
 	};
-} // End of Banshee namespace
+} // End of namespace

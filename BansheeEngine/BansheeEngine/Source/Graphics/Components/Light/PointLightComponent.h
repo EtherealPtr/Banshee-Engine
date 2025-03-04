@@ -15,4 +15,4 @@ namespace Banshee
 		void SetPosition(const glm::vec3& _pos);
 		void UpdateAttenuation(const float _radius);
 	};
-} // End of Banshee namespace
+} // End of namespace

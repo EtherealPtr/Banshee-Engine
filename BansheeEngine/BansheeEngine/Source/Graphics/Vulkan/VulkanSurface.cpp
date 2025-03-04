@@ -1,8 +1,7 @@
 #include "VulkanSurface.h"
 #include "Foundation/Logging/Logger.h"
-#include <vulkan/vulkan.h>
+#include <vulkan/vulkan_core.h>
 #include <GLFW/glfw3.h>
-#include <stdexcept>
 
 namespace Banshee
 {
@@ -30,4 +29,4 @@ namespace Banshee
 		vkDestroySurfaceKHR(m_VkInstance, m_Surface, nullptr);
 		m_Surface = VK_NULL_HANDLE;
 	}
-} // End of Banshee namespace
+} // End of namespace

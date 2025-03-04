@@ -11,7 +11,7 @@ namespace Banshee
 		VulkanInstance();
 		~VulkanInstance();
 
-		VkInstance Get() const noexcept { return m_Instance; }
+		const VkInstance& Get() const noexcept { return m_Instance; }
 
 		VulkanInstance(const VulkanInstance&) = delete;
 		VulkanInstance& operator=(const VulkanInstance&) = delete;
@@ -25,4 +25,4 @@ namespace Banshee
 		VkInstance m_Instance;
 		VkDebugUtilsMessengerEXT m_DebugMessenger;
 	};
-} // End of Banshee namespace
+} // End of namespace

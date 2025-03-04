@@ -41,4 +41,4 @@ namespace Banshee
 		VkDeviceMemory m_VertexBufferMemory;
 		VkDeviceMemory m_IndexBufferMemory;
 	};
-} // End of Banshee namespace
+} // End of namespace

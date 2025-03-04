@@ -63,4 +63,4 @@ namespace Banshee
 		glfwGetFramebufferSize(m_Window, nullptr, &h);
 		return h;
 	}
-} // End of Banshee namespace
+} // End of namespace

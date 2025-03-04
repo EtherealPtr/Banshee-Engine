@@ -32,12 +32,12 @@ namespace Banshee
 		VulkanDevice(const VkInstance& _vkInstance, const VkSurfaceKHR& _vkSurface);
 		~VulkanDevice();
 
-		VkPhysicalDevice GetPhysicalDevice() const noexcept { return m_PhysicalDevice; }
-		VkDevice GetLogicalDevice() const noexcept { return m_LogicalDevice; }
-		DeviceQueueIndices GetQueueIndices() const noexcept { return m_QueueIndices; }
-		VkQueue GetGraphicsQueue() const noexcept { return m_GraphicsQueue; }
-		VkQueue GetPresentationQueue() const noexcept { return m_PresentQueue; }
-		VkQueue GetTransferQueue() const noexcept { return m_TransferQueue; }
+		const VkPhysicalDevice& GetPhysicalDevice() const noexcept { return m_PhysicalDevice; }
+		const VkDevice& GetLogicalDevice() const noexcept { return m_LogicalDevice; }
+		const DeviceQueueIndices& GetQueueIndices() const noexcept { return m_QueueIndices; }
+		const VkQueue& GetGraphicsQueue() const noexcept { return m_GraphicsQueue; }
+		const VkQueue& GetPresentationQueue() const noexcept { return m_PresentQueue; }
+		const VkQueue& GetTransferQueue() const noexcept { return m_TransferQueue; }
 		VkPhysicalDeviceLimits GetLimits() const noexcept;
 
 		VulkanDevice(const VulkanDevice&) = delete;
@@ -61,4 +61,4 @@ namespace Banshee
 		VkQueue m_TransferQueue;
 		VkQueue m_PresentQueue;
 	};
-} // End of Banshee namespace
+} // End of namespace

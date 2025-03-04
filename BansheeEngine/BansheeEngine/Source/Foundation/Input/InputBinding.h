@@ -10,4 +10,4 @@ namespace Banshee
 		int32 m_Key;
 		std::function<void()> m_Callback;
 	};
-} // End of Banshee namespace
+} // End of namespace

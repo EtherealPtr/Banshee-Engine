@@ -1,6 +1,6 @@
 #include "VulkanVertexBuffer.h"
 #include "VulkanUtils.h"
-#include <vulkan/vulkan.h>
+#include <vulkan/vulkan_core.h>
 
 namespace Banshee
 {
@@ -119,4 +119,4 @@ namespace Banshee
 		m_IndexBufferMemory = VK_NULL_HANDLE;
 		m_IndexBuffer = VK_NULL_HANDLE;
 	}
-} // End of Banshee namespace
+} // End of namespace

@@ -2,8 +2,8 @@
 
 namespace Banshee
 {
-	MeshComponent::MeshComponent(const ShaderType _shaderType) noexcept :
+	MeshComponent::MeshComponent(const ShaderTypeEnum _shaderType) noexcept :
 		m_VertexBufferId{ 0 },
 		m_ShaderType{ _shaderType }
 	{}
-} // End of Banshee namespace
+} // End of namespace

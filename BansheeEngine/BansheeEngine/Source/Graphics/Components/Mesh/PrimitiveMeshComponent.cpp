@@ -4,7 +4,7 @@
 
 namespace Banshee
 {
-	PrimitiveMeshComponent::PrimitiveMeshComponent(const PrimitiveShape _shape, const ShaderType _shaderType) noexcept :
+	PrimitiveMeshComponent::PrimitiveMeshComponent(const PrimitiveShapeEnum _shape, const ShaderTypeEnum _shaderType) noexcept :
 		MeshComponent(_shaderType),
 		m_Shape{ _shape },
 		m_Data{}
@@ -35,4 +35,4 @@ namespace Banshee
 	{
 		m_Data.SetTexId(g_ResourceManager.LoadImageResource(_texturePath));
 	}
-} // End of Banshee namespace
+} // End of namespace

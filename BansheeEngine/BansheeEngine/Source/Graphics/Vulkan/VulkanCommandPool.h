@@ -13,7 +13,7 @@ namespace Banshee
 		VulkanCommandPool(const VkDevice& _logicalDevice, const uint32 _queueFamilyIndex);
 		~VulkanCommandPool();
 
-		VkCommandPool Get() const noexcept { return m_CommandPool; }
+		const VkCommandPool& Get() const noexcept { return m_CommandPool; }
 
 		VulkanCommandPool(const VulkanCommandPool&) = delete;
 		VulkanCommandPool& operator=(const VulkanCommandPool&) = delete;
@@ -24,4 +24,4 @@ namespace Banshee
 		VkDevice m_LogicalDevice;
 		VkCommandPool m_CommandPool;
 	};
-} // End of Banshee namespace
+} // End of namespace

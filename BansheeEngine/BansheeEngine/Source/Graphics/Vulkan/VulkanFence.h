@@ -16,7 +16,7 @@ namespace Banshee
 
 		void Wait(const uint16 _fenceIndex = 1) const noexcept;
 		void Reset(const uint16 _fenceIndex = 1) const noexcept;
-		std::vector<VkFence>& Get() noexcept { return m_Fences; }
+		const std::vector<VkFence>& Get() noexcept { return m_Fences; }
 
 		VulkanFence(const VulkanFence&) = delete;
 		VulkanFence& operator=(const VulkanFence&) = delete;
@@ -27,4 +27,4 @@ namespace Banshee
 		VkDevice m_LogicalDevice;
 		std::vector<VkFence> m_Fences;
 	};
-} // End of Banshee namespace
+} // End of namespace

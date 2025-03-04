@@ -41,4 +41,4 @@ namespace Banshee
 		static VkCommandBuffer BeginSingleTimeCommands(const VkDevice& _logicalDevice, const VkCommandPool& _commandPool, const VkQueue& _queue) noexcept;
 		static void EndSingleTimeCommands(const VkDevice& _logicalDevice, const VkCommandPool& _commandPool, const VkQueue& _queue, const VkCommandBuffer& _commandBuffer) noexcept;
 	};
-} // End of Banshee namespace
+} // End of namespace

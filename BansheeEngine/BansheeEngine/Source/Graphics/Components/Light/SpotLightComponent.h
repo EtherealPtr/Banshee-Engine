@@ -16,4 +16,4 @@ namespace Banshee
 		void UpdateAttenuation(const float _radius) noexcept;
 		void UpdateCutoffAngles(const float _innerCutoffAngle, const float _outerCutoffAngle) noexcept;
 	};
-} // End of Banshee namespace
+} // End of namespace

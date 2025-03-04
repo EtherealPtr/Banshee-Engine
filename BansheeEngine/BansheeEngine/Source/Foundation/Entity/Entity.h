@@ -67,4 +67,4 @@ namespace Banshee
 
 		return nullptr;
 	}
-} // End of Banshee namespace
+} // End of namespace

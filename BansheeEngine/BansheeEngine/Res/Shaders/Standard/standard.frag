@@ -6,6 +6,7 @@ layout (location = 1) in vec3 in_vertex_normal;
 layout (location = 2) flat in int in_texture_index;
 layout (location = 3) in vec3 in_camera_position;
 layout (location = 4) in vec3 in_fragment_position;
+layout (location = 5) in vec4 in_fragment_light_space_position;
 
 layout (location = 0) out vec4 out_frag_color;
 
@@ -33,6 +34,37 @@ readonly buffer LightBuffer
     int totalLights; 
     LightData lights[25];
 };
+
+layout (set = 0, binding = 6) uniform sampler2D shadowMap;
+
+float CalculateShadow(vec4 _fragPosLightSpace, vec3 _normal, vec3 _lightDir)
+{
+    vec3 projCoords = _fragPosLightSpace.xyz / _fragPosLightSpace.w;
+    projCoords.xy = projCoords.xy * 0.5f + 0.5f;
+    float currentDepth = projCoords.z;
+    
+    if (projCoords.z > 1.0f)
+    {
+        return 0.0f;
+    }
+
+    float bias = max(0.002f * (1.0f - dot(_normal, _lightDir)), 0.0005f);
+
+    float shadow = 0.0f;
+    vec2 texelSize = 1.0f / textureSize(shadowMap, 0);
+
+    for (int i = -1; i <= 1; ++i)
+    {
+        for (int j = -1; j <= 1; ++j)
+        {
+            float pcfDepth = texture(shadowMap, projCoords.xy + vec2(i, j) * texelSize).r;
+            shadow += currentDepth > (pcfDepth + bias) ? 1.0f : 0.0f;
+        }
+    }
+
+    shadow /= 9.0f;
+    return shadow;
+}
 
 vec3 CalculateDirectionalLight(LightData _light, vec3 _normal, vec3 _viewDir) 
 {
@@ -116,8 +148,8 @@ void main()
     vec3 viewDir = normalize(in_camera_position - in_fragment_position);
     vec3 lighting = vec3(0.0f);
 
-    const float ambientStrength = 0.01f;
-    vec3 ambient = ambientStrength * baseColor.xyz;
+    const float ambientStrength = 0.1f;
+    const vec3 ambient = ambientStrength * baseColor.xyz;
 
     for (int i = 0; i < totalLights; ++i) 
     {        
@@ -125,7 +157,9 @@ void main()
 
         if (light.positionAndType.w == 0.0f) // Directional light
         { 
-            lighting += ambient + CalculateDirectionalLight(light, normal, viewDir);
+            const vec3 lightDir = normalize(-light.direction.xyz);
+            const float shadow = CalculateShadow(in_fragment_light_space_position, normal, lightDir);
+            lighting += (ambient + (1.0 - shadow) * CalculateDirectionalLight(light, normal, viewDir));
         } 
         else if (light.positionAndType.w == 1.0f) // Point light
         { 

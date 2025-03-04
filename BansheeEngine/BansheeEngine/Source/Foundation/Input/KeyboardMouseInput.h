@@ -32,4 +32,4 @@ namespace Banshee
 		double m_LastMouseX;
 		double m_LastMouseY;
 	};
-} // End of Banshee namespace
+} // End of namespace

@@ -1,11 +1,9 @@
 #include "VulkanDevice.h"
 #include "VulkanUtils.h"
 #include "Foundation/Logging/Logger.h"
-#include <vulkan/vulkan.h>
+#include <vulkan/vulkan_core.h>
 #include <vector>
 #include <set>
-#include <stdexcept>
-#include <cassert>
 
 namespace Banshee
 {
@@ -132,8 +130,6 @@ namespace Banshee
 
 	void VulkanDevice::SetupQueueFamilyIndices()
 	{
-		assert(m_PhysicalDevice != VK_NULL_HANDLE);
-
 		uint32 queueFamilyCount{ 0 };
 		vkGetPhysicalDeviceQueueFamilyProperties(m_PhysicalDevice, &queueFamilyCount, nullptr);
 		std::vector<VkQueueFamilyProperties> queueFamilies(queueFamilyCount);
@@ -239,4 +235,4 @@ namespace Banshee
 		vkGetPhysicalDeviceProperties(m_PhysicalDevice, &gpuProperties);
 		return gpuProperties.limits;
 	}
-} // End of Banshee namespace
+} // End of namespace

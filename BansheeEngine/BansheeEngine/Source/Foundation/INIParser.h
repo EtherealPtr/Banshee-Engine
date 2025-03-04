@@ -9,4 +9,4 @@ namespace Banshee
 	public:
 		static EngineConfig ParseConfigSettings(std::string_view _filePath);
 	};
-} // End of Banshee namespace
+} // End of namespace

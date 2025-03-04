@@ -17,4 +17,4 @@ namespace Banshee
 	private:
 		std::unordered_map<uint32, std::shared_ptr<TransformComponent>> m_EntityTransformMap;
 	};
-} // End of Banshee namespace
+} // End of namespace

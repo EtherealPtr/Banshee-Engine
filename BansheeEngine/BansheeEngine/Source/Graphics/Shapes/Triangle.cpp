@@ -13,4 +13,4 @@ namespace Banshee
 
 		_indices = { 0, 1, 2 };
 	}
-} // End of Banshee namespace
+} // End of namespace

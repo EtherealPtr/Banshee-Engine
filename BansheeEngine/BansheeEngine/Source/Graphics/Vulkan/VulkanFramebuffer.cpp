@@ -1,68 +1,65 @@
 #include "VulkanFramebuffer.h"
 #include "Foundation/Logging/Logger.h"
-#include <vulkan/vulkan.h>
-#include <stdexcept>
-#include <array>
+#include <vulkan/vulkan_core.h>
 
 namespace Banshee
 {
-	VulkanFramebuffer::VulkanFramebuffer(const VkDevice& _logicalDevice, const VkRenderPass& _renderPass, const std::vector<VkImageView>& _imageViews, const VkImageView& _depthImageView, const uint32 _w, const uint32 _h) :
-		m_Device{ _logicalDevice },
-		m_RenderPass{ _renderPass },
-		m_Framebuffers{ VK_NULL_HANDLE }
-	{
-		CreateFramebuffers(_w, _h, _imageViews, _depthImageView);
-	}
+    VulkanFramebuffer::VulkanFramebuffer(const VkDevice& _logicalDevice, const VkRenderPass& _renderPass, const VkImageView& _colorImageView, const VkImageView& _depthImageView, const uint32 _w, const uint32 _h) :
+        m_Device{ _logicalDevice },
+        m_RenderPass{ _renderPass },
+        m_Framebuffer{ VK_NULL_HANDLE }
+    {
+        CreateFramebuffer(_w, _h, _colorImageView, _depthImageView);
+    }
 
-	VulkanFramebuffer::~VulkanFramebuffer()
-	{
-		CleanUp();
-	}
-	
-	void VulkanFramebuffer::RecreateFramebuffers(const uint32 _w, const uint32 _h, const std::vector<VkImageView>& _imageViews, const VkImageView& _depthImageView)
-	{
-		CleanUp();
-		CreateFramebuffers(_w, _h, _imageViews, _depthImageView);
-	}
+    VulkanFramebuffer::~VulkanFramebuffer()
+    {
+        CleanUp();
+    }
 
-	void VulkanFramebuffer::CreateFramebuffers(const uint32 _w, const uint32 _h, const std::vector<VkImageView>& _imageViews, const VkImageView& _depthImageView)
-	{
-		BE_LOG(LogCategory::Trace, "[FRAMEBUFFER]: Creating %d framebuffers", _imageViews.size());
-		m_Framebuffers.resize(_imageViews.size(), VK_NULL_HANDLE);
+    void VulkanFramebuffer::RecreateFramebuffer(const uint32 _w, const uint32 _h, const VkImageView& _colorImageView, const VkImageView& _depthImageView)
+    {
+        CleanUp();
+        CreateFramebuffer(_w, _h, _colorImageView, _depthImageView);
+    }
 
-		for (size_t i = 0; i < _imageViews.size(); ++i)
-		{
-			std::array<VkImageView, 2> imageViews{};
-			imageViews[0] = _imageViews[i];
-			imageViews[1] = _depthImageView;
+    void VulkanFramebuffer::CreateFramebuffer(const uint32 _w, const uint32 _h, const VkImageView& _colorImageView, const VkImageView& _depthImageView)
+    {
+        BE_LOG(LogCategory::Trace, "[FRAMEBUFFER]: Creating framebuffer");
 
-			// Create the framebuffer object
-			VkFramebufferCreateInfo framebufferCreateInfo{};
-			framebufferCreateInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
-			framebufferCreateInfo.renderPass = m_RenderPass;
-			framebufferCreateInfo.attachmentCount = static_cast<uint32>(imageViews.size());
-			framebufferCreateInfo.pAttachments = imageViews.data();
-			framebufferCreateInfo.width = _w;
-			framebufferCreateInfo.height = _h;
-			framebufferCreateInfo.layers = 1;
+        std::vector<VkImageView> attachments{};
+        attachments.reserve(2);
 
-			if (vkCreateFramebuffer(m_Device, &framebufferCreateInfo, nullptr, &m_Framebuffers[i]) != VK_SUCCESS)
-			{
-				throw std::runtime_error("ERROR: Failed to create a Vulkan framebuffer");
-			}
-		}
+        if (_colorImageView != VK_NULL_HANDLE)
+        {
+            attachments.emplace_back(_colorImageView);
+        }
 
-		BE_LOG(LogCategory::Info, "[FRAMEBUFFER]: Created framebuffers");
-	}
+        if (_depthImageView != VK_NULL_HANDLE)
+        {
+            attachments.emplace_back(_depthImageView);
+        }
 
-	void VulkanFramebuffer::CleanUp()
-	{
-		for (size_t i = 0; i < m_Framebuffers.size(); ++i)
-		{
-			vkDestroyFramebuffer(m_Device, m_Framebuffers[i], nullptr);
-			m_Framebuffers[i] = VK_NULL_HANDLE;
-		}
+        VkFramebufferCreateInfo framebufferCreateInfo{};
+        framebufferCreateInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
+        framebufferCreateInfo.renderPass = m_RenderPass;
+        framebufferCreateInfo.attachmentCount = static_cast<uint32>(attachments.size());
+        framebufferCreateInfo.pAttachments = attachments.data();
+        framebufferCreateInfo.width = _w;
+        framebufferCreateInfo.height = _h;
+        framebufferCreateInfo.layers = 1;
 
-		m_Framebuffers.clear();
-	}
-} // End of Banshee namespace
+        if (vkCreateFramebuffer(m_Device, &framebufferCreateInfo, nullptr, &m_Framebuffer) != VK_SUCCESS)
+        {
+            throw std::runtime_error("ERROR: Failed to create framebuffer");
+        }
+
+        BE_LOG(LogCategory::Info, "[FRAMEBUFFER]: Created framebuffer");
+    }
+
+    void VulkanFramebuffer::CleanUp() noexcept
+    {
+        vkDestroyFramebuffer(m_Device, m_Framebuffer, nullptr);
+        m_Framebuffer = VK_NULL_HANDLE;
+    }
+} // End of namespace

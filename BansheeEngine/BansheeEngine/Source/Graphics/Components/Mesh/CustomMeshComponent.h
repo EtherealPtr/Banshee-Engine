@@ -10,7 +10,7 @@ namespace Banshee
 	class CustomMeshComponent : public MeshComponent
 	{
 	public:
-		BANSHEE_ENGINE CustomMeshComponent(std::string_view _modelPath, const ShaderType _shaderType = ShaderType::Standard);
+		BANSHEE_ENGINE CustomMeshComponent(std::string_view _modelPath, const ShaderTypeEnum _shaderType = ShaderTypeEnum::Standard);
 
 		void AddMeshData(MeshData& _data);
 		std::string_view GetModelName() const noexcept { return m_ModelName; }
@@ -21,4 +21,4 @@ namespace Banshee
 		std::string m_ModelName;
 		std::vector<MeshData> m_Data;
 	};
-} // End of Banshee namespace
+} // End of namespace

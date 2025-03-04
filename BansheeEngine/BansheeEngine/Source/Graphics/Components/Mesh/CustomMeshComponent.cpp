@@ -5,7 +5,7 @@
 
 namespace Banshee
 {
-	CustomMeshComponent::CustomMeshComponent(std::string_view _modelPath, const ShaderType _shaderType) : 
+	CustomMeshComponent::CustomMeshComponent(std::string_view _modelPath, const ShaderTypeEnum _shaderType) : 
 		MeshComponent(_shaderType),
 		m_ModelName{ g_ResourceManager.GetAssetName(_modelPath) },
 		m_Data{}
@@ -30,4 +30,4 @@ namespace Banshee
 		const std::string_view modelsFolder{ "Models/" };
 		return PathManager::GetEngineResDirPath() + modelsFolder.data() + m_ModelName;
 	}
-} // End of Banshee namespace
+} // End of namespace

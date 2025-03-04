@@ -4,7 +4,7 @@
 
 namespace Banshee
 {
-	enum PrimitiveShape : uint8
+	enum PrimitiveShapeEnum : uint8
 	{
 		Empty,
 		TriangleShape,
@@ -12,4 +12,4 @@ namespace Banshee
 		PyramidShape,
 		CubeShape
 	};
-} // End of Banshee namespace
+} // End of namespace

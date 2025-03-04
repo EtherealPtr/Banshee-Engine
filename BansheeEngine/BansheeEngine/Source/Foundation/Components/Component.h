@@ -33,4 +33,4 @@ namespace Banshee
 		const Entity* m_Owner;
 		std::vector<std::shared_ptr<Observer>> m_Observers;
 	};
-} // End of Banshee namespace
+} // End of namespace

@@ -26,4 +26,4 @@ namespace Banshee
 	private:
 		std::vector<std::shared_ptr<Observer>> m_Observer;
 	};
-} // End of Banshee namespace
+} // End of namespace

@@ -40,4 +40,4 @@ namespace Banshee
 		OpenLogFile();
 		m_LogFile << _logData << '\n';
 	}
-} // End of Banshee namespace
+} // End of namespace

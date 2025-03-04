@@ -40,4 +40,4 @@ namespace Banshee
 		const glm::mat4 scaleMatrix = glm::scale(glm::mat4(1.0f), m_Scale);
 		return translationMatrix * rotationMatrix * scaleMatrix;
 	}
-} // End of Banshee namespace
+} // End of namespace

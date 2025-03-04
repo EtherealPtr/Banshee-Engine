@@ -1,6 +1,6 @@
 #include "VulkanUniformBuffer.h"
 #include "VulkanUtils.h"
-#include <vulkan/vulkan.h>
+#include <vulkan/vulkan_core.h>
 #include <stdexcept>
 
 namespace Banshee
@@ -56,4 +56,4 @@ namespace Banshee
 		// Unmap the memory
 		vkUnmapMemory(m_LogicalDevice, m_BufferMemory);
 	}
-} // End of Banshee namespace
+} // End of namespace

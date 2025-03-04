@@ -1,7 +1,6 @@
 #include "VulkanCommandBuffer.h"
 #include "Foundation/Logging/Logger.h"
-#include <vulkan/vulkan.h>
-#include <stdexcept>
+#include <vulkan/vulkan_core.h>
 
 namespace Banshee
 {
@@ -62,4 +61,4 @@ namespace Banshee
 			throw std::runtime_error("ERROR: Failed to submit command buffer to queue");
 		}
 	}
-} // End of Banshee namespace
+} // End of namespace
