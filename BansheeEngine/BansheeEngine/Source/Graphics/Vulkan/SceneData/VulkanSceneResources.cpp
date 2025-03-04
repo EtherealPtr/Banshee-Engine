@@ -94,6 +94,15 @@ namespace Banshee
 		m_LightSpaceUniformBuffer.CopyData(&_lightSpaceMatrix);
 	}
 
+	void VulkanSceneResources::UpdateLightUniformBuffer(std::span<const LightData> _lightData, const uint32 _currentFrameIndex)
+	{
+		LightBuffer lightBuffer{};
+		lightBuffer.m_TotalLights = static_cast<uint8>(_lightData.size());
+
+		std::copy(_lightData.begin(), _lightData.end(), lightBuffer.m_Lights);
+		m_LightUniformBuffers.at(_currentFrameIndex).CopyData(&lightBuffer);
+	}
+
 	void VulkanSceneResources::SetSceneTextures(const std::vector<VkImageView>& _textureViews, const VkSampler& _sampler)
 	{
 		m_DescriptorSetTextureWriters.at(0).SetImageView(_textureViews);
@@ -117,30 +126,5 @@ namespace Banshee
 		{
 			m_DescriptorSets.at(i).UpdateDescriptorSet(m_DescriptorSetTextureWriters);
 		}
-	}
-
-	void VulkanSceneResources::UpdateLightData(LightSystem& _lightSystem, const uint32 _currentFrameIndex)
-	{
-		constexpr uint8 maxLights{ 25 };
-		std::array<LightData, maxLights> lights{};
-		uint8 currentLightCount{ 0 };
-
-		for (auto& lightComponent : _lightSystem.GetLightComponents())
-		{
-			if (currentLightCount >= maxLights)
-			{
-				break;
-			}
-
-			lightComponent.UpdatePosition();
-			lights.at(currentLightCount++) = lightComponent.GetLightData();
-		}
-
-		LightBuffer lightBuffer{};
-		lightBuffer.m_TotalLights = currentLightCount;
-
-		std::copy(lights.begin(), lights.begin() + currentLightCount, lightBuffer.m_Lights);
-
-		m_LightUniformBuffers.at(_currentFrameIndex).CopyData(&lightBuffer);
 	}
 } // End of namespace

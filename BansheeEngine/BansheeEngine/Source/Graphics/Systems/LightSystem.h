@@ -1,5 +1,6 @@
 #pragma once
 
+#include <array>
 #include <vector>
 #include <optional>
 #include "Graphics/Components/Light/LightComponent.h"
@@ -12,23 +13,25 @@ namespace Banshee
     class LightSystem
     {
     public:
+        static constexpr uint8 MaxLights{ 25 };
+
         LightSystem() noexcept = default;
         ~LightSystem() noexcept = default;
-
-        void ProcessComponents(const Entity* const _entity);
-        std::vector<LightComponent>& GetLightComponents() noexcept { return m_LightComponents; }
-        const std::optional<DirectionalLightComponent>& GetDirectionalLight() const noexcept { return m_DirectionalLight; }
 
         LightSystem(const LightSystem&) = delete;
         LightSystem& operator=(const LightSystem&) = delete;
         LightSystem(LightSystem&&) = delete;
         LightSystem& operator=(LightSystem&&) = delete;
 
-    private:
-        void AddLightComponent(const LightComponent& _lightComponent);
+        void ProcessComponents(const Entity* const _entity);
+        std::array<LightData, MaxLights> UpdateLightData(uint8& outLightCount) const noexcept;
+        [[nodiscard]] const std::optional<std::shared_ptr<DirectionalLightComponent>>& GetDirectionalLight() const noexcept { return m_DirectionalLight; }
 
     private:
-        std::vector<LightComponent> m_LightComponents;
-        std::optional<DirectionalLightComponent> m_DirectionalLight;
+        void AddLightComponent(const std::shared_ptr<LightComponent>& lightComponent);
+
+    private:
+        std::vector<std::shared_ptr<LightComponent>> m_LightComponents;
+        std::optional<std::shared_ptr<DirectionalLightComponent>> m_DirectionalLight;
     };
-} // End of namespace
+} // namespace Banshee

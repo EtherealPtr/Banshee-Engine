@@ -29,7 +29,7 @@ namespace Banshee
 			return;
 		}
 
-		const glm::vec3 lightDir{ glm::normalize(directionalLightComponent->GetLightData().m_Direction) };
+		const glm::vec3 lightDir{ glm::normalize(directionalLightComponent->get()->GetLightData().m_Direction)};
 		const glm::vec3 lightPos{ -lightDir * 10.0f };
 		const glm::mat4 lightViewMatrix{ glm::lookAt(lightPos, glm::vec3(0.0f), glm::vec3(0.0f, 1.0f, 0.0f)) };
 		const glm::mat4 lightProjMatrix{ glm::ortho(-20.0f, 20.0f, -20.0f, 20.0f, 0.1f, 50.0f) };
