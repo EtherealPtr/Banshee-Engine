@@ -2,10 +2,7 @@
 #include "VulkanUtils.h"
 #include "VulkanValidation.h"
 #include "Foundation/Logging/Logger.h"
-#include <vulkan/vulkan.h>
 #include <GLFW/glfw3.h>
-#include <vector>
-#include <stdexcept>
 
 #ifdef NDEBUG
 constexpr bool g_EnableValidationLayers{ false };

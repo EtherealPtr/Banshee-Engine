@@ -19,6 +19,11 @@ namespace Banshee
         const VulkanDevice& GetDevice() const noexcept { return m_Device; }
         const VulkanSwapchain& GetSwapchain() const noexcept { return m_Swapchain; }
 
+        VulkanRenderContext(const VulkanRenderContext&) = delete;
+        VulkanRenderContext& operator=(const VulkanRenderContext&) = delete;
+        VulkanRenderContext(VulkanRenderContext&&) = delete;
+        VulkanRenderContext& operator=(VulkanRenderContext&&) = delete;
+
     private:
         const Window& m_Window;
         VulkanInstance m_Instance;

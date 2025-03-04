@@ -1,9 +1,8 @@
 #include "VulkanSwapchain.h"
 #include "VulkanUtils.h"
 #include "Foundation/Logging/Logger.h"
-#include <vulkan/vulkan.h>
+#include <vulkan/vulkan_core.h>
 #include <algorithm>
-#include <stdexcept>
 
 namespace Banshee
 {
@@ -26,13 +25,13 @@ namespace Banshee
 		}
 
 		BE_LOG(LogCategory::Info, "[SWAPCHAIN]: Selected default surface format");
-		return surfaceFormats[0];
+		return surfaceFormats.at(0);
 	}
 
 	static VkPresentModeKHR PickPresentMode(const VkPhysicalDevice& _gpu, const VkSurfaceKHR& _surface)
 	{
 		// Query available present modes
-		uint32 presentModeCount = 0;
+		uint32 presentModeCount{ 0 };
 		vkGetPhysicalDeviceSurfacePresentModesKHR(_gpu, _surface, &presentModeCount, nullptr);
 		std::vector<VkPresentModeKHR> presentModes(presentModeCount);
 		vkGetPhysicalDeviceSurfacePresentModesKHR(_gpu, _surface, &presentModeCount, presentModes.data());
@@ -171,7 +170,7 @@ namespace Banshee
 
 		for (uint32 i = 0; i < imageCount; ++i)
 		{
-			VulkanUtils::CreateImageView(m_Device, m_SwapchainImages[i], surfaceFormat.format, VK_IMAGE_ASPECT_COLOR_BIT, m_SwapchainImageViews[i]);
+			VulkanUtils::CreateImageView(m_Device, m_SwapchainImages.at(i), surfaceFormat.format, VK_IMAGE_ASPECT_COLOR_BIT, m_SwapchainImageViews.at(i));
 		}
 
 		BE_LOG(LogCategory::Info, "[SWAPCHAIN]: Created Vulkan Swapchain");

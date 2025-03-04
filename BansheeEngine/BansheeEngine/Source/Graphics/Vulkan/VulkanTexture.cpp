@@ -4,7 +4,7 @@
 #include "Foundation/ResourceManager/Image/Image.h"
 #include "Foundation/Logging/Logger.h"
 #include "VulkanDevice.h"
-#include <vulkan/vulkan.h>
+#include <vulkan/vulkan_core.h>
 
 namespace Banshee
 {
@@ -38,11 +38,6 @@ namespace Banshee
 		{
 			CreateStagingBuffer(image.m_ImageSize, image.m_Pixels, image.m_ImageWidth, image.m_ImageHeight);
 		}
-	}
-
-	const std::vector<VkImageView>& VulkanTexture::GetTextureImageViews() const noexcept
-	{
-		return m_TextureImageViews;
 	}
 
 	void VulkanTexture::CreateStagingBuffer(const uint64 _sizeOfBuffer, const unsigned char* _pixels, const uint32 _imgW, const uint32 _imgH)

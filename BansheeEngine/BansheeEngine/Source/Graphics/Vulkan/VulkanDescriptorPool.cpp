@@ -1,11 +1,11 @@
 #include "VulkanDescriptorPool.h"
 #include "Foundation/Logging/Logger.h"
-#include <vulkan/vulkan.h>
+#include <vulkan/vulkan_core.h>
 #include <array>
 
 namespace Banshee
 {
-	VulkanDescriptorPool::VulkanDescriptorPool(const VkDevice& _logicalDevice, const uint32 _maxSets) :
+	VulkanDescriptorPool::VulkanDescriptorPool(const VkDevice& _logicalDevice, const size_t _maxSets) :
 		m_LogicalDevice{ _logicalDevice },
 		m_DescriptorPool{ VK_NULL_HANDLE }
 	{
@@ -24,7 +24,7 @@ namespace Banshee
 		VkDescriptorPoolCreateInfo descriptorPoolCreateInfo{};
 		descriptorPoolCreateInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
 		descriptorPoolCreateInfo.flags = VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT;
-		descriptorPoolCreateInfo.maxSets = _maxSets;
+		descriptorPoolCreateInfo.maxSets = static_cast<uint32>(_maxSets);
 		descriptorPoolCreateInfo.poolSizeCount = static_cast<uint32>(poolSizes.size());
 		descriptorPoolCreateInfo.pPoolSizes = poolSizes.data();
 

@@ -1,28 +1,27 @@
 #include "MeshSystem.h"
 #include "Foundation/Entity/Entity.h"
-#include "Graphics/Vulkan/VulkanDevice.h"
+#include "Graphics/Vulkan/VulkanVertexBufferManager.h"
 #include "Graphics/Components/Mesh/PrimitiveMeshComponent.h"
 #include "Graphics/Components/Mesh/CustomMeshComponent.h"
 #include <algorithm>
 
 namespace Banshee
 {
-	MeshSystem::MeshSystem(const VulkanDevice& _device, const VkCommandPool& _commandPool) :
-		m_VertexBufferManager{ _device.GetLogicalDevice(), _device.GetPhysicalDevice(), _commandPool, _device.GetGraphicsQueue() },
+	MeshSystem::MeshSystem(VulkanVertexBufferManager& _vertexBufferManager) :
+		m_VertexBufferManager{ _vertexBufferManager },
 		m_CachedSubMeshes{},
 		m_VertexBufferIdToSubMeshes{},
-		m_IsCacheDirty{ true },
 		m_TotalMeshCount{ 0 }
 	{}
 
 	void MeshSystem::ProcessComponents(const Entity* const _entity)
 	{
-		if (const auto & primitiveMesh{ _entity->GetComponent<PrimitiveMeshComponent>() })
+		if (const auto& primitiveMesh{ _entity->GetComponent<PrimitiveMeshComponent>() })
 		{
 			m_VertexBufferManager.CreateBasicShapeVertexBuffer(*primitiveMesh.get());
 			AddMesh(primitiveMesh.get()->GetMeshData());
 		}
-		else if (const auto & modelMesh{ _entity->GetComponent<CustomMeshComponent>() })
+		else if (const auto& modelMesh{ _entity->GetComponent<CustomMeshComponent>() })
 		{
 			m_VertexBufferManager.CreateModelVertexBuffer(*modelMesh.get());
 			const auto& existingSubMeshes{ GetSubMeshes(modelMesh.get()->GetVertexBufferId()) };
@@ -34,8 +33,7 @@ namespace Banshee
 			}
 
 			std::vector<MeshData> duplicatedMeshes(existingSubMeshes.size());
-			std::transform(existingSubMeshes.begin(), existingSubMeshes.end(), duplicatedMeshes.begin(),
-				[&](const MeshData& _subMesh)
+			std::transform(existingSubMeshes.begin(), existingSubMeshes.end(), duplicatedMeshes.begin(), [&](const MeshData& _subMesh)
 				{
 					MeshData copiedSubMesh{ _subMesh };
 					copiedSubMesh.SetEntityId(modelMesh.get()->GetOwner()->GetUniqueId());
@@ -61,7 +59,7 @@ namespace Banshee
 			AddMesh(mesh);
 		}
 
-		m_IsCacheDirty = true;
+		UpdateSubMeshCache();
 	}
 
 	void MeshSystem::AddMesh(MeshData& _mesh)
@@ -69,17 +67,7 @@ namespace Banshee
 		const uint32 vertexBufferId{ _mesh.GetVertexBufferId() };
 		_mesh.SetMeshId(m_TotalMeshCount++);
 		m_VertexBufferIdToSubMeshes[vertexBufferId].emplace_back(_mesh);
-		m_IsCacheDirty = true;
-	}
-
-	const std::vector<MeshData>& MeshSystem::GetAllSubMeshes()
-	{
-		if (m_IsCacheDirty)
-		{
-			UpdateSubMeshCache();
-		}
-
-		return m_CachedSubMeshes;
+		UpdateSubMeshCache();
 	}
 
 	const std::vector<MeshData>& MeshSystem::GetSubMeshes(const uint32 _bufferId) const
@@ -109,7 +97,5 @@ namespace Banshee
 			const auto& subMeshes{ mesh.second };
 			m_CachedSubMeshes.insert(m_CachedSubMeshes.end(), subMeshes.begin(), subMeshes.end());
 		}
-
-		m_IsCacheDirty = false;
 	}
 } // End of namespace

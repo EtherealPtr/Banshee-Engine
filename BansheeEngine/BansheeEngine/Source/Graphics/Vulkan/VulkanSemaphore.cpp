@@ -1,7 +1,6 @@
 #include "VulkanSemaphore.h"
 #include "Foundation/Logging/Logger.h"
-#include <vulkan/vulkan.h>
-#include <stdexcept>
+#include <vulkan/vulkan_core.h>
 
 namespace Banshee
 {

@@ -1,7 +1,7 @@
 #include "VulkanTextureSampler.h"
 #include "VulkanDevice.h"
 #include "Foundation/Logging/Logger.h"
-#include <vulkan/vulkan.h>
+#include <vulkan/vulkan_core.h>
 
 namespace Banshee
 {

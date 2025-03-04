@@ -36,7 +36,7 @@ namespace Banshee
 		VulkanTexture(const VulkanDevice& _device, const VkCommandPool& _commandPool) noexcept;
 		~VulkanTexture();
 
-		const std::vector<VkImageView>& GetTextureImageViews() const noexcept;
+		const std::vector<VkImageView>& GetTextureImageViews() const noexcept { return m_TextureImageViews; }
 		void UploadTextures();
 
 		VulkanTexture(const VulkanTexture&) = delete;

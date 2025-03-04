@@ -9,8 +9,8 @@ typedef struct VkDescriptorSet_T* VkDescriptorSet;
 
 namespace Banshee
 {
-	struct DescriptorSetWriteBufferProperties;
-	struct DescriptorSetWriteTextureProperties;
+	struct VulkanDescriptorSetBufferWriter;
+	struct VulkanDescriptorSetTextureWriter;
 
 	class VulkanDescriptorSet
 	{
@@ -18,8 +18,8 @@ namespace Banshee
 		VulkanDescriptorSet(const VkDevice& _logicalDevice, const VkDescriptorPool& _descriptorPool, const VkDescriptorSetLayout& _descriptorLayout);
 		~VulkanDescriptorSet();
 
-		void UpdateDescriptorSet(const std::vector<DescriptorSetWriteBufferProperties>& _descriptorSetWriteBufProperties) const noexcept;
-		void UpdateDescriptorSet(const std::vector<DescriptorSetWriteTextureProperties>& _descriptorSetWriteTexProperties) const noexcept;
+		void UpdateDescriptorSet(const std::vector<VulkanDescriptorSetBufferWriter>& _descriptorSetBufferWriters) const noexcept;
+		void UpdateDescriptorSet(const std::vector<VulkanDescriptorSetTextureWriter>& _descriptorSetTextureWriters) const noexcept;
 		const VkDescriptorSet& Get() const noexcept { return m_DescriptorSet; }
 
 	private:

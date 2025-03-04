@@ -10,9 +10,9 @@ typedef enum VkDescriptorType VkDescriptorType;
 
 namespace Banshee
 {
-	struct DescriptorSetWriteBufferProperties
+	struct VulkanDescriptorSetBufferWriter
 	{
-		DescriptorSetWriteBufferProperties() noexcept :
+		VulkanDescriptorSetBufferWriter() noexcept :
 			m_Binding{ 0 },
 			m_DescriptorType{},
 			m_Buffer{},
@@ -37,15 +37,14 @@ namespace Banshee
 		uint64 m_BufferRange;
 	};
 
-	struct DescriptorSetWriteTextureProperties
+	struct VulkanDescriptorSetTextureWriter
 	{
-		DescriptorSetWriteTextureProperties() noexcept :
+		VulkanDescriptorSetTextureWriter() noexcept :
 			m_Binding{ 0 },
 			m_DescriptorType{},
 			m_ImageViews{},
 			m_Sampler{}
-		{
-		}
+		{}
 
 		void Initialize(const uint32 _binding, const VkDescriptorType _descType) noexcept
 		{

@@ -1,7 +1,5 @@
 #pragma once
 
-#include "Foundation/Platform.h"
-
 typedef struct VkDevice_T* VkDevice;
 typedef struct VkDescriptorPool_T* VkDescriptorPool;
 
@@ -10,7 +8,7 @@ namespace Banshee
 	class VulkanDescriptorPool
 	{
 	public:
-		VulkanDescriptorPool(const VkDevice& _logicalDevice, const uint32 _maxSets);
+		VulkanDescriptorPool(const VkDevice& _logicalDevice, const size_t _maxSets);
 		~VulkanDescriptorPool();
 
 		const VkDescriptorPool& Get() const noexcept { return m_DescriptorPool; }

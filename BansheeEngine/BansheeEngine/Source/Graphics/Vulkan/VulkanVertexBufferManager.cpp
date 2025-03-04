@@ -2,6 +2,7 @@
 #include "Foundation/Entity/Entity.h"
 #include "Foundation/Logging/Logger.h"
 #include "Foundation/ResourceManager/ResourceManager.h"
+#include "Graphics/Vulkan/VulkanDevice.h"
 #include "Graphics/Components/Mesh/PrimitiveMeshComponent.h"
 #include "Graphics/Components/Mesh/CustomMeshComponent.h"
 #include "Graphics/Shapes/ShapeFactory.h"
@@ -12,9 +13,9 @@ namespace Banshee
 {
 	uint32 VulkanVertexBufferManager::s_NextBufferId{ 0 };
 
-	VulkanVertexBufferManager::VulkanVertexBufferManager(const VkDevice& _logicalDevice, const VkPhysicalDevice& _physicalDevice, const VkCommandPool& _commandPool, const VkQueue& _graphicsQueue) :
-		m_LogicalDevice{ _logicalDevice },
-		m_PhysicalDevice{ _physicalDevice },
+	VulkanVertexBufferManager::VulkanVertexBufferManager(const VulkanDevice& _device, const VkCommandPool& _commandPool, const VkQueue& _graphicsQueue) :
+		m_LogicalDevice{ _device.GetLogicalDevice() },
+		m_PhysicalDevice{ _device.GetPhysicalDevice() },
 		m_CommandPool{ _commandPool },
 		m_GraphicsQueue{ _graphicsQueue },
 		m_VertexBuffers{}

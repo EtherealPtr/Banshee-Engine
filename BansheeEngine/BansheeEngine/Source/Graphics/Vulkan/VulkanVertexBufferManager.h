@@ -8,13 +8,14 @@
 
 namespace Banshee
 {
+	class VulkanDevice;
 	class PrimitiveMeshComponent;
 	class CustomMeshComponent;
 
 	class VulkanVertexBufferManager
 	{
 	public:
-		VulkanVertexBufferManager(const VkDevice& _logicalDevice, const VkPhysicalDevice& _physicalDevice, const VkCommandPool& _commandPool, const VkQueue& _graphicsQueue);
+		VulkanVertexBufferManager(const VulkanDevice& _device, const VkCommandPool& _commandPool, const VkQueue& _graphicsQueue);
 
 		void GenerateBuffers(const uint32 _bufferId, void* _vertexData, const uint64 _sizeOfVertexData, void* _indexData, const uint64 _sizeOfIndexData);
 		void CreateBasicShapeVertexBuffer(PrimitiveMeshComponent& _meshComponent);
