@@ -163,7 +163,11 @@ namespace Banshee
 		ViewProjMatrix viewProjMatrix{ m_Camera.GetViewProjMatrix() };
 		viewProjMatrix.m_Proj[1][1] *= -1.0f;
 		m_SceneResources.UpdateVPUniformBuffers(viewProjMatrix, _imgIndex);
-		m_SceneResources.UpdateLightData(m_LightSystem, m_CurrentFrameIndex);
+
+		uint8 lightCount{ 0 };
+		auto lightData{ m_LightSystem.UpdateLightData(lightCount) };
+		m_SceneResources.UpdateLightUniformBuffer(std::span{ lightData }.first(lightCount), _imgIndex);
+
 		m_SceneResources.UpdateDescriptorSets(_imgIndex);
 
 		RenderScene(cmdBuffer, _imgIndex);

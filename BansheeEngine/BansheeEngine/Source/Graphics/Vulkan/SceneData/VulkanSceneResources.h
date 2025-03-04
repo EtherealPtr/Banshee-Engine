@@ -7,8 +7,10 @@
 #include "Graphics/Vulkan/VulkanUniformBuffer.h"
 #include "Graphics/Vulkan/VulkanDescriptorSet.h"
 #include "Graphics/Vulkan/VulkanDescriptorSetWriters.h"
+#include "Graphics/Components/Light/LightData.h"
 #include <glm/glm.hpp>
 #include <memory>
+#include <span> 
 
 typedef struct VkSampler_T* VkSampler;
 
@@ -17,7 +19,6 @@ namespace Banshee
 	class VulkanRenderContext;
 	class Material;
 	class MeshSystem;
-	class LightSystem;
 	struct ViewProjMatrix;
 
 	class VulkanSceneResources
@@ -28,6 +29,7 @@ namespace Banshee
 		void UpdateMeshUniformBuffers(const MeshSystem& _meshSystem);
 		void UpdateVPUniformBuffers(ViewProjMatrix& _viewProj, const uint32 _imgIndex) const;
 		void UpdateLightSpaceUniformBuffer(glm::mat4& _lightSpaceMatrix) const noexcept;
+		void UpdateLightUniformBuffer(std::span<const LightData> _lightData, const uint32 _currentFrameIndex);
 		void SetSceneTextures(const std::vector<VkImageView>& _textureViews, const VkSampler& _sampler);
 		void SetSceneShadowMap(const VkImageView& _shadowMapView, const VkSampler& _sampler);
 		void RecreateDepthBuffer(const uint32 _w, const uint32 _h, const uint32 _flags);
@@ -37,7 +39,6 @@ namespace Banshee
 		const VkRenderPass& GetRenderPass() const noexcept { return m_RenderPass.Get(); }
 		const VulkanSceneDescriptorSetLayout& GetDescriptorSetLayout() const noexcept { return m_DescriptorSetLayout; }
 		const VulkanGraphicsPipeline& GetPipeline() const noexcept { return m_Pipeline; }
-		void UpdateLightData(LightSystem& _lightSystem, const uint32 _currentFrameIndex);
 		std::vector<VulkanDescriptorSet>& GetDescriptorSets() noexcept { return m_DescriptorSets; }
 		uint64 GetMaterialMemoryAlignment() const noexcept { return m_MaterialDynamicBufferMemAlignment; }
 

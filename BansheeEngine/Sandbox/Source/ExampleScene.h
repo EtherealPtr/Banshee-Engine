@@ -25,28 +25,22 @@ private:
 	std::shared_ptr<CustomMeshComponent> m_MeshComp;
 };
 
-class ExamplePrimitiveModel : public Entity
-{
-public:
-	explicit ExamplePrimitiveModel(const glm::vec3& _pos = glm::vec3(0.0f))
-	{
-		auto meshComponent{ AddComponent<PrimitiveMeshComponent>(PrimitiveShapeEnum::CubeShape, ShaderTypeEnum::Standard) };
-		meshComponent->SetTexture("Textures/tiles.jpg");
-		m_Transform = AddComponent<TransformComponent>();
-		m_Transform->SetPosition(_pos);
-	}
-
-private:
-	std::shared_ptr<TransformComponent> m_Transform;
-};
-
 class ExampleCube : public Entity
 {
 public:
-	explicit ExampleCube(const glm::vec3& _pos = glm::vec3(0.0f))
+	ExampleCube(const glm::vec3& _pos = glm::vec3(0.0f), const glm::vec3& _tintColor = glm::vec3(1.0f), const char* _texturePath = nullptr)
 	{
 		auto meshComponent{ AddComponent<PrimitiveMeshComponent>(PrimitiveShapeEnum::CubeShape, ShaderTypeEnum::Standard) };
-		meshComponent->SetTexture("Textures/tiles.jpg");
+
+		if (_texturePath)
+		{
+			meshComponent->SetTexture(_texturePath);
+		}
+		else
+		{
+			meshComponent->SetTintColor(glm::vec4(_tintColor.x, _tintColor.y, _tintColor.z, 1.0f));
+		}
+
 		m_Transform = AddComponent<TransformComponent>();
 		m_Transform->SetPosition(_pos);
 	}
@@ -54,6 +48,11 @@ public:
 	void SetPosition(const glm::vec3& _pos)
 	{
 		m_Transform->SetPosition(_pos);
+	}
+
+	void SetScale(const float _scale)
+	{
+		m_Transform->SetScale(glm::vec3(_scale));
 	}
 
 private:
@@ -69,7 +68,7 @@ public:
 		meshComponent->SetTintColor(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
 		m_Transform = AddComponent<TransformComponent>();
 		m_Transform->SetPosition(_pos);
-		m_Transform->SetScale(glm::vec3(15.0f, 15.0f, 1.0f));
+		m_Transform->SetScale(glm::vec3(10.0f, 10.0f, 1.0f));
 		m_Transform->SetRotation(glm::quat(glm::vec3(glm::radians(-90.0f), 0.0f, 0.0f)));
 	}
 
