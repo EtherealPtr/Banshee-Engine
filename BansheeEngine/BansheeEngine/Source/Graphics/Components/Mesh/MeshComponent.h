@@ -11,7 +11,7 @@ namespace Banshee
 	class MeshComponent : public Component
 	{
 	public:
-		BANSHEE_ENGINE MeshComponent(const ShaderTypeEnum _shaderType) noexcept;
+		BANSHEE_ENGINE MeshComponent() noexcept;
 		BANSHEE_ENGINE ~MeshComponent() = default;
 
 		virtual void SetTintColor(const glm::vec4& _tintColor) noexcept { m_TintColor = _tintColor; }

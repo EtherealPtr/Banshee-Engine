@@ -37,6 +37,8 @@ namespace Banshee
 			requires IsComponent<T>
 		std::shared_ptr<T> GetComponent() const noexcept;
 
+		virtual void Update(const float _deltaTime) {}
+
 	protected:
 		uint32 m_Id;
 		std::vector<std::shared_ptr<Component>> m_Components;

@@ -4,13 +4,11 @@
 
 namespace Banshee
 {
-	PrimitiveMeshComponent::PrimitiveMeshComponent(const PrimitiveShapeEnum _shape, const ShaderTypeEnum _shaderType) noexcept :
-		MeshComponent(_shaderType),
+	PrimitiveMeshComponent::PrimitiveMeshComponent(const PrimitiveShapeEnum _shape) noexcept :
+		MeshComponent{},
 		m_Shape{ _shape },
 		m_Data{}
-	{
-		m_Data.SetShaderType(_shaderType);
-	}
+	{}
 
 	void PrimitiveMeshComponent::OnComponentInitialized() noexcept
 	{

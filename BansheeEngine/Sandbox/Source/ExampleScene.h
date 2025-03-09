@@ -10,7 +10,7 @@ class ExampleCustomModel : public Entity
 public:
 	explicit ExampleCustomModel(const char* _modelPath, const glm::vec3& _pos = glm::vec3(0.0f))
 	{
-		m_MeshComp = AddComponent<CustomMeshComponent>(_modelPath, ShaderTypeEnum::Standard);
+		m_MeshComp = AddComponent<CustomMeshComponent>(_modelPath);
 		m_Transform = AddComponent<TransformComponent>();
 		m_Transform->SetPosition(_pos);
 	}
@@ -30,7 +30,7 @@ class ExampleCube : public Entity
 public:
 	ExampleCube(const glm::vec3& _pos = glm::vec3(0.0f), const glm::vec3& _tintColor = glm::vec3(1.0f), const char* _texturePath = nullptr)
 	{
-		auto meshComponent{ AddComponent<PrimitiveMeshComponent>(PrimitiveShapeEnum::CubeShape, ShaderTypeEnum::Standard) };
+		auto meshComponent{ AddComponent<PrimitiveMeshComponent>(PrimitiveShapeEnum::CubeShape) };
 
 		if (_texturePath)
 		{
@@ -64,7 +64,7 @@ class ExampleQuad : public Entity
 public:
 	explicit ExampleQuad(const glm::vec3& _pos = glm::vec3(0.0f), const glm::vec3& _tintColor = glm::vec3(1.0f), const char* _texturePath = nullptr)
 	{
-		auto meshComponent{ AddComponent<PrimitiveMeshComponent>(PrimitiveShapeEnum::SquareShape, ShaderTypeEnum::Standard) };
+		auto meshComponent{ AddComponent<PrimitiveMeshComponent>(PrimitiveShapeEnum::SquareShape) };
 
 		if (_texturePath)
 		{

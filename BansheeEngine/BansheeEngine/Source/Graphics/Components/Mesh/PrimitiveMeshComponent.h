@@ -10,7 +10,7 @@ namespace Banshee
 	class PrimitiveMeshComponent : public MeshComponent
 	{
 	public:
-		BANSHEE_ENGINE PrimitiveMeshComponent(const PrimitiveShapeEnum _basicShape, const ShaderTypeEnum _shaderType = ShaderTypeEnum::Standard) noexcept;
+		BANSHEE_ENGINE PrimitiveMeshComponent(const PrimitiveShapeEnum _basicShape) noexcept;
 
 		virtual void OnComponentInitialized() noexcept override;
 		virtual void SetTintColor(const glm::vec4& _tintColor) noexcept override;

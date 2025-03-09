@@ -2,6 +2,7 @@
 #include "Foundation/Logging/Logger.h"
 #include "Foundation/INIParser.h"
 #include "Foundation/Timer/Timer.h"
+#include "Foundation/Entity/EntityManager.h"
 #include "Graphics/Window.h"
 #include "Graphics/Vulkan/VulkanRenderer.h"
 
@@ -42,6 +43,7 @@ namespace Banshee
 		{
 			timer.Update();
 			m_Window->PollEvents();
+			EntityManager::UpdateEntities(timer.GetDeltaTime());
 			m_Renderer->DrawFrame(timer.GetDeltaTime());
 		}
 	}
