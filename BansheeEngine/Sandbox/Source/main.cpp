@@ -7,12 +7,12 @@ class ClientApp : public Banshee::Application
 {
 public:
 	ClientApp() :
-		m_DirectionalLight{ glm::vec3(-0.3f, -1.0f, -0.5f), glm::vec4(1.0f, 0.95f, 0.9f, 0.25f) },
-		m_Ground{ glm::vec3(0.0f, 0.0f, 0.0f) },
-		m_CustomModel{ glm::vec3(0.0f, 1.0f, 0.0f) },
+		m_DirectionalLight{ glm::vec3(-0.3f, -1.0f, -0.5f), glm::vec4(1.0f, 0.95f, 0.9f, 0.5f) },
+		m_Ground{ glm::vec3(0.0f), glm::vec3(1.0f), "Textures/ground.jpg" },
+		m_CustomModel{ "Models/monkey.glb", glm::vec3(0.0f, 1.0f, 0.0f) },
 		m_PointLightRed{ glm::vec3(-2.0f, 0.5f, -1.5f), glm::vec4(1.0f, 0.2f, 0.2f, 2.0f) },
-		m_PointLightGreen{ glm::vec3(2.0f, 0.5f, 0.5f), glm::vec4(0.2f, 1.0f, 0.2f, 2.0f) },
-		m_PointLightBlue{ glm::vec3(0.0f, 0.5f, 2.0f), glm::vec4(0.2f, 0.2f, 1.0f, 2.0f) }
+		m_PointLightGreen{ glm::vec3(2.2f, 1.1f, 0.5f), glm::vec4(0.2f, 1.0f, 0.2f, 2.0f) },
+		m_PointLightBlue{ glm::vec3(0.5f, 0.5f, 2.2f), glm::vec4(0.2f, 0.2f, 1.0f, 2.0f) }
 	{
 		m_CustomModel.SetTintColor(glm::vec4(1.0f, 0.8f, 0.3f, 1.0f));
 	}

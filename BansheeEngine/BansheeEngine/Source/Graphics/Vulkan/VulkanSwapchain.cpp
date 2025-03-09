@@ -9,7 +9,7 @@ namespace Banshee
 	static VkSurfaceFormatKHR PickSurfaceFormat(const VkPhysicalDevice& _gpu, const VkSurfaceKHR& _surface)
 	{
 		// Query available surface formats
-		uint32 formatCount = 0;
+		uint32 formatCount{ 0 };
 		vkGetPhysicalDeviceSurfaceFormatsKHR(_gpu, _surface, &formatCount, nullptr);
 		std::vector<VkSurfaceFormatKHR> surfaceFormats(formatCount);
 		vkGetPhysicalDeviceSurfaceFormatsKHR(_gpu, _surface, &formatCount, surfaceFormats.data());
@@ -57,7 +57,7 @@ namespace Banshee
 		// If the surface extent is undefined, set it to the window size (_w, _h)
 		if (_surfaceCapabilities.currentExtent.width == UINT32_MAX)
 		{
-			VkExtent2D extent = { _w, _h };
+			VkExtent2D extent{ _w, _h };
 			extent.width = std::max(_surfaceCapabilities.minImageExtent.width, std::min(_surfaceCapabilities.maxImageExtent.width, extent.width));
 			extent.height = std::max(_surfaceCapabilities.minImageExtent.height, std::min(_surfaceCapabilities.maxImageExtent.height, extent.height));
 			return extent;

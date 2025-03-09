@@ -18,16 +18,16 @@ namespace Banshee
 		MeshSystem(VulkanVertexBufferManager& _vertexBufferManager);
 		~MeshSystem() noexcept = default;
 
+		MeshSystem(const MeshSystem&) = delete;
+		MeshSystem& operator=(const MeshSystem&) = delete;
+		MeshSystem(MeshSystem&&) = delete;
+		MeshSystem& operator=(MeshSystem&&) = delete;
+
 		void ProcessComponents(const Entity* const _entity);
 		void UpdateSubMeshCache();
 		const std::vector<MeshData>& GetAllSubMeshes() const noexcept { return m_CachedSubMeshes; }
 		const std::vector<MeshData>& GetSubMeshes(const uint32 _bufferId) const;
 		VulkanVertexBuffer* GetVertexBuffer(const uint32 _bufferId);
-
-		MeshSystem(const MeshSystem&) = delete;
-		MeshSystem& operator=(const MeshSystem&) = delete;
-		MeshSystem(MeshSystem&&) = delete;
-		MeshSystem& operator=(MeshSystem&&) = delete;
 
 	private:
 		void AddMeshes(std::vector<MeshData>& _meshes);

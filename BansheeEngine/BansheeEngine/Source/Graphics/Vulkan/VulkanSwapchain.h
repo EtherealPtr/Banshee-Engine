@@ -19,17 +19,17 @@ namespace Banshee
 		VulkanSwapchain(const VkDevice& _logicalDevice, const VkPhysicalDevice& _gpu, const VkSurfaceKHR& _surface, const uint32 _w, const uint32 _h);
 		~VulkanSwapchain();
 
+		VulkanSwapchain(const VulkanSwapchain&) = delete;
+		VulkanSwapchain& operator=(const VulkanSwapchain&) = delete;
+		VulkanSwapchain(VulkanSwapchain&&) = delete;
+		VulkanSwapchain& operator=(VulkanSwapchain&&) = delete;
+
 		const VkSwapchainKHR& Get() const noexcept { return m_Swapchain; }
 		const std::vector<VkImageView>& GetImageViews() const noexcept { return m_SwapchainImageViews; }
 		uint32 GetWidth() const noexcept { return m_Width; }
 		uint32 GetHeight() const noexcept { return m_Height; }
 		VkFormat GetFormat() const noexcept { return m_Format; }
 		void RecreateSwapchain(const uint32 _w, const uint32 _h);
-
-		VulkanSwapchain(const VulkanSwapchain&) = delete;
-		VulkanSwapchain& operator=(const VulkanSwapchain&) = delete;
-		VulkanSwapchain(VulkanSwapchain&&) = delete;
-		VulkanSwapchain& operator=(VulkanSwapchain&&) = delete;
 
 	private:
 		void CreateSwapchain(const uint32 _w, const uint32 _h);

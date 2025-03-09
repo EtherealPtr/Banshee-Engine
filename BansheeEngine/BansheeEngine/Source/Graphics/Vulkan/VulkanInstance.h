@@ -11,12 +11,12 @@ namespace Banshee
 		VulkanInstance();
 		~VulkanInstance();
 
-		const VkInstance& Get() const noexcept { return m_Instance; }
-
 		VulkanInstance(const VulkanInstance&) = delete;
 		VulkanInstance& operator=(const VulkanInstance&) = delete;
 		VulkanInstance(VulkanInstance&&) = delete;
 		VulkanInstance& operator=(VulkanInstance&&) = delete;
+
+		const VkInstance& Get() const noexcept { return m_Instance; }
 
 	private:
 		void SetupDebugCallback();

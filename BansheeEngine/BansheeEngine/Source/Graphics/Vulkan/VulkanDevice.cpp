@@ -20,7 +20,6 @@ namespace Banshee
 
 		PickPhysicalDevice(_vkInstance);
 		SetupQueueFamilyIndices();
-
 		CreateLogicalDevice();
 	}
 
@@ -56,7 +55,7 @@ namespace Banshee
 				continue;
 			}
 
-			const uint32 deviceScore = RateDeviceSuitability(gpu, deviceProperties);
+			const uint32 deviceScore{ RateDeviceSuitability(gpu, deviceProperties) };
 			BE_LOG(LogCategory::Trace, "[DEVICE]: Assigned score of %d for device with name %s", deviceScore, deviceProperties.deviceName);
 
 			if (deviceScore > maxScore)
@@ -139,7 +138,7 @@ namespace Banshee
 		{
 			if (m_QueueIndices.m_GraphicsQueueFamilyIndex == UINT32_MAX)
 			{
-				if (queueFamilies[i].queueCount > 0 && queueFamilies[i].queueFlags & VK_QUEUE_GRAPHICS_BIT)
+				if (queueFamilies.at(i).queueCount > 0 && queueFamilies.at(i).queueFlags & VK_QUEUE_GRAPHICS_BIT)
 				{
 					m_QueueIndices.m_GraphicsQueueFamilyIndex = i;
 				}
@@ -147,7 +146,7 @@ namespace Banshee
 
 			if (m_QueueIndices.m_TransferQueueFamilyIndex == UINT32_MAX)
 			{
-				if (queueFamilies[i].queueCount > 0 && queueFamilies[i].queueFlags & VK_QUEUE_TRANSFER_BIT)
+				if (queueFamilies.at(i).queueCount > 0 && queueFamilies.at(i).queueFlags & VK_QUEUE_TRANSFER_BIT)
 				{
 					m_QueueIndices.m_TransferQueueFamilyIndex = i;
 				}
@@ -170,9 +169,12 @@ namespace Banshee
 
 	void VulkanDevice::CreateLogicalDevice()
 	{
-		std::set<uint32> queueIndices = { m_QueueIndices.m_GraphicsQueueFamilyIndex,
-										  m_QueueIndices.m_TransferQueueFamilyIndex,
-										  m_QueueIndices.m_PresentationQueueFamilyIndex };
+		std::set<uint32> queueIndices
+		{ 
+			m_QueueIndices.m_GraphicsQueueFamilyIndex,
+			m_QueueIndices.m_TransferQueueFamilyIndex,
+			m_QueueIndices.m_PresentationQueueFamilyIndex 
+		};
 
 		std::vector<VkDeviceQueueCreateInfo> queueCreateInfos(queueIndices.size());
 		constexpr float queuePriority{ 1.0f };
@@ -186,7 +188,7 @@ namespace Banshee
 			queueCreateInfo.queueFamilyIndex = queueIndex;
 			queueCreateInfo.queueCount = 1;
 			queueCreateInfo.pQueuePriorities = &queuePriority;
-			queueCreateInfos[index] = queueCreateInfo;
+			queueCreateInfos.at(index) = queueCreateInfo;
 		}
 
 		// Device features
@@ -197,14 +199,14 @@ namespace Banshee
 		if (availableDeviceFeatures.samplerAnisotropy)
 		{
 			enabledFeatures.samplerAnisotropy = VK_TRUE;
-			enabledFeatures.fillModeNonSolid = VK_TRUE; // Enable wireframe mode
+			//enabledFeatures.fillModeNonSolid = VK_TRUE; // Enable wireframe mode
 		}
 
 		VkPhysicalDeviceVulkan12Features features12{};
 		features12.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_FEATURES;
 		features12.runtimeDescriptorArray = VK_TRUE;
 
-		std::vector<const char*> deviceExtentions = { VK_KHR_SWAPCHAIN_EXTENSION_NAME };
+		std::vector<const char*> deviceExtentions{ VK_KHR_SWAPCHAIN_EXTENSION_NAME };
 		VulkanUtils::CheckDeviceExtSupport(m_PhysicalDevice, deviceExtentions);
 
 		// Specify device create info

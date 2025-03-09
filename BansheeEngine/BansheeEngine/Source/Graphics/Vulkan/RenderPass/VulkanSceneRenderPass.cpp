@@ -6,7 +6,7 @@
 namespace Banshee
 {
 	VulkanSceneRenderPass::VulkanSceneRenderPass(const VkDevice& _device, const VkFormat _colorFormat, const VkFormat _depthFormat) : 
-		VulkanRenderPass{ _device },
+		VulkanRenderPassBase{ _device },
 		m_ColorFormat{ _colorFormat },
 		m_DepthFormat{ _depthFormat }
 	{

@@ -32,6 +32,11 @@ namespace Banshee
 		VulkanDevice(const VkInstance& _vkInstance, const VkSurfaceKHR& _vkSurface);
 		~VulkanDevice();
 
+		VulkanDevice(const VulkanDevice&) = delete;
+		VulkanDevice& operator=(const VulkanDevice&) = delete;
+		VulkanDevice(VulkanDevice&&) = delete;
+		VulkanDevice& operator=(VulkanDevice&&) = delete;
+
 		const VkPhysicalDevice& GetPhysicalDevice() const noexcept { return m_PhysicalDevice; }
 		const VkDevice& GetLogicalDevice() const noexcept { return m_LogicalDevice; }
 		const DeviceQueueIndices& GetQueueIndices() const noexcept { return m_QueueIndices; }
@@ -39,11 +44,6 @@ namespace Banshee
 		const VkQueue& GetPresentationQueue() const noexcept { return m_PresentQueue; }
 		const VkQueue& GetTransferQueue() const noexcept { return m_TransferQueue; }
 		VkPhysicalDeviceLimits GetLimits() const noexcept;
-
-		VulkanDevice(const VulkanDevice&) = delete;
-		VulkanDevice& operator=(const VulkanDevice&) = delete;
-		VulkanDevice(VulkanDevice&&) = delete;
-		VulkanDevice& operator=(VulkanDevice&&) = delete;
 
 	private:
 		void PickPhysicalDevice(const VkInstance& _vkInstance);

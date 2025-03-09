@@ -1,8 +1,6 @@
 #include "Window.h"
 #include "Foundation/Logging/Logger.h"
 #include <GLFW/glfw3.h>
-#include <stdexcept>
-#include <assert.h>
 
 namespace Banshee
 {
@@ -50,14 +48,14 @@ namespace Banshee
 		glfwPollEvents();
 	}
 
-	uint16 Window::GetWidth() const noexcept
+	int Window::GetFramebufferWidth() const noexcept
 	{
 		int w{ 0 };
 		glfwGetFramebufferSize(m_Window, &w, nullptr);
 		return w;
 	}
 
-	uint16 Window::GetHeight() const noexcept
+	int Window::GetFramebufferHeight() const noexcept
 	{
 		int h{ 0 };
 		glfwGetFramebufferSize(m_Window, nullptr, &h);

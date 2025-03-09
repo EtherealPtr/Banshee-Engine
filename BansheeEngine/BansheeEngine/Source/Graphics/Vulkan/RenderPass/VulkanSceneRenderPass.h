@@ -1,10 +1,10 @@
 #pragma once
 
-#include "VulkanRenderPass.h"
+#include "VulkanRenderPassBase.h"
 
 namespace Banshee
 {
-	class VulkanSceneRenderPass : public VulkanRenderPass
+	class VulkanSceneRenderPass : public VulkanRenderPassBase
 	{
 	public:
 		VulkanSceneRenderPass(const VkDevice& _device, const VkFormat _colorFormat, const VkFormat _depthFormat);

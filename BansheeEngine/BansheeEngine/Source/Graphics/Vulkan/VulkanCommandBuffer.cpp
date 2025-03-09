@@ -27,7 +27,7 @@ namespace Banshee
 
 	VulkanCommandBuffer::~VulkanCommandBuffer()
 	{
-		vkFreeCommandBuffers(m_LogicalDevice, m_CommandPool, (uint32)m_CommandBuffers.size(), m_CommandBuffers.data());
+		vkFreeCommandBuffers(m_LogicalDevice, m_CommandPool, static_cast<uint32>(m_CommandBuffers.size()), m_CommandBuffers.data());
 	}
 
 	void VulkanCommandBuffer::Begin(const uint16 _bufferIndex) const noexcept
@@ -36,12 +36,12 @@ namespace Banshee
 		beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
 		beginInfo.flags = VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT;
 
-		vkBeginCommandBuffer(m_CommandBuffers[_bufferIndex], &beginInfo);
+		vkBeginCommandBuffer(m_CommandBuffers.at(_bufferIndex), &beginInfo);
 	}
 
 	void VulkanCommandBuffer::End(const uint16 _bufferIndex) const noexcept
 	{
-		vkEndCommandBuffer(m_CommandBuffers[_bufferIndex]);
+		vkEndCommandBuffer(m_CommandBuffers.at(_bufferIndex));
 	}
 
 	void VulkanCommandBuffer::Submit(const uint16 _bufferIndex, const VkQueue& _queue, const VkSemaphore& _waitSem, const VkSemaphore& _signalSem, const VkFence& _fence, const uint32 _waitStage)
@@ -51,7 +51,7 @@ namespace Banshee
 		submitInfo.waitSemaphoreCount = _waitSem ? 1 : 0;
 		submitInfo.pWaitSemaphores = &_waitSem;
 		submitInfo.commandBufferCount = 1;
-		submitInfo.pCommandBuffers = &m_CommandBuffers[_bufferIndex];
+		submitInfo.pCommandBuffers = &m_CommandBuffers.at(_bufferIndex);
 		submitInfo.signalSemaphoreCount = _signalSem ? 1 : 0;
 		submitInfo.pSignalSemaphores = &_signalSem;
 		submitInfo.pWaitDstStageMask = &_waitStage;

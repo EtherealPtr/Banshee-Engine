@@ -1,4 +1,5 @@
 #include "TransformationSystem.h"
+#include "Foundation/Entity/Entity.h"
 
 namespace Banshee
 {

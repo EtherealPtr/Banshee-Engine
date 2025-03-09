@@ -10,60 +10,67 @@ typedef enum VkDescriptorType VkDescriptorType;
 
 namespace Banshee
 {
-	struct VulkanDescriptorSetBufferWriter
+	class VulkanDescriptorSetWriterBase
 	{
-		VulkanDescriptorSetBufferWriter() noexcept :
-			m_Binding{ 0 },
-			m_DescriptorType{},
-			m_Buffer{},
+	public:
+		explicit VulkanDescriptorSetWriterBase(const uint32 _binding, const VkDescriptorType _descriptorType) noexcept :
+			m_Binding{ _binding },
+			m_DescriptorType{ _descriptorType }
+		{}
+		
+		uint32 GetBinding() const noexcept { return m_Binding; }
+		const VkDescriptorType& GetDescriptorType() const noexcept { return m_DescriptorType; }
+
+	protected:
+		uint32 m_Binding;
+		VkDescriptorType m_DescriptorType;
+	};
+
+	class VulkanDescriptorSetBufferWriter : public VulkanDescriptorSetWriterBase
+	{
+	public:
+		VulkanDescriptorSetBufferWriter(const uint32 _binding, const VkDescriptorType _descriptorType) noexcept :
+			VulkanDescriptorSetWriterBase{ _binding, _descriptorType },
+			m_Buffer{ nullptr },
 			m_BufferRange{ 0 }
 		{}
-
-		void Initialize(const uint32 _binding, const VkDescriptorType _descType) noexcept
-		{
-			m_Binding = _binding;
-			m_DescriptorType = _descType;
-		}
-
-		void SetBuffer(const VkBuffer& _buffer, const uint64 _bufferRange) noexcept
+		
+		void SetBuffer(const VkBuffer _buffer, const uint64 _bufferRange) noexcept
 		{
 			m_Buffer = _buffer;
 			m_BufferRange = _bufferRange;
 		}
 
-		uint32 m_Binding;
-		VkDescriptorType m_DescriptorType;
+		const VkBuffer& GetBuffer() const noexcept { return m_Buffer; }
+		uint64 GetBufferRange() const noexcept { return m_BufferRange; }
+
+	private:
 		VkBuffer m_Buffer;
 		uint64 m_BufferRange;
 	};
 
-	struct VulkanDescriptorSetTextureWriter
+	class VulkanDescriptorSetTextureWriter : public VulkanDescriptorSetWriterBase
 	{
-		VulkanDescriptorSetTextureWriter() noexcept :
-			m_Binding{ 0 },
-			m_DescriptorType{},
-			m_ImageViews{},
-			m_Sampler{}
+	public:
+		VulkanDescriptorSetTextureWriter(const uint32 _binding, const VkDescriptorType _descriptorType) noexcept : 
+			VulkanDescriptorSetWriterBase{ _binding, _descriptorType }, 
+			m_Sampler{ nullptr }
 		{}
-
-		void Initialize(const uint32 _binding, const VkDescriptorType _descType) noexcept
+		
+		void SetImageViews(std::vector<VkImageView> _imageViews) noexcept
 		{
-			m_Binding = _binding;
-			m_DescriptorType = _descType;
+			m_ImageViews = std::move(_imageViews);
 		}
-
-		void SetImageView(const std::vector<VkImageView>& _imageViews) noexcept
-		{
-			m_ImageViews = _imageViews;
-		}
-
-		void SetSampler(const VkSampler& _sampler) noexcept
+		
+		void SetSampler(VkSampler _sampler) noexcept
 		{
 			m_Sampler = _sampler;
 		}
-
-		uint32 m_Binding;
-		VkDescriptorType m_DescriptorType;
+		
+		const std::vector<VkImageView>& GetImageViews() const noexcept { return m_ImageViews; }
+		const VkSampler& GetSampler() const noexcept { return m_Sampler; }
+	
+	private:
 		std::vector<VkImageView> m_ImageViews;
 		VkSampler m_Sampler;
 	};

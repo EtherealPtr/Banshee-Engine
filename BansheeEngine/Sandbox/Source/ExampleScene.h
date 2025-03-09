@@ -8,9 +8,9 @@ using namespace Banshee;
 class ExampleCustomModel : public Entity
 {
 public:
-	explicit ExampleCustomModel(const glm::vec3& _pos = glm::vec3(0.0f))
+	explicit ExampleCustomModel(const char* _modelPath, const glm::vec3& _pos = glm::vec3(0.0f))
 	{
-		m_MeshComp = AddComponent<CustomMeshComponent>("Models/monkey.glb", ShaderTypeEnum::Standard);
+		m_MeshComp = AddComponent<CustomMeshComponent>(_modelPath, ShaderTypeEnum::Standard);
 		m_Transform = AddComponent<TransformComponent>();
 		m_Transform->SetPosition(_pos);
 	}
@@ -62,10 +62,19 @@ private:
 class ExampleQuad : public Entity
 {
 public:
-	explicit ExampleQuad(const glm::vec3& _pos = glm::vec3(0.0f))
+	explicit ExampleQuad(const glm::vec3& _pos = glm::vec3(0.0f), const glm::vec3& _tintColor = glm::vec3(1.0f), const char* _texturePath = nullptr)
 	{
 		auto meshComponent{ AddComponent<PrimitiveMeshComponent>(PrimitiveShapeEnum::SquareShape, ShaderTypeEnum::Standard) };
-		meshComponent->SetTintColor(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+
+		if (_texturePath)
+		{
+			meshComponent->SetTexture(_texturePath);
+		}
+		else
+		{
+			meshComponent->SetTintColor(glm::vec4(_tintColor.x, _tintColor.y, _tintColor.z, 1.0f));
+		}
+
 		m_Transform = AddComponent<TransformComponent>();
 		m_Transform->SetPosition(_pos);
 		m_Transform->SetScale(glm::vec3(10.0f, 10.0f, 1.0f));

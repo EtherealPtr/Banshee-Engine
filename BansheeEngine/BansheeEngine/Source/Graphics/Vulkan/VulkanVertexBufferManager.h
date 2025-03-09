@@ -17,15 +17,15 @@ namespace Banshee
 	public:
 		VulkanVertexBufferManager(const VulkanDevice& _device, const VkCommandPool& _commandPool, const VkQueue& _graphicsQueue);
 
-		void GenerateBuffers(const uint32 _bufferId, void* _vertexData, const uint64 _sizeOfVertexData, void* _indexData, const uint64 _sizeOfIndexData);
-		void CreateBasicShapeVertexBuffer(PrimitiveMeshComponent& _meshComponent);
-		void CreateModelVertexBuffer(CustomMeshComponent& _meshComponent);
-		VulkanVertexBuffer* GetVertexBuffer(const uint32 _bufferId);
-
 		VulkanVertexBufferManager(const VulkanVertexBufferManager&) = delete;
 		VulkanVertexBufferManager& operator=(const VulkanVertexBufferManager&) = delete;
 		VulkanVertexBufferManager(VulkanVertexBufferManager&&) = delete;
 		VulkanVertexBufferManager& operator=(VulkanVertexBufferManager&&) = delete;
+
+		void GenerateBuffers(const uint32 _bufferId, void* _vertexData, const uint64 _sizeOfVertexData, void* _indexData, const uint64 _sizeOfIndexData);
+		void CreateBasicShapeVertexBuffer(PrimitiveMeshComponent& _meshComponent);
+		void CreateModelVertexBuffer(CustomMeshComponent& _meshComponent);
+		VulkanVertexBuffer* GetVertexBuffer(const uint32 _bufferId);
 
 	private:
 		VkDevice m_LogicalDevice;

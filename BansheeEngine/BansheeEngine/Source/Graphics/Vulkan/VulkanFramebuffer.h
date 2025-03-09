@@ -16,7 +16,7 @@ namespace Banshee
 		~VulkanFramebuffer();
 
 		void RecreateFramebuffer(const uint32 _w, const uint32 _h, const VkImageView& _coloredImageView, const VkImageView& _depthImageView);
-		const VkFramebuffer& GetFramebuffer() const noexcept { return m_Framebuffer; }
+		const VkFramebuffer& Get() const noexcept { return m_Framebuffer; }
 
 	private:
 		void CreateFramebuffer(uint32 _w, uint32 _h, const VkImageView& _colorImageView, const VkImageView& _depthImageView);

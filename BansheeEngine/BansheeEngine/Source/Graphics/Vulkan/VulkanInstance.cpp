@@ -18,13 +18,16 @@ namespace Banshee
 	{
 		BE_LOG(LogCategory::Trace, "[INSTANCE]: Creating Vulkan instance");
 
+		uint32 instanceVersion{ 0 };
+		vkEnumerateInstanceVersion(&instanceVersion);
+
 		VkApplicationInfo appInfo{};
 		appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
-		appInfo.pApplicationName = "Untitled";
-		appInfo.applicationVersion = VK_MAKE_API_VERSION(1, 1, 0, 1);
+		appInfo.pApplicationName = "None";
+		appInfo.applicationVersion = VK_MAKE_API_VERSION(1, 1, 2, 0);
 		appInfo.pEngineName = "None";
-		appInfo.engineVersion = VK_MAKE_API_VERSION(1, 1, 1, 0);
-		appInfo.apiVersion = VK_API_VERSION_1_3;
+		appInfo.engineVersion = VK_MAKE_API_VERSION(1, 1, 2, 0);
+		appInfo.apiVersion = instanceVersion >= VK_API_VERSION_1_4 ? VK_API_VERSION_1_4 : VK_API_VERSION_1_3;
 
 		VkInstanceCreateInfo instanceCreateInfo{};
 		instanceCreateInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
@@ -90,7 +93,10 @@ namespace Banshee
 
 	void VulkanInstance::SetupDebugCallback()
 	{
-		if (!g_EnableValidationLayers) return;
+		if (!g_EnableValidationLayers)
+		{
+			return;
+		}
 
 		VkDebugUtilsMessengerCreateInfoEXT debugCreateInfo{};
 		debugCreateInfo.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;

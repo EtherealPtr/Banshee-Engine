@@ -42,7 +42,7 @@
     <ClCompile Include="source\graphics\Vulkan\VulkanSwapchain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Graphics\Vulkan\RenderPass\VulkanRenderPass.cpp">
+    <ClCompile Include="Source\Graphics\Vulkan\RenderPass\VulkanRenderPassBase.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\graphics\Vulkan\VulkanFramebuffer.cpp">
@@ -174,10 +174,10 @@
     <ClCompile Include="Source\Graphics\Vulkan\VulkanRenderContext.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Graphics\Vulkan\SceneData\VulkanSceneResources.cpp">
+    <ClCompile Include="Source\Graphics\Vulkan\SceneData\VulkanScene.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Graphics\Vulkan\SceneData\VulkanSceneShadowResources.cpp">
+    <ClCompile Include="Source\Graphics\Vulkan\SceneData\VulkanSceneShadow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\Graphics\Vulkan\RenderPass\VulkanSceneRenderPass.cpp">
@@ -248,7 +248,7 @@
     <ClInclude Include="source\graphics\Vulkan\VulkanSwapchain.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Graphics\Vulkan\RenderPass\VulkanRenderPass.h">
+    <ClInclude Include="Source\Graphics\Vulkan\RenderPass\VulkanRenderPassBase.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="source\graphics\Vulkan\VulkanFramebuffer.h">
@@ -443,10 +443,10 @@
     <ClInclude Include="Source\Graphics\Vulkan\VulkanRenderContext.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Graphics\Vulkan\SceneData\VulkanSceneResources.h">
+    <ClInclude Include="Source\Graphics\Vulkan\SceneData\VulkanScene.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Graphics\Vulkan\SceneData\VulkanSceneShadowResources.h">
+    <ClInclude Include="Source\Graphics\Vulkan\SceneData\VulkanSceneShadow.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Graphics\Vulkan\RenderPass\VulkanSceneRenderPass.h">

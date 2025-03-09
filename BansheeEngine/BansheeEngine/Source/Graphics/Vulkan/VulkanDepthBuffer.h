@@ -19,14 +19,14 @@ namespace Banshee
 		VulkanDepthBuffer(const VulkanDevice& _device, const uint32 _w, const uint32 _h, const uint32 _flags);
 		~VulkanDepthBuffer();
 
-		void RecreateDepthBuffer(const uint32 _w, const uint32 _h, const uint32 _flags);
-		VkFormat GetFormat() const noexcept { return m_DepthFormat; }
-		const VkImageView& GetImageView() const noexcept { return m_DepthImageView; }
-
 		VulkanDepthBuffer(const VulkanDepthBuffer&) = delete;
 		VulkanDepthBuffer& operator=(const VulkanDepthBuffer&) = delete;
 		VulkanDepthBuffer(VulkanDepthBuffer&&) = delete;
 		VulkanDepthBuffer& operator=(VulkanDepthBuffer&&) = delete;
+
+		void RecreateDepthBuffer(const uint32 _w, const uint32 _h, const uint32 _flags);
+		VkFormat GetFormat() const noexcept { return m_DepthFormat; }
+		const VkImageView& GetImageView() const noexcept { return m_DepthImageView; }
 
 	private:
 		void CreateDepthBuffer(const uint32 _w, const uint32 _h, const uint32 _flags);

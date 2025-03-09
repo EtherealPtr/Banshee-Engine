@@ -19,6 +19,7 @@ namespace Banshee
 
 	struct VulkanImage
 	{
+		VulkanImage() noexcept;
 		VulkanImage(const VkImage& _image, const VkImageView _imageView, const VkDeviceMemory& _imageMemory) noexcept :
 			m_Image{ _image },
 			m_ImageView{ _imageView },
@@ -33,20 +34,21 @@ namespace Banshee
 	class VulkanTexture
 	{
 	public:
-		VulkanTexture(const VulkanDevice& _device, const VkCommandPool& _commandPool) noexcept;
+		VulkanTexture(const VulkanDevice& _device, const VkCommandPool& _commandPool);
 		~VulkanTexture();
-
-		const std::vector<VkImageView>& GetTextureImageViews() const noexcept { return m_TextureImageViews; }
-		void UploadTextures();
 
 		VulkanTexture(const VulkanTexture&) = delete;
 		VulkanTexture& operator=(const VulkanTexture&) = delete;
 		VulkanTexture(VulkanTexture&&) = delete;
 		VulkanTexture& operator=(VulkanTexture&&) = delete;
 
+		const std::vector<VkImageView>& GetTextureImageViews() const noexcept { return m_TextureImageViews; }
+		const VkImageView& GetDummyDepthTexture();
+
 	private:
 		void CreateStagingBuffer(const uint64 _sizeOfBuffer, const unsigned char* _pixels, const uint32 _imgW, const uint32 _imgH);
 		void CreateTextureImage(const VkBuffer& _buffer, const uint32 _imgW, const uint32 _imgH);
+		void UploadTextures();
 
 	private:
 		VkDevice m_LogicalDevice;
@@ -56,5 +58,6 @@ namespace Banshee
 		VkFormat m_TextureImageFormat;
 		std::vector<VulkanImage> m_TextureImages;
 		std::vector<VkImageView> m_TextureImageViews;
+		VulkanImage m_DummyDepthImage;
 	};
 } // End of namespace

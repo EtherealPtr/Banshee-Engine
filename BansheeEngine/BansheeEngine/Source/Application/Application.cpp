@@ -11,14 +11,14 @@ namespace Banshee
 		m_Window{ nullptr },
 		m_Renderer{ nullptr }
 	{
-		BE_LOG(LogCategory::Trace, "[APPLICATION]: Banshee initializing");
+		BE_LOG(LogCategory::Trace, "[APPLICATION]: Initializing...");
 		const EngineConfig configSettings{ INIParser::ParseConfigSettings("config.ini") };
 		m_Window = std::make_unique<Window>(configSettings.m_WindowWidth, configSettings.m_WindowHeight, configSettings.m_WindowTitle);
 	}
 
 	Application::~Application()
 	{
-		BE_LOG(LogCategory::Trace, "[APPLICATION]: Banshee terminating");
+		BE_LOG(LogCategory::Trace, "[APPLICATION]: Terminating");
 	}
 
 	void Application::PostClientInitialize()
@@ -26,7 +26,6 @@ namespace Banshee
 		try 
 		{ 
 			m_Renderer = std::make_unique<VulkanRenderer>(*m_Window.get()); 
-			BE_LOG(LogCategory::Info, "[APPLICATION]: VulkanRenderer initialized successfully"); 
 		}
 		catch (const std::exception& _problem)
 		{
@@ -37,7 +36,7 @@ namespace Banshee
 	void Application::Run() const
 	{
 		Timer timer{};
-		BE_LOG(LogCategory::Trace, "[APPLICATION]: Banshee run");
+		BE_LOG(LogCategory::Trace, "[APPLICATION]: Run");
 
 		while (!m_Window->ShouldWindowClose())
 		{

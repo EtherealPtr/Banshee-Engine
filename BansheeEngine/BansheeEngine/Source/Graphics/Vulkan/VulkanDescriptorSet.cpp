@@ -33,15 +33,15 @@ namespace Banshee
 		{
 			VkDescriptorBufferInfo bufferInfo{};
 			bufferInfo.offset = 0;
-			bufferInfo.buffer = writer.m_Buffer;
-			bufferInfo.range = writer.m_BufferRange;
+			bufferInfo.buffer = writer.GetBuffer();
+			bufferInfo.range = writer.GetBufferRange();
 
 			VkWriteDescriptorSet descriptorSetWriter{};
 			descriptorSetWriter.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
 			descriptorSetWriter.dstSet = m_DescriptorSet;
-			descriptorSetWriter.dstBinding = writer.m_Binding;
+			descriptorSetWriter.dstBinding = writer.GetBinding();
 			descriptorSetWriter.descriptorCount = 1;
-			descriptorSetWriter.descriptorType = writer.m_DescriptorType;
+			descriptorSetWriter.descriptorType = writer.GetDescriptorType();
 			descriptorSetWriter.pBufferInfo = &bufferInfo;
 			descriptorSetWriter.pImageInfo = nullptr;
 
@@ -49,65 +49,36 @@ namespace Banshee
 		}
 	}
 
-	void VulkanDescriptorSet::UpdateDescriptorSet(const std::vector<VulkanDescriptorSetTextureWriter>& _descriptorSetTextureWriters) const noexcept
+	void VulkanDescriptorSet::UpdateDescriptorSet(const std::vector<VulkanDescriptorSetTextureWriter>& _descriptorSetTextureWriters)
 	{
 		for (const auto& writer : _descriptorSetTextureWriters)
 		{
+			const VkImageLayout imageLayout{ (writer.GetDescriptorType() == VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER) ? VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL : VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL };
+
 			std::vector<VkDescriptorImageInfo> imageInfos{};
-			imageInfos.reserve(writer.m_ImageViews.size());
+			imageInfos.reserve(writer.GetImageViews().size());
 
-			VkDescriptorImageInfo imageInfo{};
-			imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-
-			if (writer.m_DescriptorType == VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER)
+			if (writer.GetImageViews().empty())
 			{
-				imageInfo.imageLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL;
-
-				if (!writer.m_ImageViews.empty())
-				{
-					for (const auto& imageView : writer.m_ImageViews)
-					{
-						imageInfo.imageView = imageView;
-						imageInfo.sampler = writer.m_Sampler;
-						imageInfos.emplace_back(imageInfo);
-					}
-				}
-				else
-				{
-					imageInfo.imageView = VK_NULL_HANDLE;
-					imageInfo.sampler = writer.m_Sampler;
-					imageInfos.emplace_back(imageInfo);
-				}
+				imageInfos.emplace_back(writer.GetSampler(), VK_NULL_HANDLE, imageLayout);
 			}
 			else
 			{
-				if (!writer.m_ImageViews.empty())
+				for (const auto& imageView : writer.GetImageViews())
 				{
-					for (const auto& imageView : writer.m_ImageViews)
-					{
-						imageInfo.imageView = imageView;
-						imageInfo.sampler = VK_NULL_HANDLE;
-						imageInfos.emplace_back(imageInfo);
-					}
-				}
-				else
-				{
-					imageInfo.imageView = VK_NULL_HANDLE;
-					imageInfo.sampler = writer.m_Sampler;
-					imageInfos.emplace_back(imageInfo);
+					imageInfos.emplace_back(writer.GetDescriptorType() == VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER ? writer.GetSampler() : VK_NULL_HANDLE, imageView, imageLayout);
 				}
 			}
 
-			VkWriteDescriptorSet descriptorSetWriter{};
-			descriptorSetWriter.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-			descriptorSetWriter.dstSet = m_DescriptorSet;
-			descriptorSetWriter.dstBinding = writer.m_Binding;
-			descriptorSetWriter.descriptorCount = static_cast<uint32>(imageInfos.size());
-			descriptorSetWriter.descriptorType = writer.m_DescriptorType;
-			descriptorSetWriter.pBufferInfo = nullptr;
-			descriptorSetWriter.pImageInfo = imageInfos.data();
+			VkWriteDescriptorSet descriptorWrite{};
+			descriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+			descriptorWrite.dstSet = m_DescriptorSet;
+			descriptorWrite.dstBinding = writer.GetBinding();
+			descriptorWrite.descriptorCount = static_cast<uint32>(imageInfos.size());
+			descriptorWrite.descriptorType = writer.GetDescriptorType();
+			descriptorWrite.pImageInfo = imageInfos.data();
 
-			vkUpdateDescriptorSets(m_LogicalDevice, 1, &descriptorSetWriter, 0, nullptr);
+			vkUpdateDescriptorSets(m_LogicalDevice, 1, &descriptorWrite, 0, nullptr);
 		}
 	}
 } // End of namespace

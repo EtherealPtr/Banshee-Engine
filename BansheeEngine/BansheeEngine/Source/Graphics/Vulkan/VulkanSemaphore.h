@@ -14,12 +14,12 @@ namespace Banshee
 		VulkanSemaphore(const VkDevice& _logicalDevice, const uint16 _count = 1);
 		~VulkanSemaphore();
 
-		const std::vector<std::pair<VkSemaphore, VkSemaphore>>& Get() noexcept { return m_Semaphores; }
-
 		VulkanSemaphore(const VulkanSemaphore&) = delete;
 		VulkanSemaphore& operator=(const VulkanSemaphore&) = delete;
 		VulkanSemaphore(VulkanSemaphore&&) = delete;
 		VulkanSemaphore& operator=(VulkanSemaphore&&) = delete;
+
+		const std::vector<std::pair<VkSemaphore, VkSemaphore>>& Get() noexcept { return m_Semaphores; }
 
 	private:
 		VkDevice m_LogicalDevice;

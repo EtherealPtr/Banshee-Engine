@@ -1,25 +1,40 @@
 #include "VulkanTexture.h"
 #include "VulkanUtils.h"
 #include "Foundation/ResourceManager/ResourceManager.h"
-#include "Foundation/ResourceManager/Image/Image.h"
 #include "Foundation/Logging/Logger.h"
 #include "VulkanDevice.h"
 #include <vulkan/vulkan_core.h>
 
 namespace Banshee
 {
-	VulkanTexture::VulkanTexture(const VulkanDevice& _device, const VkCommandPool& _commandPool) noexcept :
+	VulkanImage::VulkanImage() noexcept : 
+		m_Image{ VK_NULL_HANDLE },
+		m_ImageView{ VK_NULL_HANDLE },
+		m_ImageMemory{ VK_NULL_HANDLE }
+	{}
+
+	VulkanTexture::VulkanTexture(const VulkanDevice& _device, const VkCommandPool& _commandPool) :
 		m_LogicalDevice{ _device.GetLogicalDevice() },
 		m_PhysicalDevice{ _device.GetPhysicalDevice() },
 		m_GraphicsQueue{ _device.GetGraphicsQueue() },
 		m_CommandPool{ _commandPool },
 		m_TextureImageFormat{ VK_FORMAT_R8G8B8A8_SRGB },
 		m_TextureImages{},
-		m_TextureImageViews{}
-	{}
+		m_TextureImageViews{},
+		m_DummyDepthImage{}
+	{
+		UploadTextures();
+	}
 
 	VulkanTexture::~VulkanTexture()
 	{
+		if (m_DummyDepthImage.m_Image != VK_NULL_HANDLE)
+		{
+			vkDestroyImageView(m_LogicalDevice, m_DummyDepthImage.m_ImageView, nullptr);
+			vkDestroyImage(m_LogicalDevice, m_DummyDepthImage.m_Image, nullptr);
+			vkFreeMemory(m_LogicalDevice, m_DummyDepthImage.m_ImageMemory, nullptr);
+		}
+
 		for (const auto& image : m_TextureImages)
 		{
 			vkDestroyImageView(m_LogicalDevice, image.m_ImageView, nullptr);
@@ -38,6 +53,62 @@ namespace Banshee
 		{
 			CreateStagingBuffer(image.m_ImageSize, image.m_Pixels, image.m_ImageWidth, image.m_ImageHeight);
 		}
+	}
+
+	const VkImageView& VulkanTexture::GetDummyDepthTexture()
+	{
+		if (m_DummyDepthImage.m_ImageView != VK_NULL_HANDLE)
+		{
+			return m_DummyDepthImage.m_ImageView;
+		}
+
+		const auto format = VulkanUtils::FindSupportedFormat
+		(
+			m_PhysicalDevice,
+			{ VK_FORMAT_D32_SFLOAT, VK_FORMAT_D32_SFLOAT_S8_UINT, VK_FORMAT_D24_UNORM_S8_UINT },
+			VK_IMAGE_TILING_OPTIMAL,
+			VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT
+		);
+
+		const VkImageUsageFlagBits usageFlags
+		{
+			static_cast<VkImageUsageFlagBits>((VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT | VK_IMAGE_USAGE_SAMPLED_BIT))
+		};
+
+		VulkanUtils::CreateImage
+		(
+			m_LogicalDevice,
+			m_PhysicalDevice,
+			1, 1,
+			format,
+			VK_IMAGE_TILING_OPTIMAL,
+			usageFlags,
+			VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
+			m_DummyDepthImage.m_Image,
+			m_DummyDepthImage.m_ImageMemory
+		);
+
+		VulkanUtils::TransitionImageLayout
+		(
+			m_LogicalDevice,
+			m_CommandPool,
+			m_GraphicsQueue,
+			m_DummyDepthImage.m_Image,
+			format,
+			VK_IMAGE_LAYOUT_UNDEFINED,
+			VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL
+		);
+
+		VulkanUtils::CreateImageView
+		(
+			m_LogicalDevice,
+			m_DummyDepthImage.m_Image,
+			format,
+			VK_IMAGE_ASPECT_DEPTH_BIT,
+			m_DummyDepthImage.m_ImageView
+		);
+
+		return m_DummyDepthImage.m_ImageView;
 	}
 
 	void VulkanTexture::CreateStagingBuffer(const uint64 _sizeOfBuffer, const unsigned char* _pixels, const uint32 _imgW, const uint32 _imgH)

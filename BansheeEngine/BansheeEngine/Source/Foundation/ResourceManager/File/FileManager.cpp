@@ -50,6 +50,6 @@ namespace Banshee
 	std::string FileManager::GetAssetName(const std::string_view _assetPath) const
 	{
 		std::filesystem::path path(_assetPath);
-		return path.filename().string();
+		return std::move(path.filename().string());
 	}
 } // End of namespace

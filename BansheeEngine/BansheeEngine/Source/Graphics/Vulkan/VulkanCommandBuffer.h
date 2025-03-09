@@ -18,15 +18,15 @@ namespace Banshee
 		VulkanCommandBuffer(const VkDevice& _logicalDevice, const VkCommandPool& _pool, const uint16 _count = 1);
 		~VulkanCommandBuffer();
 
-		void Begin(const uint16 _bufferIndex = 0) const noexcept;
-		void End(const uint16 _bufferIndex = 0) const noexcept;
-		void Submit(const uint16 _bufferIndex, const VkQueue& _queue, const VkSemaphore& _waitSem = nullptr, const VkSemaphore& _signalSem = nullptr, const VkFence& _fence = nullptr, const uint32 _waitStage = 0);
-		const std::vector<VkCommandBuffer>& Get() const noexcept { return m_CommandBuffers; }
-
 		VulkanCommandBuffer(const VulkanCommandBuffer&) = delete;
 		VulkanCommandBuffer& operator=(const VulkanCommandBuffer&) = delete;
 		VulkanCommandBuffer(VulkanCommandBuffer&&) = delete;
 		VulkanCommandBuffer& operator=(VulkanCommandBuffer&&) = delete;
+
+		void Begin(const uint16 _bufferIndex = 0) const noexcept;
+		void End(const uint16 _bufferIndex = 0) const noexcept;
+		void Submit(const uint16 _bufferIndex, const VkQueue& _queue, const VkSemaphore& _waitSem = nullptr, const VkSemaphore& _signalSem = nullptr, const VkFence& _fence = nullptr, const uint32 _waitStage = 0);
+		const std::vector<VkCommandBuffer>& Get() const noexcept { return m_CommandBuffers; }
 
 	private:
 		VkDevice m_LogicalDevice;

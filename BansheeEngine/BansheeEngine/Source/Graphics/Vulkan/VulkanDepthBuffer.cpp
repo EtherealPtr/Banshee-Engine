@@ -37,7 +37,7 @@ namespace Banshee
 			VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT
 		);
 
-		const VkImageUsageFlagBits usageFlags = static_cast<VkImageUsageFlagBits>(VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT | _flags);
+		const VkImageUsageFlagBits usageFlags{ static_cast<VkImageUsageFlagBits>(VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT | _flags) };
 		VulkanUtils::CreateImage(m_Device, m_GPU, _w, _h, m_DepthFormat, VK_IMAGE_TILING_OPTIMAL, usageFlags, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, m_DepthImage, m_DepthImageMemory);
 		VulkanUtils::CreateImageView(m_Device, m_DepthImage, m_DepthFormat, VK_IMAGE_ASPECT_DEPTH_BIT, m_DepthImageView);
 	}

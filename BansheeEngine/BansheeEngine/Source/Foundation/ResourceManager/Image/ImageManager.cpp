@@ -12,7 +12,7 @@ namespace Banshee
 		m_OnImageLoaded{ nullptr }
 	{
 		m_Images.reserve(1);
-		m_OnImageLoaded = [this](const Image& image) { m_Images.emplace_back(image); };
+		m_OnImageLoaded = [this](const Image& _image) { m_Images.emplace_back(_image); };
 
 		CreateDefaultImage();
 	}
@@ -32,6 +32,7 @@ namespace Banshee
 		whiteTexturePixels[1] = 255;
 		whiteTexturePixels[2] = 255;
 		whiteTexturePixels[3] = 255;
+
 		image.m_Pixels = whiteTexturePixels;
 		image.m_ImageWidth = 1;
 		image.m_ImageHeight = 1;

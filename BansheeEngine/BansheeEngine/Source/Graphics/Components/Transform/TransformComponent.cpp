@@ -35,9 +35,9 @@ namespace Banshee
 
 	glm::mat4 TransformComponent::GetModel() const
 	{
-		const glm::mat4 translationMatrix = glm::translate(glm::mat4(1.0f), m_Position);
-		const glm::mat4 rotationMatrix = glm::mat4_cast(m_Rotation);
-		const glm::mat4 scaleMatrix = glm::scale(glm::mat4(1.0f), m_Scale);
+		const glm::mat4 translationMatrix{ glm::translate(glm::mat4(1.0f), m_Position) };
+		const glm::mat4 rotationMatrix{ glm::mat4_cast(m_Rotation) };
+		const glm::mat4 scaleMatrix{ glm::scale(glm::mat4(1.0f), m_Scale) };
 		return translationMatrix * rotationMatrix * scaleMatrix;
 	}
 } // End of namespace

@@ -14,12 +14,12 @@ namespace Banshee
 		VulkanTextureSampler(const VulkanDevice& _device);
 		~VulkanTextureSampler();
 
-		const VkSampler& Get() const noexcept { return m_TextureSampler; }
-
 		VulkanTextureSampler(const VulkanTextureSampler&) = delete;
 		VulkanTextureSampler& operator=(const VulkanTextureSampler&) = delete;
 		VulkanTextureSampler(VulkanTextureSampler&&) = delete;
 		VulkanTextureSampler& operator=(VulkanTextureSampler&&) = delete;
+
+		const VkSampler& Get() const noexcept { return m_TextureSampler; }
 
 	private:
 		VkDevice m_LogicalDevice;
