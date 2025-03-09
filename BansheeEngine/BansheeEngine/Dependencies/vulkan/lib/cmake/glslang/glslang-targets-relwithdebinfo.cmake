@@ -5,6 +5,26 @@
 # Commands may need to know the format version.
 set(CMAKE_IMPORT_FILE_VERSION 1)
 
+# Import target "glslang::SPVRemapper" for configuration "RelWithDebInfo"
+set_property(TARGET glslang::SPVRemapper APPEND PROPERTY IMPORTED_CONFIGURATIONS RELWITHDEBINFO)
+set_target_properties(glslang::SPVRemapper PROPERTIES
+  IMPORTED_LINK_INTERFACE_LANGUAGES_RELWITHDEBINFO "CXX"
+  IMPORTED_LOCATION_RELWITHDEBINFO "${_IMPORT_PREFIX}/lib/SPVRemapper.lib"
+  )
+
+list(APPEND _cmake_import_check_targets glslang::SPVRemapper )
+list(APPEND _cmake_import_check_files_for_glslang::SPVRemapper "${_IMPORT_PREFIX}/lib/SPVRemapper.lib" )
+
+# Import target "glslang::SPIRV" for configuration "RelWithDebInfo"
+set_property(TARGET glslang::SPIRV APPEND PROPERTY IMPORTED_CONFIGURATIONS RELWITHDEBINFO)
+set_target_properties(glslang::SPIRV PROPERTIES
+  IMPORTED_LINK_INTERFACE_LANGUAGES_RELWITHDEBINFO "CXX"
+  IMPORTED_LOCATION_RELWITHDEBINFO "${_IMPORT_PREFIX}/lib/SPIRV.lib"
+  )
+
+list(APPEND _cmake_import_check_targets glslang::SPIRV )
+list(APPEND _cmake_import_check_files_for_glslang::SPIRV "${_IMPORT_PREFIX}/lib/SPIRV.lib" )
+
 # Import target "glslang::OSDependent" for configuration "RelWithDebInfo"
 set_property(TARGET glslang::OSDependent APPEND PROPERTY IMPORTED_CONFIGURATIONS RELWITHDEBINFO)
 set_target_properties(glslang::OSDependent PROPERTIES
@@ -72,26 +92,6 @@ set_target_properties(glslang::spirv-remap PROPERTIES
 
 list(APPEND _cmake_import_check_targets glslang::spirv-remap )
 list(APPEND _cmake_import_check_files_for_glslang::spirv-remap "${_IMPORT_PREFIX}/bin/spirv-remap.exe" )
-
-# Import target "glslang::SPVRemapper" for configuration "RelWithDebInfo"
-set_property(TARGET glslang::SPVRemapper APPEND PROPERTY IMPORTED_CONFIGURATIONS RELWITHDEBINFO)
-set_target_properties(glslang::SPVRemapper PROPERTIES
-  IMPORTED_LINK_INTERFACE_LANGUAGES_RELWITHDEBINFO "CXX"
-  IMPORTED_LOCATION_RELWITHDEBINFO "${_IMPORT_PREFIX}/lib/SPVRemapper.lib"
-  )
-
-list(APPEND _cmake_import_check_targets glslang::SPVRemapper )
-list(APPEND _cmake_import_check_files_for_glslang::SPVRemapper "${_IMPORT_PREFIX}/lib/SPVRemapper.lib" )
-
-# Import target "glslang::SPIRV" for configuration "RelWithDebInfo"
-set_property(TARGET glslang::SPIRV APPEND PROPERTY IMPORTED_CONFIGURATIONS RELWITHDEBINFO)
-set_target_properties(glslang::SPIRV PROPERTIES
-  IMPORTED_LINK_INTERFACE_LANGUAGES_RELWITHDEBINFO "CXX"
-  IMPORTED_LOCATION_RELWITHDEBINFO "${_IMPORT_PREFIX}/lib/SPIRV.lib"
-  )
-
-list(APPEND _cmake_import_check_targets glslang::SPIRV )
-list(APPEND _cmake_import_check_files_for_glslang::SPIRV "${_IMPORT_PREFIX}/lib/SPIRV.lib" )
 
 # Commands beyond this point should not need to know the version.
 set(CMAKE_IMPORT_FILE_VERSION)
