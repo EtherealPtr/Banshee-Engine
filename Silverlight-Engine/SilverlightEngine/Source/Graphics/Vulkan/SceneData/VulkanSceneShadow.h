@@ -48,7 +48,7 @@ namespace Silverlight
 		VulkanShadowSceneDiscriptorSetLayout m_DescriptorSetLayout;
 		VulkanShadowPipeline m_Pipeline;
 		std::vector<VulkanDescriptorSet> m_DescriptorSets;
-		VulkanDescriptorSetBufferWriter m_DescriptorSetWriter;
+		std::vector<VulkanDescriptorSetBufferWriter> m_DescriptorSetWriters;
 		std::vector<VulkanUniformBuffer> m_LightSpaceUniformBuffers;
 		glm::mat4 m_LightSpaceMatrix;
 	};

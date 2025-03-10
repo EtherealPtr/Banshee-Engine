@@ -15,7 +15,7 @@ namespace Silverlight
 		m_DescriptorSetLayout{ _renderContext.GetDevice().GetLogicalDevice() },
 		m_Pipeline{ _renderContext, m_DescriptorSetLayout.Get(), m_RenderPass.Get(), m_Width, m_Height },
 		m_LightSpaceMatrix{ glm::identity<glm::mat4>() },
-		m_DescriptorSetWriter{ 0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER }
+		m_DescriptorSetWriters{ 1, { 0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER } }
 	{
 		const size_t numOfSwapChainImages{ _renderContext.GetSwapchain().GetImageViews().size() };
 
@@ -41,8 +41,8 @@ namespace Silverlight
 		m_LightSpaceMatrix = lightProjMatrix * lightViewMatrix;
 
 		m_LightSpaceUniformBuffers.at(_imgIndex).CopyData(&m_LightSpaceMatrix);
-		m_DescriptorSetWriter.SetBuffer(m_LightSpaceUniformBuffers.at(_imgIndex).GetBuffer(), m_LightSpaceUniformBuffers.at(_imgIndex).GetBufferSize());
-		m_DescriptorSets.at(_imgIndex).UpdateDescriptorSet({ m_DescriptorSetWriter });
+		m_DescriptorSetWriters.at(0).SetBuffer(m_LightSpaceUniformBuffers.at(_imgIndex).GetBuffer(), m_LightSpaceUniformBuffers.at(_imgIndex).GetBufferSize());
+		m_DescriptorSets.at(_imgIndex).UpdateDescriptorSet(m_DescriptorSetWriters);
 	}
 
 	void VulkanSceneShadow::RecreateResources(const uint32 _flags)
