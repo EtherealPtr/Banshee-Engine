@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\RonyH\Projects\Silverlight-Engine\Silverlight-Engine\SilverlightEngine\Dependencies\glfw\generated\CMakeFiles\9b9491e64058e16a1cb0bf2902af19cc\uninstall.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\RonyH\Projects\Silverlight-Engine\Silverlight-Engine\SilverlightEngine\Dependencies\glfw\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="C:\Users\RonyH\Projects\Silverlight-Engine\Silverlight-Engine\SilverlightEngine\Dependencies\glfw\generated\CMakeFiles\uninstall" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{A6904756-BE34-3E28-A48C-C616CBA3E271}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

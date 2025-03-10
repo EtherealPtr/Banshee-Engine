@@ -1,0 +1,11 @@
+{
+	"InstallScripts" : 
+	[
+		"C:/Users/RonyH/Projects/Silverlight-Engine/Silverlight-Engine/SilverlightEngine/Dependencies/glfw/generated/cmake_install.cmake",
+		"C:/Users/RonyH/Projects/Silverlight-Engine/Silverlight-Engine/SilverlightEngine/Dependencies/glfw/generated/src/cmake_install.cmake",
+		"C:/Users/RonyH/Projects/Silverlight-Engine/Silverlight-Engine/SilverlightEngine/Dependencies/glfw/generated/examples/cmake_install.cmake",
+		"C:/Users/RonyH/Projects/Silverlight-Engine/Silverlight-Engine/SilverlightEngine/Dependencies/glfw/generated/tests/cmake_install.cmake",
+		"C:/Users/RonyH/Projects/Silverlight-Engine/Silverlight-Engine/SilverlightEngine/Dependencies/glfw/generated/docs/cmake_install.cmake"
+	],
+	"Parallel" : false
+}

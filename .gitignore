@@ -48,7 +48,6 @@ ipch/
 
 # Visual Studio generated files
 *.exp
-*.lib
 
 # Custom generated files
 Binaries/
